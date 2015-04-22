@@ -807,8 +807,11 @@ If the character before and after CH is space or tab, CH is NOT slash"
                 (set-face-background 'mode-line (car color))
                 (set-face-foreground 'mode-line (cdr color))))))
 
-(require 'evil-nerd-commenter)
-(evilnc-default-hotkeys)
+;; {{ evil-nerd-commenter
+;; comment/uncomment lines
+;; (require 'evil-nerd-commenter)
+;; (evilnc-default-hotkeys)
+;; }}
 
 ;; {{ evil-exchange
 ;; press gx twice to exchange, gX to cancel
