@@ -162,7 +162,7 @@
                                init-writting
                                init-pomodoro
                                init-dired
-                               init-artbollocks-mode
+                               ;;init-artbollocks-mode
                                init-semantic))
   (idle-require-mode 1) ;; starts loading
   ;; }}
