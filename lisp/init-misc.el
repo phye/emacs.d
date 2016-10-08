@@ -241,7 +241,7 @@
       (message "compilation errors, press C-x ` to visit")
     ;;no errors, make the compilation window go away in 0.5 seconds
     (when (and (buffer-name buf)
-               (string-match "*compilation*" (buffer-name buf)))
+               (string-match "*compilation*" ))
       ;; @see http://emacswiki.org/emacs/ModeCompile#toc2
       (bury-buffer "*compilation*")
       (winner-undo)
