@@ -1,3 +1,12 @@
+(setq org-agenda-files
+     (quote
+       ("~/ws/OrgNotes/gtd.org" "~/ws/OrgNotes/LearningPlan.org" "~/ws/OrgNotes/Work@Cisco.org")))
+  (setq org-catch-invisible-edits (quote error))
+(setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
+(setq c-basic-offset 4)
+(setq c-default-style "linux")
+(setq fill-column 80)
+
 (defun insert-src-in-orgmode (lang)
   "Insert src prefix and postfix for LANG in OrgMode"
   (interactive "sChoose your language: ")
