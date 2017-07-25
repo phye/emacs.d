@@ -9,6 +9,7 @@
                                       erc-mode
                                       browse-kill-ring-mode
                                       etags-select-mode
+                                      doc-view-mode
                                       dired-mode
                                       help-mode
                                       text-mode
