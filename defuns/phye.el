@@ -49,3 +49,10 @@
 
 (eval-after-load "org"
                  '(require 'ox-md nil t))
+
+(setq org-latex-to-pdf-process
+      '("xelatex -interaction nonstopmode -output-directory %o %f"
+        "xelatex -interaction nonstopmode -output-directory %o %f"
+        "xelatex -interaction nonstopmode -output-directory %o %f"))
+
+(require 'chinese-fonts-setup)
