@@ -56,4 +56,4 @@
         "xelatex -interaction nonstopmode -output-directory %o %f"))
 
 ;;(require 'chinese-fonts-setup)
-(load-theme 'zenburn)
+(load-theme 'manoj-dark)
