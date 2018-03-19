@@ -1,6 +1,9 @@
 (setq org-agenda-files
      (quote
-       ("~/ws/OrgNotes/gtd.org" "~/ws/OrgNotes/LearningPlan.org" "~/ws/OrgNotes/Work@Cisco.org")))
+      ("~/ws/OrgNotes/gtd.org"
+       "~/ws/OrgNotes/LearningPlan.org"
+       "~/ws/OrgNotes/KnowledgeBase.org"
+       "~/ws/OrgNotes/Work@Cisco.org")))
   (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
 (setq c-basic-offset 4)
