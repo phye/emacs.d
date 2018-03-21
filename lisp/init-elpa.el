@@ -87,6 +87,8 @@
     erlang
     workgroups2
     zoutline
+    go-guru
+    go-autocomplete
     company-c-headers
     company-statistics)
   "Packages to install from melpa-unstable.")
@@ -301,6 +303,8 @@
 (require-package 'counsel-css)
 (require-package 'auto-package-update)
 (require-package 'keyfreq)
+(require-package 'go-guru)
+(require-package 'go-autocomplete)
 ;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/
 (when *emacs24* (require-package 'color-theme))
 (when *emacs25*
