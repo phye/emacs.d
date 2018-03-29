@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name : link from clipboard
+# contributor : Philip Ye <phye8080 AT gmail.com>
+# key: l
+# --
+`(my-gclip)`
