@@ -1,0 +1,3 @@
+[submodule "snippets/yasnippet-go"]
+	path = snippets/yasnippet-go
+	url = https://github.com/dominikh/yasnippet-go.git
