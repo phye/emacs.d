@@ -171,6 +171,10 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
   (or (> (buffer-size) (* 5000 64))
       (> (line-number-at-pos (point-max)) 5000)))
 
+(defun file-too-big-p (file)
+  (> (nth 7 (file-attributes file))
+     (* 5000 64)))
+
 (defun is-buffer-file-temp ()
   (interactive)
   "If (buffer-file-name) is nil or a temp file or HTML file converted from org file"
@@ -253,9 +257,10 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
            (setq retval nil)))
         retval)))
 
-(setq simpleclip-works (test-simpleclip) )
+(setq simpleclip-works (test-simpleclip))
 
 (defun my-gclip ()
+  (unless (featurep 'simpleclip) (require 'simpleclip))
   (if simpleclip-works (simpleclip-get-contents)
     (cond
      ((eq system-type 'darwin)

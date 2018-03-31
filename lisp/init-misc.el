@@ -379,7 +379,7 @@ See \"Reusing passwords for several connections\" from INFO.
 ;; {{ show email sent by `git send-email' in gnus
 (eval-after-load 'gnus
   '(progn
-     (require 'gnus-article-treat-patch)
+     (local-require 'gnus-article-treat-patch)
      (setq gnus-article-patch-conditions
            '( "^@@ -[0-9]+,[0-9]+ \\+[0-9]+,[0-9]+ @@" ))
      ))
@@ -672,7 +672,6 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
                      ((string= choice "kill-ring")
                       (car kill-ring))
                      ((string= choice "clipboard")
-                      (unless (featurep 'simpleclip) (require 'simpleclip))
                       (my-gclip)))))
           (with-temp-file fb
             (insert txt)))))
@@ -737,6 +736,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 
 ;; {{ auto-save.el
 (local-require 'auto-save)
+(add-to-list 'auto-save-exclude 'file-too-big-p t)
 (auto-save-enable)
 (setq auto-save-slient t)
 ;; }}
