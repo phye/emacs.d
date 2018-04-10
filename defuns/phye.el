@@ -47,7 +47,7 @@
 (setq org-export-with-sub-superscripts nil)
 
 (setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+(setq mac-option-modifier 'super)
 (setq org-export-with-properties t)
 
 (eval-after-load "org"
