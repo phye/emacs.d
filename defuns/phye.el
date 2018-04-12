@@ -27,6 +27,7 @@
 
 (setq-default evil-escape-key-sequence "jk")
 
+
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/ws/OrgNotes/gtd.org" "Tasks")
          "* TODO %?\n %i\n %a")
@@ -68,3 +69,5 @@
 (with-eval-after-load 'go-mode
    (require 'go-autocomplete)
    (require 'go-guru))
+
+(load-theme 'gruvbox t)
