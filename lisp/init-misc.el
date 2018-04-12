@@ -928,16 +928,31 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 (add-hook 'after-init-hook 'session-initialize)
 ;; }}
 
-(defun optimize-emacs-startup ()
-  "Speedup emacs startup by compiling."
-  (interactive)
-  (let* ((dir (file-truename "~/.emacs.d/lisp/"))
-         (files (directory-files dir)))
-    (load (file-truename "~/.emacs.d/init.el"))
-    (dolist (f files)
-      (when (string-match-p ".*\.el$" f)
-        (let* ((default-directory dir))
-          (byte-compile-file (file-truename f) t))))))
+;; {{
+(add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
+(defun adoc-imenu-index ()
+  (let* ((patterns '((nil "^=\\([= ]*[^=\n\r]+\\)" 1))))
+    (save-excursion
+      (imenu--generic-function patterns))))
+
+(defun adoc-mode-hook-setup ()
+  ;; don't wrap lines because there is table in `adoc-mode'
+  (setq truncate-lines t)
+  (setq imenu-create-index-function 'adoc-imenu-index))
+(add-hook 'adoc-mode-hook 'adoc-mode-hook-setup)
+;; }}
+
+;; ;; useless and hard to debug
+;; (defun optimize-emacs-startup ()
+;;   "Speedup emacs startup by compiling."
+;;   (interactive)
+;;   (let* ((dir (file-truename "~/.emacs.d/lisp/"))
+;;          (files (directory-files dir)))
+;;     (load (file-truename "~/.emacs.d/init.el"))
+;;     (dolist (f files)
+;;       (when (string-match-p ".*\.el$" f)
+;;         (let* ((default-directory dir))
+;;           (byte-compile-file (file-truename f) t))))))
 
 ;; random color theme
 (defun random-color-theme ()
@@ -948,5 +963,27 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
          (theme (nth (random (length available-themes)) available-themes)))
     (counsel-load-theme-action theme)
     (message "Color theme [%s] loaded." theme)))
+
+(defun switch-to-ansi-term ()
+  (interactive)
+  (let* ((buf (get-buffer "*ansi-term*"))
+         (wins (window-list))
+         current-frame-p)
+    (cond
+     ((buffer-live-p buf)
+      (dolist (win wins)
+        (when (string= (buffer-name (window-buffer win)) "*ansi-term*")
+          (when (window-live-p win)
+            (setq current-frame-p t)
+            (select-window win))))
+      (unless current-frame-p
+          (switch-to-buffer buf)))
+     (t
+      (ansi-term my-term-program)))))
+
+(defun switch-to-shell-or-ansi-term ()
+  (interactive)
+  (if (display-graphic-p) (switch-to-ansi-term)
+    (suspend-frame)))
 
 (provide 'init-misc)

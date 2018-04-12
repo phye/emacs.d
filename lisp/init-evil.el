@@ -327,6 +327,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
         (compilation-mode . emacs)
         (speedbar-mode . emacs)
         (ivy-occur-mode . emacs)
+        (ivy-occur-grep-mode . normal)
         (messages-buffer-mode . normal)
         (magit-commit-mode . normal)
         (magit-diff-mode . normal)
@@ -352,6 +353,16 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (define-key evil-insert-state-map (kbd "C-x C-p") 'evil-complete-previous-line)
 (define-key evil-insert-state-map (kbd "C-]") 'aya-expand)
 
+(defun my-search-defun-from-pos (pos)
+  (evil-search search t t pos)
+  ;; ignore this.f1 = this.fn.bind(this) code
+  (when (and (memq major-mode '(js-mode js2-mode rjsx-mode))
+             (string-match-p "^[ \t]*this\.[a-zA-Z0-9]+[ \t]*=[ \t]*this\.[a-zA-Z0-9]*\.bind(this);"
+                             (my-line-str)))
+
+    (forward-line 1)
+    (evil-search search t t (point))))
+
 ;; the original "gd" or `evil-goto-definition' now try `imenu', `xref', search string to `point-min'
 ;; xref part is annoying because I already use `counsel-etags' to search tag.
 (evil-define-motion my-evil-goto-definition ()
@@ -371,6 +382,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
       (setq isearch-forward t)
       ;; if imenu is available, try it
       (cond
+       ((and (derived-mode-p 'js2-mode)
+             (or (null (get-text-property (point) 'face))
+                 (font-belongs-to (point) '(rjsx-tag))))
+        (js2-jump-to-definition))
        ((fboundp 'imenu--make-index-alist)
         (condition-case nil
             (setq ientry (imenu--make-index-alist))
@@ -382,12 +397,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
           (setq ipos (marker-position ipos)))
          ;; imenu found a position, so go there and
          ;; highlight the occurrence
-        (if (numberp ipos)
-            (evil-search search t t ipos)
-          (evil-search search t t (point-min))))
+        (my-search-defun-from-pos (if (numberp ipos) ipos (point-min))))
        ;; otherwise just go to first occurrence in buffer
        (t
-        (evil-search search t t (point-min)))))))
+        (my-search-defun-from-pos (point-min)))))))
 ;; use "gt", someone might prefer original `evil-goto-definition'
 (define-key evil-motion-state-map "gt" 'my-evil-goto-definition)
 
@@ -398,6 +411,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; then press "z" to contract, "x" to expand
 (eval-after-load "evil"
   '(progn
+     (define-key global-map (kbd "C-x C-z") 'switch-to-shell-or-ansi-term)
      (setq expand-region-contract-fast-key "z")))
 
 ;; I learn this trick from ReneFroger, need latest expand-region
@@ -465,6 +479,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        ;; "cl" 'evilnc-comment-or-uncomment-to-the-line
        ;; "cc" 'evilnc-copy-and-comment-lines
        ;; "cp" 'evilnc-comment-or-uncomment-paragraphs
+       "ic" 'my-imenu-comments
        "epy" 'emmet-expand-yas
        "epl" 'emmet-expand-line
        "rd" 'evilmr-replace-in-defun
@@ -630,7 +645,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "xh" 'mark-whole-buffer
        "xk" 'ido-kill-buffer
        "xs" 'save-buffer
-       "xz" 'suspend-frame
+       "xz" 'switch-to-shell-or-ansi-term
        "vm" 'vc-rename-file-and-buffer
        "vc" 'vc-copy-file-and-rename-buffer
        "xvv" 'vc-next-action ; 'C-x v v' in original
@@ -659,6 +674,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; {{ Use `SPC` as leader key
 ;; all keywords arguments are still supported
 (nvmap :prefix "SPC"
+       "ee" 'my-swap-sexps
        "pc" 'my-dired-redo-from-commands-history
        "cc" 'my-dired-redo-last-command
        "ss" 'wg-create-workgroup ; save windows layout
@@ -812,9 +828,16 @@ If the character before and after CH is space or tab, CH is NOT slash"
                 (set-face-foreground 'mode-line (cdr color))))))
 
 ;; {{ evil-nerd-commenter
-;; comment/uncomment lines
-;; (require 'evil-nerd-commenter)
-;; (evilnc-default-hotkeys)
+(require 'evil-nerd-commenter)
+(evilnc-default-hotkeys)
+
+(defun my-imenu-comments ()
+  "Imenu display comments."
+  (interactive)
+  (unless (featurep 'counsel) (require 'counsel))
+  (when (fboundp 'evilnc-imenu-create-index-function)
+    (let* ((imenu-create-index-function 'evilnc-imenu-create-index-function))
+      (counsel-imenu))))
 ;; }}
 
 ;; {{ evil-exchange
