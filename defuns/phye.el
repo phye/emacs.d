@@ -34,6 +34,7 @@
         ("n" "Note" entry (file+datetree "~/ws/OrgNotes/quick_notes.org")
          "* %?\nEntered on %U\n %i\n %a")))
 (define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cl" 'org-store-link)
 
 (setq org-refile-targets
       '((nil :maxlevel . 5)
