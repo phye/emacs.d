@@ -70,4 +70,4 @@
    (require 'go-autocomplete)
    (require 'go-guru))
 
-(load-theme 'gruvbox t)
+(load-theme 'darkburn t)
