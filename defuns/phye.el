@@ -4,7 +4,7 @@
        "~/ws/OrgNotes/LearningPlan.org"
        "~/ws/OrgNotes/KnowledgeBase.org"
        "~/ws/OrgNotes/Work@Cisco.org")))
-  (setq org-catch-invisible-edits (quote error))
+(setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
 (setq c-basic-offset 4)
 (setq c-default-style "linux")
