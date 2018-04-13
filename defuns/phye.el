@@ -43,6 +43,7 @@
       ("~/ws/OrgNotes/gtd.org"
        "~/ws/OrgNotes/LearningPlan.org"
        "~/ws/OrgNotes/LifePlanning.org"
+       "~/ws/OrgNotes/life/Birthday.org"
        "~/ws/OrgNotes/Work@Cisco.org")))
 
 (setq org-refile-targets
