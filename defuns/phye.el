@@ -41,8 +41,8 @@
 (setq org-agenda-files
      (quote
       ("~/ws/OrgNotes/gtd.org"
-       "~/ws/OrgNotes/LearningPlan.org"
-       "~/ws/OrgNotes/LifePlanning.org"
+       "~/ws/OrgNotes/PlanLearning.org"
+       "~/ws/OrgNotes/PlanLife.org"
        "~/ws/OrgNotes/life/Birthday.org"
        "~/ws/OrgNotes/Work@Cisco.org")))
 
@@ -62,7 +62,9 @@
       '(("t" "Todo" entry (file+headline "~/ws/OrgNotes/gtd.org" "Tasks")
          "* TODO %?\n %i\n %a")
         ("n" "Note" entry (file+datetree "~/ws/OrgNotes/quick_notes.org")
-         "* %?\nEntered on %U\n %i\n %a")))
+         "* %?\nEntered on %U\n %i\n %a")
+        ("j" "Journal entry" entry (function org-journal-find-location)
+                               "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
 
 
 ;; OrgMode Output
@@ -92,10 +94,6 @@
   ;; Position point on the journal's top-level heading so that org-capture
   ;; will add the new entry as a child entry.
   (goto-char (point-min)))
-
-(setq org-capture-templates '(("j" "Journal entry" entry (function org-journal-find-location)
-                               "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
-
 
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
