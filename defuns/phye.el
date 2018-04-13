@@ -114,4 +114,10 @@
   (org-edit-special)
   )
 
+;; My org template
+(defun phye/org-template ()
+  (insert "#+title: \n")
+  (insert "#+setupfile: ~/.emacs.d/misc/include.org\n"))
+
+(define-auto-insert "\\.org$" #'phye/org-template)
 ;; }}
