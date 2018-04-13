@@ -311,6 +311,7 @@
 (require-package 'auto-package-update)
 (require-package 'keyfreq)
 (require-package 'adoc-mode) ; asciidoc files
+(require-package 'org-journal)
 (require-package 'go-guru)
 (require-package 'go-autocomplete)
 ;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/
