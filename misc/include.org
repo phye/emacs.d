@@ -4,7 +4,6 @@
 #+STARTUP: overview
 #+STARTUP: hidestars
 #+STARTUP: logdone
-#+STARTUP: indent
 #+TAGS: { CISCO(c) OFFICE(o) HOME(h) } COMPUTER(c) PROJECT(p) READING(r) MISC(m) 
 #+SEQ_TODO: TODO(t) STARTED(s!) WAITING(w) APPT(a) BLOCKED(b@) | DONE(d) CANCELLED(c@) DEFERRED(f@)
 # }}
