@@ -42,15 +42,14 @@
      (quote
       ("~/ws/OrgNotes/gtd.org"
        "~/ws/OrgNotes/LearningPlan.org"
-       "~/ws/OrgNotes/KnowledgeBase.org"
+       "~/ws/OrgNotes/LifePlanning.org"
        "~/ws/OrgNotes/Work@Cisco.org")))
 
 (setq org-refile-targets
       '((nil :maxlevel . 5)
         (org-agenda-files :maxlevel . 5)
         ("KnowledgeBase.org" :maxlevel . 5)
-        ("done.org" :maxlevel . 5)
-        ("Work@Cisco.org" :maxlevel . 5)))
+        ("done.org" :maxlevel . 5)))
 
 
 ;; Protect my favorite short keys
