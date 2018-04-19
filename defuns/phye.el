@@ -12,7 +12,7 @@
   "Kill the buffer in nth window, default to next window
 Used for killing temporary/auto buffers like *help*, *manual* .etc
 If win-num is provided (via prefix in C-u), kill the buffer in window numbered win-num"
-  (interactive "p")
+  (interactive "P")
   (let ((tgt-win)
         (cur-buf-name (buffer-name))
         (cur-win (selected-window)))
