@@ -8,24 +8,6 @@
 ;; }}
 
 ;; buffer related {{
-(defun kill-buffer-in-nth-window (&optional win-num)
-  "Kill the buffer in nth window, default to next window
-Used for killing temporary/auto buffers like *help*, *manual* .etc
-If win-num is provided (via prefix in C-u), kill the buffer in window numbered win-num"
-  (interactive "P")
-  (let ((tgt-win)
-        (cur-buf-name (buffer-name))
-        (cur-win (selected-window)))
-    (if win-num
-        (setq tgt-win (select-window-by-number win-num))
-      (setq tgt-win (next-window)))
-    (select-window tgt-win)
-    (if (eq cur-buf-name (buffer-name))
-        (message "Same buffer, do nothing")
-      (kill-this-buffer))
-    (select-window cur-win)))
-
-(global-set-key (kbd "C-x K") 'kill-buffer-in-nth-window)
 (global-set-key (kbd "C-x M") 'manual-entry)
 ;; }}
 
