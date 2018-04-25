@@ -41,6 +41,23 @@
 
 ;; }}
 
+;; {{ calfw
+(require 'calfw)
+(require 'calfw-org)
+(require 'calfw-ical)
+
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:ical-create-source "chn-holidays" "https://calendar.google.com/calendar/ical/en.china%23holiday%40group.v.calendar.google.com/public/basic.ics" "Yellow")
+    (cfw:ical-create-source "gtd" "https://calendar.google.com/calendar/ical/semimiracle%40gmail.com/private-a04b71b8d901ec5c2abb2cf8f4397ec0/basic.ics" "Orange")
+    (cfw:ical-create-source "birthday" "https://calendar.google.com/calendar/htmlembed?src=%23contacts%40group.v.calendar.google.com&ctz=Asia%2FShanghai" "Red")
+    )))
+;; }}
+
 
 ;; {{ Org Mode
 (setq org-agenda-files
