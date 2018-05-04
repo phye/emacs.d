@@ -42,6 +42,9 @@
 ;; }}
 
 ;; {{ calfw
+(require-package 'calfw)
+(require-package 'calfw-org)
+(require-package 'calfw-ical)
 (require 'calfw)
 (require 'calfw-org)
 (require 'calfw-ical)
