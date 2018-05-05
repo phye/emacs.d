@@ -4,5 +4,4 @@
 #+STARTUP: overview
 #+STARTUP: hidestars
 #+STARTUP: logdone
-#+TAGS: { CISCO(c) OFFICE(o) HOME(h) } COMPUTER(c) PROJECT(p) READING(r) MISC(m) 
 # }}

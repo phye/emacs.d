@@ -61,8 +61,30 @@
     )))
 ;; }}
 
-
 ;; {{ Org Mode
+(setq org-tag-alist '((:startgroup . nil) ;; tag group for address
+                      ("@work" . ?w)
+                      ("@home" . ?h)
+                      ("@travel" . ?t)
+                      (:endgroup . nil)
+                      (:startgroup . nil) ;; tag group for reading
+                      ("book" . ?b)
+                      ("kindle" . ?k)
+                      ("pad" . ?d)
+                      ("computer" . ?c)
+                      (:endgroup . nil)
+                      (:startgroup . nil) ;; tag group for privacy
+                      ("personal" . ?p)
+                      ("office" . ?o)
+                      ("public" . ?a)
+                      (:endgroup . nil)
+                      (:startgroup . nil) ;; tag group for kind of things
+                      ("project" . ?j)
+                      ("reading" . ?r)
+                      ("ideas" . ?i)
+                      ("misc" . ?m)
+                      (:endgroup)))
+
 (setq org-todo-keywords
       '((sequence "TODO(t)" "STARTED(s!)" "WAITING(w)" "BLOCKED(b@)" "|" "DONE(d)" "CANCELLED(c@)") ;; general todo items
         (sequence "ASSIGNED(a!)" "STARTED(s!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(f)" "VERIFIED(v!)") ;; bug only
@@ -128,6 +150,7 @@
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
+;;(setq org-tags-column -80)
 
 
 ;; My useless functions (can be achieved via much easier yasnippet)
