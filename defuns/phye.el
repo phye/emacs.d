@@ -150,6 +150,12 @@
   ;; will add the new entry as a child entry.
   (goto-char (point-min)))
 
+(defun org-journal-delete ()
+  ;; Delete current journal file and buffer
+  (interactive)
+  (delete-file (buffer-name))
+  (kill-buffer))
+
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
