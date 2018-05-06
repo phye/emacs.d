@@ -83,6 +83,9 @@
                       ("reading" . ?r)
                       ("ideas" . ?i)
                       ("misc" . ?m)
+                      ("financial" . ?f)
+                      ("health" . ?h)
+                      ("gtd" . ?g)
                       (:endgroup)))
 
 (setq org-todo-keywords
