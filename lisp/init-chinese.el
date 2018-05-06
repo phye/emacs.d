@@ -74,7 +74,8 @@
      ;; I'm OK with a smaller dictionary
      (pyim-basedict-enable)
      ;; use western punctuation (ban jiao fu hao)
-     (setq pyim-punctuation-dict nil)
+     ;;(setq pyim-punctuation-dict nil)
+     (setq pyim-punctuation-translate-p '(auto yes no))
      ;; always input English when isearch
      (setq pyim-isearch-enable-pinyin-search t)
      (setq default-input-method "pyim")
