@@ -112,6 +112,12 @@
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\C-cl" 'org-store-link)
 
+;; My often used org commands
+(nvmap :prefix ","
+       "ol" 'org-open-at-point
+       "sl" 'org-store-link
+       "il" 'org-insert-link)
+
 ;; Org Mode Capture
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/ws/OrgNotes/gtd.org" "Tasks")
