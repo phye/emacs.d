@@ -169,6 +169,7 @@
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
 (setq org-tags-column -79)
+(setq org-deadline-warning-days 7)
 
 
 ;; My useless functions (can be achieved via much easier yasnippet)
