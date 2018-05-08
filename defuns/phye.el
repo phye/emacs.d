@@ -101,6 +101,9 @@
        "~/ws/OrgNotes/life/Birthday.org"
        "~/ws/OrgNotes/Work@Cisco.org")))
 
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+
 (setq org-refile-targets
       '((nil :maxlevel . 5)
         (org-agenda-files :maxlevel . 5)
