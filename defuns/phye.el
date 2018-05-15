@@ -89,7 +89,7 @@
                       (:endgroup)))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "STARTED(s!)" "WAITING(w@)" "BLOCKED(b@)" "|" "DONE(d!)" "CANCELLED(c@!)") ;; general todo items
+      '((sequence "TODO(t)" "STARTED(s!)" "WAITING(w@)" "BLOCKED(b@)" "|" "DONE(d!)" "CANCELLED(c@/!)") ;; general todo items
         (sequence "ASSIGNED(a!)" "STARTED(s!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(f!)" "VERIFIED(v!)") ;; bug only
         (type "APPT(a)" "REMINDER(r!)" "|" "DONE(d)"))) ;; misc daily items
 
