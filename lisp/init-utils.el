@@ -24,6 +24,9 @@
     (split-string (buffer-string) "\n" t)))
 ;; }}
 
+(defun nonempty-lines (s)
+  (split-string s "[\r\n]+" t))
+
 ;; Handier way to add modes to auto-mode-alist
 (defun add-auto-mode (mode &rest patterns)
   "Add entries to `auto-mode-alist' to use `MODE' for all given file `PATTERNS'."
@@ -62,6 +65,11 @@
 (defun directory-of-library (library-name)
   "Return the directory in which the `LIBRARY-NAME' load file is found."
   (file-name-as-directory (file-name-directory (find-library-name library-name))))
+
+(defun path-in-directory-p (file directory)
+  "FILE is in DIRECTORY."
+  (let* ((pattern (concat "^" (file-name-as-directory directory))))
+    (if (string-match-p pattern file) file)))
 
 (defmacro my-select-from-kill-ring (fn &optional n)
   "Use `browse-kill-ring' if it exists and N is 1.

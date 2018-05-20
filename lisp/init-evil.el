@@ -329,8 +329,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
         (ivy-occur-mode . emacs)
         (ivy-occur-grep-mode . normal)
         (messages-buffer-mode . normal)
-        (magit-commit-mode . normal)
-        (magit-diff-mode . normal)
         (browse-kill-ring-mode . normal)
         (js2-error-buffer-mode . emacs)
         )
@@ -482,7 +480,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ic" 'my-imenu-comments
        "epy" 'emmet-expand-yas
        "epl" 'emmet-expand-line
-       "rd" 'evilmr-replace-in-defun
+       "rv" 'evilmr-replace-in-defun
        "rb" 'evilmr-replace-in-buffer
        "ts" 'evilmr-tag-selected-region ;; recommended
        "tua" 'artbollocks-mode
@@ -502,7 +500,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
               (interactive)
               (let* ((ffip-diff-backends
                       '(("Show git commit" . (let* ((git-cmd "git --no-pager log --date=short --pretty=format:'%h|%ad|%s|%an'")
-                                                       (collection (split-string (shell-command-to-string git-cmd) "\n" t))
+                                                       (collection (nonempty-lines (shell-command-to-string git-cmd)))
                                                        (item (ffip-completing-read "git log:" collection)))
                                                   (when item
                                                     (shell-command-to-string (format "git show %s" (car (split-string item "|" t))))))))))
@@ -563,7 +561,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "xc" 'save-buffers-kill-terminal
        "rr" 'my-counsel-recentf
        "rh" 'counsel-yank-bash-history ; bash history command => yank-ring
-       "rf" 'counsel-recent-dir
+       "rd" 'counsel-recent-directory
        "da" 'diff-region-tag-selected-as-a
        "db" 'diff-region-compare-with-b
        "di" 'evilmi-delete-items
@@ -688,7 +686,19 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "hh" 'multiple-cursors-hydra/body
        "gi" 'gist-region ; only workable on my computer
        "tt" 'my-toggle-indentation
-       "gs" 'git-gutter:set-start-revision
+       "gg" 'magit-status
+       "gs" 'magit-show-commit
+       "gl" 'magit-log-all
+       "gff" 'magit-find-file ; loading file in specific version into buffer
+       "gdd" 'magit-diff-dwim
+       "gdc" 'magit-diff-staged
+       "gau" 'magit-stage-modified
+       "gcc" 'magit-commit-popup
+       "gca" 'magit-commit-amend
+       "gja" 'magit-commit-extend
+       "gtt" 'magit-stash
+       "gta" 'magit-stash-apply
+       "gv" 'git-gutter:set-start-revision
        "gh" 'git-gutter-reset-to-head-parent
        "gr" 'git-gutter-reset-to-default
        "ps" 'profiler-start
