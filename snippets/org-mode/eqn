@@ -1,0 +1,7 @@
+#name : eqn
+#contributor : phye
+# --
+#+name: eqn:
+\begin{equation}
+${0}
+\end{equation}
