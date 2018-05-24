@@ -61,6 +61,13 @@
     )))
 ;; }}
 
+;; {{ latex
+(require-package 'company-math)
+(require 'company-math)
+(add-to-list 'company-backends 'company-math-symbols-latex)
+(add-to-list 'company-backends 'company-math-symbols-unicode)
+;; }}
+
 ;; {{ Org Mode
 (setq org-tag-alist '((:startgroup . nil) ;; tag group for address
                       ("@work" . ?w)
