@@ -106,7 +106,7 @@
        "~/ws/OrgNotes/PlanLearning.org"
        "~/ws/OrgNotes/PlanLife.org"
        "~/ws/OrgNotes/life/Birthday.org"
-       "~/ws/OrgNotes/Work@Cisco.org")))
+       "~/ws/OrgNotes/Work.org")))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
