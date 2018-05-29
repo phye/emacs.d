@@ -128,6 +128,8 @@
        "sl" 'org-store-link
        "il" 'org-insert-link)
 
+(setq org-src-window-setup 'current-window)
+
 ;; Org Mode Capture
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/ws/OrgNotes/gtd.org" "Tasks")
