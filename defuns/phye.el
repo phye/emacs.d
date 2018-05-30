@@ -9,6 +9,7 @@
 
 ;; buffer related {{
 (global-set-key (kbd "C-x M") 'manual-entry)
+(set-language-environment "utf-8")
 ;; }}
 
 ;; {{
