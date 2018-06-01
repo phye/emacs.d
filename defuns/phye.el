@@ -11,6 +11,9 @@
 (global-set-key (kbd "C-x M") 'manual-entry)
 ;; }}
 
+;; {{
+(setq linum-format "%d ")
+;; }}
 
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
@@ -45,9 +48,11 @@
 (require-package 'calfw)
 (require-package 'calfw-org)
 (require-package 'calfw-ical)
+(require-package 'protobuf-mode)
 (require 'calfw)
 (require 'calfw-org)
 (require 'calfw-ical)
+(require 'protobuf-mode)
 
 (defun my-open-calendar ()
   (interactive)
