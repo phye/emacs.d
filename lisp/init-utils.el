@@ -193,6 +193,7 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
   (> (nth 7 (file-attributes file))
      (* 5000 64)))
 
+(defvar force-buffer-file-temp-p nil)
 (defun is-buffer-file-temp ()
   (interactive)
   "If (buffer-file-name) is nil or a temp file or HTML file converted from org file"
@@ -212,6 +213,8 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
      ((and (string-match "\.html$" f)
            (file-exists-p (setq org (replace-regexp-in-string "\.html$" ".org" f))))
       ;; file is a html file exported from org-mode
+      (setq rlt t))
+     (force-buffer-file-temp-p
       (setq rlt t))
      (t
       (setq cached-normal-file-full-path f)
@@ -279,24 +282,35 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
 
 (defun my-gclip ()
   (unless (featurep 'simpleclip) (require 'simpleclip))
-  (if simpleclip-works (simpleclip-get-contents)
-    (cond
-     ((eq system-type 'darwin)
-      (with-output-to-string
-        (with-current-buffer standard-output
-          (call-process "/usr/bin/pbpaste" nil t nil "-Prefer" "txt"))))
-     ((eq system-type 'cygwin)
-      (with-output-to-string
-        (with-current-buffer standard-output
-          (call-process "getclip" nil t nil))))
-     ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
-      (with-output-to-string
-        (with-current-buffer standard-output
-          (call-process "xsel" nil t nil "--clipboard" "--output")))))))
+  (cond
+   (simpleclip-works
+    (simpleclip-get-contents))
+   ((eq system-type 'darwin)
+    (with-output-to-string
+      (with-current-buffer standard-output
+        (call-process "/usr/bin/pbpaste" nil t nil "-Prefer" "txt"))))
+   ((eq system-type 'cygwin)
+    (with-output-to-string
+      (with-current-buffer standard-output
+        (call-process "getclip" nil t nil))))
+   ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
+    (let* ((powershell-program (executable-find "powershell.exe")))
+           (cond
+            (powershell-program
+             ;; PowerLine adds extra white space character at the end of text
+             (string-trim-right
+              (with-output-to-string
+                (with-current-buffer standard-output
+                  (call-process powershell-program nil t nil "-command" "Get-Clipboard")))))
+            (t
+             (with-output-to-string
+               (with-current-buffer standard-output
+                 (call-process "xsel" nil t nil "--clipboard" "--output")))))))))
 
 (defun my-pclip (str-val)
-  (if simpleclip-works (simpleclip-set-contents str-val)
     (cond
+     (simpleclip-works
+      (simpleclip-set-contents str-val))
      ((eq system-type 'darwin)
       (with-temp-buffer
         (insert str-val)
@@ -306,9 +320,15 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
         (insert str-val)
         (call-process-region (point-min) (point-max) "putclip")))
      ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
-      (with-temp-buffer
-        (insert str-val)
-        (call-process-region (point-min) (point-max) "xsel" nil nil nil "--clipboard" "--input"))))))
+      (let* ((win64-clip-program (executable-find "clip.exe")))
+        (with-temp-buffer
+          (insert str-val)
+          (cond
+           ;; Linux Subsystem on Windows 10
+           (win64-clip-program
+            (call-process-region (point-min) (point-max) win64-clip-program))
+           (t
+            (call-process-region (point-min) (point-max) "xsel" nil nil nil "--clipboard" "--input"))))))))
 ;; }}
 
 (defun make-concated-string-from-clipboard (concat-char)
@@ -341,8 +361,7 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
       (local-set-key (kbd "C-c C-c")
                      (lambda ()
                        (interactive)
-                       (diff-region-exit-from-certain-buffer ,buffer-name)))
-      )))
+                       (diff-region-exit-from-certain-buffer ,buffer-name))))))
 
 ;; }}
 (provide 'init-utils)
