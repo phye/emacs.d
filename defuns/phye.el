@@ -12,10 +12,6 @@
 (set-language-environment "utf-8")
 ;; }}
 
-;; {{
-(setq linum-format "%d ")
-;; }}
-
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
