@@ -130,6 +130,10 @@
        "sl" 'org-store-link
        "il" 'org-insert-link)
 
+(nvmap :prefix "SPC"
+       "nn" 'highlight-symbol-next
+       "pp" 'highlight-symbol-prev)
+
 (setq org-src-window-setup 'current-window)
 
 ;; Org Mode Capture
