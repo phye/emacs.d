@@ -217,8 +217,11 @@
       (message "NO COMPILATION ERRORS!"))))
 
 (defun generic-prog-mode-hook-setup ()
-  ;; turn off `linum-mode' when there are more than 5000 lines
-  (if (buffer-too-big-p) (linum-mode -1))
+  (when (buffer-too-big-p)
+    ;; Turn off `linum-mode' when there are more than 5000 lines
+    (linum-mode -1)
+    (when (should-use-minimum-resource)
+      (font-lock-mode -1)))
 
   (unless (is-buffer-file-temp)
 
@@ -479,18 +482,6 @@ See \"Reusing passwords for several connections\" from INFO.
       (insert song)
       (goto-line 0))))
 ;; }}
-
-;; @see http://www.emacswiki.org/emacs/EasyPG#toc4
-(defadvice epg--start (around advice-epg-disable-agent disable)
-  "Make epg--start not able to find a gpg-agent"
-  (let ((agent (getenv "GPG_AGENT_INFO")))
-    (setenv "GPG_AGENT_INFO" nil)
-    ad-do-it
-    (setenv "GPG_AGENT_INFO" agent)))
-
-;; `apt-get install pinentry-tty` if using emacs-nox
-;; Create `~/.gnupg/gpg-agent.conf' container one line `pinentry-program /usr/bin/pinentry-curses`
-(setq epa-pinentry-mode 'loopback)
 
 ;; https://github.com/abo-abo/ace-window
 ;; `M-x ace-window ENTER m` to swap window
@@ -1009,4 +1000,8 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
                          emms-player-vlc-playlist))
 ;; }}
 
+;; @see https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
+(unless *no-memory*
+  ;; speed up font rendering for special characters
+  (setq inhibit-compacting-font-caches t))
 (provide 'init-misc)

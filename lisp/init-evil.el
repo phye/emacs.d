@@ -502,6 +502,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
                                                     (shell-command-to-string (format "git show %s" (car (split-string item "|" t))))))))))
                 (ffip-show-diff 0)))
        "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
+       "gl" 'my-git-log-trace-definition ; find history of a function or range
        "sf" 'counsel-git-show-file
        "sh" 'my-select-from-search-text-history
        "df" 'counsel-git-diff-file
@@ -584,8 +585,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "sl" 'sort-lines
        "ulr" 'uniquify-all-lines-region
        "ulb" 'uniquify-all-lines-buffer
-       "lj" 'moz-load-js-file-and-send-it
-       "mr" 'moz-console-clear
        "fs" 'ffip-save-ivy-last
        "fr" 'ffip-ivy-resume
        "fc" 'cp-ffip-ivy-last
@@ -670,6 +669,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (nvmap :prefix "SPC"
        "ee" 'my-swap-sexps
        "pc" 'my-dired-redo-from-commands-history
+       "pw" 'pwd
        "cc" 'my-dired-redo-last-command
        "ss" 'wg-create-workgroup ; save windows layout
        "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
@@ -884,4 +884,18 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (evil-find-char-pinyin-mode 1)
 ;; }}
 
+;; {{ evil-args
+;; bind evil-args text objects
+(define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
+(define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
+
+;; bind evil-forward/backward-args
+(define-key evil-normal-state-map "L" 'evil-forward-arg)
+(define-key evil-normal-state-map "H" 'evil-backward-arg)
+(define-key evil-motion-state-map "L" 'evil-forward-arg)
+(define-key evil-motion-state-map "H" 'evil-backward-arg)
+
+;; bind evil-jump-out-args
+(define-key evil-normal-state-map "K" 'evil-jump-out-args)
+;; }}
 (provide 'init-evil)

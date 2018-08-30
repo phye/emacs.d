@@ -301,6 +301,7 @@
 (require-package 'evil-surround)
 (require-package 'evil-visualstar)
 (require-package 'evil-lion)
+(require-package 'evil-args)
 (require-package 'slime)
 (require-package 'counsel-css)
 (require-package 'auto-package-update)
