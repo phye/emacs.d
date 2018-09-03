@@ -5,6 +5,12 @@
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 
+;; Don't pair double quotes
+;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
+(setq electric-pair-inhibit-predicate
+      (lambda (c)
+        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+
 ;; }}
 
 ;; buffer related {{
