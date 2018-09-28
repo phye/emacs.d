@@ -218,9 +218,10 @@
 
 (defun my-electric-pair-inhibit (char)
   (or
-   (and (memq char (34 39))
-        (eq 'font-lock-string-face (get-text-property (point) 'face))
-        (not (eq 'font-lock-string-face (get-text-property (1+ (point)) 'face))))
+   ;; input single/double quotes at the end of word
+   (and (memq char '(34 39))
+        (char-before (1- (point)))
+        (eq (char-syntax (char-before (1- (point)))) ?w))
    (electric-pair-conservative-inhibit char)))
 
 (defun generic-prog-mode-hook-setup ()
