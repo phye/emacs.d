@@ -310,7 +310,7 @@
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
 (require-package 'org-journal)
 (require-package 'go-guru)
-(require-package 'go-autocomplete)
+(require-package 'company-go)
 (require-package 'shackle)
 (require-package 'toc-org)
 
