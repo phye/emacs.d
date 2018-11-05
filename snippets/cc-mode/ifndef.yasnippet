@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: ifndef
+# key: ifn
+# --
+#ifndef ${1:_`(upcase (replace-regexp-in-string "\\." "_" (file-relative-name (buffer-file-name))))`_}
+#define $1
+$0
+#endif
