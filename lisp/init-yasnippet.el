@@ -1,23 +1,18 @@
-;; loading yasnippet will slow the startup
-;; but it's necessary cost
-(require 'yasnippet)
+;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; my private snippets, should be placed before enabling yasnippet
 (setq my-yasnippets (expand-file-name "~/my-yasnippets"))
-(if (and  (file-exists-p my-yasnippets) (not (member my-yasnippets yas-snippet-dirs)))
-    (add-to-list 'yas-snippet-dirs my-yasnippets))
 
-(yas-reload-all)
 (defun yasnippet-generic-setup-for-mode-hook ()
-  (unless (is-buffer-file-temp)
-    (yas-minor-mode 1)))
+  (unless (is-buffer-file-temp) (yas-minor-mode 1)))
 
 (add-hook 'prog-mode-hook 'yasnippet-generic-setup-for-mode-hook)
 (add-hook 'text-mode-hook 'yasnippet-generic-setup-for-mode-hook)
-;; below modes does NOT inherit from prog-mode
+;; {{ modes do NOT inherit from prog-mode
 (add-hook 'cmake-mode-hook 'yasnippet-generic-setup-for-mode-hook)
 (add-hook 'web-mode-hook 'yasnippet-generic-setup-for-mode-hook)
 (add-hook 'scss-mode-hook 'yasnippet-generic-setup-for-mode-hook)
+;; }}
 
 (defun my-yas-reload-all ()
   "Compile and reload yasnippets.  Run the command after adding new snippets."
@@ -27,8 +22,7 @@
   (yas-minor-mode 1))
 
 (defun my-yas-field-to-statement(str sep)
-  "If STR=='a.b.c' and SEP=' && ',
-'a.b.c' => 'a && a.b && a.b.c'"
+  "If STR=='a.b.c' and SEP=' && ', 'a.b.c' => 'a && a.b && a.b.c'"
   (let ((a (split-string str "\\.")) rlt)
     (mapconcat 'identity
                (mapcar (lambda (elem)
@@ -52,9 +46,8 @@
     rlt))
 
 (defun my-yas-camelcase-to-string-list (str)
-  "Convert camelcase string into string list"
-  (let ((old-case case-fold-search)
-        rlt)
+  "Convert camelcase STR into string list."
+  (let* ((old-case case-fold-search) rlt)
     (setq case-fold-search nil)
     (setq rlt (replace-regexp-in-string "\\([A-Z]+\\)" " \\1" str t))
     (setq rlt (replace-regexp-in-string "\\([A-Z]+\\)\\([A-Z][a-z]+\\)" "\\1 \\2" rlt t))
@@ -63,17 +56,14 @@
     (split-string rlt " ")))
 
 (defun my-yas-camelcase-to-downcase (str)
-  (let ((l (my-yas-camelcase-to-string-list str))
-        (old-case case-fold-search)
-        rlt)
-    (setq case-fold-search nil)
-    (setq rlt (mapcar (lambda (elem)
-                        (if (string-match "^[A-Z]+$" elem)
-                            elem
-                          (downcase elem))
-                        ) l))
-    (setq case-fold-search old-case)
-    (mapconcat 'identity rlt " ")))
+  (let* ((l (my-yas-camelcase-to-string-list str))
+         (case-fold-search nil))
+    (mapconcat 'identity (mapcar (lambda (elem)
+                                   (if (string-match "^[A-Z]+$" elem)
+                                       elem
+                                     (downcase elem)))
+                                 l)
+               " ")))
 
 (defun my-yas-escape-string (s)
   (let* ((rlt (replace-regexp-in-string "'" "\\\\'" s)))
@@ -98,16 +88,13 @@
      ((memq major-mode '(emacs-lisp-mode lisp-interaction-mode))
       (setq rlt (concat (mapconcat (lambda (i) (format "%s=%%s" i)) top-kill-ring ", ")
                         "\" "
-                        (mapconcat (lambda (i) (format "%s" i)) top-kill-ring " ")
-                        )))
+                        (mapconcat (lambda (i) (format "%s" i)) top-kill-ring " "))))
      ((memq major-mode '(c-mode c++-mode))
       (setq rlt (concat (mapconcat (lambda (i) (format "%s=%%s" i)) top-kill-ring ", ")
                         "\\n\", "
-                        (mapconcat (lambda (i) (format "%s" i)) top-kill-ring ", ")
-                        )))
+                        (mapconcat (lambda (i) (format "%s" i)) top-kill-ring ", "))))
      (t (setq rlt "")))
     rlt))
-
 (add-to-list 'auto-mode-alist '("\\.yasnippet\\'" . snippet-mode))
 
 (eval-after-load 'yasnippet
@@ -116,17 +103,22 @@
      (setq-default mode-require-final-newline nil)
      ;; (message "yas-snippet-dirs=%s" (mapconcat 'identity yas-snippet-dirs ":"))
 
-     ;; default hotkey `C-c C-s` is still valid
-     ;; give yas-dropdown-prompt in yas/prompt-functions a chance
+     ;; Use `yas-dropdown-prompt' if possible. It requires `dropdown-list'.
      (setq yas-prompt-functions '(yas-dropdown-prompt
                                   yas-ido-prompt
                                   yas-completing-prompt))
 
-     ;; use yas-completing-prompt when ONLY when `M-x yas-insert-snippet'
+     ;; use `yas-completing-prompt' when ONLY when `M-x yas-insert-snippet'
      ;; thanks to capitaomorte for providing the trick.
      (defadvice yas-insert-snippet (around use-completing-prompt activate)
        "Use `yas-completing-prompt' for `yas-prompt-functions' but only here..."
        (let* ((yas-prompt-functions '(yas-completing-prompt)))
-         ad-do-it))))
+         ad-do-it))
+
+     (when (and  (file-exists-p my-yasnippets)
+                 (not (member my-yasnippets yas-snippet-dirs)))
+       (add-to-list 'yas-snippet-dirs my-yasnippets))
+
+     (yas-reload-all)))
 
 (provide 'init-yasnippet)

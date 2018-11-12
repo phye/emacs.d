@@ -1,3 +1,5 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 ;; elisp version of try...catch...finally
 (defmacro safe-wrap (fn &rest clean-up)
   `(unwind-protect
@@ -118,10 +120,6 @@ Ported from 'https://github.com/fatih/camelcase/blob/master/camelcase.go'."
       (setq pos (match-end group)))
     result))
 
-(defun string-rtrim (str)
-  "Remove trailing whitespace from `STR'."
-  (replace-regexp-in-string "[ \t\n]*$" "" str))
-
 ;; Find the directory containing a given library
 (defun directory-of-library (library-name)
   "Return the directory in which the `LIBRARY-NAME' load file is found."
@@ -132,38 +130,33 @@ Ported from 'https://github.com/fatih/camelcase/blob/master/camelcase.go'."
   (let* ((pattern (concat "^" (file-name-as-directory directory))))
     (if (string-match-p pattern file) file)))
 
+(defun my-prepare-candidate-fit-into-screen (s)
+  (let* ((w (frame-width))
+         ;; display kill ring item in one line
+         (key (replace-regexp-in-string "[ \t]*[\n\r]+[ \t]*" "\\\\n" s)))
+    ;; strip the whitespace
+    (setq key (replace-regexp-in-string "^[ \t]+" "" key))
+    ;; fit to the minibuffer width
+    (if (> (length key) w)
+        (setq key (concat (substring key 0 (- w 4)) "...")))
+    (cons key s)))
+
 (defmacro my-select-from-kill-ring (fn &optional n)
-  "Use `browse-kill-ring' if it exists and N is 1.
-If N > 1, assume just yank the Nth item in `kill-ring'.
-If N is nil, use `ivy-mode' to browse the `kill-ring'."
+  "If N > 1, yank the Nth item in `kill-ring'.
+If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive "P")
-  `(cond
-    ((or (not ,n) (and (= ,n 1) (not (fboundp 'browse-kill-ring))))
-     ;; remove duplicates in `kill-ring'
-     (let* ((candidates (cl-remove-if
-                         (lambda (s)
-                           (or (< (length s) 5)
-                               (string-match "\\`[\n[:blank:]]+\\'" s)))
-                         (delete-dups kill-ring))))
-       (let* ((ivy-height (/ (frame-height) 2)))
-         (ivy-read "Browse `kill-ring':"
-                   (mapcar
-                    (lambda (s)
-                      (let* ((w (frame-width))
-                             ;; display kill ring item in one line
-                             (key (replace-regexp-in-string "[ \t]*[\n\r]+[ \t]*" "\\\\n" s)))
-                        ;; strip the whitespace
-                        (setq key (replace-regexp-in-string "^[ \t]+" "" key))
-                        ;; fit to the minibuffer width
-                        (if (> (length key) w)
-                            (setq key (concat (substring key 0 (- w 4)) "...")))
-                        (cons key s)))
-                    candidates)
-                   :action #',fn))))
-    ((= ,n 1)
-     (browse-kill-ring))))
+  `(let* ((candidates (cl-remove-if
+                       (lambda (s)
+                         (or (< (length s) 5)
+                             (string-match-p "\\`[\n[:blank:]]+\\'" s)))
+                       (delete-dups kill-ring)))
+          (ivy-height (/ (frame-height) 2)))
+     (ivy-read "Browse `kill-ring':"
+               (mapcar #'my-prepare-candidate-fit-into-screen candidates)
+               :action #',fn)))
 
 (defun my-insert-str (str)
+  "Insert STR into current buffer."
   ;; ivy8 or ivy9
   (if (consp str) (setq str (cdr str)))
   ;; evil-mode?
@@ -174,7 +167,8 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
            (not (eobp)))
       (forward-char))
   ;; insert now
-  (insert str))
+  (insert str)
+  str)
 
 (defun my-line-str (&optional line-end)
   (buffer-substring-no-properties (line-beginning-position)
@@ -253,8 +247,8 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
 (defvar cached-normal-file-full-path nil)
 
 (defun buffer-too-big-p ()
-  (or (> (buffer-size) (* 5000 64))
-      (> (line-number-at-pos (point-max)) 5000)))
+  ;; 5000 lines
+  (> (buffer-size) (* 5000 80)))
 
 (defun file-too-big-p (file)
   (> (nth 7 (file-attributes file))
@@ -326,7 +320,7 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
 ;; {{ simpleclip has problem on Emacs 25.1
 (defun test-simpleclip ()
   (unwind-protect
-      (let (retval)
+      (let* (retval)
         (condition-case ex
             (progn
               (simpleclip-set-contents "testsimpleclip!")
@@ -334,21 +328,12 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
                     (string= "testsimpleclip!"
                              (simpleclip-get-contents))))
           ('error
-           (message (format "Please install %s to support clipboard from terminal."
-                            (cond
-                             (*unix*
-                              "xsel or xclip")
-                             ((or *cygwin* *win64*)
-                              "cygutils-extra from Cygwin")
-                             (t
-                              "CLI clipboard tools"))))
            (setq retval nil)))
         retval)))
-
 (setq simpleclip-works (test-simpleclip))
 
 (defun my-gclip ()
-  (unless (featurep 'simpleclip) (require 'simpleclip))
+  (local-require 'simpleclip)
   (cond
    (simpleclip-works
     (simpleclip-get-contents))
@@ -365,7 +350,7 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
            (cond
             (powershell-program
              ;; PowerLine adds extra white space character at the end of text
-             (string-trim-right
+             (s-trim-right
               (with-output-to-string
                 (with-current-buffer standard-output
                   (call-process powershell-program nil t nil "-command" "Get-Clipboard")))))

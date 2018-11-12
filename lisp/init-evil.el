@@ -1,43 +1,9 @@
-;; @see https://bitbucket.org/lyro/evil/issue/360/possible-evil-search-symbol-forward
-;; evil 1.0.8 search word instead of symbol
-(setq evil-symbol-word-search t)
-
-;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings
-(defmacro adjust-major-mode-keymap-with-evil (m &optional r)
-  `(eval-after-load (quote ,(if r r m))
-    '(progn
-       (evil-make-overriding-map ,(intern (concat m "-mode-map")) 'normal)
-       ;; force update evil keymaps after git-timemachine-mode loaded
-       (add-hook (quote ,(intern (concat m "-mode-hook"))) #'evil-normalize-keymaps))))
-
-(adjust-major-mode-keymap-with-evil "git-timemachine")
-(adjust-major-mode-keymap-with-evil "browse-kill-ring")
-
-(require 'evil)
-
-;; @see https://bitbucket.org/lyro/evil/issue/342/evil-default-cursor-setting-should-default
-;; Cursor is alway black because of evil.
-;; Here is the workaround
-(setq evil-default-cursor t)
-
-;; {{ multiple-cursors
-;; step 1, select thing in visual-mode (OPTIONAL)
-;; step 2, `mc/mark-all-like-dwim' or `mc/mark-all-like-this-in-defun'
-;; step 3, `ace-mc-add-multiple-cursors' to remove cursor, press RET to confirm
-;; step 4, press s or S to start replace
-;; step 5, press C-g to quit multiple-cursors
-(define-key evil-visual-state-map (kbd "mn") 'mc/mark-next-like-this)
-(define-key evil-visual-state-map (kbd "ma") 'mc/mark-all-like-this-dwim)
-(define-key evil-visual-state-map (kbd "md") 'mc/mark-all-like-this-in-defun)
-(define-key evil-visual-state-map (kbd "mm") 'ace-mc-add-multiple-cursors)
-(define-key evil-visual-state-map (kbd "ms") 'ace-mc-add-single-cursor)
-;; }}
+;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; enable evil-mode
 (evil-mode 1)
 
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
-(require 'evil-surround)
 (global-evil-surround-mode 1)
 (defun evil-surround-prog-mode-hook-setup ()
   (push '(47 . ("/" . "/")) evil-surround-pairs-alist)
@@ -67,7 +33,6 @@
 ;; }}
 
 ;; {{ For example, press `viW*`
-(require 'evil-visualstar)
 (setq evil-visualstar/persistent t)
 (global-evil-visualstar-mode t)
 ;; }}
@@ -75,24 +40,22 @@
 
 ;; ffip-diff-mode (read only) evil setup
 (defun ffip-diff-mode-hook-setup ()
-    (evil-local-set-key 'normal "K" 'diff-hunk-prev)
-    (evil-local-set-key 'normal "J" 'diff-hunk-next)
-    (evil-local-set-key 'normal "P" 'diff-file-prev)
-    (evil-local-set-key 'normal "N" 'diff-file-next)
-    (evil-local-set-key 'normal "q" 'ffip-diff-quit)
-    (evil-local-set-key 'normal (kbd "RET") 'ffip-diff-find-file)
-    ;; "C-c C-a" is binding to `diff-apply-hunk' in `diff-mode'
-    (evil-local-set-key 'normal "a" 'ffip-diff-apply-hunk)
-    (evil-local-set-key 'normal "o" 'ffip-diff-find-file))
+  (evil-local-set-key 'normal "K" 'diff-hunk-prev)
+  (evil-local-set-key 'normal "J" 'diff-hunk-next)
+  (evil-local-set-key 'normal "P" 'diff-file-prev)
+  (evil-local-set-key 'normal "N" 'diff-file-next)
+  (evil-local-set-key 'normal "q" 'ffip-diff-quit)
+  (evil-local-set-key 'normal (kbd "RET") 'ffip-diff-find-file)
+  ;; "C-c C-a" is binding to `diff-apply-hunk' in `diff-mode'
+  (evil-local-set-key 'normal "a" 'ffip-diff-apply-hunk)
+  (evil-local-set-key 'normal "o" 'ffip-diff-find-file))
 (add-hook 'ffip-diff-mode-hook 'ffip-diff-mode-hook-setup)
-
-(require 'evil-mark-replace)
 
 ;; {{ define my own text objects, works on evil v1.0.9 using older method
 ;; @see http://stackoverflow.com/questions/18102004/emacs-evil-mode-how-to-create-a-new-text-object-to-select-words-with-any-non-sp
 (defmacro define-and-bind-text-object (key start-regex end-regex)
-  (let ((inner-name (make-symbol "inner-name"))
-        (outer-name (make-symbol "outer-name")))
+  (let* ((inner-name (make-symbol "inner-name"))
+         (outer-name (make-symbol "outer-name")))
     `(progn
        (evil-define-text-object ,inner-name (count &optional beg end type)
          (evil-select-paren ,start-regex ,end-regex beg end type count nil))
@@ -128,14 +91,14 @@
 (defun evil-filepath-is-separator-char (ch)
   "Check ascii table that CH is slash characters.
 If the character before and after CH is space or tab, CH is NOT slash"
-  (let (rlt prefix-ch postfix-ch)
+  (let* (rlt prefix-ch postfix-ch)
     (when (and (> (point) (point-min)) (< (point) (point-max)))
-        (save-excursion
-          (backward-char)
-          (setq prefix-ch (following-char)))
-        (save-excursion
-          (forward-char)
-          (setq postfix-ch (following-char))))
+      (save-excursion
+        (backward-char)
+        (setq prefix-ch (following-char)))
+      (save-excursion
+        (forward-char)
+        (setq postfix-ch (following-char))))
     (if (and (not (or (= prefix-ch 32) (= postfix-ch 32)))
              (or (= ch 47) (= ch 92)) )
         (setq rlt t))
@@ -159,13 +122,13 @@ If the character before and after CH is space or tab, CH is NOT slash"
               127))))
 
 (defun evil-filepath-calculate-path (b e)
-  (let (rlt f)
+  (let* (rlt f)
     (when (and b e)
       (setq b (+ 1 b))
       (when (save-excursion
-                (goto-char e)
-                (setq f (evil-filepath-search-forward-char 'evil-filepath-is-separator-char t))
-                (and f (>= f b)))
+              (goto-char e)
+              (setq f (evil-filepath-search-forward-char 'evil-filepath-is-separator-char t))
+              (and f (>= f b)))
         (setq rlt (list b (+ 1 f) (- e 1)))))
     rlt))
 
@@ -201,11 +164,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 (defun evil-filepath-extract-region ()
   "Find the closest file path"
-  (let* (rlt
-         b
-         f1
-         f2)
-
+  (let* (rlt b f1 f2)
     (if (and (not (evil-filepath-not-path-char (following-char)))
              (setq rlt (evil-filepath-get-path-already-inside)))
         ;; maybe (point) is in the middle of the path
@@ -301,8 +260,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
         (vc-log-edit-mode . emacs)
         (magit-log-edit-mode . emacs)
         (inf-ruby-mode . emacs)
-        (direx:direx-mode . emacs)
-        (yari-mode . emacs)
         (erc-mode . emacs)
         (neotree-mode . emacs)
         (w3m-mode . emacs)
@@ -325,9 +282,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
         (ivy-occur-mode . emacs)
         (ivy-occur-grep-mode . normal)
         (messages-buffer-mode . normal)
-        (browse-kill-ring-mode . normal)
-        (js2-error-buffer-mode . emacs)
-        )
+        (js2-error-buffer-mode . emacs))
       do (evil-set-initial-state mode state))
 ;; }}
 
@@ -340,14 +295,13 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (define-key evil-normal-state-map "Y" (kbd "y$"))
 ;; (define-key evil-normal-state-map (kbd "RET") 'ivy-switch-buffer-by-pinyin) ; RET key is preserved for occur buffer
 (define-key evil-normal-state-map "go" 'goto-char)
-(define-key evil-normal-state-map (kbd "M-y") 'counsel-browse-kill-ring)
 (define-key evil-normal-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 (define-key evil-visual-state-map (kbd "C-]") 'counsel-etags-find-tag-at-point)
 (define-key evil-insert-state-map (kbd "C-x C-n") 'evil-complete-next-line)
 (define-key evil-insert-state-map (kbd "C-x C-p") 'evil-complete-previous-line)
 (define-key evil-insert-state-map (kbd "C-]") 'aya-expand)
 
-(defun my-search-defun-from-pos (pos)
+(defun my-search-defun-from-pos (search pos)
   (evil-search search t t pos)
   ;; ignore this.f1 = this.fn.bind(this) code
   (when (and (memq major-mode '(js-mode js2-mode rjsx-mode))
@@ -389,24 +343,16 @@ If the character before and after CH is space or tab, CH is NOT slash"
         (when (and (markerp ipos)
                    (eq (marker-buffer ipos) (current-buffer)))
           (setq ipos (marker-position ipos)))
-         ;; imenu found a position, so go there and
-         ;; highlight the occurrence
-        (my-search-defun-from-pos (if (numberp ipos) ipos (point-min))))
+        ;; imenu found a position, so go there and
+        ;; highlight the occurrence
+        (my-search-defun-from-pos search (if (numberp ipos) ipos (point-min))))
        ;; otherwise just go to first occurrence in buffer
        (t
-        (my-search-defun-from-pos (point-min)))))))
+        (my-search-defun-from-pos search (point-min)))))))
 ;; use "gt", someone might prefer original `evil-goto-definition'
 (define-key evil-motion-state-map "gt" 'my-evil-goto-definition)
 
-(require 'evil-matchit)
 (global-evil-matchit-mode 1)
-
-;; press ",xx" to expand region
-;; then press "z" to contract, "x" to expand
-(eval-after-load "evil"
-  '(progn
-     (define-key global-map (kbd "C-x C-z") 'switch-to-shell-or-ansi-term)
-     (setq expand-region-contract-fast-key "z")))
 
 ;; I learn this trick from ReneFroger, need latest expand-region
 ;; @see https://github.com/redguardtoo/evil-matchit/issues/38
@@ -425,8 +371,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; {{ use `,` as leader key
 (nvmap :prefix ","
-       "=" 'increase-default-font-height ; GUI emacs only
-       "-" 'decrease-default-font-height ; GUI emacs only
        "bf" 'beginning-of-defun
        "bu" 'backward-up-list
        "bb" 'back-to-previous-buffer
@@ -442,7 +386,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "af" 'ace-maximize-window
        "ac" 'aya-create
        "zz" 'paste-from-x-clipboard ; used frequently
-       "cy" 'strip-convert-lines-into-one-big-string
        "bs" '(lambda () (interactive) (goto-edge-by-comparing-font-face -1))
        "es" 'goto-edge-by-comparing-font-face
        "vj" 'my-validate-json-or-js-expression
@@ -496,10 +439,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
               (interactive)
               (let* ((ffip-diff-backends
                       '(("Show git commit" . (let* ((git-cmd "git --no-pager log --date=short --pretty=format:'%h|%ad|%s|%an'")
-                                                       (collection (nonempty-lines (shell-command-to-string git-cmd)))
-                                                       (item (ffip-completing-read "git log:" collection)))
-                                                  (when item
-                                                    (shell-command-to-string (format "git show %s" (car (split-string item "|" t))))))))))
+                                                    (collection (nonempty-lines (shell-command-to-string git-cmd)))
+                                                    (item (ffip-completing-read "git log:" collection)))
+                                               (when item
+                                                 (shell-command-to-string (format "git show %s" (car (split-string item "|" t))))))))))
                 (ffip-show-diff 0)))
        "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
        "gl" 'my-git-log-trace-definition ; find history of a function or range
@@ -514,7 +457,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "rlu" 'run-lua
        "tci" 'toggle-company-ispell
        "kb" 'kill-buffer-and-window ;; "k" is preserved to replace "C-g"
-       "it" 'issue-tracker-increment-issue-id-under-cursor
        "ls" 'highlight-symbol
        "lq" 'highlight-symbol-query-replace
        "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
@@ -529,7 +471,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "tm" 'my-git-timemachine
        ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
        "ov" 'my-overview-of-current-buffer
-       "or" 'open-readme-in-git-root-directory
        "oo" 'compile
        "c$" 'org-archive-subtree ; `C-c $'
        ;; org-do-demote/org-do-premote support selected region
@@ -565,9 +506,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "si" 'evilmi-select-items
        "jb" 'js-beautify
        "jp" 'my-print-json-path
-       "sep" 'string-edit-at-point
-       "sec" 'string-edit-conclude
-       "sea" 'string-edit-abort
        "xe" 'eval-last-sexp
        "x0" 'delete-window
        "x1" 'delete-other-windows
@@ -578,13 +516,11 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "rw" 'rotate-windows
        "ru" 'undo-tree-save-state-to-register ; C-x r u
        "rU" 'undo-tree-restore-state-from-register ; C-x r U
-       "xt" 'toggle-window-split
+       "xt" 'toggle-two-split-window
        "uu" 'winner-undo
        "UU" 'winner-redo
        "to" 'toggle-web-js-offset
        "sl" 'sort-lines
-       "ulr" 'uniquify-all-lines-region
-       "ulb" 'uniquify-all-lines-buffer
        "fs" 'ffip-save-ivy-last
        "fr" 'ffip-ivy-resume
        "fc" 'cp-ffip-ivy-last
@@ -825,16 +761,15 @@ If the character before and after CH is space or tab, CH is NOT slash"
                                    (face-foreground 'mode-line))))
   (add-hook 'post-command-hook
             (lambda ()
-              (let ((color (cond ((minibufferp) default-color)
-                                 ((evil-insert-state-p) '("#e80000" . "#ffffff"))
-                                 ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
-                                 ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
-                                 (t default-color))))
+              (let* ((color (cond ((minibufferp) default-color)
+                                  ((evil-insert-state-p) '("#e80000" . "#ffffff"))
+                                  ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+                                  ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+                                  (t default-color))))
                 (set-face-background 'mode-line (car color))
                 (set-face-foreground 'mode-line (cdr color))))))
 
 ;; {{ evil-nerd-commenter
-(require 'evil-nerd-commenter)
 (evilnc-default-hotkeys)
 
 (defun my-imenu-comments ()
@@ -848,7 +783,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; {{ evil-exchange
 ;; press gx twice to exchange, gX to cancel
-(require 'evil-exchange)
 ;; change default key bindings (if you want) HERE
 ;; (setq evil-exchange-key (kbd "zx"))
 (evil-exchange-install)
@@ -876,11 +810,9 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;;  - "n" next, "N" previous (obviously we use "p" for yank)
 ;;  - "gg" the first occurence, "G" the last occurence
 ;;  - Please note ";;" or `avy-goto-char-timer' is also useful
-(require 'evil-iedit-state)
 ;; }}
 
-;; {{ Evil’s f/F/t/T commands with Pinyin supptt,
-(require 'evil-find-char-pinyin)
+;; {{ Evil’s f/F/t/T command can search Pinyin ,
 (evil-find-char-pinyin-mode 1)
 ;; }}
 
@@ -898,4 +830,47 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; bind evil-jump-out-args
 (define-key evil-normal-state-map "K" 'evil-jump-out-args)
 ;; }}
+
+;; press ",xx" to expand region
+;; then press "z" to contract, "x" to expand
+(eval-after-load "evil"
+  '(progn
+     (define-key global-map (kbd "C-x C-z") 'switch-to-shell-or-ansi-term)
+     (setq expand-region-contract-fast-key "z")
+
+     ;; @see https://bitbucket.org/lyro/evil/issue/360/possible-evil-search-symbol-forward
+     ;; evil 1.0.8 search word instead of symbol
+     (setq evil-symbol-word-search t)
+
+     ;; @see https://emacs.stackexchange.com/questions/9583/how-to-treat-underscore-as-part-of-the-word
+     (defalias #'forward-evil-word #'forward-evil-symbol)
+
+     ;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings
+     (defmacro adjust-major-mode-keymap-with-evil (m &optional r)
+       `(eval-after-load (quote ,(if r r m))
+          '(progn
+             (evil-make-overriding-map ,(intern (concat m "-mode-map")) 'normal)
+             ;; force update evil keymaps after git-timemachine-mode loaded
+             (add-hook (quote ,(intern (concat m "-mode-hook"))) #'evil-normalize-keymaps))))
+
+     (adjust-major-mode-keymap-with-evil "git-timemachine")
+
+     ;; {{ multiple-cursors
+     ;; step 1, select thing in visual-mode (OPTIONAL)
+     ;; step 2, `mc/mark-all-like-dwim' or `mc/mark-all-like-this-in-defun'
+     ;; step 3, `ace-mc-add-multiple-cursors' to remove cursor, press RET to confirm
+     ;; step 4, press s or S to start replace
+     ;; step 5, press C-g to quit multiple-cursors
+     (define-key evil-visual-state-map (kbd "mn") 'mc/mark-next-like-this)
+     (define-key evil-visual-state-map (kbd "ma") 'mc/mark-all-like-this-dwim)
+     (define-key evil-visual-state-map (kbd "md") 'mc/mark-all-like-this-in-defun)
+     (define-key evil-visual-state-map (kbd "mm") 'ace-mc-add-multiple-cursors)
+     (define-key evil-visual-state-map (kbd "ms") 'ace-mc-add-single-cursor)
+     ;; }}
+
+     ;; @see https://bitbucket.org/lyro/evil/issue/342/evil-default-cursor-setting-should-default
+     ;; Cursor is alway black because of evil.
+     ;; Here is the workaround
+     (setq evil-default-cursor t)))
+
 (provide 'init-evil)

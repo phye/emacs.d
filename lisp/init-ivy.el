@@ -1,5 +1,37 @@
-(require 'counsel)
-(ivy-mode 1) ;; magit needs this
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
+(eval-after-load 'counsel
+  '(progn
+     ;; automatically pick up cygwin cli tools for counse
+     (when *win64*
+       (let* ((path (getenv "path"))
+              (cygpath (or (and (file-exists-p "c:/cygwin64/bin") "c:/cygwin64/bin")
+                           (and (file-exists-p "d:/cygwin64/bin") "d:/cygwin64/bin")
+                           (and (file-exists-p "e:/cygwin64/bin") "e:/cygwin64/bin"))))
+         (unless (string-match-p cygpath counsel-git-cmd)
+           (setq counsel-git-cmd (concat cygpath "/" counsel-git-cmd)))
+         (unless (string-match-p cygpath counsel-git-grep-cmd-default)
+           (setq counsel-git-grep-cmd-default (concat cygpath "/" counsel-git-grep-cmd-default)))
+         ;; ;; git-log does not work
+         ;; (unless (string-match-p cygpath counsel-git-log-cmd)
+         ;;   (setq counsel-git-log-cmd (concat "GIT_PAGER="
+         ;;                                     cygpath
+         ;;                                     "/cat "
+         ;;                                     cygpath
+         ;;                                     "/git log --grep '%s'")))
+         (unless (string-match-p cygpath counsel-grep-base-command)
+           (setq counsel-grep-base-command (concat cygpath "/" counsel-grep-base-command)))))
+
+     ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
+     ;; press "M-o" to choose ivy action
+     (ivy-set-actions
+      'counsel-find-file
+      '(("j" find-file-other-frame "other frame")
+        ("b" counsel-find-file-cd-bookmark-action "cd bookmark")
+        ("x" counsel-find-file-extern "open externally")
+        ("d" delete-file "delete")
+        ("r" counsel-find-file-as-root "open as root")))))
+
 ;; not good experience
 ;; (setq ivy-use-virtual-buffers t)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
@@ -9,7 +41,7 @@
 
 ;; {{ @see http://oremacs.com/2015/04/19/git-grep-ivy/
 (defun counsel-read-keyword (hint &optional default-when-no-active-region)
-  (let (keyword)
+  (let* (keyword)
     (cond
      ((region-active-p)
       (setq keyword (counsel-unquote-regex-parens (my-selected-str)))
@@ -25,8 +57,8 @@
   "Find a file on `recentf-list'.
 If N is not nil, only list files in current project."
   (interactive "P")
-  (require 'recentf)
-  (recentf-mode)
+  (unless (featurep 'recentf) (require 'recentf))
+  (recentf-mode 1)
   (let* ((files (mapcar #'substring-no-properties recentf-list))
          (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
     (when (and n root-dir)
@@ -41,21 +73,17 @@ If N is not nil, only list files in current project."
 
 (defmacro counsel-git-grep-or-find-api (fn git-cmd hint no-keyword)
   "Apply FN on the output lines of GIT-CMD.  HINT is hint when user input.
-Yank the file name at the same time.  FILTER is function to filter the collection"
+Yank the file name at the same time.  FILTER is function to filter the collection."
   `(let* ((str (if (buffer-file-name) (file-name-base (buffer-file-name)) ""))
           (default-directory (locate-dominating-file
                               default-directory ".git"))
-          collection)
-
-     (unless ,no-keyword
-       ;; selected region contains no regular expression
-       (setq keyword (counsel-read-keyword (concat "Enter " ,hint " pattern:" ))))
-
-     (setq collection
-           (split-string (shell-command-to-string (if ,no-keyword ,git-cmd
-                                                    (format ,git-cmd keyword)))
-                         "\n"
-                         t))
+          (keyword (unless ,no-keyword
+                     ;; selected region contains no regular expression
+                     (counsel-read-keyword (concat "Enter " ,hint " pattern:" ))))
+          (collection (split-string (shell-command-to-string (if ,no-keyword ,git-cmd
+                                                               (format ,git-cmd keyword)))
+                                    "\n"
+                                    t)))
      (cond
       ((and collection (= (length collection) 1))
        (funcall ,fn (car collection)))
@@ -160,9 +188,7 @@ Or else, find files since 24 weeks (6 months) ago."
 (defun counsel-bookmark-goto ()
   "Open ANY bookmark.  Requires bookmark+"
   (interactive)
-
-  (unless (featurep 'bookmark)
-    (require 'bookmark))
+  (unless (featurep 'bookmark) (require 'bookmark))
   (bookmark-maybe-load-default-file)
 
   (let* ((bookmarks (and (boundp 'bookmark-alist) bookmark-alist))
@@ -172,8 +198,7 @@ Or else, find files since 24 weeks (6 months) ago."
     (ivy-read "bookmarks:"
               collection
               :action (lambda (bookmark)
-                        (unless (featurep 'bookmark+)
-                          (require 'bookmark+))
+                        (local-require 'bookmark+)
                         (bookmark-jump bookmark)))))
 
 (defun counsel-yank-bash-history ()
@@ -187,10 +212,10 @@ Or else, find files since 24 weeks (6 months) ago."
                            (buffer-string))
                          "\n"
                          t))))
-      (ivy-read (format "Bash history:") collection
-                :action (lambda (val)
-                          (kill-new val)
-                          (message "%s => kill-ring" val)))))
+    (ivy-read (format "Bash history:") collection
+              :action (lambda (val)
+                        (kill-new val)
+                        (message "%s => kill-ring" val)))))
 
 (defun counsel-recent-directory (&optional n)
   "Goto recent directories.
@@ -198,11 +223,11 @@ If N is not nil, only list directories in current project."
   (interactive "P")
   (unless recentf-mode (recentf-mode 1))
   (let* ((cands (delete-dups
-                      (append my-dired-directory-history
-                              (mapcar 'file-name-directory recentf-list)
-                              ;; fasd history
-                              (if (executable-find "fasd")
-                                  (nonempty-lines (shell-command-to-string "fasd -ld"))))))
+                 (append my-dired-directory-history
+                         (mapcar 'file-name-directory recentf-list)
+                         ;; fasd history
+                         (if (executable-find "fasd")
+                             (nonempty-lines (shell-command-to-string "fasd -ld"))))))
          (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
     (when (and n root-dir)
       (setq cands (delq nil (mapcar (lambda (f) (path-in-directory-p f root-dir)) cands))))
@@ -215,8 +240,7 @@ If N is not nil, only list directories in current project."
   (column-number-mode -1)
   ;; turn on wgrep right now
   ;; (ivy-wgrep-change-to-wgrep-mode) ; doesn't work, don't know why
-  (local-set-key (kbd "RET") #'ivy-occur-press-and-switch)
-  )
+  (local-set-key (kbd "RET") #'ivy-occur-press-and-switch))
 (add-hook 'ivy-occur-grep-mode-hook 'ivy-occur-grep-mode-hook-setup)
 
 (defun counsel-git-grep-by-selected ()
@@ -228,11 +252,17 @@ If N is not nil, only list directories in current project."
     (counsel-git-grep))))
 
 (defun counsel-browse-kill-ring (&optional n)
-  "Use `browse-kill-ring' if it exists and N is 1.
-If N > 1, assume just yank the Nth item in `kill-ring'.
-If N is nil, use `ivy-mode' to browse the `kill-ring'."
+  "If N > 1, assume just yank the Nth item in `kill-ring'.
+If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive "P")
-  (my-select-from-kill-ring my-insert-str n))
+  (my-select-from-kill-ring (lambda (s)
+                              (let* ((plain-str (my-insert-str s))
+                                     (trimmed (s-trim plain-str)))
+                                (setq kill-ring (cl-delete-if
+                                                 `(lambda (e) (string= ,trimmed (s-trim e)))
+                                                 kill-ring))
+                                (kill-new plain-str)))
+                            n))
 
 (defun ivy-switch-buffer-matcher-pinyin (regexp candidates)
   (unless (featurep 'pinyinlib) (require 'pinyinlib))
@@ -318,22 +348,14 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
       '((t . re-builder-pinyin)))
 ;; }}
 
-;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
-;; press "M-o" to choose ivy action
-(ivy-set-actions
- 'counsel-find-file
- '(("j" find-file-other-frame "other frame")
-   ("b" counsel-find-file-cd-bookmark-action "cd bookmark")
-   ("x" counsel-find-file-extern "open externally")
-   ("d" delete-file "delete")
-   ("r" counsel-find-file-as-root "open as root")))
-
-;; set actions when running C-x b
-;; replace "frame" with window to open in new window
-(ivy-set-actions
- 'ivy-switch-buffer-by-pinyin
- '(("j" switch-to-buffer-other-frame "other frame")
-   ("k" kill-buffer "kill")
-   ("r" ivy--rename-buffer-action "rename")))
+(eval-after-load 'ivy
+  '(progn
+     ;; set actions when running C-x b
+     ;; replace "frame" with window to open in new window
+     (ivy-set-actions
+      'ivy-switch-buffer-by-pinyin
+      '(("j" switch-to-buffer-other-frame "other frame")
+        ("k" kill-buffer "kill")
+        ("r" ivy--rename-buffer-action "rename")))))
 
 (provide 'init-ivy)

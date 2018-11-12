@@ -1,18 +1,13 @@
-;; -*- coding: utf-8 -*-
-;(defvar best-gc-cons-threshold gc-cons-threshold "Best default gc threshold value. Should't be too big.")
+;; -*- coding: utf-8; lexical-binding: t; -*-
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
-
-(let ((minver "24.4"))
+(let* ((minver "24.4"))
   (when (version< emacs-version minver)
-    (error "This config requires Emacs v%s or higher" minver)))
+    (error "Emacs v%s or higher is required." minver)))
 
-(defvar best-gc-cons-threshold 4000000 "Best default gc threshold value. Should't be too big.")
+(defvar best-gc-cons-threshold
+  4000000
+  "Best default gc threshold value.  Should NOT be too big!")
+
 ;; don't GC during startup to save time
 (setq gc-cons-threshold most-positive-fixnum)
 
@@ -40,23 +35,26 @@
                    (*linux* nil)
                    (t nil)))
 
-;; emacs 24.3-
-(setq *emacs24old*  (or (and (= emacs-major-version 24) (= emacs-minor-version 3))
-                        (not *emacs24*)))
-
 ;; @see https://www.reddit.com/r/emacs/comments/55ork0/is_emacs_251_noticeably_slower_than_245_on_windows/
 ;; Emacs 25 does gc too frequently
 (when *emacs25*
   ;; (setq garbage-collection-messages t) ; for debug
-  (setq gc-cons-threshold (* 64 1024 1024) )
+  (setq best-gc-cons-threshold (* 64 1024 1024))
   (setq gc-cons-percentage 0.5)
   (run-with-idle-timer 5 t #'garbage-collect))
 
 (defmacro local-require (pkg)
-  `(load (file-truename (format "~/.emacs.d/site-lisp/%s/%s" ,pkg ,pkg))))
+  `(unless (featurep ,pkg)
+     (cond
+      ((eq ,pkg 'bookmark+)
+       (load (file-truename (format "~/.emacs.d/site-lisp/bookmark-plus/%s" ,pkg)) t t))
+      ((eq ,pkg 'go-mode-load)
+       (load (file-truename (format "~/.emacs.d/site-lisp/go-mode/%s" ,pkg)) t t))
+      (t
+       (load (file-truename (format "~/.emacs.d/site-lisp/%s/%s" ,pkg ,pkg)) t t)))))
 
 (defmacro require-init (pkg)
-  `(load (file-truename (format "~/.emacs.d/lisp/%s" ,pkg))))
+  `(load (file-truename (format "~/.emacs.d/lisp/%s" ,pkg)) t t))
 
 ;; *Message* buffer should be writable in 24.4+
 (defadvice switch-to-buffer (after switch-to-buffer-after-hack activate)
@@ -69,29 +67,15 @@
 ;; ("\\`/[^/|:][^/|]*:" . tramp-file-name-handler)
 ;; ("\\`/:" . file-name-non-special))
 ;; Which means on every .el and .elc file loaded during start up, it has to runs those regexps against the filename.
-(let ((file-name-handler-alist nil))
+(let* ((file-name-handler-alist nil))
+  ;; `package-initialize' takes 35% of startup time
+  ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
   (require-init 'init-autoload)
   (require-init 'init-modeline)
-  ;; (require 'cl-lib) ; it's built in since Emacs v24.3
-  (require-init 'init-compat)
   (require-init 'init-utils)
-
-  ;; Windows configuration, assuming that cygwin is installed at "c:/cygwin"
-  ;; (condition-case nil
-  ;;     (when *win64*
-  ;;       ;; (setq cygwin-mount-cygwin-bin-directory "c:/cygwin/bin")
-  ;;       (setq cygwin-mount-cygwin-bin-directory "c:/cygwin64/bin")
-  ;;       (require 'setup-cygwin)
-  ;;       ;; better to set HOME env in GUI
-  ;;       ;; (setenv "HOME" "c:/cygwin/home/someuser")
-  ;;       )
-  ;;   (error
-  ;;    (message "setup-cygwin failed, continue anyway")
-  ;;    ))
   (require-init 'init-elpa)
   (require-init 'init-exec-path) ;; Set up $PATH
-  ;; any file use flyspell should be initialized after init-spelling.el
-  ;; actually, I don't know which major-mode use flyspell.
+  ;; Any file use flyspell should be initialized after init-spelling.el
   (require-init 'init-spelling)
   (require-init 'init-gui-frames)
   (require-init 'init-uniquify)
@@ -104,7 +88,7 @@
   (require-init 'init-javascript)
   (require-init 'init-org)
   (require-init 'init-css)
-  (require-init 'init-python-mode)
+  (require-init 'init-python)
   (require-init 'init-haskell)
   (require-init 'init-ruby-mode)
   (require-init 'init-lisp)
@@ -122,7 +106,6 @@
   ;; use evil mode (vi key binding)
   (require-init 'init-evil)
   (require-init 'init-multiple-cursors)
-  (require-init 'init-sh)
   (require-init 'init-ctags)
   (require-init 'init-bbdb)
   (require-init 'init-gnus)
@@ -144,45 +127,31 @@
   (require-init 'init-emacs-w3m)
   (require-init 'init-hydra)
   (require-init 'init-shackle)
-
-  (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
-  ;; {{ idle require other stuff
-  (local-require 'idle-require)
-  (setq idle-require-idle-delay 2)
-  (setq idle-require-symbols '(init-perforce
-                               init-slime
-                               init-misc-lazy
-                               init-which-func
-                               init-fonts
-                               init-hs-minor-mode
-                               init-writting
-                               init-pomodoro
-                               init-dired
-                               ;;init-artbollocks-mode
-                               init-semantic))
-  (idle-require-mode 1) ;; starts loading
-  ;; }}
-
-  (when (require 'time-date nil t)
-    (message "Emacs startup time: %d seconds."
-             (time-to-seconds (time-since emacs-load-start-time))))
+  (require-init 'init-dired)
+  (require-init 'init-artbollocks-mode)
+  (require-init 'init-writting)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "~/.emacs.d/site-lisp/" to `load-path' slows
   ;; down all `require' statement. So we do this at the end of startup
-  ;; Besides, no packages from ELPA is dependent "~/.emacs.d/site-lisp" now.
+  ;; Besides, no packages from ELPA is dependent on "~/.emacs.d/site-lisp".
   (require-init 'init-site-lisp)
 
   ;; my personal setup, other major-mode specific setup need it.
   ;; It's dependent on init-site-lisp.el
-  (if (file-exists-p "~/.custom.el") (load-file "~/.custom.el")))
+  (if (file-exists-p "~/.custom.el") (load-file "~/.custom.el"))
   (if (file-exists-p "~/.emacs.d/defuns/phye.el") (load-file "~/.emacs.d/defuns/phye.el"))
 
-;; @see https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
-(setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
-(load custom-file 'noerror)
+  ;; @see https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
+  (setq custom-file (concat user-emacs-directory "custom-set-variables.el"))
+  (load custom-file 'noerror))
 
 (setq gc-cons-threshold best-gc-cons-threshold)
+
+(when (require 'time-date nil t)
+  (message "Emacs startup time: %d seconds."
+           (time-to-seconds (time-since emacs-load-start-time))))
+
 ;;; Local Variables:
 ;;; no-byte-compile: t
 ;;; End:
