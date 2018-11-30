@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: errorff
+# key: errorff
+# --
+log.WithFields(${1:flds}).
+    Errorf("$0")

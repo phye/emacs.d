@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: debugff
+# key: debugff
+#
+# --
+log.WithFields(${1:flds}).
+    Debugf("$0")

@@ -1,0 +1,6 @@
+# -*- mode: go -*-
+# name: info with fields
+# key: infoff
+# --
+log.WithFields(${1:flds}).
+    Infof("$0")
