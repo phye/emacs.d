@@ -816,6 +816,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (evil-find-char-pinyin-mode 1)
 ;; }}
 
+;; {{ Port of vim-textobj-syntax. It provides evil text objects for consecutive items with same syntax highlig
+(require 'evil-textobj-syntax)
+;; }}
+
 ;; {{ evil-args
 ;; bind evil-args text objects
 (define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
@@ -843,7 +847,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
      (setq evil-symbol-word-search t)
 
      ;; @see https://emacs.stackexchange.com/questions/9583/how-to-treat-underscore-as-part-of-the-word
-     (defalias #'forward-evil-word #'forward-evil-symbol)
+     ;; uncomment below line to make "dw" has exact same behaviour in evil as as in vim
+     ;; (defalias #'forward-evil-word #'forward-evil-symbol)
 
      ;; @see https://bitbucket.org/lyro/evil/issue/511/let-certain-minor-modes-key-bindings
      (defmacro adjust-major-mode-keymap-with-evil (m &optional r)
