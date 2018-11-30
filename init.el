@@ -153,7 +153,6 @@
   ;; It's dependent on "~/.emacs.d/site-lisp/*.el"
   (load (expand-file-name "~/.custom.el") t nil)
   (load (expand-file-name "~/.emacs.d/defuns/phye.el") t nil)
->>>>>>> red/master
 
   ;; @see https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
   ;; See `custom-file' for details.
