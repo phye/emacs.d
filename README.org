@@ -9,64 +9,64 @@
 [[file:demo.png]]
 
 * Table of Content                                                              :noexport:TOC:
- - [[#features][Features]]
- - [[#checklist][Checklist]]
- - [[#installation][Installation]]
-   - [[#install-in-normal-way][Install in normal way]]
-   - [[#install-stable-version-in-easiest-way-optional][Install stable version in easiest way (OPTIONAL)]]
-   - [[#third-party-command-line-program-optional][Third party command line program (OPTIONAL)]]
- - [[#tutorial-optional][Tutorial (OPTIONAL)]]
-   - [[#basic-tutorial][Basic tutorial]]
-   - [[#evil-mode-tutorial][Evil-mode tutorial]]
-   - [[#methodology][Methodology]]
- - [[#usage][Usage]]
-   - [[#quick-start][Quick start]]
-   - [[#key-bindings][Key bindings]]
- - [[#faq][FAQ]]
-   - [[#saveload-windows-layout][Save/Load windows layout]]
-   - [[#default-terminal-shell][Default terminal shell]]
-   - [[#override-default-setup][Override default setup]]
-   - [[#code-navigation-and-auto-completion][Code navigation and auto-completion]]
-   - [[#color-theme][Color theme]]
-   - [[#grepreplace-text-in-project][Grep/Replace text in project]]
-   - [[#hydraswipercounselivy][Hydra/Swiper/Counsel/Ivy]]
-   - [[#react-and-jsx][React and JSX]]
-   - [[#git-gutter][git-gutter]]
-   - [[#start-a-shell-inside-emacs][Start a shell inside Emacs]]
-   - [[#setup-fonts-in-gui-emacs][Setup fonts in GUI Emacs]]
-   - [[#synchronize-setup-with-git][Synchronize setup with Git]]
-   - [[#indentation][Indentation]]
-   - [[#editing-lisp][Editing Lisp]]
-   - [[#use-smart-mode-line-or-powerline][Use smart-mode-line or powerline?]]
-   - [[#key-bindings-doesnt-work][Key bindings doesn't work?]]
-   - [[#use-org-mode][Use org-mode]]
-   - [[#macos-user][macOS user?]]
-   - [[#locked-packages][Locked packages]]
-   - [[#customize-global-variables][Customize global variables]]
-   - [[#opensave-file-with-counselivy][Open/Save file with Counsel/Ivy]]
-   - [[#windows][Windows]]
-   - [[#yasnippet][Yasnippet]]
-   - [[#non-english-users][Non-English users]]
-   - [[#behind-corporate-firewall][Behind corporate firewall]]
-   - [[#network-is-blocked][Network is blocked]]
-   - [[#email][Email]]
-   - [[#cannot-download-packages][Cannot download packages?]]
-   - [[#use-packages-on-gnu-elpa][use packages on GNU ELPA]]
-   - [[#disable-vim-key-bindings][Disable Vim key bindings]]
-   - [[#evil-setup][Evil setup]]
-   - [[#c-auto-completion-doesnt-work][C++ auto-completion doesn't work?]]
-   - [[#auto-completion-for-other-languages][Auto-completion for other languages]]
-   - [[#chinese-input-method-editor][Chinese Input Method Editor]]
-   - [[#install-multiple-versions-of-emacs][Install multiple versions of Emacs]]
-   - [[#change-time-locale][Change Time Locale]]
-   - [[#directory-structure][Directory structure]]
-   - [[#true-colors-in-terminal-emacs][True colors in terminal Emacs]]
- - [[#support-legacy-emacs-versions][Support legacy Emacs versions]]
-   - [[#emacs-23][Emacs 23]]
-   - [[#emacs-243][Emacs 24.3]]
-   - [[#emacs-244-and-245][Emacs 24.4 and 24.5]]
- - [[#tips][Tips]]
- - [[#report-bug][Report bug]]
+- [[#features][Features]]
+- [[#checklist][Checklist]]
+- [[#installation][Installation]]
+  - [[#install-in-normal-way][Install in normal way]]
+  - [[#install-stable-version-in-easiest-way-optional][Install stable version in easiest way (OPTIONAL)]]
+  - [[#third-party-command-line-program-optional][Third party command line program (OPTIONAL)]]
+- [[#tutorial-optional][Tutorial (OPTIONAL)]]
+  - [[#basic-tutorial][Basic tutorial]]
+  - [[#evil-mode-tutorial][Evil-mode tutorial]]
+  - [[#methodology][Methodology]]
+- [[#usage][Usage]]
+  - [[#quick-start][Quick start]]
+  - [[#key-bindings][Key bindings]]
+- [[#faq][FAQ]]
+  - [[#saveload-windows-layout][Save/Load windows layout]]
+  - [[#default-terminal-shell][Default terminal shell]]
+  - [[#override-default-setup][Override default setup]]
+  - [[#code-navigation-and-auto-completion][Code navigation and auto-completion]]
+  - [[#color-theme][Color theme]]
+  - [[#grepreplace-text-in-project][Grep/Replace text in project]]
+  - [[#hydraswipercounselivy][Hydra/Swiper/Counsel/Ivy]]
+  - [[#react-and-jsx][React and JSX]]
+  - [[#git-gutter][git-gutter]]
+  - [[#start-a-shell-inside-emacs][Start a shell inside Emacs]]
+  - [[#setup-fonts-in-gui-emacs][Setup fonts in GUI Emacs]]
+  - [[#synchronize-setup-with-git][Synchronize setup with Git]]
+  - [[#indentation][Indentation]]
+  - [[#editing-lisp][Editing Lisp]]
+  - [[#use-smart-mode-line-or-powerline][Use smart-mode-line or powerline?]]
+  - [[#key-bindings-doesnt-work][Key bindings doesn't work?]]
+  - [[#use-org-mode][Use org-mode]]
+  - [[#macos-user][macOS user?]]
+  - [[#locked-packages][Locked packages]]
+  - [[#customize-global-variables][Customize global variables]]
+  - [[#opensave-file-with-counselivy][Open/Save file with Counsel/Ivy]]
+  - [[#windows][Windows]]
+  - [[#yasnippet][Yasnippet]]
+  - [[#non-english-users][Non-English users]]
+  - [[#behind-corporate-firewall][Behind corporate firewall]]
+  - [[#network-is-blocked][Network is blocked]]
+  - [[#email][Email]]
+  - [[#cannot-download-packages][Cannot download packages?]]
+  - [[#use-packages-on-gnu-elpa][use packages on GNU ELPA]]
+  - [[#disable-vim-key-bindings][Disable Vim key bindings]]
+  - [[#evil-setup][Evil setup]]
+  - [[#c-auto-completion-doesnt-work][C++ auto-completion doesn't work?]]
+  - [[#auto-completion-for-other-languages][Auto-completion for other languages]]
+  - [[#chinese-input-method-editor][Chinese Input Method Editor]]
+  - [[#install-multiple-versions-of-emacs][Install multiple versions of Emacs]]
+  - [[#change-time-locale][Change Time Locale]]
+  - [[#directory-structure][Directory structure]]
+  - [[#true-colors-in-terminal-emacs][True colors in terminal Emacs]]
+- [[#support-legacy-emacs-versions][Support legacy Emacs versions]]
+  - [[#emacs-23][Emacs 23]]
+  - [[#emacs-243][Emacs 24.3]]
+  - [[#emacs-244-and-245][Emacs 24.4 and 24.5]]
+- [[#tips][Tips]]
+- [[#report-bug][Report bug]]
 
 * Checklist
 - Emacs 26.1 is strongly recommended. It has better performance and easier to setup on Windows
@@ -80,14 +80,12 @@
 Most users should follow the section "Install in normal way".
 
 You need the section "Install stable version in easiest way" *if and only if*:
-- You have never heard Unix/Linux
-- You are living in North Korea without internet access
+- You don't have network access
+- You have never used any command line program
 ** Install in normal way
 Please remove =~/.emacs.d/init.el= and =~/.emacs=. =~= means [[https://en.wikipedia.org/wiki/Home_directory][Home directory]].
 
-Please uninstall third party Emacs package which is not placed at =~/.emacs.d=. For example, run =apt-get autoremove emacs-w3m= on Debian/Ubuntu.
-
-If you don't know what I mean, then *do nothing*.
+Uninstall third party Emacs package which is not placed at =~/.emacs.d=. For example, run =apt-get autoremove emacs-w3m= on Debian/Ubuntu. Do nothing if you don't know what I mean.
 
 There are two ways to install this setup (I recommend the first way):
 
@@ -99,6 +97,9 @@ Ensure that =init.el= contained in this repo ends up at =~/.emacs.d/init.el=.
 
 By default, packages are installed automatically during Emacs startup.
 
+Some users reported that package repositories ([[http://melpa.org]] for example) is not responsive in China.
+
+So it's better for users in China to answer "YES" to the question "Switch to faster package repositories in China temporarily?" when using this setup for the first time. Please note the variable =package-archives= in =init-elpa.el= still need be changed to use different repository permanently.
 ** Install stable version in easiest way (OPTIONAL)
 You only need two zip files.
 
@@ -177,11 +178,11 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 **** sbcl (lisp environment)
 - Required by lisp =slime=
 - Install through OS package manager
-
 **** tidy
 - Required by =web-mode= for syntax check and =tidy.el= html formatting
 - Install through OS package manager
 **** csslint
+- Required by =flymake-css=
 - Install =node.js= through OS package manager, then =npm install -g csslint=
 **** identify from [[http://www.imagemagick.org/][ImageMagick]]
 - Required by =org-mode= to export org file to odt file when image embedded
@@ -222,9 +223,9 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 - Please read [[https://www.gnu.org/software/global/manual/global.html][GNU Global manual]] to understand environment variables =GTAGSLIBPATH= and =MAKEOBJDIRPREFIX=
 - Install through OS package manager
 **** LibreOffice
-- Only the executable =soffice= is used when converting odt file into doc/pdf
-- conversion happens automatically when exporting org-mode to odt
-- The conversion command is in variable =org-export-odt-convert-processes=
+- Only the executable =soffice= is used for converting odt file into doc/pdf
+- Conversion happens automatically when exporting org-mode to odt
+- The conversion command is defined in variable =org-export-odt-convert-processes=
 - Install through OS package manager
 **** js-beautify
 - Beautify javascript code
@@ -236,16 +237,15 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 - Required by [[https://github.com/jorgenschaefer/elpy][elpy]] which is python IDE
 - At least =pip install jedi flake8=. Check elpy website for more tips.
 **** sdcv (console version of StarDict)
-- Required by sdcv.el
+- Required by =sdcv.e=
 - Install through OS package manager
-- Run =curl http://abloz.com/huzheng/stardict-dic/dict.org/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic= to install dictionary
+- Run =curl http://pkgs.fedoraproject.org/repo/pkgs/stardict-dic/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2/f164dcb24b1084e1cfa2b1cb63d590e6/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic= to install dictionary
 **** [[https://github.com/BurntSushi/ripgrep][ripgrep]]
-- Used by =M-x counsel-etags-grep= to search text in files
+- Optionally used by =M-x counsel-etags-grep= to search text in files
 - Run =curl https://sh.rustup.rs -sSf | sh= in shell to install [[https://www.rust-lang.org/][Rust]] then =cargo install ripgrep=
 - Tweak environment variable PATH to let Emacs find ripgrep
-I will keep using =ripgrep= instead of =the-silver-searcher= from now on.
 * Tutorial (OPTIONAL)
-Basic knowledge of Linux/Unix is required. At least you should understand the words like "environment variable", "shell", "stdin", "stdout", "man", "info".
+Knowledge of Linux/Unix is required. At least you should understand the words like "environment variable", "shell", "stdin", "stdout", "man", "info".
 ** Basic tutorial
 Please read this tutorial at least for once.
 *** Step 1, learn OS basics
@@ -278,7 +278,7 @@ See [[https://github.com/redguardtoo/mastering-emacs-in-one-year-guide][Master E
 I *avoid overriding the original setup* of third party command line program.
 
 ** Quick start
-On windows, you need install Cygwin. It provides command line tools Emacs uses. Cygwin could be installed on any hard drive but it's highly recommended don't change path of Cygwin.
+On Windows, you need install Cygwin which provides command line tools Emacs uses. Cygwin could be installed on any hard drive but it's highly recommended don't change it relative path to the root driver.
 
 Install Ctags (Universal Ctags is better. But Exuberant Ctags is fine). On Windows you could install Ctags through Cygwin.
 
