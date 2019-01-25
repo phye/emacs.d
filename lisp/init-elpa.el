@@ -1,5 +1,13 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
+(defun initialize-package ()
+  (unless nil ;package--initialized
+    ;; optimization, no need to activate all the packages so early
+    (setq package-enable-at-startup nil)
+    (package-initialize)))
+
+(initialize-package)
+
 ;; List of visible packages from melpa-unstable (http://melpa.org).
 ;; Please add the package name into `melpa-include-packages`
 ;; if it's not visible after  `list-packages'.
@@ -7,7 +15,6 @@
   '(ace-mc
     color-theme ; emacs24 need this package
     ace-window ; lastest stable is released on year 2014
-    artbollocks-mode
     auto-package-update
     bbdb
     evil-textobj-syntax
@@ -326,7 +333,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'company-go)
 (require-package 'shackle)
 (require-package 'toc-org)
-(require-package 'artbollocks-mode)
 (require-package 'elpa-mirror)
 ;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/
 (require-package 'color-theme)

@@ -422,7 +422,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "rv" 'evilmr-replace-in-defun
        "rb" 'evilmr-replace-in-buffer
        "ts" 'evilmr-tag-selected-region ;; recommended
-       "tua" 'artbollocks-mode
        "cby" 'cb-switch-between-controller-and-view
        "cbu" 'cb-get-url-from-controller
        "ht" 'counsel-etags-find-tag-at-point ; better than find-tag C-]
@@ -460,7 +459,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ls" 'highlight-symbol
        "lq" 'highlight-symbol-query-replace
        "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
-       "bm" 'pomodoro-start ;; beat myself
        "ii" 'counsel-imenu
        "ij" 'rimenu-jump
        "." 'evil-ex
@@ -772,20 +770,27 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; {{ evil-nerd-commenter
 (evilnc-default-hotkeys t)
 
+(defun my-current-line-html-p (paragraph-region)
+  (let* ((line (buffer-substring-no-properties (line-beginning-position)
+                                               (line-end-position)))
+         (re (format "^[ \t]*\\(%s\\)?[ \t]*</?[a-zA-Z]+"
+                     (regexp-quote evilnc-html-comment-start))))
+    ;; current paragraph does contain html tag
+    (if (and (>= (point) (car paragraph-region))
+             (string-match-p re line))
+        t)))
+
 (defun my-evilnc-comment-or-uncomment-paragraphs (&optional num)
   "Comment or uncomment NUM paragraphs which might contain html tags."
   (interactive "p")
   (unless (featurep 'evil-nerd-commenter) (require 'evil-nerd-commenter))
   (let* ((paragraph-region (evilnc--get-one-paragraph-region))
-         (html-p (save-excursion
-                   (sgml-skip-tag-backward 1)
-                   (let* ((line (buffer-substring-no-properties (line-beginning-position)
-                                                                (line-end-position))))
-                     ;; current paragraph does contain html tag
-                     (if (and (>= (point) (car paragraph-region))
-                              (string-match-p (format "^[ \t]*\\(%s\\)?[ \t]*<[a-zA-Z]+"
-                                                      (regexp-quote evilnc-html-comment-start)) line))
-                         t)))))
+         (html-p (or (save-excursion
+                       (sgml-skip-tag-backward 1)
+                       (my-current-line-html-p paragraph-region))
+                     (save-excursion
+                       (sgml-skip-tag-forward 1)
+                       (my-current-line-html-p paragraph-region)))))
     (if html-p (evilnc-comment-or-uncomment-html-paragraphs num)
       (evilnc-comment-or-uncomment-paragraphs num))))
 
