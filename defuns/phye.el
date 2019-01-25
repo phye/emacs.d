@@ -1,7 +1,7 @@
 ;; {{ Misc
 (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'dracula t)
+(load-theme 'sanityinc-tomorrow-eighties t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 
