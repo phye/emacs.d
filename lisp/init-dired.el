@@ -64,14 +64,29 @@ If no files marked, always operate on current line in dired-mode."
                                           " -sub Subs/English.srt")))
            ((file-exists-p (concat dir "Chinese.srt"))
             (setq ad-return-value (concat ad-return-value
-                                          " -sub Subs/Chinesesrt")))
+                                          " -sub Subs/Chinese.srt")))
            ((file-exists-p (concat dir (setq basename (file-name-base (car (dired-get-marked-files 'no-dir)))) ".sub"))
             (setq ad-return-value (concat ad-return-value
                                           " -sub Subs/" basename ".srt"))))))
       ad-return-value)
     (dolist (file `(((if *unix* "zathura" "open") "pdf" "dvi" "pdf.gz" "ps" "eps")
                     ("7z x" "rar" "zip" "7z") ; "e" to extract, "x" to extract with full path
-                    ((if (not *is-a-mac*) (my-guess-mplayer-path) "open")  "ogm" "avi" "mpg" "rmvb" "rm" "flv" "wmv" "mkv" "mp4" "m4v" "webm" "part" "mov")
+                    ((if (not *is-a-mac*) (my-guess-mplayer-path) "open") "ogm"
+                                                                          "avi"
+                                                                          "mpg"
+                                                                          "rmvb"
+                                                                          "rm"
+                                                                          "flv"
+                                                                          "wmv"
+                                                                          "mkv"
+                                                                          "mp4"
+                                                                          "m4v"
+                                                                          "webm"
+                                                                          "part"
+                                                                          "mov"
+                                                                          "3gp"
+                                                                          "crdownload"
+                                                                          "mp3")
                     ((concat (my-guess-mplayer-path) " -playlist") "list" "pls")
                     ((if *unix* "feh" "open") "gif" "jpeg" "jpg" "tif" "png" )
                     ((if *unix* "libreoffice" "open") "doc" "docx" "xls" "xlsx" "odt")

@@ -20,6 +20,7 @@
     evil-textobj-syntax
     command-log-mode
     vimrc-mode
+    rjsx-mode ; fixed the indent issue in jsx
     auto-yasnippet
     dumb-jump
     websocket ; to talk to the browser
@@ -243,7 +244,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'dsvn)
 (require-package 'git-timemachine)
 (require-package 'exec-path-from-shell)
-(require-package 'flymake-css)
 (require-package 'flymake-jslint)
 (require-package 'flymake-ruby)
 (require-package 'ivy)
@@ -258,6 +258,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'groovy-mode)
 (require-package 'ruby-compilation)
 (require-package 'emmet-mode)
+(require-package 'winum)
 (require-package 'session)
 (require-package 'unfill)
 (require-package 'w3m)
