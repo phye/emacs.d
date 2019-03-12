@@ -176,24 +176,11 @@
 (which-key-mode 1)
 ;; }}
 
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-m") 'counsel-M-x)
 
-;; smex or counsel-M-x?
-(defvar my-use-smex nil
-  "Use `smex' instead of `counsel-M-x' when press M-x.")
-(defun my-M-x ()
-  (interactive)
-  (cond
-   (my-use-smex
-    (smex))
-   ((fboundp 'counsel-M-x)
-    ;; `counsel-M-x' will use `smex' to remember history
-    (counsel-M-x))
-   ((fboundp 'smex)
-    (smex))
-   (t
-    (execute-extended-command))))
-(global-set-key (kbd "M-x") 'my-M-x)
-(global-set-key (kbd "C-x C-m") 'my-M-x)
+(defvar my-do-bury-compliation-buffer t
+  "Hide comliation buffer if compile successfully.")
 
 (defun compilation-finish-hide-buffer-on-success (buf str)
   "Could be reused by other major-mode after compilation."
@@ -201,7 +188,8 @@
       ;;there were errors
       (message "compilation errors, press C-x ` to visit")
     ;;no errors, make the compilation window go away in 0.5 seconds
-    (when (and (buffer-name buf)
+    (when (and my-do-bury-compliation-buffer
+               (buffer-name buf)
                (string-match "*compilation*" (buffer-name buf)))
       ;; @see http://emacswiki.org/emacs/ModeCompile#toc2
       (bury-buffer "*compilation*")
@@ -330,10 +318,7 @@
   "Erase the content of the *Messages* buffer in emacs.
 Keep the last num lines if argument num if given."
   (interactive "p")
-  (let* ((buf (cond
-               ((eq 'ruby-mode major-mode) "*server*")
-               (t "*Messages*"))))
-    (erase-specific-buffer num buf)))
+  (erase-specific-buffer num "*Messages*"))
 
 ;; turn off read-only-mode in *Message* buffer, a "feature" in v24.4
 (when (fboundp 'messages-buffer-mode)
@@ -467,11 +452,14 @@ Keep the last num lines if argument num if given."
       (define-key map (kbd "M-7") 'winum-select-window-7)
       (define-key map (kbd "M-8") 'winum-select-window-8)
       map))
-(require 'winum)
-(setq winum-format "%s")
-(setq winum-mode-line-position 0)
-(set-face-attribute 'winum-face nil :foreground "DeepPink" :underline "DeepPink" :weight 'bold)
-(winum-mode)
+
+(unless (featurep 'winum) (require 'winum))
+(eval-after-load 'winum
+  '(progn
+     (setq winum-format "%s")
+     (setq winum-mode-line-position 0)
+     (set-face-attribute 'winum-face nil :foreground "DeepPink" :underline "DeepPink" :weight 'bold)
+     (winum-mode 1)))
 ;; }}
 
 (ace-pinyin-global-mode +1)
@@ -756,6 +744,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; flymake
 (eval-after-load 'flymake
   '(progn
+     (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
      (setq flymake-gui-warnings-enabled nil)))
 
 ;; {{ check attachments
@@ -989,9 +978,17 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 
 (transient-mark-mode t)
 
-(global-auto-revert-mode)
-(setq global-auto-revert-non-file-buffers t
-      auto-revert-verbose nil)
+(unless (or *cygwin* *win64*)
+  ;; Takes ages to start Emacs.
+  ;; Got error `Socket /tmp/fam-cb/fam- has wrong permissions` in Cygwin ONLY!
+  ;; reproduced with Emacs 26.1 and Cygwin upgraded at 2019-02-26
+  ;;
+  ;; Although win64 is fine. It still slows down generic performance.
+  ;; @see https://stackoverflow.com/questions/3589535/why-reload-notification-slow-in-emacs-when-files-are-modified-externally
+  ;; So no auto-revert-mode on Windows/Cygwin
+  (global-auto-revert-mode)
+  (setq global-auto-revert-non-file-buffers t
+        auto-revert-verbose nil))
 
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
@@ -1002,7 +999,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-defun 'disabled nil)
 
-;; But don't show trailing whitespace in SQLi, inf-ruby etc.
+;; But don't show trailing whitespace in REPL.
 (add-hook 'comint-mode-hook
           (lambda () (setq show-trailing-whitespace nil)))
 
@@ -1250,6 +1247,7 @@ Including indent-buffer, which should not be called automatically on save."
 (which-function-mode 1)
 ;; }}
 
+;; {{ pomodoro
 (eval-after-load 'pomodoro
   '(progn
      (setq pomodoro-break-time 2)
@@ -1262,5 +1260,52 @@ Including indent-buffer, which should not be called automatically on save."
 (unless (featurep 'pomodoro)
   (require 'pomodoro)
   (pomodoro-add-to-mode-line))
+;; }}
+
+;; {{ pronunciation
+(defun my-pronounce-word (&optional word)
+  (interactive "sWord: ")
+  (unless (featurep 'url) (require 'url))
+  (if word (setq word (downcase word)))
+  (let* ((url (format "https://dictionary.cambridge.org/pronunciation/english/%s" word))
+         (cached-mp3 (file-truename (format "~/.emacs.d/misc/%s.mp3" word)))
+         (player (if (not *is-a-mac*) (my-guess-mplayer-path) "open"))
+         html-text
+         online-mp3)
+    (cond
+     ((file-exists-p cached-mp3)
+      (my-async-shell-command (format "%s %s" player cached-mp3)))
+     ((and (not (string-match "404" (setq html-text (with-current-buffer (url-retrieve-synchronously url) (buffer-string)))))
+           (string-match "data-src-mp3=\"\\([^\"]+\\)" html-text))
+      (setq online-mp3 (concat "https://dictionary.cambridge.org" (match-string 1 html-text)))
+      (url-copy-file online-mp3 cached-mp3)
+      (my-async-shell-command (format "%s %s" player cached-mp3)))
+     (t
+      (message "Sorry, can't find pronunciation for \"%s\"" word)))))
+
+(defun my-pronounce-current-word ()
+  "Pronounce current word."
+  (interactive)
+  (when (memq major-mode '(nov-mode))
+    ;; go to end of word to workaround `nov-mode' bug
+    (forward-word)
+    (forward-char -1))
+  (my-pronounce-word (thing-at-point 'word)))
+;; }}
+
+;; {{ epub setup
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(defun nov-mode-hook-setup ()
+  (local-set-key (kbd "d") (lambda ()
+                             (interactive)
+                             (when (memq major-mode '(nov-mode))
+                               ;; go to end of word to workaround `nov-mode' bug
+                               (forward-word)
+                               (forward-char -1))
+                             (sdcv-search-input (thing-at-point 'word))))
+  (local-set-key (kbd "w") 'my-pronounce-current-word)
+  (local-set-key (kbd ";") 'avy-goto-char-2))
+(add-hook 'nov-mode-hook 'nov-mode-hook-setup)
+;; }}
 
 (provide 'init-misc)
