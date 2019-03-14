@@ -120,6 +120,7 @@
 (setq org-agenda-files
      (quote
       ("~/ws/OrgNotes/gtd.org"
+       "~/ws/OrgNotes/quick_notes.org"
        "~/ws/OrgNotes/PlanLearning.org"
        "~/ws/OrgNotes/PlanLife.org"
        "~/ws/OrgNotes/life/Birthday.org"
