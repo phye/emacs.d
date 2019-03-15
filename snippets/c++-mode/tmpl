@@ -1,0 +1,5 @@
+# -*- mode: c++ -*-
+# name: template
+# key: tmpl
+# --
+template <typename ${0:T}>

@@ -40,6 +40,9 @@
               )))
 ;; }}
 
+;; {{ cpp programming
+(c-set-offset 'innamespace 0)
+;; }}
 
 ;; {{ Golang programming
 (with-eval-after-load 'go-mode
