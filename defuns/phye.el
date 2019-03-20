@@ -1,7 +1,7 @@
 ;; {{ Misc
 (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'sanityinc-tomorrow-eighties t)
+(load-theme 'ample-zen t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 
@@ -172,10 +172,6 @@
                  '(require 'ox-odt nil t))
 (setq org-export-with-sub-superscripts nil)
 (setq org-export-with-properties t)
-(setq org-latex-to-pdf-process
-      '("xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"))
 
 (eval-after-load "ox-latex"
   ;; update the list of LaTeX classes and associated header (encoding, etc.)
