@@ -12,6 +12,7 @@
          retval)
      ,@clean-up))
 
+
 ;; {{ copied from http://ergoemacs.org/emacs/elisp_read_file_content.html
 (defun get-string-from-file (file)
   "Return FILE's content."
@@ -350,7 +351,7 @@ you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
            (cond
             (powershell-program
              ;; PowerLine adds extra white space character at the end of text
-             (s-trim-right
+             (string-trim-right ; emacs 24.4
               (with-output-to-string
                 (with-current-buffer standard-output
                   (call-process powershell-program nil t nil "-command" "Get-Clipboard")))))

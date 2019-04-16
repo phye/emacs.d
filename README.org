@@ -1,4 +1,6 @@
-* Features
+[[https://travis-ci.org/redguardtoo/emacs.d][https://travis-ci.org/redguardtoo/emacs.d.svg?branch=master]]
+
+* A fast and robust Emacs setup
 - Fast. Only *one second* to start up
 - Robust. Never crash after package upgrade. Packages could be installed without network
 - Support Windows. You can find&grep files on Windows with minimum setup
@@ -9,7 +11,7 @@
 [[file:demo.png]]
 
 * Table of Content                                                              :noexport:TOC:
-- [[#features][Features]]
+- [[#a-fast-and-robust-emacs-setup][A fast and robust Emacs setup]]
 - [[#checklist][Checklist]]
 - [[#installation][Installation]]
   - [[#install-in-normal-way][Install in normal way]]
@@ -69,11 +71,11 @@
 - [[#report-bug][Report bug]]
 
 * Checklist
-- Emacs 26.1 is strongly recommended. It has better performance and easier to setup
+- Emacs 26.1 is strongly recommended. It is faster and easier to setup
 - Please read FAQ to disable [[http://www.vim.org][Vim]] key bindings
 - Please read section "Key bindings" to learn key bindings
 - If you use Windows Emacs, you have to [[https://emacs.stackexchange.com/questions/27202/how-do-i-install-gnutls-for-emacs-25-1-on-windows][install GnuTLS Dlls manually]] to install packages from remote repositories. Or else you got error message like =error: Package `async-' is unavailable= on Windows. Please note since =Emacs 26.1=, you can download no dependency version which works out of box
-- Most packages from [[http://melpa.org][MELPA]] are *invisible* but packages from [[https://stable.melpa.org][MELPA Stable]] are visible. You can modify variable =melpa-include-packages= in =~/.emacs.d/lisp/init-elpa.el= to install unstable packages
+- Most packages from [[http://melpa.org][MELPA]] are *invisible* but packages from [[https://stable.melpa.org][MELPA Stable]] are visible. You can modify variable =melpa-include-packages= in =~/.emacs.d/lisp/init-elpa.el= to install unstable packages. Please choose stable packages if possible. Even advanced user could under-estimate the risk of using unstable packages.
 - Emacs 24 support will be dropped on 2019. Check "Support legacy Emacs versions" if you use old versions
 - Other issues are covered in FAQ
 * Installation
@@ -266,17 +268,15 @@ Please [[https://en.wikipedia.org/wiki/Grep][grep]] in the directory =~/.emacs.d
 ** Key bindings
 You don't need memorize any key binding. Try =M-x my-command= and key binding hint is displayed.
 
-Most key bindings are defined in =~/.emacs.d/lisp/init-evil.el=.
+Most key bindings are defined in =~/.emacs.d/lisp/init-evil.el=, a few key in =~/.emacs.d/lisp/init-hydra.el= which uses [[https://github.com/abo-abo/hydra][Hydra]].
 
-For example, =(nvmap :prefix "," "bu" 'backward-up-list)= means pressing ",bu" executes command =backward-up-list=.
+Press =C-c C-y= anywhere to bring up default hydra menu.
 
 The tutorials I recommended have enough information about commands.
 
 Besides, "[[http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html][How to be extremely efficient in Emacs]]" lists my frequently used commands.
 
-[[https://github.com/abo-abo/hydra][Hydra]] is used to define key bindings when evil-mode is disabled. See =~/.emacs.d/lisp/init-hydra.el= for details.
-
-You can always press =C-c C-y= anywhere to bring up default hydra menu.
+Press =kj= to escape from =evil-insert-state= and everything else in Emacs. It's much more efficient than =ESC= in Vim or =C-g= in Emacs. Search =evil-escape= in =init-evil.el= for details.
 * FAQ
 ** Save/Load windows layout
 =SPC s s= or =M-x wg-create-workgrou= to save windows layout.
@@ -284,7 +284,19 @@ You can always press =C-c C-y= anywhere to bring up default hydra menu.
 ** Default terminal shell
 You can customize =my-term-program= whose default value is =/bin/bash=. It's used by =ansi-term= and =multi-term=.
 ** Override default setup
-Place your setup in =~/.custom.el=.
+Place your setup in =~/.custom.el= which is loaded after other "*.el".
+
+So you can use any functions defined in =~/.emacs.d=.
+
+Here is a sample to override keybindings defined in =~/.emacs.d/lisp/init-evil.el=,
+#+begin_src elisp
+(eval-after-load "evil"
+  '(progn
+     (my-space-leader-def
+       "ss" 'pwd
+       "ll" 'pwd
+       "pp" 'pwd)))
+#+end_src
 ** Code navigation and auto-completion
 It's usable out of box if Ctags is installed
 
@@ -482,7 +494,7 @@ rm -rf ~/myemacs/24.4/*;
 
 Feel free to replace 24.4 with other version number.
 ** Change Time Locale
-Insert below code into =~/.emacs= or =~/.custom.el,
+Insert below code into =~/.emacs= or =~/.custom.el=,
 #+begin_src elisp
 ;; Use en_US locale to format time.
 ;; if not set, the OS locale is used.
@@ -526,8 +538,8 @@ Please use [[https://github.com/redguardtoo/emacs.d/archive/2.9.zip]] and [[http
 - You can run =optimize-emacs-startup= to compile "*.el" under =~/.emacs.d/lisp/=
 * Report bug
 - Please check [[http://www.emacswiki.org/emacs/][EmacsWiki]] and my FAQ at first
-- If the issue is still NOT resolved, restart Emacs with option =---debug-init=, run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue
-- Send error messages to the original developer if it's third party package issue
-- If you are *sure* it's my issue, file bug report at [[https://github.com/redguardtoo/emacs.d]]. Don't email me!
+- If you still can't resolve the issue, restart Emacs with option =---debug-init=, run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue
+- Send error messages to the original developer if it's third party package's problem
+- If *you are sure* it's this setup's problem, file bug report at [[https://github.com/redguardtoo/emacs.d]]. Don't email me!
 
 Bug report should include details (OS, Emacs version ...).
