@@ -259,3 +259,11 @@
                   (org-todo 'done)
                 (org-todo 'todo)))))))
 ;; }}
+
+
+(defun artist-mode-toggle-emacs-state ()
+  (if artist-mode
+      (evil-emacs-state)
+    (evil-exit-emacs-state)))
+
+(add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
