@@ -1,5 +1,5 @@
 ;; {{ Misc
-(cd "~/ws/OrgNotes/")
+;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (load-theme 'ample-zen t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
