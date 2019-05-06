@@ -5,7 +5,6 @@
 ;; use similar key bindings as init-evil.el
 (defhydra hydra-launcher (:color blue)
   "
-----------------------------------------------------------
 ^Misc^                    ^Audio^               ^Pomodoro^
 ----------------------------------------------------------
 [_u_] CompanyIspell       [_R_] Emms Random     [_s_] Start
@@ -14,7 +13,7 @@
 [_B_] New bookmark        [_P_] Emms Pause      [_a_] Pause
 [_m_] Goto bookmark       [_O_] Emms Open
 [_v_] Show/Hide undo      [_L_] Emms Playlist
-[_b_] Switch buffer       [_w_] Pronounce word
+[_b_] Switch Gnus buffer  [_w_] Pronounce word
 [_f_] Recent file
 [_d_] Recent directory
 [_c_] Last dired command
@@ -45,7 +44,7 @@
   ("p" emms-previous)
   ("P" emms-pause)
   ("O" emms-play-playlist)
-  ("b" back-to-previous-buffer)
+  ("b" my-switch-gnus-buffer)
   ("L" emms-playlist-mode-go)
   ("q" nil))
 
@@ -61,16 +60,23 @@
 (eval-after-load 'gnus-group
   '(progn
      (defhydra hydra-gnus-group (:color blue)
-       "?"
-       ("a" gnus-group-list-active "REMOTE groups A A")
-       ("l" gnus-group-list-all-groups "LOCAL groups L")
-       ("c" gnus-topic-catchup-articles "Rd all c")
-       ("G" gnus-group-make-nnir-group "Srch server G G")
-       ("g" gnus-group-get-new-news "Refresh g")
-       ("s" gnus-group-enter-server-mode "Servers")
-       ("m" gnus-group-new-mail "Compose m OR C-x m")
-       ("#" gnus-topic-mark-topic "mark #")
-       ("q" nil "Bye"))
+       "
+[_A_] Remote groups (A A) [_g_] Refresh
+[_L_] Local groups        [_\\^_] List servers
+[_c_] Mark all read       [_m_] Compose new mail
+[_G_] Search mails (G G)  [_#_] Mark mail
+[_b_] Switch Gnus buffer
+"
+       ("A" gnus-group-list-active)
+       ("L" gnus-group-list-all-groups)
+       ("c" gnus-topic-catchup-articles)
+       ("G" gnus-group-make-nnir-group)
+       ("b" my-switch-gnus-buffer)
+       ("g" gnus-group-get-new-news)
+       ("^" gnus-group-enter-server-mode)
+       ("m" gnus-group-new-mail)
+       ("#" gnus-topic-mark-topic)
+       ("q" nil))
      ;; y is not used by default
      (define-key gnus-group-mode-map "y" 'hydra-gnus-group/body)))
 
@@ -78,21 +84,32 @@
 (eval-after-load 'gnus-sum
   '(progn
      (defhydra hydra-gnus-summary (:color blue)
-       "?"
-       ("s" gnus-summary-show-thread "Show thread")
-       ("h" gnus-summary-hide-thread "Hide thread")
-       ("n" gnus-summary-insert-new-articles "Refresh / N")
-       ("f" gnus-summary-mail-forward "Fwd C-c C-f")
-       ("!" gnus-summary-tick-article-forward "Mail -> disk !")
-       ("p" gnus-summary-put-mark-as-read "Mail <- disk")
-       ("c" gnus-summary-catchup-and-exit "Rd all c")
-       ("e" gnus-summary-resend-message-edit "Resend S D e")
-       ("R" gnus-summary-reply-with-original "Re with orig R")
-       ("r" gnus-summary-reply "Re r")
-       ("W" gnus-summary-wide-reply-with-original "Re all with orig S W")
-       ("w" gnus-summary-wide-reply "Re all S w")
-       ("#" gnus-topic-mark-topic "Mark #")
-       ("q" nil "Bye"))
+       "
+[_F_] Forward (C-c C-f)             [_s_] Show thread
+[_e_] Resend (S D e)                [_h_] Hide thread
+[_r_] Reply                         [_n_] Refresh (/ N)
+[_R_] Reply with original           [_!_] Mail -> disk
+[_w_] Reply all (S w)               [_p_] Disk -> mail
+[_W_] Reply all with original (S W) [_c_] Read all
+[_G_] Search current folder         [_#_] Mark
+[_b_] Switch Gnus buffer
+"
+       ("s" gnus-summary-show-thread)
+       ("h" gnus-summary-hide-thread)
+       ("n" gnus-summary-insert-new-articles)
+       ("F" gnus-summary-mail-forward)
+       ("!" gnus-summary-tick-article-forward)
+       ("b" my-switch-gnus-buffer)
+       ("p" gnus-summary-put-mark-as-read)
+       ("c" gnus-summary-catchup-and-exit)
+       ("e" gnus-summary-resend-message-edit)
+       ("R" gnus-summary-reply-with-original)
+       ("r" gnus-summary-reply)
+       ("W" gnus-summary-wide-reply-with-original)
+       ("w" gnus-summary-wide-reply)
+       ("#" gnus-topic-mark-topic)
+       ("G" gnus-summary-make-nnir-group)
+       ("q" nil))
      ;; y is not used by default
      (define-key gnus-summary-mode-map "y" 'hydra-gnus-summary/body)))
 
@@ -100,19 +117,27 @@
 (eval-after-load 'gnus-art
   '(progn
      (defhydra hydra-gnus-article (:color blue)
-       "?"
-       ("f" gnus-summary-mail-forward "Fwd")
-       ("R" gnus-article-reply-with-original "Re with orig R")
-       ("r" gnus-article-reply "Re r")
-       ("W" gnus-article-wide-reply-with-original "Re all with orig S W")
-       ("o" gnus-mime-save-part "Save attachment at point o")
-       ("w" gnus-article-wide-reply "Re all S w")
-       ("v" w3mext-open-with-mplayer "Video/audio at point")
-       ("d" w3mext-download-rss-stream "CLI to download stream")
-       ("b" w3mext-open-link-or-image-or-url "Link under cursor or page URL with external browser")
-       ("f" w3m-lnum-follow "Click link/button/input")
-       ("F" w3m-lnum-goto "Move focus to link/button/input")
-       ("q" nil "Bye"))
+       "
+[_o_] Save attachment        [_F_] Forward
+[_v_] Play video/audio       [_r_] Reply
+[_d_] CLI to dowloand stream [_R_] Reply with original
+[_b_] Open external browser  [_w_] Reply all (S w)
+[_f_] Click link/button      [_W_] Reply all with original (S W)
+[_g_] Focus link/button      [_b_] Switch Gnus buffer
+"
+       ("F" gnus-summary-mail-forward)
+       ("r" gnus-article-reply)
+       ("R" gnus-article-reply-with-original)
+       ("w" gnus-article-wide-reply)
+       ("W" gnus-article-wide-reply-with-original)
+       ("o" gnus-mime-save-part)
+       ("v" w3mext-open-with-mplayer)
+       ("d" w3mext-download-rss-stream)
+       ("b" w3mext-open-link-or-image-or-url)
+       ("f" w3m-lnum-follow)
+       ("g" w3m-lnum-goto)
+       ("b" my-switch-gnus-buffer)
+       ("q" nil))
      ;; y is not used by default
      (define-key gnus-article-mode-map "y" 'hydra-gnus-article/body)))
 
@@ -120,11 +145,17 @@
 (eval-after-load 'message
   '(progn
      (defhydra hydra-message (:color blue)
-       "?"
-       ("a" counsel-bbdb-complete-mail "Mail address")
-       ("ca" mml-attach-file "Attach C-c C-a")
-       ("cc" message-send-and-exit "Send C-c C-c")
-       ("q" nil "Bye"))))
+  "
+[_c_] Complete mail address
+[_a_] Attach file
+[_s_] Send mail (C-c C-c)
+[_b_] Switch Gnus buffer
+"
+       ("c" counsel-bbdb-complete-mail)
+       ("a" mml-attach-file)
+       ("s" message-send-and-exit)
+       ("b" my-switch-gnus-buffer)
+       ("q" nil))))
 
 (defun message-mode-hook-hydra-setup ()
   (local-set-key (kbd "C-c C-y") 'hydra-message/body))
