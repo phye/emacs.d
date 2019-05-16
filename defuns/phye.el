@@ -42,6 +42,10 @@
 
 ;; {{ cpp programming
 (c-set-offset 'innamespace 0)
+(require 'string-inflection)
+(global-set-key (kbd "C-c i") 'string-inflection-cycle)
+(global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
+(global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
 ;; }}
 
 ;; {{ Golang programming
