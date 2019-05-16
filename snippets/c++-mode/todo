@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
 # name: todo
-# key: todo
+# key: td
 # --
 // TODO(phye): ${0:}
