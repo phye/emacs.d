@@ -489,7 +489,7 @@ Keep the last num lines if argument num if given."
      (winum-mode 1)))
 ;; }}
 
-(ace-pinyin-global-mode +1)
+;; (ace-pinyin-global-mode +1)
 
 ;; {{ avy, jump between texts, like easymotion in vim
 ;; @see http://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy/ for more tips
@@ -715,6 +715,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; {{ auto-save.el
 (local-require 'auto-save)
 (add-to-list 'auto-save-exclude 'file-too-big-p t)
+(setq auto-save-idle 2) ; 2 seconds
 (auto-save-enable)
 (setq auto-save-slient t)
 ;; }}

@@ -155,7 +155,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
          (pkg-desc (nth 0 original-args))
          (pkg-dir (nth 1 original-args))
          (path (package-generate-autoload-path pkg-desc pkg-dir)))
-    (message "pkg-desc=%s pkg-dir=%s path=%s" pkg-desc pkg-dir path)
+    ;; (message "pkg-desc=%s pkg-dir=%s path=%s" pkg-desc pkg-dir path)
     (with-current-buffer (find-file-existing path)
       (kill-buffer nil))))
 
@@ -294,7 +294,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'emms)
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
-(require-package 'ace-pinyin)
+;; (require-package 'ace-pinyin) ; advice old avy API, make avy v5.0 broken
 (require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers
 (require-package 'jss)
@@ -333,6 +333,15 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'vimrc-mode)
 (require-package 'nov) ; read epub
 (require-package 'rust-mode)
+(require-package 'benchmark-init)
+
+;; {{ Fixed expiring GNU ELPA keys
+;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to
+;; update key or else users can't install packages from GNU ELPA.
+;; @see https://www.reddit.com/r/emacs/comments/bn6k1y/updating_gnu_elpa_keys/
+;; BTW, this setup uses MELPA only. So GNU ELPA GPG key is not used.
+(require-package 'gnu-elpa-keyring-update)
+;; }}
 
 (when *emacs26*
   ;; org => ppt, org v8.3 is required (Emacs 25 uses org v8.2)

@@ -70,7 +70,7 @@
        ("A" gnus-group-list-active)
        ("L" gnus-group-list-all-groups)
        ("c" gnus-topic-catchup-articles)
-       ("G" gnus-group-make-nnir-group)
+       ("G" dianyou-group-make-nnir-group)
        ("b" my-switch-gnus-buffer)
        ("g" gnus-group-get-new-news)
        ("^" gnus-group-enter-server-mode)
@@ -89,10 +89,10 @@
 [_e_] Resend (S D e)                [_h_] Hide thread
 [_r_] Reply                         [_n_] Refresh (/ N)
 [_R_] Reply with original           [_!_] Mail -> disk
-[_w_] Reply all (S w)               [_p_] Disk -> mail
+[_w_] Reply all (S w)               [_d_] Disk -> mail
 [_W_] Reply all with original (S W) [_c_] Read all
 [_G_] Search current folder         [_#_] Mark
-[_b_] Switch Gnus buffer
+[_b_] Switch Gnus buffer            [_A_] Show Raw article
 "
        ("s" gnus-summary-show-thread)
        ("h" gnus-summary-hide-thread)
@@ -100,7 +100,7 @@
        ("F" gnus-summary-mail-forward)
        ("!" gnus-summary-tick-article-forward)
        ("b" my-switch-gnus-buffer)
-       ("p" gnus-summary-put-mark-as-read)
+       ("d" gnus-summary-put-mark-as-read-next)
        ("c" gnus-summary-catchup-and-exit)
        ("e" gnus-summary-resend-message-edit)
        ("R" gnus-summary-reply-with-original)
@@ -108,7 +108,8 @@
        ("W" gnus-summary-wide-reply-with-original)
        ("w" gnus-summary-wide-reply)
        ("#" gnus-topic-mark-topic)
-       ("G" gnus-summary-make-nnir-group)
+       ("A" gnus-summary-show-raw-article)
+       ("G" dianyou-group-make-nnir-group)
        ("q" nil))
      ;; y is not used by default
      (define-key gnus-summary-mode-map "y" 'hydra-gnus-summary/body)))
@@ -130,7 +131,7 @@
        ("R" gnus-article-reply-with-original)
        ("w" gnus-article-wide-reply)
        ("W" gnus-article-wide-reply-with-original)
-       ("o" gnus-mime-save-part)
+       ("o" (lambda () (interactive) (let* ((file (gnus-mime-save-part))) (when file (copy-yank-str file)))))
        ("v" w3mext-open-with-mplayer)
        ("d" w3mext-download-rss-stream)
        ("b" w3mext-open-link-or-image-or-url)
