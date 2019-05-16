@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: class
+# key: cls
+# --
+class ${1:Class} ${2:: public ${3:Base}} {
+public:
+    $1();
+    virtual ~$1();
+    $0
+
+private:
+};
