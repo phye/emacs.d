@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: class_variable 
+# key: var
+# --
+${1:ClassName} $1;
