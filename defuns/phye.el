@@ -1,7 +1,7 @@
 ;; {{ Misc
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'ample-zen t)
+(load-theme 'gruvbox-dark-hard t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 
