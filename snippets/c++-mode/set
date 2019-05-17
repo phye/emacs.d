@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: set
+# key: set
+# --
+std::set<${1:std::string}>${2} $0

@@ -2,4 +2,4 @@
 # name: vector
 # key: vec
 # --
-std::vector<${1:Class}> ${2:var}${3:(${4:10}, $1($5))};
+std::vector<${1:std::string}>${2:} $0
