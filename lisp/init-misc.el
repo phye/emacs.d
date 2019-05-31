@@ -365,7 +365,18 @@ Keep the last num lines if argument num if given."
     (counsel-etags-grep (format ".*%s" (file-name-nondirectory buffer-file-name))))
    ((= n 4)
     ;; grep js files which is imported
-    (counsel-etags-grep (format "from .*%s('|\\\.js');?" (file-name-base (file-name-nondirectory buffer-file-name)))))))
+    (counsel-etags-grep (format "from .*%s('|\\\.js');?"
+                                (file-name-base (file-name-nondirectory buffer-file-name)))))
+   ((= n 5)
+    ;; grep Chinese using pinyinlib.
+    ;; In ivy filter, trigger key must be pressed before filter chinese
+    (unless (featurep 'pinyinlib) (require 'pinyinlib))
+    (let* ((counsel-etags-convert-grep-keyword
+            (lambda (keyword)
+              (if (and keyword (> (length keyword) 0))
+                  (pinyinlib-build-regexp-string keyword t)
+                keyword))))
+      (counsel-etags-grep)))))
 
 (defun toggle-full-window()
   "Toggle the full view of selected window"
@@ -489,7 +500,8 @@ Keep the last num lines if argument num if given."
      (winum-mode 1)))
 ;; }}
 
-;; (ace-pinyin-global-mode +1)
+(local-require 'ace-pinyin)
+(ace-pinyin-global-mode +1)
 
 ;; {{ avy, jump between texts, like easymotion in vim
 ;; @see http://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy/ for more tips
@@ -1338,6 +1350,50 @@ Including indent-buffer, which should not be called automatically on save."
   (local-set-key (kbd "w") 'my-pronounce-current-word)
   (local-set-key (kbd ";") 'avy-goto-char-2))
 (add-hook 'nov-mode-hook 'nov-mode-hook-setup)
+;; }}
+
+(defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
+  "Indirect buffer could multiple widen on same file."
+  (if (region-active-p) (deactivate-mark))
+  (if use-indirect-buffer
+      (with-current-buffer (clone-indirect-buffer
+                            (generate-new-buffer-name
+                             (concat (buffer-name) "-indirect-"
+                                     (number-to-string start) "-"
+                                     (number-to-string end)))
+                            'display)
+        (narrow-to-region start end)
+        (goto-char (point-min)))
+      (narrow-to-region start end)))
+
+;; {{ @see https://gist.github.com/mwfogleman/95cc60c87a9323876c6c
+(defun narrow-or-widen-dwim (&optional use-indirect-buffer)
+  "If the buffer is narrowed, it widens.
+ Otherwise, it narrows to region, or Org subtree.
+If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen content."
+  (interactive "P")
+  (cond ((buffer-narrowed-p) (widen))
+        ((region-active-p)
+         (narrow-to-region-indirect-buffer-maybe (region-beginning)
+                                                 (region-end)
+                                                 use-indirect-buffer))
+        ((equal major-mode 'org-mode)
+         (org-narrow-to-subtree))
+        ((derived-mode-p 'diff-mode)
+         (let* (b e)
+           (save-excursion
+             ;; If the (point) is already beginning or end of file diff,
+             ;; the `diff-beginning-of-file' and `diff-end-of-file' return nil
+             (setq b (progn (diff-beginning-of-file) (point)))
+             (setq e (progn (diff-end-of-file) (point))))
+           (when (and b e (< b e))
+             (narrow-to-region-indirect-buffer-maybe b e use-indirect-buffer))))
+        ((derived-mode-p 'prog-mode)
+         (mark-defun)
+         (narrow-to-region-indirect-buffer-maybe (region-beginning)
+                                                 (region-end)
+                                                 use-indirect-buffer))
+        (t (error "Please select a region to narrow to"))))
 ;; }}
 
 (provide 'init-misc)

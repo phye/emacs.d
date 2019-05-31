@@ -27,6 +27,12 @@
     evil-exchange
     evil-find-char-pinyin
     evil-lion
+    ;; {{ dependencies of stable realgud are too old
+    load-relative
+    loc-changes
+    test-simple
+    realgud
+    ;; }}
     counsel-css
     iedit
     undo-tree
@@ -294,7 +300,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'emms)
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
-;; (require-package 'ace-pinyin) ; advice old avy API, make avy v5.0 broken
 (require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers
 (require-package 'jss)
@@ -334,6 +339,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'nov) ; read epub
 (require-package 'rust-mode)
 (require-package 'benchmark-init)
+(require-package 'realgud)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

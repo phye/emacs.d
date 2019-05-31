@@ -1,9 +1,9 @@
-;;; dianyou.el --- Analyze mails in Gnus
+;;; dianyou.el --- Search and analyze mails in Gnus
 
 ;; Copyright (C) 2019 Chen Bin
 ;;
-;; Version: 0.0.1
-;; Keywords: email
+;; Version: 0.0.2
+;; Keywords: mail
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/usrname/dianyou
 ;; Package-Requires: ((emacs "24.4"))
@@ -27,10 +27,16 @@
 ;;; Commentary:
 
 ;; `dianyou-group-make-nnir-group' to search mails.
+;; `dianyou-insert-email-address-from-received-mails' to insert email address.
 
 ;;; Code:
-(require 'gnus-group)
-(require 'gnus-util)
+(require 'gnus-topic)
+(require 'gnus-sum)
+(require 'nnir)
+(require 'gnus-srvr)
+(require 'cl-lib)
+
+(defvar dianyou-email-address-history nil "Email address history.")
 
 (defvar dianyou-debug nil "Print debug information.")
 
@@ -143,7 +149,7 @@
   (interactive)
   (let* ((q (read-string "Query: " nil 'nnir-search-history))
          (words (split-string q " "))
-         (query (string-join (mapcar 'dianyou-translate words) " ")))
+         (query (mapconcat 'identity (mapcar 'dianyou-translate words) " ")))
     (if dianyou-debug (message "query=%s" query))
     query))
 
@@ -166,14 +172,14 @@
 
 ;;;###autoload
 (defun dianyou-group-make-nnir-group ()
-  "Create an nnir group.
+  "Search emails like `gnus-group-make-nnir-group'.
 Prompt for search query and determine groups to search as follows:
-In *Server* buffer search all groups belonging to current server;
-In *Group* buffer search marked groups, or the current group,
+In *Server* buffer, search all groups belonging to current server;
+In *Group* buffer, search marked groups, or the current group,
 or all the groups under the current topic;
-In *Summary* buffer search the group current buffer belonging to.
+In *Summary* buffer, search the group current buffer belonging to.
 
-The IMAP search syntax supports shortcut and more date format:
+IMAP search syntax supports shortcut and more date format:
 \"t\" equals \"TO\".
 \"b\" equals \"BEFORE\".
 \"e\" equals \"TEXT\".
@@ -205,6 +211,121 @@ See https://tools.ietf.org/html/rfc3501#section-6.4.4 for IMAP SEARCH spec."
       (cons 'nnir-specs (list (cons 'nnir-query-spec query-spec)
                               (cons 'nnir-group-spec group-spec)))
       (cons 'nnir-artlist nil)))))
+
+(defun dianyou-test-two-email-address (x y)
+  "Test if email address X equals Y."
+  (let* (x1 y1)
+    ;; Tom W <tom.w@gmail.com> | tom.w@gmail.com (Tom W)
+    (if (string-match "^[^<]*<\\([^ ]*\\)> *$" x)
+        (setq x1 (match-string 1 x))
+      (setq x1 (replace-regexp-in-string " *([^()]*) *" "" (if x x ""))))
+    (if (string-match "^[^<]*<\\([^ ]*\\)> *$" y)
+        (setq y1 (match-string 1 y))
+      (setq y1 (replace-regexp-in-string " *([^ ]*) *" "" (if y y ""))))
+    (string= x1 y1)))
+
+(defun dianyou-add-address (address list regexp)
+  "Add ADDRESS into LIST and return it.
+The email address should not match REGEXP."
+  (cond
+   ((or (not address)
+        ; No empty strings
+        (string= address "")
+        ;; exclude  address
+        (and regexp (not (string= regexp "")) (string-match regexp address)))
+    list)
+   (t
+    (setq list (add-to-list 'list address)))))
+
+;;;###autoload
+(defun dianyou-all-email-address (&optional exclude-regexp quiet)
+  "Return all email address extracted from received mails.
+Email address matching EXCLUDE-REGEXP is excluded from final result.
+If QUIET is t, show no progress report when extracting email address."
+  (let* (str (i 0) header cc-to cands)
+    (dolist (d gnus-newsgroup-data)
+      (setq header (gnus-data-header d))
+      (setq i (+ 1 i))
+      (if (= (mod i 100) 0) (message "%s mails scanned ..." i))
+      (when (vectorp header)
+        (if (setq cc-to (mail-header-extra header))
+            ;; (message "cc-to=%s cc=%s" cc-to (assoc 'Cc cc-to))
+            (setq str (concat str
+                              (cdr (assoc 'To cc-to))
+                              ", "
+                              (cdr (assoc 'Cc cc-to))
+                              ", ")))
+        (setq str (concat str (if (string= "" str) "" ", ")
+                          (mail-header-from header) ", "))))
+
+    ;; sanity check
+    (unless str (setq str ""))
+
+    ;; filter some address
+    (dolist (r (split-string (replace-regexp-in-string "[ ,]*\\'"
+                                                       ""
+                                                       str) ", *"))
+      (setq cands (dianyou-add-address r cands exclude-regexp)))
+
+    ;; remove actually duplicated mails
+    (setq cands (delq nil (cl-remove-duplicates cands
+                                             :test 'dianyou-test-two-email-address
+                                             :from-end t)))
+    cands))
+
+;;;###autoload
+(defun dianyou-summary-extract-email-address(regexp)
+  "Extract email address from email to/cc/from field in *Summary* buffer.
+REGEXP is pattern to exclude email address.
+For example, 'Tom|gmail' excludes address containing \"Tom\" or \"gmail\".
+Final result is inserted into `kill-ring' and returned."
+  (interactive
+   (let* ((regexp (read-regexp "Regex to exclude mail address (OPTIONAL):")))
+     (list regexp)))
+
+  ;; convert into Emacs Lisp regular expression
+  (when (and regexp (not (string= regexp "")))
+    (setq regexp (concat "\\("
+                         (replace-regexp-in-string "|" "\\\\|" regexp)
+                         "\\)")))
+
+  (let* ((rlt (dianyou-all-email-address regexp)))
+    (cond
+     ((> (length rlt) 0)
+      (kill-new (mapconcat 'identity rlt ", "))
+      (message "%d mail address => kill-ring" (length rlt)))
+     (t
+      (message "NO email address is found.")))
+    rlt))
+
+;;;###autoload
+(defun dianyou-get-all-email-addresses ()
+  "Get all email addresses in received mails and update history."
+  (let* ((all-addresses (dianyou-all-email-address))
+         (cands (cond
+                 ((and dianyou-email-address-history all-addresses)
+                  (append dianyou-email-address-history
+                          all-addresses))
+                 (dianyou-email-address-history
+                  dianyou-email-address-history)
+                 (t
+                  (setq dianyou-email-address-history all-addresses)))))
+    (cond
+     ((and cands (> (length cands) 0))
+      (setq dianyou-email-address-history
+            (delq nil (cl-remove-duplicates cands
+                                         :test 'dianyou-test-two-email-address
+                                         :from-end t))))
+     (t
+      nil))))
+
+;;;###autoload
+(defun dianyou-insert-email-address-from-received-mails()
+  "Insert email address from received mails."
+  (interactive)
+  (let* ((email-address (completing-read "Insert email address: "
+                                         (dianyou-get-all-email-addresses))))
+    (if email-address (insert email-address))))
 
 (provide 'dianyou)
 ;;; dianyou.el ends here

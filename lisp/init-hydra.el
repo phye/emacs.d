@@ -65,7 +65,7 @@
 [_L_] Local groups        [_\\^_] List servers
 [_c_] Mark all read       [_m_] Compose new mail
 [_G_] Search mails (G G)  [_#_] Mark mail
-[_b_] Switch Gnus buffer
+[_b_] Switch Gnus buffer  [_E_] Extract email address
 "
        ("A" gnus-group-list-active)
        ("L" gnus-group-list-all-groups)
@@ -76,6 +76,7 @@
        ("^" gnus-group-enter-server-mode)
        ("m" gnus-group-new-mail)
        ("#" gnus-topic-mark-topic)
+       ("E" dianyou-summary-extract-email-address)
        ("q" nil))
      ;; y is not used by default
      (define-key gnus-group-mode-map "y" 'hydra-gnus-group/body)))
@@ -147,15 +148,18 @@
   '(progn
      (defhydra hydra-message (:color blue)
   "
-[_c_] Complete mail address
+[_c_] Complete mail address [_H_] convert to html mail
 [_a_] Attach file
 [_s_] Send mail (C-c C-c)
 [_b_] Switch Gnus buffer
+[_i_] Insert email address
 "
        ("c" counsel-bbdb-complete-mail)
        ("a" mml-attach-file)
        ("s" message-send-and-exit)
        ("b" my-switch-gnus-buffer)
+       ("i" dianyou-insert-email-address-from-received-mails)
+       ("H" org-mime-htmlize)
        ("q" nil))))
 
 (defun message-mode-hook-hydra-setup ()
@@ -237,12 +241,14 @@ _d_ debug-on-error:    %`debug-on-error
 _f_ auto-fill-mode:    %`auto-fill-function
 _t_ truncate-lines:    %`truncate-lines
 _w_ whitespace-mode:   %`whitespace-mode
+_i_ indent-tabs-mode:   %`indent-tabs-mode
 "
   ("a" abbrev-mode nil)
   ("d" toggle-debug-on-error nil)
   ("f" auto-fill-mode nil)
   ("t" toggle-truncate-lines nil)
   ("w" whitespace-mode nil)
+  ("i" (lambda () (interactive) (setq indent-tabs-mode (not indent-tabs-mode))) nil)
   ("q" nil "quit"))
 ;; Recommended binding:
 (global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
@@ -402,7 +408,7 @@ _q_ cancel
   ("h" w3mext-hacker-search)
   ("m" lookup-doc-in-man)
 
-  (";" avy-goto-char-2 )
+  (";" ace-pinyin-jump-char-2)
   ("w" avy-goto-word-or-subword-1 )
   ("a" avy-goto-char-timer )
 
