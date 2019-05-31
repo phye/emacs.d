@@ -2,4 +2,4 @@
 # name: set
 # key: set
 # --
-std::set<${1:std::string}>${2} $0
+std::set<${1:std::string}>$2 $0
