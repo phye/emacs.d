@@ -200,8 +200,10 @@
 
 
 ;; org-journal related
-(setq org-journal-dir "~/ws/OrgNotes/journals/")
-(setq org-journal-enable-agenda-integration t)
+(customize-set-variable 'org-journal-enable-agenda-integration t)
+(customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
+(customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+(require 'org-journal)
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
