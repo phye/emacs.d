@@ -31,7 +31,6 @@
     load-relative
     loc-changes
     test-simple
-    realgud
     ;; }}
     counsel-css
     iedit
@@ -294,7 +293,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'neotree)
 (require-package 'hydra)
 (require-package 'ivy-hydra) ; @see https://oremacs.com/2015/07/23/ivy-multiaction/
-(require-package 'pyim)
+(require-package 'pyim-basedict) ; it's default pyim dictionary
 (require-package 'web-mode)
 (require-package 'dumb-jump)
 (require-package 'emms)
@@ -339,7 +338,8 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'nov) ; read epub
 (require-package 'rust-mode)
 (require-package 'benchmark-init)
-(require-package 'realgud)
+(require-package 'langtool) ; check grammer
+(require-package 'typescript-mode)
 
 ;; {{ Fixed expiring GNU ELPA keys
 ;; GNU ELPA GPG key will expire on Sep-2019. So we need install this package to

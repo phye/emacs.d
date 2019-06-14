@@ -44,7 +44,7 @@
   ("p" emms-previous)
   ("P" emms-pause)
   ("O" emms-play-playlist)
-  ("b" my-switch-gnus-buffer)
+  ("b" dianyou-switch-gnus-buffer)
   ("L" emms-playlist-mode-go)
   ("q" nil))
 
@@ -71,7 +71,7 @@
        ("L" gnus-group-list-all-groups)
        ("c" gnus-topic-catchup-articles)
        ("G" dianyou-group-make-nnir-group)
-       ("b" my-switch-gnus-buffer)
+       ("b" dianyou-switch-gnus-buffer)
        ("g" gnus-group-get-new-news)
        ("^" gnus-group-enter-server-mode)
        ("m" gnus-group-new-mail)
@@ -100,7 +100,7 @@
        ("n" gnus-summary-insert-new-articles)
        ("F" gnus-summary-mail-forward)
        ("!" gnus-summary-tick-article-forward)
-       ("b" my-switch-gnus-buffer)
+       ("b" dianyou-switch-gnus-buffer)
        ("d" gnus-summary-put-mark-as-read-next)
        ("c" gnus-summary-catchup-and-exit)
        ("e" gnus-summary-resend-message-edit)
@@ -138,7 +138,7 @@
        ("b" w3mext-open-link-or-image-or-url)
        ("f" w3m-lnum-follow)
        ("g" w3m-lnum-goto)
-       ("b" my-switch-gnus-buffer)
+       ("b" dianyou-switch-gnus-buffer)
        ("q" nil))
      ;; y is not used by default
      (define-key gnus-article-mode-map "y" 'hydra-gnus-article/body)))
@@ -149,7 +149,7 @@
      (defhydra hydra-message (:color blue)
   "
 [_c_] Complete mail address [_H_] convert to html mail
-[_a_] Attach file
+[_a_] Attach file           [_p_] Paste image from clipboard
 [_s_] Send mail (C-c C-c)
 [_b_] Switch Gnus buffer
 [_i_] Insert email address
@@ -157,9 +157,10 @@
        ("c" counsel-bbdb-complete-mail)
        ("a" mml-attach-file)
        ("s" message-send-and-exit)
-       ("b" my-switch-gnus-buffer)
+       ("b" dianyou-switch-gnus-buffer)
        ("i" dianyou-insert-email-address-from-received-mails)
        ("H" org-mime-htmlize)
+       ("p" dianyou-paste-image-from-clipboard)
        ("q" nil))))
 
 (defun message-mode-hook-hydra-setup ()

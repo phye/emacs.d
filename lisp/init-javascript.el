@@ -21,6 +21,7 @@
         ("Filter" "[. \t]filter([ \t]*['\"]\\([^'\"]+\\)" 1)
         ("State" "[. \t]state[(:][ \t]*['\"]\\([^'\"]+\\)" 1)
         ("Factory" "[. \t]factory([ \t]*['\"]\\([^'\"]+\\)" 1)
+        ("Global" "^\\(export const\\|const\\) \\([a-zA-Z][a-zA-Z0-9]*\\) =" 2)
         ("Service" "[. \t]service([ \t]*['\"]\\([^'\"]+\\)" 1)
         ("Module" "[. \t]module( *['\"]\\([a-zA-Z0-9_.]+\\)['\"], *\\[" 1)
         ("ngRoute" "[. \t]when(\\(['\"][a-zA-Z0-9_\/]+['\"]\\)" 1)
@@ -284,7 +285,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
  ((not *no-memory*)
   ;; javascript
   (add-auto-mode 'js2-mode
-                 "\\.ts\\'"
                  "\\.js\\(\\.erb\\)?\\'")
   ;; JSX
   (add-auto-mode 'rjsx-mode
@@ -297,8 +297,10 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
  (t
   (add-auto-mode 'js-mode
                  "\\.js\\(\\.erb\\)?\\'"
-                 "\\.ts\\'"
                  "\\.babelrc\\'")))
+
+(add-auto-mode 'typescript-mode
+               "\\.ts$")
 
 ;; @see https://github.com/felipeochoa/rjsx-mode/issues/33
 (eval-after-load 'rjsx-mode

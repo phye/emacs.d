@@ -1,11 +1,11 @@
-;;; dianyou.el --- Search and analyze mails in Gnus
+;;; dianyou.el --- Search and analyze mails in Gnus -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2019 Chen Bin
 ;;
 ;; Version: 0.0.2
 ;; Keywords: mail
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
-;; URL: http://github.com/usrname/dianyou
+;; URL: http://github.com/redguardtoo/dianyou
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is not part of GNU Emacs.
@@ -28,6 +28,8 @@
 
 ;; `dianyou-group-make-nnir-group' to search mails.
 ;; `dianyou-insert-email-address-from-received-mails' to insert email address.
+;; `dianyou-switch-gnus-buffer' to switch between gnus buffers
+;; `dianyou-paste-image-from-clipboard' to paste image from clipboard
 
 ;;; Code:
 (require 'gnus-topic)
@@ -235,13 +237,12 @@ The email address should not match REGEXP."
         (and regexp (not (string= regexp "")) (string-match regexp address)))
     list)
    (t
-    (setq list (add-to-list 'list address)))))
+    (push address list))))
 
 ;;;###autoload
-(defun dianyou-all-email-address (&optional exclude-regexp quiet)
+(defun dianyou-all-email-address (&optional exclude-regexp)
   "Return all email address extracted from received mails.
-Email address matching EXCLUDE-REGEXP is excluded from final result.
-If QUIET is t, show no progress report when extracting email address."
+Email address matching EXCLUDE-REGEXP is excluded from final result."
   (let* (str (i 0) header cc-to cands)
     (dolist (d gnus-newsgroup-data)
       (setq header (gnus-data-header d))
@@ -326,6 +327,46 @@ Final result is inserted into `kill-ring' and returned."
   (let* ((email-address (completing-read "Insert email address: "
                                          (dianyou-get-all-email-addresses))))
     (if email-address (insert email-address))))
+
+;;;###autoload
+(defun dianyou-switch-gnus-buffer ()
+  "Switch between Gnus buffers."
+  (interactive)
+  (let* ((curbuf (buffer-name (current-buffer)))
+         (cands (internal-complete-buffer
+                 ""
+                 `(lambda (b)
+                    (let* ((bn (car b)))
+                      (unless (or (string= ,curbuf bn)
+                                  (not (string-match "^\*\\(Group\\|Summary\\|Article\\|unsent\\)" bn)))
+                        b)))
+                 t))
+
+         (buf (and cands (completing-read "Switch to buffer: " cands))))
+    (cond
+     (buf
+      (switch-to-buffer buf))
+     (t
+      (message "No other Gnus buffer.")))))
+
+;;;###autoload
+(defun dianyou-paste-image-from-clipboard ()
+  "Paste image from clipboard.  CLI program xclip is required."
+  (interactive)
+  (let* ((temp-name (format "dianyou-%s.png" (format-time-string "%Y-%m-%dT%T")))
+         (file-path (expand-file-name temp-name temporary-file-directory))
+         (disposition (completing-read "Dispostion (default attachment): "
+                                       '("attachment" "inline"))))
+    (cond
+     ((executable-find "xclip")
+      ;; Execute "xclip -selection clipboard  -t image/png -o > test.png"
+      (shell-command (format "xclip -selection clipboard -t image/png -o > %s" file-path))
+      (when (file-exists-p file-path)
+        (insert (format "<#part type=\"image/png\" filename=\"%s\" disposition=%s><#/part>"
+                        file-path
+                        (if (string= disposition "") "attachment" disposition)))))
+     (t
+      (message "CLI program xclip should be installed at first.")))))
 
 (provide 'dianyou)
 ;;; dianyou.el ends here

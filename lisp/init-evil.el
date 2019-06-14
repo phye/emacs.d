@@ -1,7 +1,13 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
+;;
+;; My frequently used commands are listed here
 
 ;; enable evil-mode
 (evil-mode 1)
+
+(defvar my-use-m-for-matchit nil
+  "If t, use \"m\" key for `evil-matchit-mode'.
+And \"%\" key is also retored to `evil-jump-item'.")
 
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (global-evil-surround-mode 1)
@@ -350,8 +356,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; use "gt", someone might prefer original `evil-goto-definition'
 (define-key evil-motion-state-map "gt" 'my-evil-goto-definition)
 
-(global-evil-matchit-mode 1)
-
 ;; I learn this trick from ReneFroger, need latest expand-region
 ;; @see https://github.com/redguardtoo/evil-matchit/issues/38
 (define-key evil-visual-state-map (kbd "v") 'er/expand-region)
@@ -428,9 +432,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
                         (xref-pulse-momentarily)))))
 ;; }}
 
-;; My frequently used commands are listed here
-;; For example, for line like `"ef" 'end-of-defun`
-;;   You can either press `,ef` or `M-x end-of-defun` to execute it
 (local-require 'general)
 (general-evil-setup t)
 
@@ -444,7 +445,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "bu" 'backward-up-list
  "bb" 'back-to-previous-buffer
  "ef" 'end-of-defun
- "mf" 'mark-defun
+ "m" 'evil-set-marker
  "em" 'erase-message-buffer
  "eb" 'eval-buffer
  "sd" 'sudo-edit
@@ -459,7 +460,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "es" 'goto-edge-by-comparing-font-face
  "vj" 'my-validate-json-or-js-expression
  "kc" 'kill-ring-to-clipboard
- "mcr" 'my-create-regex-from-kill-ring
  "ntt" 'neotree-toggle
  "ntf" 'neotree-find ; open file in current buffer in neotree
  "ntd" 'neotree-project-dir
@@ -483,7 +483,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "ti" 'fastdef-insert
  "th" 'fastdef-insert-from-history
  "ci" 'evilnc-comment-or-uncomment-lines
- "cl" 'evilnc-comment-or-uncomment-to-the-line
+ "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
  "cc" 'evilnc-copy-and-comment-lines
  "cp" 'my-evilnc-comment-or-uncomment-paragraphs
  "ct" 'evilnc-comment-or-uncomment-html-tag ; evil-nerd-commenter v3.3.0 required
@@ -495,10 +495,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "ts" 'evilmr-tag-selected-region ;; recommended
  "cby" 'cb-switch-between-controller-and-view
  "cbu" 'cb-get-url-from-controller
- "ht" 'counsel-etags-find-tag-at-point ; better than find-tag C-]
  "rt" 'counsel-etags-recent-tag
  "ft" 'counsel-etags-find-tag
- "mm" 'counsel-evil-goto-global-marker
  "yy" 'counsel-browse-kill-ring
  "cf" 'counsel-grep ; grep current buffer
  "gf" 'counsel-git ; find file
@@ -575,7 +573,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "uu" 'winner-undo
  "UU" 'winner-redo
  "to" 'toggle-web-js-offset
- "sl" 'sort-lines
  "fs" 'ffip-save-ivy-last
  "fr" 'ffip-ivy-resume
  "fc" 'cp-ffip-ivy-last
@@ -594,6 +591,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "fb" 'flyspell-buffer
  "fe" 'flyspell-goto-next-error
  "fa" 'flyspell-auto-correct-word
+ "lb" 'langtool-check-buffer
+ "ll" 'langtool-goto-next-error
  "pe" 'flymake-goto-prev-error
  "ne" 'flymake-goto-next-error
  "bc" '(lambda () (interactive) (wxhelp-browse-class-or-api (thing-at-point 'symbol)))
@@ -665,9 +664,9 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "ee" 'my-swap-sexps
  "pc" 'my-dired-redo-from-commands-history
  "pw" 'pwd
+ "mm" 'counsel-evil-goto-global-marker
+ "mf" 'mark-defun
  "cc" 'my-dired-redo-last-command
- "mm" 'counsel-bookmark-goto
- "mk" 'bookmark-set
  "ss" 'wg-create-workgroup ; save windows layout
  "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
  "sc" 'shell-command
@@ -788,10 +787,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "gj" 'w3m-search-js-api-mdn
  "ga" 'w3m-java-search
  "gh" 'w3mext-hacker-search ; code search in all engines with firefox
- "gq" 'w3m-stackoverflow-search
- "mw" 'mpc-which-song
- "mn" 'mpc-next-prev-song
- "mp" '(lambda () (interactive) (mpc-next-prev-song t)))
+ "gq" 'w3m-stackoverflow-search)
 ;; }}
 
 ;; {{ remember what we searched
@@ -900,11 +896,12 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;;  - Please note ";;" or `avy-goto-char-timer' is also useful
 ;; }}
 
-;; {{ Evil’s f/F/t/T command can search Pinyin ,
+;; {{ Evil’s f/F/t/T command can search PinYin ,
 (evil-find-char-pinyin-mode 1)
 ;; }}
 
-;; {{ Port of vim-textobj-syntax. It provides evil text objects for consecutive items with same syntax highlig
+;; {{ Port of vim-textobj-syntax.
+;; It provides evil text objects for consecutive items with same syntax highlight.
 (require 'evil-textobj-syntax)
 ;; }}
 
