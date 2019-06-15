@@ -96,7 +96,8 @@
     workgroups2
     zoutline
     company-c-headers
-    company-statistics)
+    company-statistics
+    org-journal)
   "Packages to install from melpa-unstable.")
 
 (defvar melpa-stable-banned-packages nil
@@ -322,7 +323,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'keyfreq)
 (require-package 'adoc-mode) ; asciidoc files
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
-(require-package 'org-journal)
 (require-package 'go-guru)
 (require-package 'company-go)
 (require-package 'shackle)

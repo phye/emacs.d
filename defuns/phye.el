@@ -203,6 +203,8 @@
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+(customize-set-variable 'org-journal-file-format "%Y%m%d.org")
+(customize-set-variable 'org-journal-file-type 'weekly)
 (require 'org-journal)
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
