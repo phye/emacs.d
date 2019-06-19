@@ -200,6 +200,7 @@
 
 
 ;; org-journal related
+(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
