@@ -417,6 +417,7 @@ Keep the last num lines if argument num if given."
                         "\\.mkv$"
                         "\\.mp[34]$"
                         "\\.avi$"
+                        "\\.wav$"
                         "\\.pdf$"
                         "\\.docx?$"
                         "\\.xlsx?$"
@@ -621,7 +622,7 @@ If step is -1, go backward."
 
 (defun diff-region-tag-selected-as-a ()
   "Select a region to compare."
-  (interactive)
+  (interactive "P")
   (when (region-active-p)
     (let* (tmp buf)
       ;; select lines
@@ -922,6 +923,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 (setq session-globals-max-string (* 8 1024 1024))
 (setq session-globals-include '(kill-ring
                                 (session-file-alist 100 t)
+                                my-dired-commands-history
                                 file-name-history
                                 search-ring
                                 regexp-search-ring))
@@ -1325,14 +1327,16 @@ Including indent-buffer, which should not be called automatically on save."
      (t
       (message "Sorry, can't find pronunciation for \"%s\"" word)))))
 
-(defun my-pronounce-current-word ()
+(defun my-pronounce-current-word (&optional manual)
   "Pronounce current word."
-  (interactive)
+  (interactive "P")
   (when (memq major-mode '(nov-mode))
     ;; go to end of word to workaround `nov-mode' bug
     (forward-word)
     (forward-char -1))
-  (my-pronounce-word (thing-at-point 'word)))
+  (let* ((word (if manual (read-string "Word: ")
+                 (thing-at-point 'word))))
+    (my-pronounce-word word)))
 ;; }}
 
 ;; {{ epub setup

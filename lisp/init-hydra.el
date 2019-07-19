@@ -5,39 +5,41 @@
 ;; use similar key bindings as init-evil.el
 (defhydra hydra-launcher (:color blue)
   "
-^Misc^                    ^Audio^               ^Pomodoro^
-----------------------------------------------------------
-[_u_] CompanyIspell       [_R_] Emms Random     [_s_] Start
-[_C_] New workgroup       [_n_] Emms Next       [_t_] Stop
-[_l_] Load workgroup      [_p_] Emms Previous   [_r_] Resume
-[_B_] New bookmark        [_P_] Emms Pause      [_a_] Pause
-[_m_] Goto bookmark       [_O_] Emms Open
-[_v_] Show/Hide undo      [_L_] Emms Playlist
-[_b_] Switch Gnus buffer  [_w_] Pronounce word
-[_f_] Recent file
+^Misc^                    ^Audio^               ^Move^                          ^Pomodoro^
+----------------------------------------------------------------------------------------------
+[_ss_] Save workgroup     [_R_] Emms Random     [_sa_] Backward Sentence (M-a)  [_ss_] Start
+[_ll_] Load workgroup     [_n_] Emms Next       [_se_] Forward Sentence (M-e)   [_st_] Stop
+[_B_] New bookmark        [_p_] Emms Previous   [_la_] Backward Up List         [_sr_] Resume
+[_m_] Goto bookmark       [_P_] Emms Pause      [_le_] Forward List             [_sp_] Pause
+[_v_] Show/Hide undo      [_O_] Emms Open       [_pa_] Backward Paragraph (M-{)
+[_b_] Switch Gnus buffer  [_L_] Emms Playlist   [_pe_] Forward Paragraph (M-})
+[_f_] Recent file         [_w_] Pronounce word
 [_d_] Recent directory
-[_c_] Last dired command
 [_h_] Dired CMD history
 [_E_] Enable typewriter
 [_V_] Vintage typewriter
 [_q_] Quit
 "
-  ("c" my-dired-redo-last-command)
   ("h" my-dired-redo-from-commands-history)
   ("B" bookmark-set)
   ("m" counsel-bookmark-goto)
   ("f" my-counsel-recentf)
   ("d" counsel-recent-directory)
-  ("C" wg-create-workgroup)
-  ("l" my-wg-switch-workgroup)
-  ("u" toggle-company-ispell)
+  ("ss" wg-create-workgroup)
+  ("ll" my-wg-switch-workgroup)
   ("E" toggle-typewriter)
   ("V" twm/toggle-sound-style)
   ("v" undo-tree-visualize)
-  ("s" pomodoro-start)
-  ("t" pomodoro-stop)
-  ("r" pomodoro-resume)
-  ("a" pomodoro-pause)
+  ("ss" pomodoro-start)
+  ("st" pomodoro-stop)
+  ("sr" pomodoro-resume)
+  ("sp" pomodoro-pause)
+  ("sa" backward-sentence)
+  ("se" forward-sentence)
+  ("la" backward-up-list)
+  ("le" forward-list)
+  ("pa" backward-paragraph)
+  ("pe" forward-paragraph)
   ("R" emms-random)
   ("n" emms-next)
   ("w" my-pronounce-current-word)
@@ -54,32 +56,23 @@
   (local-set-key (kbd "C-c C-y") 'hydra-launcher/body))
 (add-hook 'org-mode-hook 'org-mode-hook-hydra-setup)
 
-;; {{ mail
-;; @see https://github.com/redguardtoo/mastering-emacs-in-one-year-guide/blob/master/gnus-guide-en.org
-;; gnus-group-mode
-(eval-after-load 'gnus-group
+(eval-after-load 'find-file-in-project
   '(progn
-     (defhydra hydra-gnus-group (:color blue)
+     (defhydra hydra-ffip-diff-group (:color blue)
        "
-[_A_] Remote groups (A A) [_g_] Refresh
-[_L_] Local groups        [_\\^_] List servers
-[_c_] Mark all read       [_m_] Compose new mail
-[_G_] Search mails (G G)  [_#_] Mark mail
-[_b_] Switch Gnus buffer  [_E_] Extract email address
+[_k_] Previous hunk
+[_j_] Next hunk
+[_p_] Previous file
+[_n_] Next file
 "
-       ("A" gnus-group-list-active)
-       ("L" gnus-group-list-all-groups)
-       ("c" gnus-topic-catchup-articles)
-       ("G" dianyou-group-make-nnir-group)
-       ("b" dianyou-switch-gnus-buffer)
-       ("g" gnus-group-get-new-news)
-       ("^" gnus-group-enter-server-mode)
-       ("m" gnus-group-new-mail)
-       ("#" gnus-topic-mark-topic)
-       ("E" dianyou-summary-extract-email-address)
-       ("q" nil))
-     ;; y is not used by default
-     (define-key gnus-group-mode-map "y" 'hydra-gnus-group/body)))
+       ("k" diff-hunk-prev)
+       ("j" diff-hunk-next)
+       ("p" diff-file-prev)
+       ("n" diff-file-next)
+       ("q" nil))))
+(defun ffip-diff-mode-hook-hydra-setup ()
+  (local-set-key (kbd "C-c C-y") 'hydra-ffip-diff-group/body))
+(add-hook 'ffip-diff-mode-hook 'ffip-diff-mode-hook-hydra-setup)
 
 ;; gnus-summary-mode
 (eval-after-load 'gnus-sum
@@ -181,21 +174,61 @@
          (when (yes-or-no-p (format "%s => %s at %s?"
                                     fb nf dir))
            (rename-file fp (concat dir nf)))))
+     (defun my-extract-mp3-from-video ()
+       "Extract mp3 from current video file using ffmpeg."
+       (interactive)
+       (let* ((video-file (file-name-nondirectory (dired-file-name-at-point)))
+              (params (split-string (string-trim (read-string "start-second [total seconds] (e.g, \"6 10\" or \"05:30 5\"): "))
+                                    " +"))
+              (start (car params))
+              (total (if (eq (length params) 1) "5" (nth 1 params)))
+              cmd)
+         (unless (string= start "")
+           (setq cmd (format "ffmpeg -i \"%s\" -vn -ss %s -t %s -acodec copy \"%s\""
+                                  video-file
+                                  start
+                                  total
+                                  (format "%s-%s-%s.mp3" (file-name-base video-file) start total)))
+           (shell-command (concat cmd " &")))))
+     (defun my-record-wav-by-mp3 ()
+       "Record a wav using meta data from current mp3 file."
+       (interactive)
+       (let* ((mp3-file (file-name-nondirectory (dired-file-name-at-point)))
+              (base (file-name-base mp3-file))
+              (params (split-string base  "-"))
+              (output-file (concat base ".wav"))
+              (total (string-to-number (nth (1- (length params)) params)))
+              cmd)
+         (if (= total 0) (setq total 4))
+         (setq cmd (format "arecord -fdat -d %s \"%s\""
+                           total
+                           output-file))
+           (message "Start recording %s seconds wav ..." total)
+           (my-async-shell-command cmd)))
+     (defun my-play-both-mp3-and-wav ()
+       "Play wav and mp3."
+       (interactive)
+       (let* ((audio-file (file-name-nondirectory (dired-file-name-at-point)))
+              (base (file-name-base audio-file))
+              (ext (file-name-extension audio-file) )
+              (cmd (format "mplayer -quiet \"%s\" \"%s\""
+                           audio-file
+                           (concat base "." (if (string= ext "mp3") "wav" "mp3")))))
+         (my-async-shell-command cmd)))
      (defun my-copy-file-info (fn)
        (message "%s => clipboard & yank ring"
                 (copy-yank-str (funcall fn (dired-file-name-at-point)))))
      (defhydra hydra-dired (:color blue)
        "
-^File/Directory^    ^Copy Info^  ^Fetch Subtitles^
-----------------------------------------------------
-[_mv_] Move file    [_pp_] Path  [_sa_] All
-[_cf_] New file     [_nn_] Name  [_s1_] One
-[_rr_] Rename file  [_bb_] Base
-[_ff_] Find file    [_dd_] DIR
-[_mk_] New DIR
-[_rb_] Replace base
-[_C_]  Copy file
-^^                  ^^           [_q_]  Quit
+^Misc^                      ^File^             ^Copy Info^
+----------------------------------------------------------------
+[_vv_] video2mp3            [_R_] Move         [_pp_] Path
+[_aa_] Record by mp3        [_cf_] New         [_nn_] Name
+[_zz_] Play wav&mp3         [_rr_] Rename      [_bb_] Base
+[_cc_] Last command         [_ff_] Find        [_dd_] directory
+[_sa_] Fetch all subtitles  [_C_]  Copy
+[_s1_] Fetch on subtitle    [_rb_] Change base
+[_+_] Create directory
 "
        ("sa" (shell-command "periscope.py -l en *.mkv *.mp4 *.avi &"))
        ("s1" (let* ((video-file (dired-file-name-at-point))
@@ -206,14 +239,18 @@
        ("bb" (my-copy-file-info 'file-name-base))
        ("dd" (my-copy-file-info 'file-name-directory))
        ("rb" (my-replace-dired-base (car kill-ring)))
+       ("vv" my-extract-mp3-from-video)
+       ("aa" my-record-wav-by-mp3)
+       ("cc" my-dired-redo-last-command)
+       ("zz" my-play-both-mp3-and-wav)
        ("C" dired-do-copy)
-       ("mv" diredp-do-move-recursive)
+       ("R" dired-rename-file)
        ("cf"find-file)
        ("rr" dired-toggle-read-only)
        ("ff" (lambda (regexp)
                (interactive "sMatching regexp: ")
                (find-lisp-find-dired default-directory regexp)))
-       ("mk" dired-create-directory)
+       ("+" dired-create-directory)
        ("q" nil))))
 
 (defun dired-mode-hook-hydra-setup ()
@@ -237,6 +274,7 @@
 ;; {{ @see https://github.com/abo-abo/hydra/blob/master/hydra-examples.el
 (defhydra hydra-toggle (:color pink)
   "
+_u_ company-ispell     %(if (memq 'company-ispell company-backends) t)
 _a_ abbrev-mode:       %`abbrev-mode
 _d_ debug-on-error:    %`debug-on-error
 _f_ auto-fill-mode:    %`auto-fill-function
@@ -244,6 +282,7 @@ _t_ truncate-lines:    %`truncate-lines
 _w_ whitespace-mode:   %`whitespace-mode
 _i_ indent-tabs-mode:   %`indent-tabs-mode
 "
+  ("u" toggle-company-ispell nil)
   ("a" abbrev-mode nil)
   ("d" toggle-debug-on-error nil)
   ("f" auto-fill-mode nil)
@@ -252,7 +291,7 @@ _i_ indent-tabs-mode:   %`indent-tabs-mode
   ("i" (lambda () (interactive) (setq indent-tabs-mode (not indent-tabs-mode))) nil)
   ("q" nil "quit"))
 ;; Recommended binding:
-(global-set-key (kbd "C-c C-v") 'hydra-toggle/body)
+(global-set-key (kbd "C-c C-h") 'hydra-toggle/body)
 ;; }}
 
 ;; {{ @see https://github.com/abo-abo/hydra/wiki/Window-Management

@@ -1,8 +1,5 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-;; use memory efficient pyim engine
-(setq pyim-mapping-file-engine-p t)
-
 ;; {{ make IME compatible with evil-mode
 (defun evil-toggle-input-method ()
   "When input method is on, goto `evil-insert-state'."
@@ -44,8 +41,7 @@
 
 ;; {{ pyim
 (defvar my-pyim-directory "~/.eim"
-  "The directory containing pyim dictionaries.
-Bigger (>2M) dictionaries in this directory will replace basedict.")
+  "The directory containing pyim dictionaries.")
 
 (add-auto-mode 'text-mode "\\.pyim\\'")
 
@@ -53,53 +49,39 @@ Bigger (>2M) dictionaries in this directory will replace basedict.")
   (file-truename (concat (file-name-as-directory my-pyim-directory)
                          (or dict-name "personal.pyim"))))
 
-(defun my-pyim-export-dictionary ()
-  "Export words you use in pyim into personal dictionary."
-  (interactive)
-  (with-temp-buffer
-    (maphash
-     #'(lambda (key value)
-         ;; only export two character word
-         (if (string-match "-" key)
-             (insert (concat key
-                             " "
-                             (mapconcat #'identity value ""))
-                     "\n")))
-     pyim-dcache-icode2word)
-    (unless (and my-pyim-directory
-                 (file-directory-p my-pyim-directory))
-      (setq my-pyim-directory
-            (read-directory-name "Personal Chinese dictionary directory:")))
-    (if my-pyim-directory
-        (write-file (my-pyim-personal-dict)))))
-
 (eval-after-load 'pyim
   '(progn
+     ;; use memory efficient pyim engine
+     (setq pyim-dcache-backend 'pyim-dregcache)
+     ;; don's use shortcode2word
+     (setq pyim-enable-shortcode nil)
+
      ;; use western punctuation (ban jiao fu hao)
-     ;;(setq pyim-punctuation-dict nil)
-     (setq pyim-punctuation-translate-p '(auto yes no))
-     ;; always input English when isearch
-     (setq pyim-isearch-enable-pinyin-search t)
      (setq default-input-method "pyim")
 
-     ;; I'm OK with a smaller dictionary
-     (let* ((files (directory-files-and-attributes my-pyim-directory t "\.pyim$") )
-            bigdict-p)
-       (cond
-        ((> (length files) 0)
+     ;; automatically load all "*.pyim" under "~/.eim/"
+     ;; `directory-files-recursively' requires Emacs 25
+     (let* ((files (directory-files-recursively my-pyim-directory "\.pyim$"))
+            disable-basedict)
+       (when (and files (> (length files) 0))
          (setq pyim-dicts
                (mapcar (lambda (f)
-                         (when (> (file-attribute-size (cdr f)) (* 2 1024 1024))
-                           (setq bigdict-p t))
-                         (list :name (file-name-base (car f))
-                               :file (car f)))
-                       files)))
-        ((not bigdict-p)
-         (pyim-basedict-enable))))
+                         (list :name (file-name-base f) :file f))
+                       files))
+         ;; disable basedict if bigdict or greatdict is used
+         (dolist (f files)
+           (when (or (string= "pyim-bigdict" (file-name-base f))
+                     (string= "pyim-greatdict" (file-name-base f)))
+             (setq disable-basedict t))))
+       (unless disable-basedict (pyim-basedict-enable)))
 
-     ;; You can also set up the great dictionary (80M) the same way as peronsal dictionary
-     ;; great dictionary can be downloaded this way:
-     ;; `curl -L https://github.com/tumashu/pyim-greatdict/raw/master/pyim-greatdict.pyim.gz | zcat > ~/.eim/pyim-greatdict.pyim`
+     (setq pyim-fuzzy-pinyin-alist
+           '(("en" "eng")
+             ("in" "ing")))
+
+     ;;  pyim-bigdict is recommended (20M). There are many useless words in pyim-greatdict which also slows
+     ;;  down pyim performance
+     ;; `curl -L http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz | zcat > ~/.eim/pyim-bigdict.pyim`
 
      ;; don't use tooltip
      (setq pyim-use-tooltip 'popup)))

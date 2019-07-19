@@ -12,28 +12,22 @@ And \"%\" key is also retored to `evil-jump-item'.")
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (global-evil-surround-mode 1)
 (defun evil-surround-prog-mode-hook-setup ()
-  (push '(47 . ("/" . "/")) evil-surround-pairs-alist)
-  (push '(40 . ("(" . ")")) evil-surround-pairs-alist)
-  (push '(41 . ("(" . ")")) evil-surround-pairs-alist)
-  (push '(91 . ("[" . "]")) evil-surround-pairs-alist)
-  (push '(93 . ("[" . "]")) evil-surround-pairs-alist))
+  (push '(?$ . ("${" . "}")) evil-surround-pairs-alist)
+  (push '(?/ . ("/" . "/")) evil-surround-pairs-alist))
 (add-hook 'prog-mode-hook 'evil-surround-prog-mode-hook-setup)
 
 (defun evil-surround-js-mode-hook-setup ()
   ;; ES6
-  (push '(?1 . ("{`" . "`}")) evil-surround-pairs-alist)
-  (push '(?2 . ("${" . "}")) evil-surround-pairs-alist)
-  (push '(?4 . ("(e) => " . "(e)")) evil-surround-pairs-alist)
-  ;; ReactJS
-  (push '(?3 . ("classNames(" . ")")) evil-surround-pairs-alist))
+  (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
 (add-hook 'js-mode-hook 'evil-surround-js-mode-hook-setup)
 
 (defun evil-surround-emacs-lisp-mode-hook-setup ()
+  (push '(?( . ("( " . ")")) evil-surround-pairs-alist)
   (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
 (add-hook 'emacs-lisp-mode-hook 'evil-surround-emacs-lisp-mode-hook-setup)
+
 (defun evil-surround-org-mode-hook-setup ()
-  (push '(91 . ("[" . "]")) evil-surround-pairs-alist)
-  (push '(93 . ("[" . "]")) evil-surround-pairs-alist)
+  (push '(93 . ("[[" . "]]")) evil-surround-pairs-alist) ; ]
   (push '(?= . ("=" . "=")) evil-surround-pairs-alist))
 (add-hook 'org-mode-hook 'evil-surround-org-mode-hook-setup)
 ;; }}
@@ -45,10 +39,6 @@ And \"%\" key is also retored to `evil-jump-item'.")
 
 ;; ffip-diff-mode (read only) evil setup
 (defun ffip-diff-mode-hook-setup ()
-  (evil-local-set-key 'normal "K" 'diff-hunk-prev)
-  (evil-local-set-key 'normal "J" 'diff-hunk-next)
-  (evil-local-set-key 'normal "P" 'diff-file-prev)
-  (evil-local-set-key 'normal "N" 'diff-file-next)
   (evil-local-set-key 'normal "q" (lambda () (interactive) (quit-window t)))
   (evil-local-set-key 'normal (kbd "RET") 'ffip-diff-find-file)
   ;; "C-c C-a" is binding to `diff-apply-hunk' in `diff-mode'
@@ -336,7 +326,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
       (cond
        ((and (derived-mode-p 'js2-mode)
              (or (null (get-text-property (point) 'face))
-                 (font-belongs-to (point) '(rjsx-tag))))
+                 (font-belongs-to (point) '(rjsx-tag
+                                            js2-function-call))))
         (js2-jump-to-definition))
        ((fboundp 'imenu--make-index-alist)
         (condition-case nil
@@ -576,7 +567,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "fs" 'ffip-save-ivy-last
  "fr" 'ffip-ivy-resume
  "fc" 'cp-ffip-ivy-last
- "ss" 'swiper-the-thing ; http://oremacs.com/2015/03/25/swiper-0.2.0/ for guide
+ "ss" (lambda ()
+        (interactive)
+        ;; better performance, got Cygwin grep installed on Windows always
+        (counsel-grep-or-swiper (if (region-active-p) (my-selected-str))))
  "hst" 'hs-toggle-fold
  "hsa" 'hs-toggle-fold-all
  "hsh" 'hs-hide-block

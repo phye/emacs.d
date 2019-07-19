@@ -221,6 +221,8 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 - Optionally used by =M-x counsel-etags-grep= to search text in files
 - Run =curl https://sh.rustup.rs -sSf | sh= in shell to install [[https://www.rust-lang.org/][Rust]] then =cargo install ripgrep=
 - Tweak environment variable PATH so Emacs find ripgrep
+**** [[http://www.sbcl.org/][sbcl]]
+- Required by [[https://common-lisp.net/project/slime/][SLIME: The Superior Lisp Interaction Mode for Emacs]]
 **** LanguageTool
 It's Grammar, Style and Spell Checker
 - Download from [[https://languagetool.org/download/LanguageTool-stable.zip]].
@@ -507,9 +509,7 @@ You can also complete line by =M-x eacl-complete-line= and complete multi-lines 
 ** Chinese Input Method Editor
 Run =M-x toggle-input-method= to toggle input method [[https://github.com/tumashu/pyim][pyim]].
 
-If your *personal* dictionary =~/.eim/personal.pyim= exists, it will be used.
-
-You can =M-x my-pyim-export-dictionary= to export your personal words into =personal.pyim=. Check =init-chinese.el= for more information.
+Dictionnaries with ".pyim" extension under  =~/.eim/= are automatically loaded.
 ** Install multiple versions of Emacs
 Run below commands in shell:
 #+begin_src bash
