@@ -120,9 +120,11 @@
                       (:endgroup)))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "STARTED(s!)" "BLOCKED(b@)" "|" "DONE(d!)" "CANCELLED(c@/!)") ;; general todo items
+      '((sequence "TODO(t!/!)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "CANCELLED(c@/!)") ;; general todo items
         (sequence "ASSIGNED(a!)" "STARTED(s!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(f!)" "VERIFIED(v!)") ;; bug only
         (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
+
+(setq org-log-into-drawer t)
 
 (setq org-agenda-files
      (quote
