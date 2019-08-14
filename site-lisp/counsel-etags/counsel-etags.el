@@ -6,7 +6,7 @@
 ;; URL: http://github.com/redguardtoo/counsel-etags
 ;; Package-Requires: ((emacs "24.4") (counsel "0.10.0") (ivy "0.10.0"))
 ;; Keywords: tools, convenience
-;; Version: 1.8.7
+;; Version: 1.8.9
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -158,7 +158,7 @@ Here is code to enable grepping Chinese using pinyinlib,
   :group 'counsel-etags
   :type 'boolean)
 
-(defcustom counsel-etags-find-tag-name-function 'find-tag-default
+(defcustom counsel-etags-find-tag-name-function nil
   "The function to use to find tag name at point.
 It should be a function that takes no arguments and returns an string.
 If it returns nil, the `find-tag-default' is used.
@@ -189,7 +189,7 @@ The definition of word is customized by the user.
 (defun counsel-etags-setup-smart-rules ()
   "Initialize `counsel-etags-smart-rules'."
   (interactive)
-  (counsel-etags-load-smart-rules '(js-mode js2-mode rjsx-mode) 'javascript))
+  (counsel-etags-load-smart-rules '(js-mode js2-mode rjsx-mode js2-jsx-mode) 'javascript))
 
 (defun counsel-etags-execute-collect-function ()
   "Return context before finding tag definition."
@@ -440,6 +440,9 @@ The file is also used by tags file auto-update process.")
   "Guess path from its EXECUTABLE-NAME on Windows.
 Return nil if it's not found."
   (cond
+   ((file-remote-p default-directory)
+    ;; Assume remote server has already added EXE into $PATH!
+    executable-name)
    ((eq system-type 'windows-nt)
     (or (counsel-etags-win-path executable-name "c")
         (counsel-etags-win-path executable-name "d")
@@ -453,7 +456,7 @@ Return nil if it's not found."
 ;;;###autoload
 (defun counsel-etags-version ()
   "Return version."
-  (message "1.8.7"))
+  (message "1.8.9"))
 
 ;;;###autoload
 (defun counsel-etags-get-hostname ()
@@ -745,7 +748,7 @@ HASH store the previous distance."
   "Sort CANDS if `counsel-etags-candidates-optimize-limit' is t.
 STRIP-COUNT strips the string before calculating distance.
 IS-STRING is t if the candidate is string.
-CURRENT-FILE is use comparting candidate path"
+CURRENT-FILE is used to compare with candidate path."
   (let* ((ref (and current-file (counsel-etags--strip-path current-file strip-count))))
     (cond
      ;; don't sort candidates
@@ -778,10 +781,10 @@ CURRENT-FILE is use comparting candidate path"
   (let* ((info (plist-get counsel-etags-cache (intern tags-file))))
     (plist-get info :content)))
 
-(defun counsel-etags-cache-checksum (tags-file)
+(defun counsel-etags-cache-filesize (tags-file)
   "Read cache using TAGS-FILE as key."
   (let* ((info (plist-get counsel-etags-cache (intern tags-file))))
-    (plist-get info :size)))
+    (or (plist-get info :filesize) 0)))
 
 (defmacro counsel-etags-put (key value dictionary)
   "Add KEY VALUE pair into DICTIONARY."
@@ -811,14 +814,16 @@ CONTEXT is extra information collected before find tag definition."
     ;; Not precise but acceptable algorithm.
     (when (and tags-file
                (file-exists-p tags-file)
-               (not (string= (counsel-etags-cache-checksum tags-file)
-                             (setq file-size (format "%s" (nth 7 (file-attributes tags-file)))))))
+               ;; TAGS file is smaller when being created.
+               ;; Do NOT load incomplete tags file
+               (< (counsel-etags-cache-filesize tags-file)
+                  (setq file-size (nth 7 (file-attributes tags-file)))))
       (when counsel-etags-debug
-        (message "Read file .... %s %s" (counsel-etags-cache-checksum tags-file) file-size))
+        (message "Read file .... %s %s" (counsel-etags-cache-filesize tags-file) file-size))
       (counsel-etags-put (intern tags-file)
                          (list :content
                                (counsel-etags-read-file tags-file)
-                               :size
+                               :filesize
                                file-size)
                          counsel-etags-cache))
 
@@ -914,11 +919,12 @@ So we need *encode* the string."
       (counsel-etags-encode (buffer-substring-no-properties (region-beginning)
                                                             (region-end)))))
 
-(defun counsel-etags-tagname-at-point ()
+(defmacro counsel-etags-tagname-at-point ()
   "Get tag name at point."
-  (or (counsel-etags-selected-str)
-      (funcall counsel-etags-find-tag-name-function)
-      (find-tag-default)))
+  `(or (counsel-etags-selected-str)
+       (and counsel-etags-find-tag-name-function
+            (funcall counsel-etags-find-tag-name-function))
+       (find-tag-default)))
 
 (defun counsel-etags-forward-line (lnum)
   "Forward LNUM lines."
@@ -937,6 +943,9 @@ Focus on TAGNAME if it's not nil."
            ;; always calculate path relative to TAGS
            (default-directory dir))
 
+      (when counsel-etags-debug
+        (message "counsel-etags-open-file-api called => dir=%s, linenum=%s, file=%s" dir linenum file))
+
       ;; item's format is like '~/proj1/ab.el:39: (defun hello() )'
       (counsel-etags-push-marker-stack (point-marker))
       ;; open file, go to certain line
@@ -944,10 +953,12 @@ Focus on TAGNAME if it's not nil."
       (counsel-etags-forward-line linenum))
 
     ;; move focus to the tagname
-    (when tagname
-      ;; highlight the tag
-      (beginning-of-line)
-      (re-search-forward tagname)
+    (beginning-of-line)
+    ;; search tagname in current line might fail
+    ;; maybe tags files is updated yet
+    (when (and tagname
+               ;; focus on the tag if possible
+               (re-search-forward tagname (line-end-position) t))
       (goto-char (match-beginning 0)))
 
     ;; flash, Emacs v25 only API

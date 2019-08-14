@@ -22,7 +22,7 @@ And \"%\" key is also retored to `evil-jump-item'.")
 (add-hook 'js-mode-hook 'evil-surround-js-mode-hook-setup)
 
 (defun evil-surround-emacs-lisp-mode-hook-setup ()
-  (push '(?( . ("( " . ")")) evil-surround-pairs-alist)
+  (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
   (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
 (add-hook 'emacs-lisp-mode-hook 'evil-surround-emacs-lisp-mode-hook-setup)
 
@@ -326,8 +326,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
       (cond
        ((and (derived-mode-p 'js2-mode)
              (or (null (get-text-property (point) 'face))
-                 (font-belongs-to (point) '(rjsx-tag
-                                            js2-function-call))))
+                 (font-belongs-to (point) '(rjsx-tag))))
         (js2-jump-to-definition))
        ((fboundp 'imenu--make-index-alist)
         (condition-case nil
@@ -528,7 +527,13 @@ If the character before and after CH is space or tab, CH is NOT slash"
  "tm" 'my-git-timemachine
  ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
  "ov" 'my-overview-of-current-buffer
- "oo" 'compile
+ "oo" '(lambda ()
+         (interactive)
+         (cond
+          ((member major-mode '(octave-mode))
+           (octave-send-buffer))
+          (t
+           (compile))))
  "c$" 'org-archive-subtree ; `C-c $'
  ;; org-do-demote/org-do-premote support selected region
  "c<" 'org-do-promote ; `C-c C-<'
@@ -771,14 +776,12 @@ If the character before and after CH is space or tab, CH is NOT slash"
  ";" 'ace-pinyin-jump-char-2
  "w" 'avy-goto-word-or-subword-1
  "a" 'avy-goto-char-timer
- "db" 'sdcv-search-pointer ; in buffer
- "dt" 'sdcv-search-input+ ; in tip
+ "db" 'sdcv-search-input ; details
+ "dt" 'sdcv-search-input+ ; summary
  "dd" 'my-lookup-dict-org
  "mm" 'lookup-doc-in-man
  "gg" 'w3m-google-search
- "gf" 'w3m-google-by-filetype
  "gd" 'w3m-search-financial-dictionary
- "gj" 'w3m-search-js-api-mdn
  "ga" 'w3m-java-search
  "gh" 'w3mext-hacker-search ; code search in all engines with firefox
  "gq" 'w3m-stackoverflow-search)
@@ -857,6 +860,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
   (when (fboundp 'evilnc-imenu-create-index-function)
     (let* ((imenu-create-index-function 'evilnc-imenu-create-index-function))
       (counsel-imenu))))
+;; }}
+
+;; {{ `evil-matchit'
+(global-evil-matchit-mode 1)
 ;; }}
 
 ;; {{ evil-exchange
