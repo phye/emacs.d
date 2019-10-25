@@ -43,20 +43,15 @@
      (put 'web-mode 'flyspell-mode-predicate 'web-mode-flyspell-verify)
      ;; }}
 
-     ;; {{ flyspell setup for js2-mode
-     (local-require 'wucuo)
-     (put 'js2-mode 'flyspell-mode-predicate 'wucuo-generic-check-word-predicate)
-     (put 'rjsx-mode 'flyspell-mode-predicate 'wucuo-generic-check-word-predicate)
-     ;; }}
-
      ;; better performance
      (setq flyspell-issue-message-flag nil)
 
+     ;; flyspell-lazy is outdated and conflicts with latest flyspell
+     ;; It only improves the performance of flyspell so it's not essential.
+
      (defadvice flyspell-highlight-incorrect-region (around flyspell-highlight-incorrect-region-hack activate)
        (if (or flyspell-check-doublon (not (eq 'doublon (ad-get-arg 2))))
-           ad-do-it))
-
-     (flyspell-lazy-mode 1)))
+           ad-do-it))))
 
 
 ;; The logic is:
