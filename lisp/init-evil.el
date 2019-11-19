@@ -433,7 +433,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (my-comma-leader-def
   "bf" 'beginning-of-defun
   "bu" 'backward-up-list
-  "bb" 'back-to-previous-buffer
+  "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
   "ef" 'end-of-defun
   "m" 'evil-set-marker
   "em" 'erase-message-buffer
@@ -445,7 +445,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "aw" 'ace-swap-window
   "af" 'ace-maximize-window
   "ac" 'aya-create
-  "zz" 'paste-from-x-clipboard ; used frequently
+  "pp" 'paste-from-x-clipboard ; used frequently
   "bs" '(lambda () (interactive) (goto-edge-by-comparing-font-face -1))
   "es" 'goto-edge-by-comparing-font-face
   "vj" 'my-validate-json-or-js-expression
@@ -523,7 +523,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "ls" 'highlight-symbol
   "lq" 'highlight-symbol-query-replace
   "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
-  "ii" 'counsel-imenu
+  "ii" 'my-imenu-or-list-tag-in-current-file
   "ij" 'rimenu-jump
   "." 'evil-ex
   ;; @see https://github.com/pidu/git-timemachine
@@ -550,7 +550,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "cxr" 'org-clock-report ; `C-c C-x C-r'
   "qq" 'my-multi-purpose-grep
   "dd" 'counsel-etags-grep-current-directory
-  "xc" 'save-buffers-kill-terminal
   "rr" 'my-counsel-recentf
   "rh" 'counsel-yank-bash-history ; bash history command => yank-ring
   "rd" 'counsel-recent-directory
@@ -633,7 +632,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "xh" 'mark-whole-buffer
   "xk" 'kill-buffer
   "xs" 'save-buffer
-  "xz" 'switch-to-shell-or-ansi-term
+  "xc" 'my-switch-to-shell-or-ansi-term
   "vm" 'vc-rename-file-and-buffer
   "vc" 'vc-copy-file-and-rename-buffer
   "xvv" 'vc-next-action ; 'C-x v v' in original
@@ -649,8 +648,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "yu" 'cliphist-select-item
   "ih" 'my-goto-git-gutter ; use ivy-mode
   "ir" 'ivy-resume
-  "nn" 'my-goto-next-hunk
-  "pp" 'my-goto-previous-hunk
   "ww" 'narrow-or-widen-dwim
   "xnw" 'widen
   "xnd" 'narrow-to-defun
@@ -667,10 +664,13 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 (my-space-leader-def
   "ee" 'my-swap-sexps
+  "nn" 'my-goto-next-hunk
+  "pp" 'my-goto-previous-hunk
   "pc" 'my-dired-redo-from-commands-history
   "pw" 'pwd
   "mm" 'counsel-evil-goto-global-marker
   "mf" 'mark-defun
+  "xc" 'save-buffers-kill-terminal ; not used frequently
   "cc" 'my-dired-redo-last-command
   "ss" 'wg-create-workgroup ; save windows layout
   "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
@@ -819,17 +819,17 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; }}
 
 ;; change mode-line color by evil state
-(lexical-let ((default-color (cons (face-background 'mode-line)
-                                   (face-foreground 'mode-line))))
+(let* ((default-color (cons (face-background 'mode-line)
+			    (face-foreground 'mode-line))))
   (add-hook 'post-command-hook
-            (lambda ()
-              (let* ((color (cond ((minibufferp) default-color)
-                                  ((evil-insert-state-p) '("#e80000" . "#ffffff"))
-                                  ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
-                                  ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
-                                  (t default-color))))
-                (set-face-background 'mode-line (car color))
-                (set-face-foreground 'mode-line (cdr color))))))
+	    (lambda ()
+	      (let* ((color (cond ((minibufferp) default-color)
+				  ((evil-insert-state-p) '("#e80000" . "#ffffff"))
+				  ((evil-emacs-state-p)  '("#444488" . "#ffffff"))
+				  ((buffer-modified-p)   '("#006fa0" . "#ffffff"))
+				  (t default-color))))
+		(set-face-background 'mode-line (car color))
+		(set-face-foreground 'mode-line (cdr color))))))
 
 ;; {{ evil-nerd-commenter
 (evilnc-default-hotkeys t)
@@ -928,12 +928,21 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; }}
 
 
+(defun my-switch-to-shell-or-ansi-term ()
+  "Switch to shell or terminal."
+  (interactive)
+  (cond
+   ((fboundp 'switch-to-shell-or-ansi-term)
+    (switch-to-shell-or-ansi-term))
+   (t
+    (suspend-frame))))
+
 ;; press ",xx" to expand region
-;; then press "z" to contract, "x" to expand
+;; then press "c" to contract, "x" to expand
 (eval-after-load "evil"
   '(progn
-     (define-key global-map (kbd "C-x C-z") 'switch-to-shell-or-ansi-term)
-     (setq expand-region-contract-fast-key "z")
+     (define-key global-map (kbd "C-x C-a") 'my-switch-to-shell-or-ansi-term)
+     (setq expand-region-contract-fast-key "c")
      ;; @see https://bitbucket.org/lyro/evil/issue/360/possible-evil-search-symbol-forward
      ;; evil 1.0.8 search word instead of symbol
      (setq evil-symbol-word-search t)
@@ -953,7 +962,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
      (adjust-major-mode-keymap-with-evil "git-timemachine")
 
      ;; @see https://bitbucket.org/lyro/evil/issue/342/evil-default-cursor-setting-should-default
-     ;; Cursor is alway black because of evil.
+     ;; Cursor is always black because of evil.
      ;; Here is the workaround
      (setq evil-default-cursor t)))
 

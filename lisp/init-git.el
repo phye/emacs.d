@@ -206,12 +206,12 @@ If nothing is selected, use the word under cursor as function name to look up."
     (let* ((range-or-func (cond
                            ((region-active-p)
                             (cond
-                             ((my-is-one-line (region-beginning) (region-end))
+                             ((my-is-in-one-line (region-beginning) (region-end))
                               (format ":%s" (my-selected-str)))
                              (t
                               (format "%s,%s"
                                       (line-number-at-pos (region-beginning))
-                                      (line-number-at-pos (region-end))))))
+                                      (line-number-at-pos (1- (region-end)))))))
                            (t
                             (format ":%s" (thing-at-point 'symbol)))))
            (cmd (format "git log -L%s:%s" range-or-func (file-truename buffer-file-name)))
@@ -221,9 +221,9 @@ If nothing is selected, use the word under cursor as function name to look up."
         (mark-defun)
         (setq range-or-func (format "%s,%s"
                                     (line-number-at-pos (region-beginning))
-                                    (line-number-at-pos (region-end))))
+                                    (line-number-at-pos (1- (region-end)))))
         (setq cmd (format "git log -L%s:%s" range-or-func (file-truename buffer-file-name))))
-      (message cmd)
+      ;; (message cmd)
       (unless (featurep 'find-file-in-project) (require 'find-file-in-project))
       (ffip-show-content-in-diff-mode (shell-command-to-string cmd)))))
 

@@ -126,10 +126,6 @@
                "CMakeLists\\.txt\\'"
                "\\.cmake\\'" )
 
-(defun back-to-previous-buffer ()
-  (interactive)
-  (switch-to-buffer nil))
-
 ;; {{ dictionary setup
 (defun my-lookup-dict-org ()
   (interactive)
@@ -214,7 +210,7 @@
 
     ;; {{ spell check camel-case word
     (unless (featurep 'wucuo) (local-require 'wucuo))
-    (wucuo-start)
+    (wucuo-start t)
     ;; }}
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
@@ -262,9 +258,6 @@
 
 (setq history-delete-duplicates t)
 
-;;----------------------------------------------------------------------------
-(fset 'yes-or-no-p 'y-or-n-p)
-
 ;; NO automatic new line when scrolling down at buffer bottom
 (setq next-line-add-newlines nil)
 
@@ -295,43 +288,6 @@
   (interactive)
   (shell-command "periscope.py -l en *.mkv *.mp4 *.avi &"))
 
-(defun erase-specific-buffer (num buf-name)
-  (let* ((message-buffer (get-buffer buf-name))
-         (old-buffer (current-buffer)))
-    (save-excursion
-      (if (buffer-live-p message-buffer)
-          (progn
-            (switch-to-buffer message-buffer)
-            (if (not (null num))
-                (progn
-                  (end-of-buffer)
-                  (dotimes (i num)
-                    (previous-line))
-                  (set-register t (buffer-substring (point) (point-max)))
-                  (erase-buffer)
-                  (insert (get-register t))
-                  (switch-to-buffer old-buffer))
-              (progn
-                (erase-buffer)
-                (switch-to-buffer old-buffer))))
-        (error "Message buffer doesn't exists!")
-        ))))
-
-;; {{ message buffer things
-(defun erase-message-buffer (&optional num)
-  "Erase the content of the *Messages* buffer in emacs.
-Keep the last num lines if argument num if given."
-  (interactive "p")
-  (erase-specific-buffer num "*Messages*"))
-
-;; turn off read-only-mode in *Message* buffer, a "feature" in v24.4
-(when (fboundp 'messages-buffer-mode)
-  (defun messages-buffer-mode-hook-setup ()
-    (message "messages-buffer-mode-hook-setup called")
-    (read-only-mode -1))
-  (add-hook 'messages-buffer-mode-hook 'messages-buffer-mode-hook-setup))
-;; }}
-
 ;; vimrc
 (add-auto-mode 'vimrc-mode "\\.?vim\\(rc\\)?$")
 
@@ -343,50 +299,6 @@ Keep the last num lines if argument num if given."
            '( "^@@ -[0-9]+,[0-9]+ \\+[0-9]+,[0-9]+ @@" ))
      ))
 ;; }}
-
-(defun my-multi-purpose-grep (n)
-  "Run different grep from N."
-  (interactive "P")
-  (cond
-   ((not n)
-    (counsel-etags-grep))
-   ((= n 1)
-    ;; grep references of current web component
-    ;; component could be inside styled-component like `const c = styled(Comp1)`
-    (let* ((fb (file-name-base buffer-file-name)))
-      (when (string= "index" fb)
-        (setq fb (file-name-base (directory-file-name (file-name-directory (directory-file-name buffer-file-name))))))
-        (counsel-etags-grep (format "(<%s( *$| [^ ])|styled\\\(%s\\))" fb fb))))
-   ((= n 2)
-    ;; grep web component attribute name
-    (counsel-etags-grep (format "^ *%s[=:]" (or (thing-at-point 'symbol)
-                                                (read-string "Component attribute name?")))))
-   ((= n 3)
-    ;; grep current file name
-    (counsel-etags-grep (format ".*%s" (file-name-nondirectory buffer-file-name))))
-   ((= n 4)
-    ;; grep js files which is imported
-    (counsel-etags-grep (format "from .*%s('|\\\.js');?"
-                                (file-name-base (file-name-nondirectory buffer-file-name)))))
-   ((= n 5)
-    ;; grep Chinese using pinyinlib.
-    ;; In ivy filter, trigger key must be pressed before filter chinese
-    (unless (featurep 'pinyinlib) (require 'pinyinlib))
-    (let* ((counsel-etags-convert-grep-keyword
-            (lambda (keyword)
-              (if (and keyword (> (length keyword) 0))
-                  (pinyinlib-build-regexp-string keyword t)
-                keyword))))
-      (counsel-etags-grep)))))
-
-(defun toggle-full-window()
-  "Toggle the full view of selected window"
-  (interactive)
-  ;; @see http://www.gnu.org/software/emacs/manual/html_node/elisp/Splitting-Windows.html
-  (if (window-parent)
-      (delete-other-windows)
-    (winner-undo)
-    ))
 
 (defun add-pwd-into-load-path ()
   "add current directory into load-path, useful for elisp developers"
@@ -473,33 +385,6 @@ Keep the last num lines if argument num if given."
       (switch-to-buffer (create-file-buffer "Lyrics"))
       (insert song)
       (goto-line 0))))
-;; }}
-
-;; https://github.com/abo-abo/ace-window
-;; `M-x ace-window ENTER m` to swap window
-(global-set-key (kbd "C-x o") 'ace-window)
-
-;; {{ move focus between sub-windows
-(setq winum-keymap
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "M-0") 'winum-select-window-0-or-10)
-      (define-key map (kbd "M-1") 'winum-select-window-1)
-      (define-key map (kbd "M-2") 'winum-select-window-2)
-      (define-key map (kbd "M-3") 'winum-select-window-3)
-      (define-key map (kbd "M-4") 'winum-select-window-4)
-      (define-key map (kbd "M-5") 'winum-select-window-5)
-      (define-key map (kbd "M-6") 'winum-select-window-6)
-      (define-key map (kbd "M-7") 'winum-select-window-7)
-      (define-key map (kbd "M-8") 'winum-select-window-8)
-      map))
-
-(unless (featurep 'winum) (require 'winum))
-(eval-after-load 'winum
-  '(progn
-     (setq winum-format "%s")
-     (setq winum-mode-line-position 0)
-     (set-face-attribute 'winum-face nil :foreground "DeepPink" :underline "DeepPink" :weight 'bold)
-     (winum-mode 1)))
 ;; }}
 
 (local-require 'ace-pinyin)
@@ -625,6 +510,34 @@ If step is -1, go backward."
 
 ;; {{ rust
 (add-auto-mode 'rust-mode "\\.rs\\'")
+;; }}
+
+;; {{ diff region SDK
+(defun diff-region-exit-from-certain-buffer (buffer-name)
+  (bury-buffer buffer-name)
+  (winner-undo))
+
+(defmacro diff-region-open-diff-output (content buffer-name)
+  `(let ((rlt-buf (get-buffer-create ,buffer-name)))
+    (save-current-buffer
+      (switch-to-buffer-other-window rlt-buf)
+      (set-buffer rlt-buf)
+      (erase-buffer)
+      (insert ,content)
+      ;; `ffip-diff-mode' is more powerful than `diff-mode'
+      (ffip-diff-mode)
+      (goto-char (point-min))
+      ;; Evil keybinding
+      (if (fboundp 'evil-local-set-key)
+          (evil-local-set-key 'normal "q"
+                              (lambda ()
+                                (interactive)
+                                (diff-region-exit-from-certain-buffer ,buffer-name))))
+      ;; Emacs key binding
+      (local-set-key (kbd "C-c C-c")
+                     (lambda ()
+                       (interactive)
+                       (diff-region-exit-from-certain-buffer ,buffer-name))))))
 ;; }}
 
 (defun diff-region-tag-selected-as-a ()
@@ -1003,6 +916,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
       (ansi-term my-term-program)))))
 
 (defun switch-to-shell-or-ansi-term ()
+  "Switch to shell or terminal."
   (interactive)
   (if (display-graphic-p) (switch-to-ansi-term)
     (suspend-frame)))
@@ -1362,51 +1276,6 @@ Including indent-buffer, which should not be called automatically on save."
   (local-set-key (kbd "w") 'my-pronounce-current-word)
   (local-set-key (kbd ";") 'avy-goto-char-2))
 (add-hook 'nov-mode-hook 'nov-mode-hook-setup)
-;; }}
-
-(defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
-  "Indirect buffer could multiple widen on same file."
-  (if (region-active-p) (deactivate-mark))
-  (if use-indirect-buffer
-      (with-current-buffer (clone-indirect-buffer
-                            (generate-new-buffer-name
-                             (format "%s-indirect-:%s-:%s"
-                                     (buffer-name)
-                                     (line-number-at-pos start)
-                                     (line-number-at-pos end)))
-                            'display)
-        (narrow-to-region start end)
-        (goto-char (point-min)))
-      (narrow-to-region start end)))
-
-;; {{ @see https://gist.github.com/mwfogleman/95cc60c87a9323876c6c
-(defun narrow-or-widen-dwim (&optional use-indirect-buffer)
-  "If the buffer is narrowed, it widens.
- Otherwise, it narrows to region, or Org subtree.
-If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen content."
-  (interactive "P")
-  (cond ((buffer-narrowed-p) (widen))
-        ((region-active-p)
-         (narrow-to-region-indirect-buffer-maybe (region-beginning)
-                                                 (region-end)
-                                                 use-indirect-buffer))
-        ((equal major-mode 'org-mode)
-         (org-narrow-to-subtree))
-        ((derived-mode-p 'diff-mode)
-         (let* (b e)
-           (save-excursion
-             ;; If the (point) is already beginning or end of file diff,
-             ;; the `diff-beginning-of-file' and `diff-end-of-file' return nil
-             (setq b (progn (diff-beginning-of-file) (point)))
-             (setq e (progn (diff-end-of-file) (point))))
-           (when (and b e (< b e))
-             (narrow-to-region-indirect-buffer-maybe b e use-indirect-buffer))))
-        ((derived-mode-p 'prog-mode)
-         (mark-defun)
-         (narrow-to-region-indirect-buffer-maybe (region-beginning)
-                                                 (region-end)
-                                                 use-indirect-buffer))
-        (t (error "Please select a region to narrow to"))))
 ;; }}
 
 ;; {{ octave
