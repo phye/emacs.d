@@ -1,9 +1,11 @@
 ;; {{ Misc
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'gruvbox-dark-hard t)
+(load-theme 'doom-Iosvkem t)
+;;(load-theme 'sanityinc-tomorrow-night t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
+(require-package 'cnfonts)
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
@@ -121,7 +123,7 @@
 
 (setq org-todo-keywords
       '((sequence "TODO(t!/!)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "CANCELLED(c@/!)") ;; general todo items
-        (sequence "ASSIGNED(a!)" "STARTED(s!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(f!)" "VERIFIED(v!)") ;; bug only
+        (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(f!)" "VERIFIED(v!)") ;; bug only
         (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
 (setq org-log-into-drawer t)
@@ -202,13 +204,13 @@
 
 
 ;; org-journal related
-(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"")
+(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
 (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
 (customize-set-variable 'org-journal-file-type 'weekly)
-(require 'org-journal)
+(require-package 'org-journal)
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
