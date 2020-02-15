@@ -315,10 +315,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
          (search (format "\\_<%s\\_>" (regexp-quote string)))
          ientry ipos)
     ;; load imenu if available
-    (unless (featurep 'imenu)
-      (condition-case nil
-          (require 'imenu)
-        (error nil)))
+    (my-ensure 'imenu)
+
     (if (null string)
         (user-error "No symbol under cursor")
       (setq isearch-forward t)
@@ -406,7 +404,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (defun counsel-evil-goto-global-marker ()
   "Goto global evil marker."
   (interactive)
-  (unless (featurep 'counsel-etags) (require 'counsel-etags))
+  (my-ensure 'counsel-etags)
   (ivy-read "Goto global evil marker"
             evil-global-markers-history
             :action (lambda (m)
@@ -548,10 +546,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "fs" 'ffip-save-ivy-last
   "fr" 'ffip-ivy-resume
   "fc" 'cp-ffip-ivy-last
-  "ss" (lambda ()
-         (interactive)
-         ;; better performance, got Cygwin grep installed on Windows always
-         (counsel-grep-or-swiper (if (region-active-p) (my-selected-str))))
+  "ss" 'my-counsel-grep-or-swiper
   "hd" 'describe-function
   "hf" 'find-function
   "hk" 'describe-key
@@ -570,7 +565,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "otl" 'org-toggle-link-display
   "oa" '(lambda ()
           (interactive)
-          (unless (featurep 'org) (require 'org))
+          (my-ensure 'org)
           (counsel-org-agenda-headlines))
   "om" 'toggle-org-or-message-mode
   "ut" 'undo-tree-visualize
@@ -598,8 +593,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "xh" 'mark-whole-buffer
   "xk" 'kill-buffer
   "xs" 'save-buffer
-  "xc" 'my-switch-to-shell-or-ansi-term
-  "xz" 'my-switch-to-shell-or-ansi-term
+  "xc" 'my-switch-to-shell
+  "xz" 'my-switch-to-shell
   "vf" 'vc-rename-file-and-buffer
   "vc" 'vc-copy-file-and-rename-buffer
   "xv" 'vc-next-action ; 'C-x v v' in original
@@ -792,7 +787,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (defun my-evilnc-comment-or-uncomment-paragraphs (&optional num)
   "Comment or uncomment NUM paragraphs which might contain html tags."
   (interactive "p")
-  (unless (featurep 'evil-nerd-commenter) (require 'evil-nerd-commenter))
+  (my-ensure 'evil-nerd-commenter)
   (let* ((paragraph-region (evilnc--get-one-paragraph-region))
          (html-p (ignore-errors
                    (or (save-excursion
@@ -807,7 +802,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (defun my-imenu-comments ()
   "Imenu display comments."
   (interactive)
-  (unless (featurep 'counsel) (require 'counsel))
+  (my-ensure 'counsel)
   (when (fboundp 'evilnc-imenu-create-index-function)
     (let* ((imenu-create-index-function 'evilnc-imenu-create-index-function))
       (counsel-imenu))))
@@ -872,13 +867,18 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (define-key evil-normal-state-map "K" 'evil-jump-out-args)
 ;; }}
 
+;; In insert mode, press "rr" in 0.2 second to trigger my-counsel-company
+(general-imap "r"
+  (general-key-dispatch 'self-insert-command
+    :timeout 0.2
+    "r" 'my-counsel-company))
 
-(defun my-switch-to-shell-or-ansi-term ()
-  "Switch to shell or terminal."
+(defun my-switch-to-shell ()
+  "Switch to built in or 3rd party shell."
   (interactive)
   (cond
-   ((fboundp 'switch-to-shell-or-ansi-term)
-    (switch-to-shell-or-ansi-term))
+   ((display-graphic-p)
+    (switch-to-builtin-shell))
    (t
     (suspend-frame))))
 
@@ -886,6 +886,9 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; then press "c" to contract, "x" to expand
 (eval-after-load "evil"
   '(progn
+     ;; evil re-assign "M-." to `evil-repeat-pop-next` which I don't use actually.
+     ;; Restore "M-." to original binding command
+     (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
      (setq expand-region-contract-fast-key "c")
      ;; @see https://bitbucket.org/lyro/evil/issue/360/possible-evil-search-symbol-forward
      ;; evil 1.0.8 search word instead of symbol

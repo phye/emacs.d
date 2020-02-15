@@ -83,17 +83,17 @@
 
 (eval-after-load 'org
   '(progn
-     (unless (featurep 'org-clock) (require 'org-clock))
+     (my-ensure 'org-clock)
 
      ;; org-re-reveal requires org 8.3 while Emacs 25 uses org 8.2
-     (when (and *emacs26* (not (featurep 'org-re-reveal)))
-       (require 'org-re-reveal))
+     (when *emacs26*
+       (my-ensure 'org-re-reveal))
 
      ;; odt export
      (add-to-list 'org-export-backends 'odt)
 
      ;; markdown export
-     (unless (featurep 'ox-md) (require 'ox-md))
+     (my-ensure 'ox-md)
      (add-to-list 'org-export-backends 'md)
 
      (defun org-agenda-show-agenda-and-todo (&optional arg)
@@ -140,10 +140,16 @@ It's value could be customized liked \"/usr/bin/firefox\".
        (let* ((run-spellcheck ad-return-value))
          (when run-spellcheck
            (cond
-            ((org-mode-is-code-snippet)
+            ((font-belongs-to (point) '(org-verbatim org-code))
              (setq run-spellcheck nil))
+
             ((org-mode-current-line-is-property)
+             (setq run-spellcheck nil))
+
+            ;; slow test should be placed at last
+            ((org-mode-is-code-snippet)
              (setq run-spellcheck nil))))
+
          (setq ad-return-value run-spellcheck)))
      ;; }}
 
@@ -152,10 +158,9 @@ It's value could be customized liked \"/usr/bin/firefox\".
        (interactive)
        (let* ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
          (when (and *is-a-mac* (file-exists-p cmd))
-           ;; org v7
-           (setq org-export-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i")))
            ;; org v8
-           (setq org-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i"))))))
+           (setq org-odt-convert-processes
+                 '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i"))))))
      (my-setup-odt-org-convert-process)
      ;; }}
 
@@ -169,11 +174,10 @@ It's value could be customized liked \"/usr/bin/firefox\".
      ;; and you need install texlive-xetex on different platforms
      ;; To install texlive-xetex:
      ;;    `sudo USE="cjk" emerge texlive-xetex` on Gentoo Linux
-     (setq org-latex-to-pdf-process ;; org v7
+     (setq org-latex-pdf-process
            '("xelatex -interaction nonstopmode -output-directory %o %f"
              "xelatex -interaction nonstopmode -output-directory %o %f"
-             "xelatex -interaction nonstopmode -output-directory %o %f"))
-     (setq org-latex-pdf-process org-latex-to-pdf-process) ;; org v8
+             "xelatex -interaction nonstopmode -output-directory %o %f")) ;; org v8
      ;; }}
 
      ;; misc
@@ -193,8 +197,6 @@ It's value could be customized liked \"/usr/bin/firefox\".
            org-agenda-inhibit-startup t ;; ~50x speedup
            org-agenda-use-tag-inheritance nil ;; 3-4x speedup
            ;; }}
-           ;; org v7
-           org-export-odt-preferred-output-format "doc"
            ;; org v8
            org-odt-preferred-output-format "doc"
            org-tags-column 80

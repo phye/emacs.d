@@ -55,7 +55,7 @@
   "Find a file on `recentf-list'.
 If N is not nil, only list files in current project."
   (interactive "P")
-  (unless (featurep 'recentf) (require 'recentf))
+  (my-ensure 'recentf)
   (recentf-mode 1)
   (let* ((files (mapcar #'substring-no-properties recentf-list))
          (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
@@ -177,7 +177,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
                                 (kill-new plain-str)))))
 
 (defun ivy-switch-buffer-matcher-pinyin (regexp candidates)
-  (unless (featurep 'pinyinlib) (require 'pinyinlib))
+  (my-ensure 'pinyinlib)
   (let* ((pys (split-string regexp "[ \t]+"))
          (regexp (format ".*%s.*"
                          (mapconcat 'pinyinlib-build-regexp-string pys ".*"))))
@@ -186,8 +186,8 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
 (defun ivy-switch-buffer-by-pinyin ()
   "Switch to another buffer."
   (interactive)
-  (unless (featurep 'ivy) (require 'ivy))
-  (let ((this-command 'ivy-switch-buffer))
+  (my-ensure 'ivy)
+  (let* ((this-command 'ivy-switch-buffer))
     (ivy-read "Switch to buffer: " 'internal-complete-buffer
               :matcher #'ivy-switch-buffer-matcher-pinyin
               :preselect (buffer-name (other-buffer (current-buffer)))
@@ -247,29 +247,34 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
 (defun my-counsel-imenu ()
   "Jump to a buffer position indexed by imenu."
   (interactive)
-  (unless (featurep 'counsel) (require 'counsel))
-  (let* ((cands (counsel--imenu-candidates))
-         (pre-selected (thing-at-point 'symbol))
-         (pos (point))
-         closest)
-    (dolist (c cands)
-      (let* ((item (cdr c))
-             (m (cdr item)))
-        (when (and m (<= (marker-position m) pos))
-          (cond
-           ((not closest)
-            (setq closest item))
-           ((< (- pos (marker-position m))
-               (- pos (marker-position (cdr closest))))
-            (setq closest item))))))
-    (if closest (setq pre-selected (car closest)))
-    (ivy-read "imenu items: " cands
-              :preselect pre-selected
-              :require-match t
-              :action #'counsel-imenu-action
-              :keymap counsel-imenu-map
-              :history 'counsel-imenu-history
-              :caller 'counsel-imenu)))
+  (my-ensure 'counsel)
+  (cond
+   ;; `counsel--imenu-candidates' was created on 2019-10-12
+   ((fboundp 'counsel--imenu-candidates)
+    (let* ((cands (counsel--imenu-candidates))
+           (pre-selected (thing-at-point 'symbol))
+           (pos (point))
+           closest)
+      (dolist (c cands)
+        (let* ((item (cdr c))
+               (m (cdr item)))
+          (when (and m (<= (marker-position m) pos))
+            (cond
+             ((not closest)
+              (setq closest item))
+             ((< (- pos (marker-position m))
+                 (- pos (marker-position (cdr closest))))
+              (setq closest item))))))
+      (if closest (setq pre-selected (car closest)))
+      (ivy-read "imenu items: " cands
+                :preselect pre-selected
+                :require-match t
+                :action #'counsel-imenu-action
+                :keymap counsel-imenu-map
+                :history 'counsel-imenu-history
+                :caller 'counsel-imenu)))
+   (t
+    (counsel-imenu))))
 
 (defun my-imenu-or-list-tag-in-current-file ()
   "Combine the power of counsel-etags and imenu."
@@ -299,5 +304,13 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
       '(("j" switch-to-buffer-other-frame "other frame")
         ("k" kill-buffer "kill")
         ("r" ivy--rename-buffer-action "rename")))))
+
+(defun my-counsel-company ()
+  "Input code from company backend using fuzzy matching."
+  (interactive)
+  (company-abort)
+  (let* ((company-backends '(company-ctags))
+         (company-ctags-fuzzy-match-p t))
+    (counsel-company)))
 
 (provide 'init-ivy)

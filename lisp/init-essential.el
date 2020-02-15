@@ -29,7 +29,7 @@
    ((= n 5)
     ;; grep Chinese using pinyinlib.
     ;; In ivy filter, trigger key must be pressed before filter chinese
-    (unless (featurep 'pinyinlib) (require 'pinyinlib))
+    (my-ensure 'pinyinlib)
     (let* ((counsel-etags-convert-grep-keyword
             (lambda (keyword)
               (if (and keyword (> (length keyword) 0))
@@ -93,6 +93,11 @@ Keep the last NUM lines if argument num if given."
         (goto-char (point-min)))
       (narrow-to-region start end)))
 
+;; @see https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
+(unless *no-memory*
+  ;; speed up font rendering for special characters
+  (setq inhibit-compacting-font-caches t))
+
 ;; @see https://gist.github.com/mwfogleman/95cc60c87a9323876c6c
 ;; fixed to behave correctly in org-src buffers; taken from:
 ;; https://lists.gnu.org/archive/html/emacs-orgmode/2019-09/msg00094.html
@@ -142,5 +147,27 @@ If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen conte
                                             use-indirect-buffer))
    (t (error "Please select a region to narrow to"))))
 ;; }}
+
+(defun my-counsel-grep-or-swiper (&optional other-source)
+  "Search current file.
+If OTHER-SOURCE is 1, get keyword from clipboard.
+If OTHER-SOURCE is 2, get keyword from `kill-ring'."
+  (interactive "P")
+  (message "other-source=%s" other-source)
+  (let* ((keyword (cond
+                   ((eq 1 other-source)
+                    (cliphist-select-item))
+                   ((eq 2 other-source)
+                    (my-select-from-kill-ring 'identity))
+                   ((region-active-p)
+                    (my-selected-str)))))
+    ;; better performance, got Cygwin grep installed on Windows always
+    (counsel-grep-or-swiper keyword)))
+
+(eval-after-load 'cliphist
+  '(progn
+     (defadvice cliphist-routine-before-insert (before before-cliphist-paste activate)
+       ;; delete selected text before paste
+       (if (region-active-p) (delete-region (region-beginning) (region-end))))))
 
 (provide 'init-essential)

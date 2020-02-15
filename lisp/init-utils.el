@@ -1,5 +1,12 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
+(defmacro my-ensure (feature)
+  "Make sure FEATURE is required."
+  `(unless (featurep ,feature)
+     (condition-case nil
+         (require ,feature)
+       (error nil))))
+
 (defun run-cmd-and-replace-region (cmd)
   "Run CMD in shell on selected region or whole buffer and replace it with cli output."
   (let* ((orig-point (point))
@@ -10,7 +17,7 @@
 
 (defun my-use-tags-as-imenu-function-p ()
   "Can use tags file to build imenu function"
-  (unless (featurep 'counsel-etags) (require 'counsel-etags))
+  (my-ensure 'counsel-etags)
   (and (locate-dominating-file default-directory "TAGS")
        ;; ctags needs extra setup to extract typescript tags
        (file-exists-p counsel-etags-ctags-options-file)
@@ -97,11 +104,11 @@
         (setq key (concat (substring key 0 (- w 4)) "...")))
     (cons key s)))
 
-(defmacro my-select-from-kill-ring (fn)
+(defun my-select-from-kill-ring (fn)
   "If N > 1, yank the Nth item in `kill-ring'.
 If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive "P")
-  `(let* ((candidates (cl-remove-if
+  (let* ((candidates (cl-remove-if
                        (lambda (s)
                          (or (< (length s) 5)
                              (string-match-p "\\`[\n[:blank:]]+\\'" s)))
@@ -109,7 +116,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
           (ivy-height (/ (frame-height) 2)))
      (ivy-read "Browse `kill-ring':"
                (mapcar #'my-prepare-candidate-fit-into-screen candidates)
-               :action #',fn)))
+               :action fn)))
 
 (defun my-insert-str (str)
   "Insert STR into current buffer."
@@ -122,6 +129,10 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
            (not (eolp))
            (not (eobp)))
       (forward-char))
+
+  ;; delete selected text before paste
+  (if (region-active-p) (delete-region (region-beginning) (region-end)))
+
   ;; insert now
   (insert str)
   str)

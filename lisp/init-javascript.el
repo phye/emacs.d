@@ -178,8 +178,7 @@ If NOT-JSON-P is not nil, validate as Javascript expression instead of JSON."
       (setq json-exp (format "var a=%s;"  json-exp)))
     (with-temp-buffer
       (insert json-exp)
-      (unless (featurep 'js2-mode)
-        (require 'js2-mode))
+      (my-ensure 'js2-mode)
       (js2-parse)
       (setq errs (js2-errors))
       (cond
@@ -208,7 +207,7 @@ If HARDCODED-ARRAY-INDEX provided, array index in JSON path is replaced with it.
       (when (string= "json" (file-name-extension buffer-file-name))
         (setq str (format "var a=%s;" str))
         (setq cur-pos (+ cur-pos (length "var a="))))
-      (unless (featurep 'js2-mode) (require 'js2-mode))
+      (my-ensure 'js2-mode)
       (with-temp-buffer
         (insert str)
         (js2-init-scanner)
@@ -237,21 +236,6 @@ Merge RLT and EXTRA-RLT, items in RLT has *higher* priority."
   ;;  (hellworld . #<marker 161>))
   (setq extra-rlt (js2-imenu--remove-duplicate-items extra-rlt))
   (append rlt extra-rlt))
-
-;; {{ print json path, will be removed when latest STABLE js2-mode released
-(defun js2-get-element-index-from-array-node (elem array-node &optional hardcoded-array-index)
-  "Get index of ELEM from ARRAY-NODE or 0 and return it as string."
-  (let* ((idx 0) elems (rlt hardcoded-array-index))
-    (setq elems (js2-array-node-elems array-node))
-    (if (and elem (not hardcoded-array-index))
-        (setq rlt (catch 'nth-elt
-                    (dolist (x elems)
-                      ;; We know the ELEM does belong to ARRAY-NODE,
-                      (if (eq elem x) (throw 'nth-elt idx))
-                      (setq idx (1+ idx)))
-                    0)))
-    (format "[%s]" rlt)))
-;; }}
 
 (eval-after-load 'js2-mode
   '(progn
@@ -333,10 +317,15 @@ INDENT-SIZE decide the indentation level.
       (setq indent-size (cond
                          ((memq major-mode '(js-mode javascript-mode))
                           js-indent-level)
+
                          ((memq major-mode '(web-mode))
                           web-mode-code-indent-offset)
+
+                         ((memq major-mode '(typescript-mode))
+                          typescript-indent-level)
+
                          (t
-                          js2-basic-offset))))
+                          2))))
     ;; do it!
     (run-cmd-and-replace-region (concat "js-beautify"
                                         " --stdin "

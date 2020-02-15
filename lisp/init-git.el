@@ -119,8 +119,7 @@
 (defun my-git-timemachine ()
   "Open git snapshot with the selected version."
   (interactive)
-  (unless (featurep 'git-timemachine)
-    (require 'git-timemachine))
+  (my-ensure 'git-timemachine)
   (git-timemachine--start #'my-git-timemachine-show-selected-revision))
 ;; }}
 
@@ -255,7 +254,7 @@ If nothing is selected, use the word under cursor as function name to look up."
                                     (line-number-at-pos (1- (region-end)))))
         (setq cmd (format "git log -L%s:%s" range-or-func (file-truename buffer-file-name))))
       ;; (message cmd)
-      (unless (featurep 'find-file-in-project) (require 'find-file-in-project))
+      (my-ensure 'find-file-in-project)
       (ffip-show-content-in-diff-mode (shell-command-to-string cmd)))))
 
 (eval-after-load 'magit
@@ -264,12 +263,31 @@ If nothing is selected, use the word under cursor as function name to look up."
 
 (eval-after-load 'vc-msg-git
   '(progn
+     ;; open file of certain revision
      (push '("m" "[m]agit-find-file"
              (lambda ()
                (let* ((info vc-msg-previous-commit-info))
                  (magit-find-file (plist-get info :id )
                                   (concat (vc-msg-sdk-git-rootdir)
                                           (plist-get info :filename))))))
+           vc-msg-git-extra)
+
+     ;; copy commit hash
+     (push '("h" "[h]ash"
+             (lambda ()
+               (let* ((info vc-msg-previous-commit-info)
+                      (id (plist-get info :id)))
+                 (kill-new id)
+                 (message "%s => kill-ring" id))))
+           vc-msg-git-extra)
+
+     ;; copy commit hash
+     (push '("a" "[a]uthor"
+             (lambda ()
+               (let* ((info vc-msg-previous-commit-info)
+                      (author (plist-get info :author)))
+                 (kill-new author)
+                 (message "%s => kill-ring" author))))
            vc-msg-git-extra)))
 
 (provide 'init-git)

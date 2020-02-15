@@ -1,10 +1,7 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
-;; (advice-add #'package-initialize :after #'update-load-path)
 
 ;; Without this comment emacs25 adds (package-initialize) here
 ;; (package-initialize)
-
-(push (expand-file-name "~/.emacs.d/lisp") load-path)
 
 (let* ((minver "24.4"))
   (when (version< emacs-version minver)
@@ -38,7 +35,10 @@
 (setq *emacs26* (>= emacs-major-version 26))
 (setq *no-memory* (cond
                    (*is-a-mac*
-                    (< (string-to-number (nth 1 (split-string (shell-command-to-string "sysctl hw.physmem")))) 4000000000))
+                    ;; @see https://discussions.apple.com/thread/1753088
+                    ;; "sysctl -n hw.physmem" does not work
+                    (<= (string-to-number (shell-command-to-string "sysctl -n hw.memsize"))
+                        (* 4 1024 1024)))
                    (*linux* nil)
                    (t nil)))
 
@@ -131,8 +131,13 @@
 
   ;; projectile costs 7% startup time
 
+  ;; don't play with color-theme in light weight mode
+  ;; color themes are already installed in `init-elpa.el'
+  (require-init 'init-theme t)
+
   ;; misc has some crucial tools I need immediately
   (require-init 'init-essential)
+  ;; handy tools though not must have
   (require-init 'init-misc t)
 
   (require-init 'init-emacs-w3m t)

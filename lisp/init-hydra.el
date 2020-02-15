@@ -228,15 +228,15 @@
                 (copy-yank-str (funcall fn (dired-file-name-at-point)))))
      (defhydra hydra-dired (:color blue)
        "
-^Misc^                      ^File^             ^Copy Info^
-----------------------------------------------------------------
-[_vv_] video2mp3            [_R_] Move         [_pp_] Path
-[_aa_] Record by mp3        [_cf_] New         [_nn_] Name
-[_zz_] Play wav&mp3         [_rr_] Rename      [_bb_] Base
-[_cc_] Last command         [_ff_] Find        [_dd_] directory
+^Misc^                      ^File^              ^Copy Info^
+-----------------------------------------------------------------
+[_vv_] video2mp3            [_R_] Move          [_pp_] Path
+[_aa_] Record by mp3        [_cf_] New          [_nn_] Name
+[_zz_] Play wav&mp3         [_rr_] Rename       [_bb_] Base
+[_cc_] Last command         [_ff_] Find         [_dd_] directory
 [_sa_] Fetch all subtitles  [_C_]  Copy
 [_s1_] Fetch on subtitle    [_rb_] Change base
-[_+_] Create directory
+[_+_] Create directory      [_dd_] Diff 2 files
 "
        ("sa" (shell-command "periscope.py -l en *.mkv *.mp4 *.avi &"))
        ("s1" (let* ((video-file (dired-file-name-at-point))
@@ -253,7 +253,8 @@
        ("zz" my-play-both-mp3-and-wav)
        ("C" dired-do-copy)
        ("R" dired-rename-file)
-       ("cf"find-file)
+       ("cf" find-file)
+       ("dd" my-ediff-files)
        ("rr" dired-toggle-read-only)
        ("ff" (lambda (regexp)
                (interactive "sMatching regexp: ")
@@ -403,14 +404,15 @@ _SPC_ cancel _o_nly this     _d_elete
                      :color blue)
 "
 Git:
-[_i_] Gist selected      [_dd_] Diff
-[_s_] Show commit        [_dc_] Diff staged
-[_r_] Reset gutter       [_dr_] Diff range
-[_h_] Gutter => HEAD     [_au_] Add modified
-[_l_] Log selected/file  [_cc_] Commit
-[_b_] Branches           [_ca_] Amend
-[_k_] Git commit link    [_tt_] Stash
-[_Q_] Quit gutter        [_ta_] Apply Stash
+[_dd_] Diff         [_i_] Gist selected
+[_dc_] Diff staged  [_s_] Show commit
+[_dr_] Diff range   [_r_] Reset gutter
+[_au_] Add modified [_h_] Gutter => HEAD
+[_cc_] Commit       [_l_] Log selected/file
+[_ca_] Amend        [_b_] Branches
+[_ja_] Amend silent [_k_] Git commit link
+[_tt_] Stash        [_Q_] Quit gutter
+[_ta_] Apply Stash
 "
   ("i" gist-region)
   ("r" git-gutter-reset-to-default)
@@ -427,6 +429,7 @@ Git:
   ("dr" (progn (magit-diff-range (my-git-commit-id))))
   ("cc" magit-commit-popup)
   ("ca" magit-commit-amend)
+  ("ja" (magit-commit-amend "--reuse-message=HEAD"))
   ("au" magit-stage-modified)
   ("Q" git-gutter-toggle)
   ("q" nil))
