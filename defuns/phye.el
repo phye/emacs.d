@@ -37,6 +37,7 @@
 (setq fill-column 80)
 (add-hook 'c-mode-common-hook
           (lambda ()
+            (setq fill-column 100)
             (if (derived-mode-p 'c-mode 'c++-mode)
                 (cppcm-reload-all)
               )))
@@ -136,6 +137,10 @@
        "~/ws/OrgNotes/PlanLife.org"
        "~/ws/OrgNotes/life/Birthday.org"
        "~/ws/OrgNotes/Work.org")))
+
+;; (add-hook 'org-mode-hook
+;;           (lambda ()
+;;             (set-fill-column 120)))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
