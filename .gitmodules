@@ -1,0 +1,3 @@
+[submodule "site-lisp/org-gantt"]
+	path = site-lisp/org-gantt
+	url = https://github.com/phye/org-gantt.git
