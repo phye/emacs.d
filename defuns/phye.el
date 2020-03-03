@@ -123,7 +123,7 @@
                       (:endgroup)))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t!/!)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
+      '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
         (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
         (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
@@ -209,7 +209,7 @@
 
 
 ;; org-journal related
-(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"")
+(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
