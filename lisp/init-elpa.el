@@ -78,7 +78,7 @@
     ;; }}
     slime
     groovy-mode
-    ;; company ; I won't wait another 2 years for stable
+    company ; I won't wait another 2 years for stable
     simple-httpd
     dsvn
     findr
@@ -240,6 +240,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'workgroups2)
 (require-package 'yaml-mode)
 (require-package 'paredit)
+(require-package 'xr) ; required by pyim
 (require-package 'findr)
 (require-package 'diredfl) ; font lock for `dired-mode'
 (require-package 'pinyinlib)
