@@ -214,9 +214,6 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 **** syntaxerl
 - syntax check [[http://www.erlang.org/][Erlang]] through flymake
 - Install from [[https://github.com/ten0s/syntaxerl]]
-**** jedi & flake8
-- Required by [[https://github.com/jorgenschaefer/elpy][elpy]] which is python IDE
-- At least =pip install jedi flake8=. Check elpy website for more tips.
 **** sdcv (console version of StarDict)
 - Required by =sdcv.e=
 - Run =curl http://pkgs.fedoraproject.org/repo/pkgs/stardict-dic/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2/f164dcb24b1084e1cfa2b1cb63d590e6/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic= to install dictionary
@@ -432,7 +429,7 @@ If you use Zsh instead of Bash, please modify =init-term-mode.el=.
 ** Setup fonts in GUI Emacs
 Non-Chinese can use [[https://github.com/rolandwalker/unicode-fonts][unicode-fonts]].
 
-Chinese can use c[[https://github.com/tumashu/chinese-fonts-setup][chinese-fonts-setup]].
+Chinese can use [[https://github.com/tumashu/chinese-fonts-setup][chinese-fonts-setup]].
 
 They are not included in this setup. You need install them manually.
 ** Synchronize setup with Git
@@ -587,15 +584,9 @@ On macOS/Linux/Cygwin, run =make githooks= to install hooks into =~/.emacs.d/.gi
 
 Then unit test is run automatically before =git commit=.
 ** Python environment
-This setup used [[https://github.com/jorgenschaefer/elpy][elpy (Emacs Python Development Environment)]]. The setup for python development is minimum, as you can see in =init-python.el=.
+This setup used [[https://github.com/jorgenschaefer/elpy][elpy (Emacs Python Development Environment)]].
 
-If elpy warns you that the python environment is corrupt, you have two solutions.
-
-Solution 1, ignore the warning and turn off elpy by comment out =(elpy-enable)= in =init-python.el=. Then you won't have those python IDE things.
-
-Solution 2, fix your python environment. For example, if elpy gives the error message =ImportError: No module named pkg_resources= on Ubuntu, a quick search will lead to [[https://askubuntu.com/questions/1006201/importerror-no-module-named-pkg-resources][this link.]] So a simple shell command =sudo apt install --reinstall python-pkg-resources python-setuptools= solves the problem.
-
-Solution 2 might be better because you couldn't do any serious coding anyway if the python environment is broken.
+See elpy's official documentation on how to use elpy.
 ** Set up [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
 You could insert below code into =~/.custom.el=,
 #+begin_src elisp
@@ -605,17 +596,29 @@ You could insert below code into =~/.custom.el=,
      (setq lsp-log-io nil)
      ;; use `evil-matchit' instead
      (setq lsp-enable-folding nil)
+     ;; no real time syntax check
+     (setq lsp-diagnostic-package :none)
      ;; handle yasnippet by myself
      (setq lsp-enable-snippet nil)
      ;; use `company-ctags' only.
-     ;; Please `company-lsp' is automatically enabled if installed
+     ;; Please note `company-lsp' is automatically enabled if it's installed
      (setq lsp-enable-completion-at-point nil)
      ;; turn off for better performance
      (setq lsp-enable-symbol-highlighting nil)
-     ;; use ffip instead
+     ;; use find-fine-in-project instead
      (setq lsp-enable-links nil)
-     ;; don't scan 3rd party javascript libraries
-     (push "[/\\\\]\\node_modules$" lsp-file-watch-ignored)))
+     ;; auto restart lsp
+     (setq lsp-restart 'auto-restart)
+     ;; don't watch 3rd party javascript libraries
+     (push "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|jade\\)$" lsp-file-watch-ignored)
+     ;; don't ping LSP lanaguage server too frequently
+     (defvar lsp-on-touch-time 0)
+     (defadvice lsp-on-change (around lsp-on-change-hack activate)
+       ;; do run `lsp-on-change' too frequently
+       (when (> (- (float-time (current-time))
+                   lsp-on-touch-time) 30) ;; 30 seconds
+         (setq lsp-on-touch-time (float-time (current-time)))
+         ad-do-it))))
 #+end_src
 
 Then run `M-x lsp` to start lsp client and server. Check [[https://github.com/emacs-lsp/lsp-mode]] on how to install lsp server.

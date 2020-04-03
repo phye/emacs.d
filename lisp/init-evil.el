@@ -5,6 +5,10 @@
 ;; enable evil-mode
 (evil-mode 1)
 
+;; @see https://github.com/syl20bnr/evil-iedit-state#key-bindings
+;; Don't know why it's not loaded if placed in elpa
+(local-require 'evil-iedit-state)
+
 (defvar my-use-m-for-matchit nil
   "If t, use \"m\" key for `evil-matchit-mode'.
 And \"%\" key is also retored to `evil-jump-item'.")
@@ -430,6 +434,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   :states '(normal visual))
 
 (my-comma-leader-def
+  "," 'evilnc-comment-operator
   "bf" 'beginning-of-defun
   "bu" 'backward-up-list
   "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
@@ -630,7 +635,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "xc" 'save-buffers-kill-terminal ; not used frequently
   "cc" 'my-dired-redo-last-command
   "ss" 'wg-create-workgroup ; save windows layout
-  "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
+  "rr" 'evil-iedit-state/iedit-mode ; start iedit in emacs to rename variables in defun
   "sc" 'shell-command
   "ll" 'my-wg-switch-workgroup ; load windows layout
   "kk" 'scroll-other-window
