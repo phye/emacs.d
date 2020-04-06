@@ -105,7 +105,9 @@ Suitable for inclusion in `c-offsets-alist'."
                        defun-close-semi
                        list-close-comma
                        scope-operator))
-    (c-offsets-alist . ((arglist-intro google-c-lineup-expression-plus-4)
+    (c-offsets-alist . ((arglist-intro . ++)
+                        (arglist-cont . ++)
+                        (arglist-cont-nonempty . ++)
                         (func-decl-cont . ++)
                         (member-init-intro . ++)
                         (inher-intro . ++)
