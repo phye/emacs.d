@@ -1,7 +1,8 @@
 ;; {{ Misc
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'doom-Iosvkem t)
+;;(load-theme 'doom-Iosvkem t)
+(load-theme 'doom-city-lights t)
 ;;(load-theme 'sanityinc-tomorrow-night t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
@@ -32,19 +33,17 @@
 
 
 ;; {{ c programming
-(setq c-basic-offset 4)
-(setq c-default-style "linux")
-(setq fill-column 80)
+(local-require 'google-c-style)
+(add-hook 'c-mode-common-hook 'google-set-c-style)
+(add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq fill-column 100)
-            (if (derived-mode-p 'c-mode 'c++-mode)
-                (cppcm-reload-all)
-              )))
+            (setq fill-column 80)
+            (setq 'c-basic-offset 4)
+            ) t)
 ;; }}
 
 ;; {{ cpp programming
-(c-set-offset 'innamespace 0)
 (require-package 'string-inflection)
 (global-set-key (kbd "C-c i") 'string-inflection-cycle)
 (global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
@@ -63,6 +62,11 @@
           (lambda ()
             (set (make-local-variable 'company-backends) '(company-go))
             (company-mode)))
+
+;; }}
+
+;; {{ JavaScript programming
+(setq js-indent-level 4)
 
 ;; }}
 
