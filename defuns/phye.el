@@ -142,9 +142,9 @@
        "~/ws/OrgNotes/life/Birthday.org"
        "~/ws/OrgNotes/Work.org")))
 
-;; (add-hook 'org-mode-hook
-;;           (lambda ()
-;;             (set-fill-column 120)))
+(add-hook 'org-mode-hook
+          (lambda ()
+            (set-fill-column 120)))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
