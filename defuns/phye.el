@@ -2,7 +2,7 @@
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 ;;(load-theme 'doom-Iosvkem t)
-(load-theme 'doom-city-lights t)
+(load-theme 'rebecca t)
 ;;(load-theme 'sanityinc-tomorrow-night t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
