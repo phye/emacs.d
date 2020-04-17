@@ -626,8 +626,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; Please check "init-ediff.el" which contains `my-space-leader-def' code too
 (my-space-leader-def
-  "n" 'my-goto-next-hunk
-  "p" 'my-goto-previous-hunk
+  "nh" 'my-goto-next-hunk
+  "ph" 'my-goto-previous-hunk
   "ch" 'my-dired-redo-from-commands-history
   "dd" 'pwd
   "mm" 'counsel-evil-goto-global-marker
