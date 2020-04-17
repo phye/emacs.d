@@ -6,17 +6,26 @@
     (kill-buffer (process-buffer proc))))
 
 ;; {{ @see https://coredumped.dev/2020/01/04/native-shell-completion-in-emacs/
-;; enable auto-completion in `shell'.
-;; Since we already got a dropdown for auto-completion, so don't bother with
-;; `company-mode' backend set up
-(eval-after-load 'shell
-  '(progn
-     (setq explicit-bash-args
-           (delete "--noediting" explicit-bash-args))))
+;; Enable auto-completion in `shell'.
+(with-eval-after-load 'shell
+  ;; `comint-terminfo-terminal' is invented in Emacs 26
+  (unless (and (boundp 'comint-terminfo-terminal)
+               comint-terminfo-terminal)
+    (setq comint-terminfo-terminal "dumb"))
+  (native-complete-setup-bash))
 
-(advice-add 'comint-term-environment
-            :filter-return (lambda (env) (cons "INSIDE_EMACS" env)))
-
+;; `bash-completion-tokenize' can handle garbage output of "complete -p"
+(defadvice bash-completion-tokenize (around bash-completion-tokenize-hack activate)
+  (let* ((args (ad-get-args 0))
+         (beg (nth 0 args))
+         (end (nth 1 args)))
+    ;; original code extracts tokens line by line of output of "complete -p"
+    (cond
+     ((not (string-match-p "^complete " (buffer-substring beg end)))
+      ;; filter out some wierd lines
+      (setq ad-return-value nil))
+     (t
+      ad-do-it))))
 
 (defun my-exit-shell-process (process event)
   "Called when the shell PROCESS is stopped.  EVENT is ignored."
@@ -24,6 +33,11 @@
 
 (defun shell-mode-hook-setup ()
   "Set up `shell-mode'."
+  ;; hook `completion-at-point', optional
+  (add-hook 'completion-at-point-functions #'native-complete-at-point nil t)
+  (setq-local company-backends '((company-files company-native-complete)))
+  ;; `company-native-complete' is better than `completion-at-point'
+  (local-set-key (kbd "TAB") 'company-complete)
   ;; try to kill buffer when exit shell
   (let* ((proc (get-buffer-process (current-buffer)))
          (shell (file-name-nondirectory (car (process-command proc)))))
@@ -85,25 +99,24 @@
 
 (setq multi-term-program my-term-program)
 ;; check `term-bind-key-alist' for key bindings
-(eval-after-load 'multi-term
-  '(progn
-     (dolist (p '(("C-p" . term-send-up)
-                  ("C-n" . term-send-down)
-                  ("C-s" . swiper)
-                  ("C-r" . term-send-reverse-search-history)
-                  ("C-m" . term-send-raw)
-                  ("C-k" . term-send-kill-whole-line)
-                  ("C-y" . yank)
-                  ("C-_" . term-send-raw)
-                  ("M-f" . term-send-forward-word)
-                  ("M-b" . term-send-backward-word)
-                  ("M-K" . term-send-kill-line)
-                  ("M-p" . previous-line)
-                  ("M-n" . next-line)
-                  ("M-y" . yank-pop)
-                  ("M-." . term-send-raw-meta)))
-       (setq term-bind-key-alist (delq (assoc (car p) term-bind-key-alist) term-bind-key-alist))
-       (add-to-list 'term-bind-key-alist p))))
+(with-eval-after-load 'multi-term
+  (dolist (p '(("C-p" . term-send-up)
+               ("C-n" . term-send-down)
+               ("C-s" . swiper)
+               ("C-r" . term-send-reverse-search-history)
+               ("C-m" . term-send-raw)
+               ("C-k" . term-send-kill-whole-line)
+               ("C-y" . yank)
+               ("C-_" . term-send-raw)
+               ("M-f" . term-send-forward-word)
+               ("M-b" . term-send-backward-word)
+               ("M-K" . term-send-kill-line)
+               ("M-p" . previous-line)
+               ("M-n" . next-line)
+               ("M-y" . yank-pop)
+               ("M-." . term-send-raw-meta)))
+    (setq term-bind-key-alist (delq (assoc (car p) term-bind-key-alist) term-bind-key-alist))
+    (add-to-list 'term-bind-key-alist p)))
 ;; }}
 
 (provide 'init-term-mode)

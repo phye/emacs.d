@@ -16,6 +16,8 @@
     auto-package-update
     nov
     bbdb
+    native-complete
+    company-native-complete
     js2-mode ; need new features
     git-timemachine ; stable version is broken when git rename file
     evil-textobj-syntax
@@ -233,7 +235,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'fringe-helper)
 (require-package 'gitignore-mode)
 (require-package 'gitconfig-mode)
-(require-package 'gist)
 (require-package 'wgrep)
 (require-package 'request)
 (require-package 'lua-mode)
@@ -299,6 +300,8 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'yasnippet)
 (require-package 'yasnippet-snippets)
 (require-package 'company)
+(require-package 'native-complete)
+(require-package 'company-native-complete)
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
 (require-package 'lsp-mode)

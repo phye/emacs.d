@@ -47,11 +47,11 @@
       (message "Buffer %s is not visible!" buf-name))
      (t
       (select-window target-window)
-      (let ((inhibit-read-only t))
+      (let* ((inhibit-read-only t))
         (erase-buffer))
       (select-window original-window)))))
 
-(defun erase-visible-buffer (&optional n)
+(defun my-erase-visible-buffer (&optional n)
   "Erase the content of the *Messages* buffer.
 N specifies the buffer to erase."
   (interactive "P")
@@ -67,6 +67,11 @@ N specifies the buffer to erase."
 
    ((eq 3 n)
     (erase-one-visible-buffer "*eshell*"))))
+
+(defun my-erase-current-buffer ()
+  "Erase current buffer even it's read-only."
+  (interactive)
+  (erase-one-visible-buffer (buffer-name (current-buffer))))
 ;; }}
 
 ;; {{ narrow region
@@ -140,12 +145,11 @@ If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen conte
    (t (error "Please select a region to narrow to"))))
 ;; }}
 
-(defun my-counsel-grep-or-swiper (&optional other-source)
+(defun my-swiper (&optional other-source)
   "Search current file.
 If OTHER-SOURCE is 1, get keyword from clipboard.
 If OTHER-SOURCE is 2, get keyword from `kill-ring'."
   (interactive "P")
-  (message "other-source=%s" other-source)
   (let* ((keyword (cond
                    ((eq 1 other-source)
                     (cliphist-select-item))
@@ -153,12 +157,12 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
                     (my-select-from-kill-ring 'identity))
                    ((region-active-p)
                     (my-selected-str)))))
-    ;; better performance, got Cygwin grep installed on Windows always
-    (counsel-grep-or-swiper keyword)))
+    ;; `swiper--re-builder' read from `ivy-re-builders-alist'
+    ;; more flexible
+    (swiper keyword)))
 
-(eval-after-load 'cliphist
-  '(progn
-     (defadvice cliphist-routine-before-insert (before before-cliphist-paste activate)
-       (my-delete-selected-region))))
+(with-eval-after-load 'cliphist
+  (defadvice cliphist-routine-before-insert (before before-cliphist-paste activate)
+    (my-delete-selected-region)))
 
 (provide 'init-essential)

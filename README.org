@@ -56,7 +56,7 @@
   - [[#network-is-blocked][Network is blocked]]
   - [[#email][Email]]
   - [[#cannot-download-packages][Cannot download packages?]]
-  - [[#use-packages-on-gnu-elpa][use packages on GNU ELPA]]
+  - [[#use-packages-on-gnu-elpa][Use packages on GNU ELPA]]
   - [[#disable-vim-key-bindings][Disable Vim key bindings]]
   - [[#evil-setup][Evil setup]]
   - [[#c-auto-completion-doesnt-work][C++ auto-completion doesn't work?]]
@@ -268,7 +268,7 @@ On Windows, you need install Cygwin which provides command line programs to Emac
 
 Install Ctags (Universal Ctags is better. Exuberant Ctags is fine). On Windows, you could install Ctags through Cygwin.
 
-Run =M-x counsel-etags-find-ctags= from =counsel-etags= to navigate code. It uses tags files created by ctags. Tags file will be automatically created/update when you start using `counsel-etags`.
+Run =M-x counsel-etags-find-tag-at-point= from =counsel-etags= to navigate code. It uses tags files created by ctags. Tags file will be automatically created/update when you start using `counsel-etags`.
 
 Run =M-x counsel-etags-grep= to search text (grep) in project. Project root is automatically detected.
 
@@ -341,12 +341,11 @@ So you can use any functions defined in =~/.emacs.d=.
 
 Here is a sample to override keybindings defined in =~/.emacs.d/lisp/init-evil.el=,
 #+begin_src elisp
-(eval-after-load "evil"
-  '(progn
-     (my-space-leader-def
-       "ss" 'pwd
-       "ll" 'pwd
-       "pp" 'pwd)))
+(with-eval-after-load 'evil
+  (my-space-leader-def
+    "ss" 'pwd
+    "ll" 'pwd
+    "pp" 'pwd))
 #+end_src
 ** Code navigation and auto-completion
 It's usable out of box if Ctags is installed
@@ -504,7 +503,7 @@ If you use Gnus for email, check =init-gnus.el= and read [[https://github.com/re
 Some package cannot be downloaded automatically because of network problem.
 
 Run =M-x package-refresh-content=, restart Emacs, reinstall package.
-** use packages on [[https://elpa.gnu.org/][GNU ELPA]]
+** Use packages on [[https://elpa.gnu.org/][GNU ELPA]]
 By default, packages from GNU ELPA are NOT available. Search the line "uncomment below line if you need use GNU ELPA" in =init-elpa.el= if you want to access GNU ELPA.
 
 For example, [[https://github.com/flycheck/flycheck][flycheck]] requires packages from GNU ELPA.
@@ -586,39 +585,38 @@ Then unit test is run automatically before =git commit=.
 ** Python environment
 This setup used [[https://github.com/jorgenschaefer/elpy][elpy (Emacs Python Development Environment)]].
 
-See elpy's official documentation on how to use elpy.
+See elpy official documentation on how to use elpy.
 ** Set up [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
 You could insert below code into =~/.custom.el=,
 #+begin_src elisp
-(eval-after-load 'lsp-mode
-  '(progn
-     ;; enable log only for debug
-     (setq lsp-log-io nil)
-     ;; use `evil-matchit' instead
-     (setq lsp-enable-folding nil)
-     ;; no real time syntax check
-     (setq lsp-diagnostic-package :none)
-     ;; handle yasnippet by myself
-     (setq lsp-enable-snippet nil)
-     ;; use `company-ctags' only.
-     ;; Please note `company-lsp' is automatically enabled if it's installed
-     (setq lsp-enable-completion-at-point nil)
-     ;; turn off for better performance
-     (setq lsp-enable-symbol-highlighting nil)
-     ;; use find-fine-in-project instead
-     (setq lsp-enable-links nil)
-     ;; auto restart lsp
-     (setq lsp-restart 'auto-restart)
-     ;; don't watch 3rd party javascript libraries
-     (push "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|jade\\)$" lsp-file-watch-ignored)
-     ;; don't ping LSP lanaguage server too frequently
-     (defvar lsp-on-touch-time 0)
-     (defadvice lsp-on-change (around lsp-on-change-hack activate)
-       ;; do run `lsp-on-change' too frequently
-       (when (> (- (float-time (current-time))
-                   lsp-on-touch-time) 30) ;; 30 seconds
-         (setq lsp-on-touch-time (float-time (current-time)))
-         ad-do-it))))
+(with-eval-after-load 'lsp-mode
+  ;; enable log only for debug
+  (setq lsp-log-io nil)
+  ;; use `evil-matchit' instead
+  (setq lsp-enable-folding nil)
+  ;; no real time syntax check
+  (setq lsp-diagnostic-package :none)
+  ;; handle yasnippet by myself
+  (setq lsp-enable-snippet nil)
+  ;; use `company-ctags' only.
+  ;; Please note `company-lsp' is automatically enabled if it's installed
+  (setq lsp-enable-completion-at-point nil)
+  ;; turn off for better performance
+  (setq lsp-enable-symbol-highlighting nil)
+  ;; use find-fine-in-project instead
+  (setq lsp-enable-links nil)
+  ;; auto restart lsp
+  (setq lsp-restart 'auto-restart)
+  ;; don't watch 3rd party javascript libraries
+  (push "[/\\\\][^/\\\\]*\\.\\(json\\|html\\|jade\\)$" lsp-file-watch-ignored)
+  ;; don't ping LSP lanaguage server too frequently
+  (defvar lsp-on-touch-time 0)
+  (defadvice lsp-on-change (around lsp-on-change-hack activate)
+    ;; do run `lsp-on-change' too frequently
+    (when (> (- (float-time (current-time))
+                lsp-on-touch-time) 30) ;; 30 seconds
+      (setq lsp-on-touch-time (float-time (current-time)))
+      ad-do-it)))
 #+end_src
 
 Then run `M-x lsp` to start lsp client and server. Check [[https://github.com/emacs-lsp/lsp-mode]] on how to install lsp server.
@@ -645,7 +643,7 @@ Please use [[https://github.com/redguardtoo/emacs.d/archive/2.9.zip]] and [[http
 * Report bug
 Please check [[http://www.emacswiki.org/emacs/][EmacsWiki]] and my FAQ at first
 
-If you still can't resolve the issue, restart Emacs with option =---debug-init= in shell , run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue
+If you still can't resolve the issue, restart Emacs with option =---debug-init= in shell. Then run =M-x toggle-debug-on-error= in Emacs. Try to reproduce the issue.
 
 The full command line to run Emacs is =emacs -nw --debug-init= in most environments.
 
