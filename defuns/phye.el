@@ -144,7 +144,7 @@
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (set-fill-column 120)))
+            (set-fill-column 96)))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -284,6 +284,10 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
+
+;; ox-taskjuggler
+(local-require 'ox-taskjuggler)
+(add-to-list 'org-export-backends 'taskjuggler)
 ;; }}
 
 
