@@ -40,7 +40,7 @@
 (add-hook 'c-mode-common-hook
           (lambda ()
             (setq fill-column 80)
-            (setq 'c-basic-offset 4)
+            (setq c-basic-offset 4)
             ) t)
 ;; }}
 
@@ -145,7 +145,7 @@
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (set-fill-column 96)))
+            (set-fill-column 85)))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
@@ -241,7 +241,7 @@
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-(setq org-tags-column -90)
+(setq org-tags-column -84)
 (setq org-deadline-warning-days 7)
 
 
