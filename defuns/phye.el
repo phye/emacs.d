@@ -14,6 +14,7 @@
       (lambda (c)
         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 
+(setq help-window-select t)
 ;; }}
 
 ;; buffer related {{
@@ -161,12 +162,13 @@
 (define-key global-map "\C-cl" 'org-store-link)
 
 ;; My often used org commands
-(nvmap :prefix ","
+(my-comma-leader-def
        "ol" 'org-open-at-point
        "sl" 'org-store-link
        "il" 'org-insert-link)
 
-(nvmap :prefix "SPC"
+(my-space-leader-def
+       "rt" 'random-color-theme
        "nn" 'highlight-symbol-next
        "pp" 'highlight-symbol-prev)
 
@@ -239,7 +241,7 @@
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-(setq org-tags-column -79)
+(setq org-tags-column -90)
 (setq org-deadline-warning-days 7)
 
 
@@ -288,6 +290,7 @@
 ;; ox-taskjuggler
 (local-require 'ox-taskjuggler)
 (add-to-list 'org-export-backends 'taskjuggler)
+(setq org-taskjuggler-target-version 3.6)
 ;; }}
 
 
