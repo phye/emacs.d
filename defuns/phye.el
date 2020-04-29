@@ -2,7 +2,7 @@
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 ;;(load-theme 'doom-Iosvkem t)
-(load-theme 'rebecca t)
+(load-theme 'railscasts t)
 ;;(load-theme 'sanityinc-tomorrow-night t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
@@ -241,7 +241,7 @@
 ;; Misc Org settings
 (setq org-catch-invisible-edits (quote error))
 (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-(setq org-tags-column -84)
+(setq org-tags-column -80)
 (setq org-deadline-warning-days 7)
 
 
