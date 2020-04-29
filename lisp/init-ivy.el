@@ -100,11 +100,7 @@ If N is not nil, only list files in current project."
   (shell-command "history -r") ; reload history
   (let* ((collection
           (nreverse
-           (split-string (with-temp-buffer
-                           (insert-file-contents (file-truename "~/.bash_history"))
-                           (buffer-string))
-                         "\n"
-                         t))))
+           (my-read-lines (file-truename "~/.bash_history")))))
     (ivy-read (format "Bash history:") collection
               :action (lambda (val)
                         (kill-new val)
@@ -279,6 +275,8 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive)
   (cond
    ((my-use-tags-as-imenu-function-p)
+    ;; see code of `my-use-tags-as-imenu-function-p'. Currently we only use ctags for imenu
+    ;; in typescript because `lsp-mode' is too damn slow
     (let* ((imenu-create-index-function 'counsel-etags-imenu-default-create-index-function))
       (my-counsel-imenu)))
    (t

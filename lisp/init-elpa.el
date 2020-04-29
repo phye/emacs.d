@@ -18,11 +18,12 @@
     bbdb
     native-complete
     company-native-complete
+    flymake-shellcheck ; check shell script
     js2-mode ; need new features
     git-timemachine ; stable version is broken when git rename file
     evil-textobj-syntax
     command-log-mode
-    lsp-mode ; stable version has performance issue
+    ;; lsp-mode ; stable version has performance issue, but unstable version sends too many warnings
     edit-server ; use Emacs to edit textarea in browser, need browser addon
     vimrc-mode
     rjsx-mode ; fixed the indent issue in jsx
@@ -120,7 +121,7 @@
 ;; I don't use any packages from GNU ELPA because I want to minimize
 ;; dependency on 3rd party web site.
 (setq package-archives
-      '(("localelpa" . "~/.emacs.d/localelpa/")
+      '(
         ;; uncomment below line if you need use GNU ELPA
         ;; ("gnu" . "https://elpa.gnu.org/packages/")
         ;; ("melpa" . "https://melpa.org/packages/")
@@ -146,16 +147,19 @@
 (defvar my-ask-elpa-mirror t)
 (when (and (not noninteractive) ; no popup in batch mode
            my-ask-elpa-mirror
-           (not (file-exists-p (file-truename "~/.emacs.d/elpa")))
+           (not (file-exists-p (file-truename (concat my-emacs-d "elpa"))))
            (yes-or-no-p "Switch to faster package repositories in China temporarily?
 You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use this ELPA mirror."))
   (setq package-archives
-        '(("localelpa" . "~/.emacs.d/localelpa/")
-          ("melpa" . "http://mirrors.163.com/elpa/melpa/")
-          ("melpa-stable" . "http://mirrors.163.com/elpa/melpa-stable/"))))
+        '(("melpa" . "https://mirrors.163.com/elpa/melpa/")
+          ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/"))))
 
 ;; Un-comment below line if you follow "Install stable version in easiest way"
-;; (setq package-archives '(("localelpa" . "~/.emacs.d/localelpa/") ("myelpa" . "~/projs/myelpa/")))
+;; (setq package-archives '(("myelpa" . "~/myelpa/")))
+
+;; my local repository is always needed.
+(push (cons "localelpa" (concat my-emacs-d "localelpa/")) package-archives)
+
 
 ;;--------------------------------------------------------------------------
 ;; Internal implementation, newbies should NOT touch code below this line!
@@ -264,7 +268,6 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 (require-package 'dsvn)
 (require-package 'git-timemachine)
 (require-package 'exec-path-from-shell)
-(require-package 'flymake-jslint)
 (require-package 'ivy)
 (require-package 'swiper)
 (require-package 'counsel) ; counsel => swiper => ivy
@@ -366,6 +369,7 @@ PACKAGE is a symbol, VERSION is a vector as produced by `version-to-list', and
 ;; }}
 
 (when *emacs26*
+  (require-package 'flymake-shellcheck)
   ;; org => ppt, org v8.3 is required (Emacs 25 uses org v8.2)
   (require-package 'org-re-reveal))
 

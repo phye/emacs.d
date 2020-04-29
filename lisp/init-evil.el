@@ -505,7 +505,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "lq" 'highlight-symbol-query-replace
   "ln" 'highlight-symbol-nav-mode ; use M-n/M-p to navigation between symbols
   "ii" 'my-imenu-or-list-tag-in-current-file
-  "ij" 'rimenu-jump
   "." 'evil-ex
   ;; @see https://github.com/pidu/git-timemachine
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
@@ -513,7 +512,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "tb" 'dumb-jump-back
   "tm" 'my-git-timemachine
   ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
-  "ov" 'my-overview-of-current-buffer
   "oo" 'compile
   "c$" 'org-archive-subtree ; `C-c $'
   ;; org-do-demote/org-do-premote support selected region
@@ -644,7 +642,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "yy" 'hydra-launcher/body
   "ii" 'my-toggle-indentation
   "g" 'hydra-git/body
-  "ud" 'my-gud-gdb
   "uk" 'gud-kill-yes
   "ur" 'gud-remove
   "ub" 'gud-break
@@ -839,7 +836,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; {{ @see https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org#replacing-text-with-iedit
 ;; same keybindgs as spacemacs:
-;;  - "SPC s e" to start `iedit-mode'
+;;  - Start `iedit-mode' by `evil-iedit-state/iedit-mode'
 ;;  - "TAB" to toggle current occurrence
 ;;  - "n" next, "N" previous (obviously we use "p" for yank)
 ;;  - "gg" the first occurence, "G" the last occurence
@@ -871,7 +868,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; }}
 
 ;; In insert mode, press "fg" in 0.3 second to trigger my-counsel-company
-;; Run "grep fg ~/.emacs.d/misc/english-words.txt", got "afghan".
+;; Run "grep fg english-words.txt", got "afghan".
 ;; "afgan" is rarely used when programming
 (general-imap "f"
   (general-key-dispatch 'self-insert-command
