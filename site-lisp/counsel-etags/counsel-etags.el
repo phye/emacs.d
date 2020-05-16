@@ -1,12 +1,12 @@
 ;;; counsel-etags.el ---  Fast and complete Ctags/Etags solution using ivy  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2018, 2019 Chen Bin
+;; Copyright (C) 2018-2020 Chen Bin
 
-;; Author: Chen Bin <chenbin.sh@gmail.com>
+;; Author: Chen Bin <chenbin dot sh AT gmail dot com>
 ;; URL: http://github.com/redguardtoo/counsel-etags
 ;; Package-Requires: ((counsel "0.13.0"))
 ;; Keywords: tools, convenience
-;; Version: 1.9.7
+;; Version: 1.9.8
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,7 +27,8 @@
 ;;  Setup:
 ;;   "Ctags" (Universal Ctags is recommended) should exist.
 ;;   "GNU Find" is used if it's installed but it's optional.
-;;   Or else, customize `counsel-etags-update-tags-backend' to generate tags file
+;;   Or else, customize `counsel-etags-update-tags-backend' to generate tags file.
+;;   Please note etags bundled with Emacs is not supported any more.
 ;;
 ;; Usage:
 ;;
@@ -40,7 +41,8 @@
 ;;      (setq imenu-create-index-function
 ;;            'counsel-etags-imenu-default-create-index-function)
 ;;
-;;   Use `counsel-etags-imenu-excluded-items' to exclude fake items extracted by ctags.
+;;   Use `counsel-etags-imenu-excluded-names' to exclude tags by name.
+;;   Use `counsel-etags-imenu-excluded-types' to exclude tags by type
 ;;
 ;;   `counsel-etags-scan-code' to create tags file
 ;;   `counsel-etags-grep' to grep
@@ -49,8 +51,12 @@
 ;;   `counsel-etags-find-tag' to two steps tag matching use regular expression and filter
 ;;   `counsel-etags-list-tag' to list all tags
 ;;   `counsel-etags-update-tags-force' to update current tags file by force
+;;   `counsel-etags-ignore-config-file' specifies paths of ignore configuration files
+;;   (".gitignore", ".hgignore", etc).  Path is either absolute or relative to the tags file.
+;;
 ;;
 ;; Tips:
+;;
 ;; - Add below code into "~/.emacs" to AUTOMATICALLY update tags file:
 ;;
 ;;   ;; Don't ask before reloading updated tags files
@@ -118,6 +124,15 @@
 (defgroup counsel-etags nil
   "Complete solution to use ctags."
   :group 'tools)
+
+(defcustom counsel-etags-ignore-config-files
+  '(".gitignore"
+    ".hgignore"
+    "~/.ignore")
+  "Path of configuration file which specifies files that should ignore.
+Path is either absolute path or relative to the tags file."
+  :group 'counsel-etags
+  :type '(repeat string))
 
 (defcustom counsel-etags-smart-rules nil
   "Plugins to match filter out candidates when using `counsel-etags-find-tag-at-point'."
@@ -366,20 +381,28 @@ related functions need create and scan files in this folder."
   :group 'counsel-etags
   :type 'string)
 
-(defcustom counsel-etags-imenu-excluded-items
+(defcustom counsel-etags-imenu-excluded-names
   '("this"
     "if"
     "unless"
     "import"
     "const"
     "public"
+    "static"
     "private"
     "for"
     "while"
     "export"
     "declare"
     "let")
-  "Regex could extract fake imenu items which should be excluded."
+  "Some imenu items should be excluded by name."
+  :group 'counsel-etags
+  :type '(repeat 'string))
+
+(defcustom counsel-etags-imenu-excluded-types
+  '("variable")
+  "Some imenu items should be excluded by type.
+Run 'ctags -x some-file' to see the type in second column of output."
   :group 'counsel-etags
   :type '(repeat 'string))
 
@@ -496,7 +519,7 @@ Return nil if it's not found."
 ;;;###autoload
 (defun counsel-etags-version ()
   "Return version."
-  (message "1.9.7"))
+  (message "1.9.8"))
 
 ;;;###autoload
 (defun counsel-etags-get-hostname ()
@@ -614,6 +637,17 @@ Return nil if it's not found."
     (format "--options=\"%s\""
             (file-truename counsel-etags-ctags-options-file)))))
 
+(defun counsel-etags-ctags-ingore-config ()
+  "Specify ignore configuration file (.gitignore, for example) for Ctags."
+  (let* (rlt configs filename)
+    (dolist (f counsel-etags-ignore-config-files)
+      (when (file-exists-p (setq filename (file-truename f)))
+        (push filename configs)))
+    (setq rlt (mapconcat (lambda (c) (format "--exclude=\"@%s\"" c)) configs " "))
+    (when counsel-etags-debug
+        (message "counsel-etags-ctags-ingore-config returns %s" rlt))
+    rlt))
+
 (defun counsel-etags-get-scan-command (find-program ctags-program &optional code-file)
   "Create scan command for SHELL from FIND-PROGRAM and CTAGS-PROGRAM.
 If CODE-FILE is a real file, the command scans it and output to stdout."
@@ -621,7 +655,7 @@ If CODE-FILE is a real file, the command scans it and output to stdout."
     (cond
      ;; use both find and ctags
      ((and find-program ctags-program)
-      (setq cmd (format "%s . \\( %s \\) -prune -o -type f -not -size +%sk %s -print | %s -e %s -L -"
+      (setq cmd (format "%s . \\( %s \\) -prune -o -type f -not -size +%sk %s -print | %s -e %s %s -L -"
                         find-program
                         (mapconcat (lambda (p)
                                      (format "-iwholename \"*/%s\"" (counsel-etags-dir-pattern p)) )
@@ -630,10 +664,12 @@ If CODE-FILE is a real file, the command scans it and output to stdout."
                         (mapconcat (lambda (n) (format "-not -name \"%s\"" n))
                                    counsel-etags-ignore-filenames " ")
                         ctags-program
-                        (counsel-etags-ctags-options-file-cli ctags-program))))
+                        (counsel-etags-ctags-options-file-cli ctags-program)
+                        (counsel-etags-ctags-ingore-config))))
+
      ;; Use ctags only
      (ctags-program
-      (setq cmd (format "%s %s %s -e %s %s -R %s"
+      (setq cmd (format "%s %s %s -e %s %s %s -R %s"
                         ctags-program
                         (mapconcat (lambda (p)
                                      (format "--exclude=\"*/%s/*\" --exclude=\"%s/*\""
@@ -644,8 +680,12 @@ If CODE-FILE is a real file, the command scans it and output to stdout."
                                      (format "--exclude=\"%s\"" p))
                                    counsel-etags-ignore-filenames " ")
                         (counsel-etags-ctags-options-file-cli ctags-program)
-                        (if code-file "-f -" "")
-                        (if code-file (format "\"%s\"" code-file ) "."))))
+                        (counsel-etags-ctags-ingore-config)
+                        ;; print a tabular, human-readable cross reference
+                        ;; --<my-lang>-kinds=f still accept all user defined regex
+                        ;; so we have to filter in Emacs Lisp
+                        (if code-file "-x" "")
+                        (if code-file (format "\"%s\"" code-file) "."))))
 
      ;; fall back to Emacs bundled etags
      (t
@@ -1242,6 +1282,21 @@ CONTEXT is extra information collected before finding tag definition."
       ;; open the one selected candidate
       (counsel-etags-open-tag-cand tagname counsel-etags-find-tag-candidates time)))))
 
+(defun counsel-etags-imenu-scan-string (output)
+  "Extract imenu items from OUTPUT."
+  (let* (cands
+         (lines (split-string output "\n")))
+    (dolist (l lines)
+      (let* ((items (split-string l " +")))
+        (when (and (>= (length items) 4)
+                   ;; tag name is not excluded
+                   (not (member (nth 0 items) counsel-etags-imenu-excluded-names))
+
+                   ;; tags type is not excluded
+                   (not (member (nth 1 items) counsel-etags-imenu-excluded-types)))
+          (push (cons (nth 0 items) (nth 2 items)) cands))))
+    cands))
+
 
 ;;;###autoload
 (defun counsel-etags-list-tag ()
@@ -1249,7 +1304,6 @@ CONTEXT is extra information collected before finding tag definition."
   (interactive)
   (counsel-etags-tags-file-must-exist)
   (counsel-etags-find-tag-api nil t buffer-file-name))
-
 
 ;;;###autoload
 (defun counsel-etags-imenu-default-create-index-function ()
@@ -1259,7 +1313,6 @@ CONTEXT is extra information collected before finding tag definition."
          (ext (if buffer-file-name (file-name-extension buffer-file-name) ""))
          ;; ctags needs file extension
          (code-file (make-temp-file "coet" nil (concat "." ext)))
-         (tagname-re (counsel-etags-search-regex nil))
          cmd
          imenu-items
          cands)
@@ -1278,17 +1331,12 @@ CONTEXT is extra information collected before finding tag definition."
               (counsel-etags-get-scan-command nil ctags-program code-file))))
 
       ;; create one item for imenu list
-      ;; (cons name
-      ;;       (if imenu-use-markers (point-marker) (point)))
-      (counsel-etags-scan-string (shell-command-to-string cmd)
-                                 tagname-re
-                                 nil
-                                 (let* ((k (match-string-no-properties 2))
-                                        (v (match-string-no-properties 3)))
-                                   (unless (member k counsel-etags-imenu-excluded-items)
-                                     (push (cons k v) cands))))
+      ;; (cons name (if imenu-use-markers (point-marker) (point)))
+      (setq cands (counsel-etags-imenu-scan-string (shell-command-to-string cmd)))
 
-      ;; now cands is just name and line number
+      ;; cands contains list of name and line number
+      ;; Example of cands:
+      ;;  (setq cands (list (cons "hello" "5")))
       ;; we need convert it into imenu items (name . marker)
       (save-excursion
         (dolist (c cands)

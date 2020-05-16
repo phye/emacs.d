@@ -1,5 +1,5 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
-;;
+
 ;; My frequently used commands are listed here
 
 ;; enable evil-mode
@@ -346,8 +346,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        ;; otherwise just go to first occurrence in buffer
        (t
         (my-search-defun-from-pos search (point-min)))))))
-;; use "gt", someone might prefer original `evil-goto-definition'
-(define-key evil-motion-state-map "gt" 'my-evil-goto-definition)
 
 ;; I learn this trick from ReneFroger, need latest expand-region
 ;; @see https://github.com/redguardtoo/evil-matchit/issues/38
@@ -457,9 +455,8 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "fn" 'cp-filename-of-current-buffer
   "fp" 'cp-fullpath-of-current-buffer
   "dj" 'dired-jump ;; open the dired from current file
-  "xd" 'dired
   "xo" 'ace-window
-  "ff" 'toggle-full-window ;; I use WIN+F in i3
+  "ff" 'my-toggle-full-window ;; I use WIN+F in i3
   "ip" 'find-file-in-project
   "tt" 'find-file-in-current-directory
   "jj" 'find-file-in-project-at-point
@@ -495,6 +492,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "gf" 'counsel-git ; find file
   "gg" 'my-counsel-git-grep ; quickest grep should be easy to press
   "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
+  "gt" 'my-evil-goto-definition ; "gt" is occupied by evil
   "gl" 'my-git-log-trace-definition ; find history of a function or range
   "sh" 'my-select-from-search-text-history
   "rjs" 'run-js
@@ -524,8 +522,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "qq" 'my-multi-purpose-grep
   "dd" 'counsel-etags-grep-current-directory
   "rr" 'my-counsel-recentf
-  "rh" 'counsel-yank-bash-history ; bash history command => yank-ring
-  "rd" 'counsel-recent-directory
   "da" 'diff-region-tag-selected-as-a
   "db" 'diff-region-compare-with-b
   "di" 'evilmi-delete-items
@@ -535,29 +531,18 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "xe" 'eval-last-sexp
   "x0" 'delete-window
   "x1" 'delete-other-windows
-  "x2" 'my-split-window-vertically
-  "x3" 'my-split-window-horizontally
-  "s1" 'delete-other-windows
-  "s2" 'fip-split-window-vertically
+  "x2" 'split-window-vertically
+  "x3" 'split-window-horizontally
+  "s2" 'ffip-split-window-vertically
   "s3" 'ffip-split-window-horizontally
-  "rw" 'rotate-windows
-  "ru" 'undo-tree-save-state-to-register ; C-x r u
-  "rU" 'undo-tree-restore-state-from-register ; C-x r U
+  "xr" 'rotate-windows
   "xt" 'toggle-two-split-window
   "uu" 'winner-undo
   "ur" 'winner-redo
-  "to" 'toggle-web-js-offset
   "fs" 'ffip-save-ivy-last
   "fr" 'ffip-ivy-resume
   "fc" 'cp-ffip-ivy-last
   "ss" 'my-swiper
-  "hd" 'describe-function
-  "hf" 'find-function
-  "hk" 'describe-key
-  "hv" 'describe-variable
-  "gt" 'counsel-gtags-dwim ; jump from reference to definition or vice versa
-  "gr" 'counsel-gtags-find-symbol
-  "gu" 'counsel-gtags-update-tags
   "fb" 'flyspell-buffer
   "fe" 'flyspell-goto-next-error
   "fa" 'flyspell-auto-correct-word
