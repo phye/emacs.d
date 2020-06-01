@@ -1,21 +1,20 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
 ;; avoid spell-checking doublon (double word) in certain major modes
-(defvar flyspell-check-doublon t
+(defvar my-flyspell-check-doublon t
   "Check doublon (double word) when calling `flyspell-highlight-incorrect-region'.")
- (make-variable-buffer-local 'flyspell-check-doublon)
+ (make-variable-buffer-local 'my-flyspell-check-doublon)
 
 (defvar my-default-spell-check-language "en_US"
   "Language used by aspell and hunspell CLI.")
 
 (with-eval-after-load 'flyspell
   ;; {{ flyspell setup for web-mode
-  (defun web-mode-flyspell-verify ()
+  (defun my-web-mode-flyspell-verify ()
     (let* ((f (get-text-property (- (point) 1) 'face))
            rlt)
       (cond
-       ;; Check the words with these font faces, possibly.
-       ;; This *blacklist* will be tweaked in next condition
+       ;; Check the words whose font face is NOT in below *blacklist*
        ((not (memq f '(web-mode-html-attr-value-face
                        web-mode-html-tag-face
                        web-mode-html-attr-name-face
@@ -41,19 +40,24 @@
        ;; finalize the blacklist
        (t
         (setq rlt nil)))
+      ;; If rlt is t, it's a typo. If nil, not a typo.
       rlt))
-  (put 'web-mode 'flyspell-mode-predicate 'web-mode-flyspell-verify)
+  (put 'web-mode 'flyspell-mode-predicate 'my-web-mode-flyspell-verify)
   ;; }}
 
   ;; better performance
   (setq flyspell-issue-message-flag nil)
 
   ;; flyspell-lazy is outdated and conflicts with latest flyspell
-  ;; It only improves the performance of flyspell so it's not essential.
 
-  (defadvice flyspell-highlight-incorrect-region (around flyspell-highlight-incorrect-region-hack activate)
-    (if (or flyspell-check-doublon (not (eq 'doublon (ad-get-arg 2))))
-        ad-do-it)))
+  (defun my-flyspell-highlight-incorrect-region-hack (orig-func &rest args)
+    "Don't mark doublon (double words) as typo."
+    (let* ((beg (nth 0 args))
+           (end (nth 1 args))
+           (poss (nth 2 args)))
+      (when (or my-flyspell-check-doublon (not (eq 'doublon poss)))
+        (apply orig-func args))))
+  (advice-add 'flyspell-highlight-incorrect-region :around #'my-flyspell-highlight-incorrect-region-hack))
 
 ;; Logic:
 ;; If (aspell is installed) { use aspell}
@@ -82,7 +86,7 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
           (cond
            ;; Kevin Atkinson said now aspell supports camel case directly
            ;; https://github.com/redguardtoo/emacs.d/issues/796
-           ((string-match-p "--camel-case"
+           ((string-match-p "--.*camel-case"
                             (shell-command-to-string (concat ispell-program-name " --help")))
             (setq args (append args '("--camel-case"))))
 
@@ -146,42 +150,26 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
 ;; `ispell-extra-args' is *always* used when start CLI aspell process
 (setq-default ispell-extra-args (flyspell-detect-ispell-args t))
 
-(defadvice ispell-word (around my-ispell-word activate)
+(defun my-ispell-word-hack (orig-func &rest args)
+  "Use Emacs original arguments when calling `ispell-word'.
+When fixing a typo, avoid pass camel case option to cli program."
   (let* ((old-ispell-extra-args ispell-extra-args))
     (ispell-kill-ispell t)
     ;; use emacs original arguments
     (setq ispell-extra-args (flyspell-detect-ispell-args))
-    ad-do-it
+    (apply orig-func args)
     ;; restore our own ispell arguments
     (setq ispell-extra-args old-ispell-extra-args)
     (ispell-kill-ispell t)))
-
-(defadvice flyspell-auto-correct-word (around my-flyspell-auto-correct-word activate)
-  (let* ((old-ispell-extra-args ispell-extra-args))
-    (ispell-kill-ispell t)
-    ;; use emacs original arguments
-    (setq ispell-extra-args (flyspell-detect-ispell-args))
-    ad-do-it
-    ;; restore our own ispell arguments
-    (setq ispell-extra-args old-ispell-extra-args)
-    (ispell-kill-ispell t)))
+(advice-add 'ispell-word :around #'my-ispell-word-hack)
+(advice-add 'flyspell-auto-correct-word :around #'my-ispell-word-hack)
 
 (defun text-mode-hook-setup ()
   ;; Turn off RUN-TOGETHER option when spell check text-mode
-  (setq-local ispell-extra-args (flyspell-detect-ispell-args)))
+  (setq-local ispell-extra-args (flyspell-detect-ispell-args))
+  (my-ensure 'wucuo)
+  (wucuo-start))
 (add-hook 'text-mode-hook 'text-mode-hook-setup)
-
-(defun enable-flyspell-mode-conditionally (&optional turn-off)
-  "Enable `flyspell-mode'.  If TURN-OFF is t, turn off it at the end."
-  (when (and (not *no-memory*)
-             ispell-program-name
-             (executable-find ispell-program-name))
-    ;; I don't use flyspell in text-mode because I often use Chinese.
-    ;; I'd rather manually spell check the English text
-    (flyspell-mode 1)
-    ;; The purpose to turn on and turn off `flyspell-mode' is to load some
-    ;; major mode's own predicate
-    (if turn-off (flyspell-mode -1))))
 
 ;; You can also use "M-x ispell-word" or hotkey "M-$". It pop up a multiple choice
 ;; @see http://frequal.com/Perspectives/EmacsTip03-FlyspellAutoCorrectWord.html
@@ -211,6 +199,8 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
                   (ignored-font-faces '(org-verbatim
                                         org-block-begin-line
                                         org-meta-line
+                                        org-special-keyword
+                                        org-property-value
                                         org-tag
                                         org-link
                                         org-table
@@ -256,7 +246,7 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
 ;; }}
 
 (with-eval-after-load 'wucuo
-  ;; {{ wucuo is used to check camel cased code.  Code is usually written
+  ;; {{ wucuo is used to check camel cased code and plain text.  Code is usually written
   ;; in English. If your code uses other language (Spanish?),
   ;; Un-comment and modify below two lines:
 
@@ -266,9 +256,8 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
   ;; }}
 
   ;; do NOT turn on `flyspell-mode' automatically.
-  ;; use `flyspell-buffer' instead
-  (setq wucuo-flyspell-start-mode "lite")
-  ;; spell check buffer every 10 mins
-  (setq wucuo-update-interval 600))
+  ;; check buffer or visible region only
+  ;; spell check buffer every 30 seconds
+  (setq wucuo-update-interval 2))
 
 (provide 'init-spelling)

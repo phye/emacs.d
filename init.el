@@ -11,6 +11,8 @@
   4000000
   "Best default gc threshold value.  Should NOT be too big!")
 
+(defvar my-debug nil "Enable debug mode.")
+
 ;; don't GC during startup to save time
 (setq gc-cons-threshold most-positive-fixnum)
 
@@ -60,6 +62,7 @@
   (run-with-idle-timer 5 t #'garbage-collect))
 
 (defun my-vc-merge-p ()
+  "Use Emacs for git merge only?"
   (boundp 'startup-now))
 
 (defun require-init (pkg &optional maybe-disabled)
@@ -77,11 +80,6 @@
             (t
              (format "%s/%s/%s" my-site-lisp-dir pkg pkg))))
           t t)))
-
-;; *Message* buffer should be writable in 24.4+
-(defadvice switch-to-buffer (after switch-to-buffer-after-hack activate)
-  (if (string= "*Messages*" (buffer-name))
-      (read-only-mode -1)))
 
 ;; @see https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
 ;; Normally file-name-handler-alist is set to
