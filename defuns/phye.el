@@ -24,7 +24,7 @@
   (kill-emacs)
   )
 (global-set-key (kbd "C-x C-c") 'delete-frame)
-(global-set-key (kbd "C-x C-c") 'server-shutdown)
+(global-set-key (kbd "C-x C-q") 'server-shutdown)
 ;; }}
 
 ;; buffer related {{
