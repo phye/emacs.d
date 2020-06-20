@@ -34,6 +34,7 @@
 ;;
 ;;   `counsel-etags-find-tag-at-point' to navigate.  This command will also
 ;;   run `counsel-etags-scan-code' AUTOMATICALLY if tags file is not built yet.
+;;   It also calls `counsel-etags-fallback-grep-function' if not tag is found.
 ;;
 ;;   Run `counsel-etags-list-tag-in-current-file' to list tags in current file.
 ;;
@@ -190,6 +191,17 @@ Here is code to enable grepping Chinese using pinyinlib,
            (if (and keyword (> (length keyword) 0))
                (pinyinlib-build-regexp-string keyword t)
              keyword)))"
+  :group 'counsel-etags
+  :type 'function)
+
+(defcustom counsel-etags-fallback-grep-function #'counsel-etags-grep
+  "The fallback grep function if tag can't be found at first.
+May Grep can find something.
+
+Below parameters is passed to the function.
+The parameter \"keyword\" is the search keyword.
+The parameter \"hint\" is the hint for grep ui.
+The parameter \"root\" is the project root directory."
   :group 'counsel-etags
   :type 'function)
 
@@ -498,6 +510,12 @@ The file is also used by tags file auto-update process.")
 (defvar counsel-etags-find-tag-candidates nil "Find tag candidate.")
 
 (defvar counsel-etags-cache nil "Cache of multiple tags files.")
+
+(defvar counsel-etags-find-tag-map (make-sparse-keymap)
+  "Ivy keymap while narrowing down tags.")
+
+(defvar counsel-etags-last-tagname-at-point nil
+  "Last tagname queried at point.")
 
 (defun counsel-etags-win-path (executable-name drive)
   "Guess EXECUTABLE-NAME's full path in Cygwin on DRIVE."
@@ -1069,7 +1087,7 @@ CONTEXT is extra information collected before find tag definition."
       (setq rlt (delq nil (delete-dups rlt))))
     rlt))
 
-(defun counsel-etags-encode(s)
+(defun counsel-etags-regexp-quote(s)
   "Encode S."
   ;; encode "{}[]"
   (setq s (replace-regexp-in-string "\"" "\\\\\"" s))
@@ -1089,14 +1107,15 @@ CONTEXT is extra information collected before find tag definition."
 (defun counsel-etags-selected-str ()
   "Get selected string.  Suppose plain text instead regex in selected text.
 So we need *encode* the string."
-  (if (region-active-p)
-      (counsel-etags-encode (buffer-substring-no-properties (region-beginning)
-                                                            (region-end)))))
+  (when (region-active-p)
+    (counsel-etags-regexp-quote (buffer-substring-no-properties (region-beginning)
+                                                                (region-end)))))
 
 (defun counsel-etags-tagname-at-point ()
   "Get tag name at point."
-  (or (counsel-etags-selected-str)
-      (funcall counsel-etags-find-tag-name-function)))
+  (setq counsel-etags-last-tagname-at-point
+        (or (counsel-etags-selected-str)
+            (funcall counsel-etags-find-tag-name-function))))
 
 (defun counsel-etags-forward-line (lnum)
   "Forward LNUM lines."
@@ -1105,6 +1124,7 @@ So we need *encode* the string."
     (goto-char (point-min))
     (forward-line (1- lnum))))
 
+;;;###autoload
 (defun counsel-etags-push-marker-stack ()
   "Save current position."
   ;; un-select region
@@ -1190,7 +1210,8 @@ Focus on TAGNAME if it's not nil."
                            (counsel-etags-open-file-api e
                                                         ,dir
                                                         ,tagname))
-                :caller 'counsel-etags-find-tag)))))
+                :caller 'counsel-etags-find-tag
+                :keymap counsel-etags-find-tag-map)))))
 
 (defun counsel-etags-tags-file-must-exist ()
   "Make sure tags file does exist."
@@ -1325,12 +1346,16 @@ CONTEXT is extra information collected before finding tag definition."
                 :dynamic-collection t
                 :action `(lambda (e)
                            (counsel-etags-open-file-api e ,dir))
-                :caller 'counsel-etags-find-tag))
+                :caller 'counsel-etags-find-tag
+                :keymap counsel-etags-find-tag-map))
 
      ((not (setq counsel-etags-find-tag-candidates
                  (counsel-etags-collect-cands tagname fuzzy current-file dir context)))
-      ;; OK let's try grep if no tag found
-      (counsel-etags-grep tagname "No tag found. "))
+      ;; OK, let's try grep the whole project if no tag is found yet
+      (funcall counsel-etags-fallback-grep-function
+               tagname
+               "No tag is found. "
+               (counsel-etags-locate-project)))
 
      (t
       ;; open the one selected candidate

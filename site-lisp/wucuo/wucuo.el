@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2018-2020 Chen Bin
 ;;
-;; Version: 0.2.1
+;; Version: 0.2.3
 ;; Keywords: convenience
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: http://github.com/redguardtoo/wucuo
@@ -39,6 +39,11 @@
 ;; Please note `flyspell-prog-mode' and `flyspell-mode' should be turned off
 ;; before using this program.
 ;;
+;; User's configuration for the package flyspell still works.
+;; Flyspell provides two minor modes, `flyspell-prog-mode' and `flyspell-mode'.
+;; They are replaced by this program.  But all the other commands and configuration
+;; for flyspell is still valid.
+;;
 ;; 3. Tips
 ;; If `wucuo-flyspell-start-mode' is "normal", `wucuo-start' runs `flyspell-buffer'.
 ;; If it's "normal", `wucuo-start' runs `flyspell-region' to check visible region
@@ -47,6 +52,26 @@
 ;; The interval of checking is set by `wucuo-update-interval'.
 ;;
 ;; See `wucuo-check-nil-font-face' on how to check plain text (text without font)
+;;
+;; Use `wucuo-current-font-face' to detect font face at point.
+;;
+;; You can define a function in `wucuo-spell-check-buffer-predicate'.
+;; If the function returns t, the spell checking of current buffer will continue.
+;; If it returns nil, the spell checking is skipped.
+;;
+;; Here is sample to skip checking in specified major modes,
+;;   (setq wucuo-spell-check-buffer-predicate
+;;         (lambda ()
+;;           (not (memq major-mode
+;;                      '(dired-mode
+;;                        log-edit-mode
+;;                        compilation-mode
+;;                        help-mode
+;;                        profiler-report-mode
+;;                        speedbar-mode
+;;                        gud-mode
+;;                        calc-mode
+;;                        Info-mode)))))
 ;;
 
 ;;; Code:
@@ -59,6 +84,11 @@
 
 (defcustom wucuo-debug nil
   "Output debug information when it's not nil."
+  :type 'boolean
+  :group 'wucuo)
+
+(defcustom wucuo-inherit-flyspell-mode-keybindings t
+  "Inherit `flyspell-mode' keybindings."
   :type 'boolean
   :group 'wucuo)
 
@@ -79,12 +109,16 @@ If it's t, check plain text in any mode."
   :group 'wucuo)
 
 (defcustom wucuo-aspell-language-to-use "en"
-  "Language to use passed to aspell option '--lang'."
+  "Language to use passed to aspell option '--lang'.
+Please note it's only to check camel cased words.
+User's original dictionary configration for flyspell still works."
   :type 'string
   :group 'wucuo)
 
 (defcustom wucuo-hunspell-dictionary-base-name "en_US"
-  "Dictionary base name pass to hunspell option '-d'."
+  "Dictionary base name pass to hunspell option '-d'.
+Please note it's only used to check camel cased words.
+User's original dictionary configration for flyspell still works."
   :type 'string
   :group 'wucuo)
 
@@ -129,7 +163,7 @@ If major mode's own predicate is not nil, the font face check is skipped."
   :group 'wucuo
   :type 'integer)
 
-(defcustom wucuo-spell-check-buffer-max (* 128 1024 1024)
+(defcustom wucuo-spell-check-buffer-max (* 256 1024)
   "Max size of buffer to run `wucuo-spell-check-buffer'."
   :type 'integer
   :group 'wucuo)
@@ -227,7 +261,7 @@ Ported from 'https://github.com/fatih/camelcase/blob/master/camelcase.go'."
   "Feed LINE into spell checker and return output as string."
   (let* ((cmd (cond
                ;; aspell: `echo "helle world" | aspell pipe --lang en`
-               ((string-match-p "aspell$" ispell-program-name)
+               ((string-match-p "aspell\\(\\.exe\\)?$" ispell-program-name)
                 (format "%s pipe --lang %s" ispell-program-name wucuo-aspell-language-to-use))
                ;; hunspell: `echo "helle world" | hunspell -a -d en_US`
                (t
@@ -353,7 +387,7 @@ Returns t to continue checking, nil otherwise."
 ;;;###autoload
 (defun wucuo-version ()
   "Output version."
-  (message "0.2.1"))
+  (message "0.2.3"))
 
 
 ;;;###autoload
@@ -361,6 +395,12 @@ Returns t to continue checking, nil otherwise."
   "Spell check current buffer."
   (if wucuo-debug (message "wucuo-spell-check-buffer called."))
   (cond
+   ((or (null ispell-program-name)
+        (not (executable-find ispell-program-name))
+        (not (string-match "aspell\\(\\.exe\\)?$\\|hunspell\\(\\.exe\\)?$" ispell-program-name)))
+    ;; do nothing, wucuo only works with aspell or hunspell
+    (if wucuo-debug (message "aspell/hunspell missing in `ispell-program-name' or not installed.")))
+
    ((not wucuo-timer)
     ;; start timer if not started yet
     (setq wucuo-timer (current-time)))
@@ -398,7 +438,24 @@ Returns t to continue checking, nil otherwise."
   (interactive)
   (if wucuo-debug (message "wucuo-start called."))
   (ignore arg)
+  (cond
+   (wucuo-inherit-flyspell-mode-keybindings
+    (wucuo-mode 1))
+   (t
+    (wucuo-mode-on))))
 
+(defun wucuo-stop ()
+  "Turn off wucuo and stop spell checking code."
+  (interactive)
+  (if wucuo-debug (message "wucuo-stop called."))
+  (cond
+   (wucuo-inherit-flyspell-mode-keybindings
+    (wucuo-mode -1))
+   (t
+    (wucuo-mode-off))))
+
+(defun wucuo-mode-on ()
+  "Turn Wucuo mode on.  Do not use this; use `wucuo-mode' instead."
   (cond
    (flyspell-mode
     (message "Please turn off `flyspell-mode' and `flyspell-prog-mode' before wucuo starts!"))
@@ -410,8 +467,43 @@ Returns t to continue checking, nil otherwise."
     ;; work around issue when calling `flyspell-small-region'
     ;; can't show the overlay of error but can't delete overlay
     (setq flyspell-large-region 1)
-
     (add-hook 'after-save-hook #'wucuo-spell-check-buffer nil t))))
+
+(defun wucuo-mode-off ()
+  "Turn Wucuo mode on.  Do not use this; use `wucuo-mode' instead."
+
+  ;; {{ copied from `flyspell-mode-off'
+  (flyspell-delete-all-overlays)
+  (setq flyspell-pre-buffer nil)
+  (setq flyspell-pre-point  nil)
+  ;; }}
+
+  (remove-hook 'after-save-hook #'wucuo-spell-check-buffer t))
+
+(define-minor-mode wucuo-mode
+  "Toggle spell checking (Wucuo mode).
+With a prefix argument ARG, enable Flyspell mode if ARG is
+positive, and disable it otherwise.  If called from Lisp, enable
+the mode if ARG is omitted or nil.
+
+Wucuo mode is a buffer-local minor mode.  When enabled, it
+spawns a single Ispell process and checks each word.  The default
+flyspell behavior is to highlight incorrect words.
+
+Remark:
+`wucuo-mode' uses `flyspell' and `flyspell-mode-mpa'.  Thus all Flyspell options and
+key bindings are valid."
+  :lighter flyspell-mode-line-string
+  :keymap flyspell-mode-map
+  :group 'wucuo
+  (cond
+   (wucuo-mode
+    (condition-case err
+        (wucuo-mode-on)
+      (error (message "Error enabling Flyspell mode:\n%s" (cdr err))
+             (wucuo-mode -1))))
+   (t
+    (wucuo-mode-off))))
 
 (provide 'wucuo)
 ;;; wucuo.el ends here

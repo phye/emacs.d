@@ -16,24 +16,27 @@ And \"%\" key is also retored to `evil-jump-item'.")
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (global-evil-surround-mode 1)
 (defun evil-surround-prog-mode-hook-setup ()
-  (push '(?$ . ("${" . "}")) evil-surround-pairs-alist)
+  "Set up surround shortcuts."
+  (cond
+   ((memq major-mode '(sh-mode))
+    (push '(?$ . ("$(" . ")")) evil-surround-pairs-alist))
+   (t
+    (push '(?$ . ("${" . "}")) evil-surround-pairs-alist)))
+
+  (when (memq major-mode '(org-mode))
+   (push '(91 . ("[[" . "]]")) evil-surround-pairs-alist) ; [
+   (push '(?= . ("=" . "=")) evil-surround-pairs-alist))
+
+  (when (memq major-mode '(emacs-lisp-mode))
+   (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
+   (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
+
+  (when (derived-mode-p 'js-mode)
+   (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
+
+  ;; generic
   (push '(?/ . ("/" . "/")) evil-surround-pairs-alist))
 (add-hook 'prog-mode-hook 'evil-surround-prog-mode-hook-setup)
-
-(defun evil-surround-js-mode-hook-setup ()
-  ;; ES6
-  (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
-(add-hook 'js-mode-hook 'evil-surround-js-mode-hook-setup)
-
-(defun evil-surround-emacs-lisp-mode-hook-setup ()
-  (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
-  (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
-(add-hook 'emacs-lisp-mode-hook 'evil-surround-emacs-lisp-mode-hook-setup)
-
-(defun evil-surround-org-mode-hook-setup ()
-  (push '(93 . ("[[" . "]]")) evil-surround-pairs-alist) ; ]
-  (push '(?= . ("=" . "=")) evil-surround-pairs-alist))
-(add-hook 'org-mode-hook 'evil-surround-org-mode-hook-setup)
 ;; }}
 
 ;; {{ For example, press `viW*`
@@ -63,8 +66,6 @@ And \"%\" key is also retored to `evil-jump-item'.")
        (define-key evil-inner-text-objects-map ,key (quote ,inner-name))
        (define-key evil-outer-text-objects-map ,key (quote ,outer-name)))))
 
-;; between dollar signs:
-(my-evil-define-and-bind-text-object "$" "\\$" "\\$")
 ;; between equal signs
 (my-evil-define-and-bind-text-object "=" "=" "=")
 ;; between pipe characters:
@@ -104,7 +105,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
     rlt))
 
 (defun my-evil-path-not-path-char (ch)
-  "Check ascii table for charctater."
+  "Check ascii table for character CH."
   (or (and (<= 0 ch) (<= ch 32))
       (memq ch
             '(34 ; double quotes
@@ -198,7 +199,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
     (if selected-region
         (evil-range (nth 1 selected-region) (nth 2 selected-region) :expanded t))))
 
-(evil-define-text-object my-evil-path-outer-text-object (&optional NUM begin end type)
+(evil-define-text-object my-evil-path-outer-text-object (&optional count begin end type)
   "Nearby path."
   (let* ((selected-region (my-evil-path-extract-region)))
     (when selected-region
@@ -418,6 +419,41 @@ If the character before and after CH is space or tab, CH is NOT slash"
 (local-require 'general)
 (general-evil-setup t)
 
+;; {{
+(evil-define-text-object my-evil-a-statement (count &optional beg end type)
+  "Select a statement."
+  (list (my-skip-white-space (line-beginning-position) 1)
+        (line-end-position)))
+
+(evil-define-text-object my-evil-inner-statement (count &optional beg end type)
+  "Select inner statement."
+  (let* ((b (my-skip-white-space (line-beginning-position) 1))
+         (e (line-end-position)))
+    (list (save-excursion
+            (goto-char b)
+            (while (and (< (point) e) (not (eq (following-char) 61)))
+              (forward-char))
+            (cond
+             ((eq (point) e)
+              b)
+             (t
+              ;; skip '=' at point
+              (goto-char (my-skip-white-space (1+ (point)) 1))
+              (point))))
+          (cond
+           ((eq (char-before e) 59) ; ";"
+            (my-skip-white-space (1- e) -1))
+           (t
+            e)))))
+
+(define-key evil-outer-text-objects-map "v" #'my-evil-a-statement)
+(define-key evil-inner-text-objects-map "v" #'my-evil-inner-statement)
+;; }}
+
+;; I select string inside single quote frequently
+(define-key evil-outer-text-objects-map "i" #'evil-a-single-quote)
+(define-key evil-inner-text-objects-map "i" #'evil-inner-single-quote)
+
 ;; {{ use `,` as leader key
 (general-create-definer my-comma-leader-def
   :prefix ","
@@ -432,7 +468,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "m" 'evil-set-marker
   "em" 'my-erase-visible-buffer
   "eb" 'eval-buffer
-  "sd" 'sudo-edit
   "sc" 'scratch
   "ee" 'eval-expression
   "aa" 'copy-to-x-clipboard ; used frequently
@@ -500,7 +535,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "tm" 'my-git-timemachine
   ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
-  "oo" 'compile
+  "op" 'compile
   "c$" 'org-archive-subtree ; `C-c $'
   ;; org-do-demote/org-do-premote support selected region
   "c<" 'org-do-promote ; `C-c C-<'
@@ -518,13 +553,24 @@ If the character before and after CH is space or tab, CH is NOT slash"
   "si" 'evilmi-select-items
   "jb" 'js-beautify
   "jp" 'my-print-json-path
-  "xe" 'eval-last-sexp
+  ;; {{ @see http://ergoemacs.org/emacs/emacs_pinky_2020.html
+  ;; `keyfreq-show' proved sub-window operations happen most.
   "x0" 'delete-window
   "x1" 'delete-other-windows
   "x2" 'split-window-vertically
   "x3" 'split-window-horizontally
-  "s2" 'ffip-split-window-vertically
-  "s3" 'ffip-split-window-horizontally
+  "xq" 'delete-window
+  "xa" 'split-window-vertically
+  "xd" 'split-window-horizontally
+  "s0" 'delete-window
+  "s1" 'delete-other-windows
+  "s2" 'split-window-vertically
+  "s3" 'split-window-horizontally
+  "sq" 'delete-window
+  "sa" 'split-window-vertically
+  "sd" 'split-window-horizontally
+  "oo" 'delete-other-windows
+  ;; }}
   "xr" 'rotate-windows
   "xt" 'toggle-two-split-window
   "uu" 'winner-undo
@@ -822,6 +868,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
 
 ;; {{ Port of vim-textobj-syntax.
 ;; It provides evil text objects for consecutive items with same syntax highlight.
+;; press "vah" or "vih"
 (require 'evil-textobj-syntax)
 ;; }}
 

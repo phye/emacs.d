@@ -15,14 +15,6 @@
 (global-set-key (kbd "C-q") #'aya-open-line)
 ;; }}
 
-;; {{ `sh-mode' setup
-(defun sh-mode-hook-setup ()
-  (when (and *emacs26* (executable-find "shellcheck"))
-    (flymake-shellcheck-load)
-    (flymake-mode 1)))
-(add-hook 'sh-mode-hook 'sh-mode-hook-setup)
-;; }}
-
 ;; {{ ace-link
 (ace-link-setup-default)
 (global-set-key (kbd "M-o") 'ace-link)
@@ -673,7 +665,6 @@ If no region is selected, `kill-ring' or clipboard is used instead."
 
 ;; flymake
 (with-eval-after-load 'flymake
-  (remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
   (setq flymake-gui-warnings-enabled nil))
 
 ;; {{ check attachments
@@ -756,9 +747,6 @@ If no region is selected, `kill-ring' or clipboard is used instead."
       (typewriter-mode -1)
     (typewriter-mode 1)))
 ;; }}
-
-;; @see https://github.com/szermatt/emacs-bash-completion
-(bash-completion-setup)
 
 (with-eval-after-load 'grep
   ;; eacl and other general grep (rgrep, grep ...) setup
@@ -1080,34 +1068,43 @@ Including indent-buffer, which should not be called automatically on save."
 ;; }}
 
 ;; {{ pronunciation
+(defun my-extract-word-mp3 (url)
+  "Extract mp3 from URL's response."
+  (let* ((html-text (with-current-buffer
+                        (url-retrieve-synchronously url) (buffer-string)))
+         (regexp "<source type=\"audio/mpeg\" src=\"\\([^\"]+\\)"))
+    (when (and html-text
+               (not (string-match "404" html-text))
+               (string-match regexp html-text))
+      (concat "https://dictionary.cambridge.org" (match-string 1 html-text)))))
+
 (defun my-pronounce-word (&optional word)
+  "Use cambridge dictionary to pronounce WORD."
   (interactive "sWord: ")
   (my-ensure 'url)
   (if word (setq word (downcase word)))
   (let* ((url (format "https://dictionary.cambridge.org/pronunciation/english/%s" word))
          (cached-mp3 (file-truename (concat my-emacs-d (format "misc/%s.mp3" word))))
          (player (if (not *is-a-mac*) (my-guess-mplayer-path) "open"))
-         html-text
          online-mp3)
     (cond
      ((file-exists-p cached-mp3)
       (my-async-shell-command (format "%s %s" player cached-mp3)))
-     ((and (not (string-match "404" (setq html-text (with-current-buffer (url-retrieve-synchronously url) (buffer-string)))))
-           (string-match "data-src-mp3=\"\\([^\"]+\\)" html-text))
-      (setq online-mp3 (concat "https://dictionary.cambridge.org" (match-string 1 html-text)))
+     ((setq online-mp3 (my-extract-word-mp3 url))
       (url-copy-file online-mp3 cached-mp3)
       (my-async-shell-command (format "%s %s" player cached-mp3)))
      (t
       (message "Sorry, can't find pronunciation for \"%s\"" word)))))
 
-(defun my-pronounce-current-word (&optional manual)
-  "Pronounce current word."
+(defun my-pronounce-current-word (&optional user-input-p)
+  "Pronounce current word.
+If USER-INPUT-P is t, user need input the word."
   (interactive "P")
   (when (memq major-mode '(nov-mode))
     ;; go to end of word to workaround `nov-mode' bug
     (forward-word)
     (forward-char -1))
-  (let* ((word (if manual (read-string "Word: ")
+  (let* ((word (if user-input-p (read-string "Word: ")
                  (thing-at-point 'word))))
     (my-pronounce-word word)))
 ;; }}
@@ -1230,7 +1227,30 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
                                (file-name-base video-file)))))
      (t
       (shell-command (format "%s --dir . &" cmd-prefix))))))
+;; }}
 
+;; {{ use sdcv dictionary to find big word definition
+(defun my-sdcv-format-bigword (word zipf)
+  "Format WORD and ZIPF using sdcv dictionary."
+  (ignore zipf)
+  (let* (rlt def)
+    (local-require 'sdcv)
+    ;; 2 level org format
+    (condition-case nil
+        (progn
+          (setq def (sdcv-search-witch-dictionary word sdcv-dictionary-complete-list))
+          (setq def (replace-regexp-in-string "^-->.*" "" def))
+          (setq def (replace-regexp-in-string "[\n\r][\n\r]+" "" def))
+          (setq rlt (format "** %s\n%s\n" word def)))
+      (error nil))
+    rlt))
+
+(defun my-lookup-big-word-definition-in-buffer ()
+  "Look up big word definitions."
+  (interactive)
+  (local-require 'mybigword)
+  (let* ((mybigword-default-format-function 'my-sdcv-format-bigword))
+    (mybigword-show-big-words-from-current-buffer)))
 ;; }}
 
 (provide 'init-misc)
