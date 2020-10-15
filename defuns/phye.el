@@ -1,8 +1,8 @@
 ;; {{ Misc
 ;; (cd "~/ws/OrgNotes/")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-;;(load-theme 'doom-Iosvkem t)
-(load-theme 'railscasts t)
+(load-theme 'doom-dark+ t)
+;;(load-theme 'railscasts t)
 ;;(load-theme 'sanityinc-tomorrow-night t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
@@ -51,6 +51,7 @@
           (lambda ()
             (setq fill-column 80)
             (setq c-basic-offset 4)
+            (c-set-offset 'inlamda 0)
             ) t)
 ;; }}
 
@@ -178,7 +179,7 @@
        "il" 'org-insert-link)
 
 (my-space-leader-def
-       "rt" 'random-color-theme
+       "rt" 'my-random-color-theme
        "nn" 'highlight-symbol-next
        "pp" 'highlight-symbol-prev)
 
