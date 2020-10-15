@@ -11,16 +11,16 @@
 [_ss_] Save workgroup     [_R_] Emms Random     [_w_] Pronounce word
 [_ll_] Load workgroup     [_n_] Emms Next       [_W_] Big words definition
 [_B_] New bookmark        [_p_] Emms Previous   [_v_] Play big word video
-[_m_] Goto bookmark       [_P_] Emms Pause      [_ss_] Pomodoro start
-[_uu_] Show/Hide undo     [_O_] Emms Open       [_st_] Pomodoro stop
-[_bb_] Switch Gnus buffer [_L_] Emms Playlist   [_sr_] Pomodoro resume
-[_e_] Erase buffer        [_E_] Typewriter on   [_sp_] Pomodoro pause
-[_r_] Erase this buffer   [_V_] Old typewriter
-[_f_] Recent file
+[_m_] Goto bookmark       [_P_] Emms Pause      [_im_] Image of word
+[_bb_] Switch Gnus buffer [_O_] Emms Open       [_ss_] Pomodoro start
+[_e_] Erase buffer        [_L_] Emms Playlist   [_st_] Pomodoro stop
+[_r_] Erase this buffer   [_E_] Typewriter on   [_sr_] Pomodoro resume
+[_f_] Recent file         [_V_] Old typewriter  [_sp_] Pomodoro pause
 [_d_] Recent directory
 [_bh_] Bash history
 [_hr_] Dired CMD history
 [_hh_] Random theme
+[_ii_] Imenu
 [_q_] Quit
 "
   ("hr" my-dired-redo-from-commands-history)
@@ -31,12 +31,13 @@
   ("bh" counsel-insert-bash-history)
   ("hh" random-healthy-color-theme)
   ("ss" wg-create-workgroup)
-  ("ll" my-wg-switch-workgroup)
+  ("ii" my-counsel-imenu)
+  ("ll" wg-open-workgroup)
+
   ("e" my-erase-visible-buffer)
   ("r" my-erase-current-buffer)
   ("E" toggle-typewriter)
   ("V" twm/toggle-sound-style)
-  ("uu" undo-tree-visualize)
   ("ss" pomodoro-start)
   ("st" pomodoro-stop)
   ("sr" pomodoro-resume)
@@ -44,6 +45,7 @@
   ("R" emms-random)
   ("n" emms-next)
   ("w" mybigword-pronounce-word)
+  ("im" mybigword-show-image-of-word)
   ("W" my-lookup-big-word-definition-in-buffer)
   ("v" mybigword-play-video-of-word-at-point)
   ("p" emms-previous)
@@ -272,7 +274,7 @@
 [_cc_] Last command         [_ff_] Find         [_dd_] directory
 [_sa_] Fetch all subtitles  [_C_]  Copy
 [_s1_] Fetch on subtitle    [_rb_] Change base
-[_vv_] Video => Mp3         [_dd_] Diff 2 files
+[_vv_] Video => Mp3         [_df_] Diff 2 files
 [_aa_] Recording Wav
 [_ee_] Mkv => Srt
 [_+_] Create directory
