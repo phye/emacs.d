@@ -1,11 +1,5 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(defun ibuffer-mode-hook-setup ()
-  (ibuffer-vc-set-filter-groups-by-vc-root)
-  (unless (eq ibuffer-sorting-mode 'filename/process)
-    (ibuffer-do-sort-by-filename/process))
-  (ibuffer-switch-to-saved-filter-groups "default"))
-
 (with-eval-after-load 'ibuffer
   ;; Use human readable Size column instead of original one
   (define-ibuffer-column size-h
@@ -17,9 +11,6 @@
       (format "%7.1fk" (/ (buffer-size) 1000.0)))
      (t
       (format "%8d" (buffer-size)))))
-  ;; Explicitly require ibuffer-vc to get its column definitions, which
-  ;; can't be autoloaded
-  (require 'ibuffer-vc)
 
   (setq ibuffer-expert t
         ibuffer-show-empty-filter-groups nil
@@ -73,18 +64,21 @@
                              (mode . gnus-article-mode)
                              (name . "^\\.bbdb$")
                              (name . "^\\.newsrc-dribble")))))))
+  (defun ibuffer-mode-hook-setup ()
+    (unless (eq ibuffer-sorting-mode 'filename/process)
+      (ibuffer-do-sort-by-filename/process))
+    (ibuffer-switch-to-saved-filter-groups "default"))
+
   (add-hook 'ibuffer-mode-hook 'ibuffer-mode-hook-setup)
 
   ;; Modify the default ibuffer-formats
   (setq ibuffer-formats
-        '((mark modified read-only vc-status-mini " "
+        '((mark modified read-only " "
                 (name 18 18 :left :elide)
                 " "
                 (size-h 9 -1 :right)
                 " "
                 (mode 16 16 :left :elide)
-                " "
-                (vc-status 16 16 :left)
                 " "
                 filename-and-process)))
 

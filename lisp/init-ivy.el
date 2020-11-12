@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(ivy-mode 1) ; it enables ivy UI for `kill-buffer'
+(my-run-with-idle-timer 1 #'ivy-mode) ; it enables ivy UI for `kill-buffer'
 
 (with-eval-after-load 'counsel
   ;; automatically pick up cygwin cli tools for counsel
@@ -135,20 +135,18 @@ If N is 2, list files in my recent 20 commits."
                                    bookmark-alist)))
             :action #'bookmark-jump))
 
-(defun counsel-insert-bash-history ()
+(defun my-insert-bash-history ()
   "Yank the bash history."
   (interactive)
   (shell-command "history -r") ; reload history
-  (let* ((collection
-          (nreverse
-           (my-read-lines (file-truename "~/.bash_history")))))
-    (ivy-read (format "Bash history:") collection
-              :action (lambda (val)
-                        (kill-new val)
-                        (message "%s => kill-ring" val)
-                        (insert val)))))
+  (let* ((collection (nreverse (my-read-lines (file-truename "~/.bash_history"))))
+         (val (completing-read "Bash history: " collection)))
+  (when val
+      (kill-new val)
+      (message "%s => kill-ring" val)
+      (insert val))))
 
-(defun counsel-recent-directory (&optional n)
+(defun my-recent-directory (&optional n)
   "Goto recent directories.
 If N is not nil, only list directories in current project."
   (interactive "P")
@@ -157,12 +155,12 @@ If N is not nil, only list directories in current project."
                  (append my-dired-directory-history
                          (mapcar 'file-name-directory recentf-list)
                          ;; fasd history
-                         (if (executable-find "fasd")
-                             (nonempty-lines (shell-command-to-string "fasd -ld"))))))
+                         (and (executable-find "fasd")
+                              (nonempty-lines (shell-command-to-string "fasd -ld"))))))
          (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
     (when (and n root-dir)
       (setq cands (delq nil (mapcar (lambda (f) (path-in-directory-p f root-dir)) cands))))
-    (ivy-read "directories:" cands :action 'dired)))
+    (dired (completing-read "Directories: " cands))))
 
 (defun ivy-occur-grep-mode-hook-setup ()
   "Set up ivy occur grep mode."
@@ -211,11 +209,7 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
                                 (kill-new plain-str)))))
 
 (defun ivy-switch-buffer-matcher-pinyin (regexp candidates)
-  (my-ensure 'pinyinlib)
-  (let* ((pys (split-string regexp "[ \t]+"))
-         (regexp (format ".*%s.*"
-                         (mapconcat 'pinyinlib-build-regexp-string pys ".*"))))
-    (ivy--switch-buffer-matcher regexp candidates)))
+  (ivy--switch-buffer-matcher (my-pinyinlib-build-regexp-string regexp) candidates))
 
 (defun ivy-switch-buffer-by-pinyin ()
   "Switch to another buffer."
@@ -247,16 +241,16 @@ If N is nil, use `ivy-mode' to browse `kill-ring'."
   (let* ((len (length str)))
     (cond
      ;; do nothing
-     ((<= (length str) 0))
+     ((<= (length str) 1))
 
-     ;; If the first charater of input in ivy is ":",
+     ;; If the first character of input in ivy is ":",
      ;; remaining input is converted into Chinese pinyin regex.
-     ;; For example, input "/ic" match "isController" or "isCollapsed"
      ((string= (substring str 0 1) ":")
-      (setq str (pinyinlib-build-regexp-string (substring str 1 len) t)))
+      (setq str (my-pinyinlib-build-regexp-string (substring str 1 len))))
 
-     ;; If the first charater of input in ivy is "/",
+     ;; If the first character of input in ivy is "/",
      ;; remaining input is converted to pattern to search camel case word
+     ;; For example, input "/ic" match "isController" or "isCollapsed"
      ((string= (substring str 0 1) "/")
       (let* ((rlt "")
              (i 0)

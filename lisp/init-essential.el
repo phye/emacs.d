@@ -29,79 +29,12 @@
    ((= n 5)
     ;; grep Chinese using pinyinlib.
     ;; In ivy filter, trigger key must be pressed before filter chinese
-    (my-ensure 'pinyinlib)
     (let* ((counsel-etags-convert-grep-keyword
             (lambda (keyword)
               (if (and keyword (> (length keyword) 0))
-                  (pinyinlib-build-regexp-string keyword t)
+                  (my-pinyinlib-build-regexp-string keyword)
                 keyword))))
       (counsel-etags-grep)))))
-
-;; {{ message buffer things
-(defun my-search-backward-prompt (n)
-  "Search backward for N prompt.
-Return the line beginning of prompt line."
-  (let* (rlt
-         (first-line-end-pos (save-excursion
-                               (goto-char (point-min))
-                               (line-end-position))))
-    (save-excursion
-      (while (and (> (line-beginning-position) first-line-end-pos)
-                  (> n 0))
-        (when (evilmi-prompt-line-p)
-          (setq n (1- n))
-          (setq rlt (line-beginning-position)))
-        (forward-line -1)))
-    rlt))
-
-(defun my-erase-one-visible-buffer (buf-name &optional n)
-  "Erase the content of visible buffer with BUF-NAME.
-Keep latest N cli program output if it's not nil."
-  (let* ((original-window (get-buffer-window))
-         (target-window (get-buffer-window buf-name))
-         beg)
-    (cond
-     ((not target-window)
-      (message "Buffer %s is not visible!" buf-name))
-     (t
-      (select-window target-window)
-      (let* ((inhibit-read-only t))
-        (my-ensure 'evil-matchit-terminal)
-        (when (and n (> n 0) (fboundp 'evilmi-prompt-line-p))
-          ;; skip current prompt line
-          (forward-line -2)
-          (setq beg (my-search-backward-prompt n)))
-        (cond
-         (beg
-          (delete-region (point-min) beg))
-         (t
-          (erase-buffer))))
-      (select-window original-window)))))
-
-(defun my-erase-visible-buffer (&optional n)
-  "Erase the content of the *Messages* buffer.
-N specifies the buffer to erase."
-  (interactive "P")
-  (cond
-   ((null n)
-    (my-erase-one-visible-buffer "*Messages*"))
-
-   ((eq 1 n)
-    (my-erase-one-visible-buffer "*shell*"))
-
-   ((eq 2 n)
-    (my-erase-one-visible-buffer "*Javascript REPL*"))
-
-   ((eq 3 n)
-    (my-erase-one-visible-buffer "*eshell*"))))
-
-(defun my-erase-current-buffer (&optional n)
-  "Erase current buffer even it's read-only.
-Keep N cli output if it's not nil."
-  (interactive "P")
-  (my-erase-one-visible-buffer (buffer-name (current-buffer)) n)
-  (goto-char (point-max)))
-;; }}
 
 ;; {{ narrow region
 (defun narrow-to-region-indirect-buffer-maybe (start end use-indirect-buffer)
@@ -192,12 +125,14 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
 
 (with-eval-after-load 'cliphist
   (defun cliphist-routine-before-insert-hack (&optional arg)
+    (ignore arg)
     (my-delete-selected-region))
   (advice-add 'cliphist-routine-before-insert :before #'cliphist-routine-before-insert-hack))
 
 ;; {{ Write backup files to its own directory
 ;; @see https://www.gnu.org/software/emacs/manual/html_node/tramp/Auto_002dsave-and-Backup.html
-(defvar my-binary-file-name-regexp "\\.\\(avi\\|wav\\|pdf\\|mp[34g]\\|mkv\\|exe\\|3gp\\|rmvb\\|rm\\)$"
+(defvar my-binary-file-name-regexp
+  "\\.\\(avi\\|wav\\|pdf\\|mp[34g]\\|mkv\\|exe\\|3gp\\|rmvb\\|rm\\|pyim\\|\\.recentf\\)$"
   "Is binary file name?")
 
 (setq backup-enable-predicate
@@ -219,15 +154,15 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
 (setq vc-make-backup-files nil)
 ;; }}
 
-;; {{ tramp setup
-(add-to-list 'backup-directory-alist
-             (cons tramp-file-name-regexp nil))
-(setq tramp-chunksize 8192)
+(with-eval-after-load 'tramp
+  (push (cons tramp-file-name-regexp nil) backup-directory-alist)
 
 ;; @see https://github.com/syl20bnr/spacemacs/issues/1921
 ;; If you tramp is hanging, you can uncomment below line.
 ;; (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
-;; }}
+
+  (setq tramp-chunksize 8192))
+
 
 ;; {{ GUI frames
 ;; Suppress GUI features
@@ -239,17 +174,31 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
 ;; Show a marker in the left fringe for lines not in the buffer
 (setq indicate-empty-lines t)
 
-;; NO tool bar, scroll-bar
-(when window-system
-  (and (fboundp 'scroll-bar-mode) (not (eq scroll-bar-mode -1))
-       (scroll-bar-mode -1))
-  (and (fboundp 'tool-bar-mode) (not (eq tool-bar-mode -1))
-       (tool-bar-mode -1))
-  (and (fboundp 'horizontal-scroll-bar-mode)
-       (horizontal-scroll-bar-mode -1)))
-;; no menu bar
-(and (fboundp 'menu-bar-mode) (not (eq menu-bar-mode -1))
-     (menu-bar-mode -1))
+(defun my-mini-ui ()
+  "Minimum ui."
+  ;; NO tool bar, scroll-bar
+  (when window-system
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
+    (horizontal-scroll-bar-mode -1)))
+(my-run-with-idle-timer 2 #'my-mini-ui)
 ;; }}
+
+;; no menu bar
+(menu-bar-mode -1)
+
+;; Nicer naming of buffers for files with identical names
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator " • ")
+(setq uniquify-after-kill-buffer-p t)
+(setq uniquify-ignore-buffers-re "^\\*")
+
+(setq hippie-expand-try-functions-list
+      '(try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill))
+(global-set-key (kbd "M-/") 'hippie-expand)
 
 (provide 'init-essential)

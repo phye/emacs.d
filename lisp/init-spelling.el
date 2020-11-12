@@ -4,6 +4,10 @@
   "Language used by aspell and hunspell CLI.")
 
 (with-eval-after-load 'flyspell
+  ;; You can also use "M-x ispell-word" or hotkey "M-$". It pop up a multiple choice
+  ;; @see http://frequal.com/Perspectives/EmacsTip03-FlyspellAutoCorrectWord.html
+  (global-set-key (kbd "C-c s") 'flyspell-auto-correct-word)
+
   ;; better performance
   (setq flyspell-issue-message-flag nil))
 
@@ -126,10 +130,6 @@ When fixing a typo, avoid pass camel case option to cli program."
   (wucuo-start))
 (add-hook 'text-mode-hook 'text-mode-hook-setup)
 
-;; You can also use "M-x ispell-word" or hotkey "M-$". It pop up a multiple choice
-;; @see http://frequal.com/Perspectives/EmacsTip03-FlyspellAutoCorrectWord.html
-(global-set-key (kbd "C-c s") 'flyspell-auto-correct-word)
-
 (defun my-clean-aspell-dict ()
   "Clean ~/.aspell.pws (dictionary used by aspell)."
   (interactive)
@@ -162,19 +162,14 @@ When fixing a typo, avoid pass camel case option to cli program."
                                         org-level-1
                                         org-document-info))
                   (rlt t)
-                  ff
                   th
                   b e)
              (save-excursion
                (goto-char start)
 
-               ;; get current font face
-               (setq ff (get-text-property start 'face))
-               (if (listp ff) (setq ff (car ff)))
-
                ;; ignore certain errors by set rlt to nil
                (cond
-                ((memq ff ignored-font-faces)
+                ((cl-intersection (my-what-face start) ignored-font-faces)
                  ;; check current font face
                  (setq rlt nil))
                 ((or (string-match "^ *- $" (buffer-substring (line-beginning-position) (+ start 2)))
@@ -196,7 +191,6 @@ When fixing a typo, avoid pass camel case option to cli program."
                  (setq b (re-search-backward begin-regexp nil t))
                  (if b (setq e (re-search-forward end-regexp nil t)))
                  (if (and b e (< start e)) (setq rlt nil)))))
-             ;; (if rlt (message "start=%s end=%s ff=%s" start end ff))
              rlt))))
 ;; }}
 
