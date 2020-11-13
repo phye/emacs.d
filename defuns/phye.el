@@ -156,7 +156,7 @@
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (set-fill-column 85)))
+            (set-fill-column 100)))
 
 (setq org-clock-persist 'history)
 (org-clock-persistence-insinuate)
