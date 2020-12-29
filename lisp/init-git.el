@@ -2,7 +2,7 @@
 
 ;; ;; {{ Solution 1: disable all vc backends
 ;; @see http://stackoverflow.com/questions/5748814/how-does-one-disable-vc-git-in-emacs
-;; (setq vc-handled-backends ())
+;; (setq vc-handled-backends nil)
 ;; }}
 
 ;; {{ Solution 2: if NO network mounted drive involved
@@ -46,7 +46,7 @@
           markdown-mode
           image-mode)))
 
-(defun git-gutter-reset-to-head-parent()
+(defun my-git-gutter-reset-to-head-parent()
   "Reset gutter to HEAD^.  Support Subversion and Git."
   (interactive)
   (let* ((filename (buffer-file-name))
@@ -61,6 +61,18 @@
                    "HEAD^"))))
     (git-gutter:set-start-revision parent)
     (message "git-gutter:set-start-revision HEAD^")))
+
+;; {{ speed up magit, @see https://jakemccrary.com/blog/2020/11/14/speeding-up-magit/
+(defvar my-prefer-lightweight-magit t)
+(with-eval-after-load 'magit
+  (when my-prefer-lightweight-magit
+    (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-pushremote)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+    (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)))
+;; }}
 
 (defun git-gutter-toggle ()
   "Toggle git gutter."
@@ -335,33 +347,5 @@ If nothing is selected, use the word under cursor as function name to look up."
       ;; (message cmd)
       (my-ensure 'find-file-in-project)
       (ffip-show-content-in-diff-mode (shell-command-to-string cmd)))))
-
-(with-eval-after-load 'vc-msg-git
-  ;; open file of certain revision
-  (push '("m" "[m]agit-find-file"
-          (lambda ()
-            (let* ((info vc-msg-previous-commit-info))
-              (magit-find-file (plist-get info :id )
-                               (concat (vc-msg-sdk-git-rootdir)
-                                       (plist-get info :filename))))))
-        vc-msg-git-extra)
-
-  ;; copy commit hash
-  (push '("h" "[h]ash"
-          (lambda ()
-            (let* ((info vc-msg-previous-commit-info)
-                   (id (plist-get info :id)))
-              (kill-new id)
-              (message "%s => kill-ring" id))))
-        vc-msg-git-extra)
-
-  ;; copy author
-  (push '("a" "[a]uthor"
-          (lambda ()
-            (let* ((info vc-msg-previous-commit-info)
-                   (author (plist-get info :author)))
-              (kill-new author)
-              (message "%s => kill-ring" author))))
-        vc-msg-git-extra))
 
 (provide 'init-git)

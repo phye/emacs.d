@@ -497,13 +497,14 @@ If INCLUSIVE is t, the text object is inclusive."
   :prefix ","
   :states '(normal visual))
 
-(defun my-rename-thing-at-point ()
-  "Rename thing at point."
-  (interactive)
+(defun my-rename-thing-at-point (&optional n)
+  "Rename thing at point.
+If N > 0, only occurrences in current N lines are renamed."
+  (interactive "P")
   (cond
    ((derived-mode-p 'js2-mode)
     ;; use `js2-mode' parser, much smarter and works in any scope
-    (js2hl-rename-thing-at-point))
+    (js2hl-rename-thing-at-point n))
    (t
     ;; simple string search/replace in function scope
     (evilmr-replace-in-defun))))
@@ -557,6 +558,7 @@ If INCLUSIVE is t, the text object is inclusive."
   "wj" 'evil-window-down
   ;; }}
   "rv" 'my-rename-thing-at-point
+  "nm" 'js2hl-add-namespace-to-thing-at-point
   "rb" 'evilmr-replace-in-buffer
   "ts" 'evilmr-tag-selected-region ;; recommended
   "rt" 'counsel-etags-recent-tag
@@ -570,8 +572,8 @@ If INCLUSIVE is t, the text object is inclusive."
   "gl" 'my-git-log-trace-definition ; find history of a function or range
   "sh" 'my-select-from-search-text-history
   "rjs" 'run-js
-  "jsr" 'js-send-region
-  "jsb" 'js-clear-send-buffer
+  "jsr" 'js-comint-send-region
+  "jsb" 'my-js-clear-send-buffer
   "kb" 'kill-buffer-and-window ;; "k" is preserved to replace "C-g"
   "ls" 'highlight-symbol
   "lq" 'highlight-symbol-query-replace
@@ -735,17 +737,6 @@ If INCLUSIVE is t, the text object is inclusive."
   "te" 'js2-mode-toggle-element
   "tf" 'js2-mode-toggle-hide-functions)
 ;; }}
-
-(defun my-evil-delete-hack (orig-func &rest args)
-  "Press `dd' to delete lines in `wgrep-mode' in evil directly."
-  ;; make buffer writable
-  (if (and (boundp 'wgrep-prepared) wgrep-prepared)
-      (wgrep-toggle-readonly-area))
-  (apply orig-func args)
-  ;; make buffer read-only
-  (if (and (boundp 'wgrep-prepared) wgrep-prepared)
-      (wgrep-toggle-readonly-area)))
-(advice-add 'evil-delete :around #'my-evil-delete-hack)
 
 ;; {{ Use `;` as leader key, for searching something
 (general-create-definer my-semicolon-leader-def

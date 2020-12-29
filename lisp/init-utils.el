@@ -50,10 +50,9 @@
   "Can use tags file to build imenu function"
   (my-ensure 'counsel-etags)
   (and (locate-dominating-file default-directory "TAGS")
-       ;; ctags needs extra setup to extract typescript tags
-       (file-exists-p counsel-etags-ctags-options-file)
-       (memq major-mode '(typescript-mode
-                          js-mode))))
+       ;; latest universal ctags has built in parser for javacript/typescript
+       (counsel-etags-universal-ctags-p "ctags")
+       (memq major-mode '(typescript-mode js-mode javascript-mode))))
 
 ;; {{ copied from http://ergoemacs.org/emacs/elisp_read_file_content.html
 (defun my-get-string-from-file (file)
@@ -210,8 +209,7 @@ If HINT is empty, use symbol at point."
         (set-visited-file-name new-name)
         (set-buffer-modified-p nil)))))
 
-(defvar load-user-customized-major-mode-hook t)
-(defvar cached-normal-file-full-path nil)
+(defvar my-load-user-customized-major-mode-hook t)
 
 (defun buffer-too-big-p ()
   "Test if current buffer is too big."
@@ -223,31 +221,35 @@ If HINT is empty, use symbol at point."
   (> (nth 7 (file-attributes file))
      (* 5000 64)))
 
-(defvar force-buffer-file-temp-p nil)
+(defvar my-force-buffer-file-temp-p nil)
 (defun is-buffer-file-temp ()
   "If (buffer-file-name) is nil or a temp file or HTML file converted from org file."
   (interactive)
   (let* ((f (buffer-file-name)) (rlt t))
     (cond
-     ((not load-user-customized-major-mode-hook)
+     ((not my-load-user-customized-major-mode-hook)
       (setq rlt t))
-     ((not f)
-      ;; file does not exist at all
+
+     ((and (buffer-name) (string-match "\\* Org SRc" (buffer-name)))
       ;; org-babel edit inline code block need calling hook
       (setq rlt nil))
-     ((string= f cached-normal-file-full-path)
-      (setq rlt nil))
+
+     ((null f)
+      (setq rlt t))
+
      ((string-match (concat "^" temporary-file-directory) f)
       ;; file is create from temp directory
       (setq rlt t))
+
      ((and (string-match "\.html$" f)
            (file-exists-p (replace-regexp-in-string "\.html$" ".org" f)))
       ;; file is a html file exported from org-mode
       (setq rlt t))
-     (force-buffer-file-temp-p
+
+     (my-force-buffer-file-temp-p
       (setq rlt t))
+
      (t
-      (setq cached-normal-file-full-path f)
       (setq rlt nil)))
     rlt))
 
@@ -298,7 +300,7 @@ For example, you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
   (let* ((powershell-program (executable-find "powershell.exe")))
     (cond
      ;; Windows
-     ((fboundp 'w32-get-clipboard-data)
+     ((and *win64* (fboundp 'w32-get-clipboard-data))
       ;; `w32-set-clipboard-data' makes `w32-get-clipboard-data' always return null
       (w32-get-clipboard-data))
 
@@ -321,15 +323,16 @@ For example, you can '(setq my-mplayer-extra-opts \"-ao alsa -vo vdpau\")'.")
   (let* ((win64-clip-program (executable-find "clip.exe"))
          ssh-client)
     (cond
-     ;; Windows
-     ((fboundp 'w32-set-clipboard-data)
-      (w32-set-clipboard-data str-val))
-
-     ;; Windows 10
+     ;; Windows 10 or Windows 7
      ((and win64-clip-program)
       (with-temp-buffer
         (insert str-val)
         (call-process-region (point-min) (point-max) win64-clip-program)))
+
+     ;; Windows
+     ((and *win64* (fboundp 'w32-set-clipboard-data))
+      ;; Don't know why, but on Windows 7 this API does not work.
+      (w32-set-clipboard-data str-val))
 
      ;; If Emacs is inside an ssh session, place the clipboard content
      ;; into "~/.tmp-clipboard" and send it back into ssh client
@@ -429,7 +432,7 @@ If STEP is 1,  search in forward direction, or else in backward direction."
   (let* ((region (my-comint-current-input-region)))
     (string-trim (buffer-substring-no-properties (car region) (cdr region)))))
 
-(defun my-imenu-items (&optional index-function)
+(defun my-rescan-imenu-items (&optional index-function)
   "Get imenu items using INDEX-FUNCTION."
   (my-ensure 'imenu)
   (let* ((imenu-auto-rescan t)
@@ -487,6 +490,12 @@ Copied from 3rd party package evil-textobj."
 
     (cons start (1+ end))))
 
+(defun my-get-char (position)
+  "Get character at POSITION."
+  (save-excursion
+    (goto-char position)
+    (following-char)))
+
 (defun my-pinyinlib-build-regexp-string (str)
   "Build pinyin regexp from STR."
   (my-ensure 'pinyinlib)
@@ -512,6 +521,22 @@ Copied from 3rd party package evil-textobj."
     (funcall func))
    (t
     (run-with-idle-timer seconds nil func))))
+
+(defun my-get-closest-imenu-item (cands)
+  "Return closest imen item from CANDS."
+  (let* ((pos (point))
+         closest)
+    (dolist (c cands)
+      (let* ((item (cdr c))
+             (m (cdr item)))
+        (when (and m (<= (marker-position m) pos))
+          (cond
+           ((not closest)
+            (setq closest item))
+           ((< (- pos (marker-position m))
+               (- pos (marker-position (cdr closest))))
+            (setq closest item))))))
+    closest))
 
 (provide 'init-utils)
 ;;; init-utils.el ends here

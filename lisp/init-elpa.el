@@ -2,7 +2,6 @@
 
 (defun my-initialize-package ()
   ;; optimization, no need to activate all the packages so early
-  (setq package-enable-at-startup nil)
   (cond
    (*emacs27*
     ;; you need run `M-x package-quickstart-refresh' at least once
@@ -11,7 +10,7 @@
     ;; Please note once this file is created, you can't automatically
     ;; install missing package any more
     ;; You also need need re-generate this file if any package is upgraded.
-    (setq package-quick-start t)
+    (setq package-quickstart t)
 
     ;; esup need call `package-initialize'
     ;; @see https://github.com/jschaf/esup/issues/84
@@ -70,6 +69,7 @@
     molokai-theme
     spacemacs-theme
     leuven-theme
+    elpy ; use latest elpy since Python package API changes
     sublime-themes
     tangotango-theme
     darkburn-theme
@@ -111,6 +111,7 @@
     htmlize
     pyim-basedict
     pyim-wbdict
+    pyim
     scratch
     session
     inflections
@@ -256,7 +257,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'link)
 (require-package 'connection)
 (require-package 'dictionary) ; dictionary requires 'link and 'connection
-(require-package 'htmlize)
+(require-package 'htmlize) ; prefer stable version
 (require-package 'jade-mode)
 (require-package 'diminish)
 (require-package 'scratch)
@@ -369,113 +370,116 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'ace-pinyin)
 (require-package 'which-key)
 
-;; most popular 100 themes
-(my-install-popular-themes
- '(
-   afternoon-theme
-   alect-themes
-   ample-theme
-   ample-zen-theme
-   anti-zenburn-theme
-   apropospriate-theme
-   atom-dark-theme
-   atom-one-dark-theme
-   badwolf-theme
-   base16-theme
-   birds-of-paradise-plus-theme
-   bubbleberry-theme
-   busybee-theme
-   cherry-blossom-theme
-   clues-theme
-   color-theme-sanityinc-solarized
-   color-theme-sanityinc-tomorrow
-   cyberpunk-theme
-   dakrone-theme
-   darkburn-theme
-   darkmine-theme
-   darkokai-theme
-   darktooth-theme
-   django-theme
-   doom-themes
-   dracula-theme
-   espresso-theme
-   exotica-theme
-   eziam-theme
-   fantom-theme
-   farmhouse-theme
-   flatland-theme
-   flatui-theme
-   gandalf-theme
-   gotham-theme
-   grandshell-theme
-   gruber-darker-theme
-   gruvbox-theme
-   hc-zenburn-theme
-   hemisu-theme
-   heroku-theme
-   inkpot-theme
-   ir-black-theme
-   jazz-theme
-   jbeans-theme
-   kaolin-themes
-   leuven-theme
-   light-soap-theme
-   lush-theme
-   madhat2r-theme
-   majapahit-theme
-   material-theme
-   minimal-theme
-   moe-theme
-   molokai-theme
-   monochrome-theme
-   monokai-theme
-   mustang-theme
-   naquadah-theme
-   noctilux-theme
-   nord-theme
-   obsidian-theme
-   occidental-theme
-   oldlace-theme
-   omtose-phellack-theme
-   organic-green-theme
-   phoenix-dark-mono-theme
-   phoenix-dark-pink-theme
-   planet-theme
-   professional-theme
-   purple-haze-theme
-   railscasts-theme
-   rebecca-theme
-   reverse-theme
-   seti-theme
-   smyx-theme
-   soft-charcoal-theme
-   soft-morning-theme
-   soft-stone-theme
-   solarized-theme
-   soothe-theme
-   spacegray-theme
-   spacemacs-theme
-   srcery-theme
-   subatomic-theme
-   subatomic256-theme
-   sublime-themes
-   sunny-day-theme
-   tango-2-theme
-   tango-plus-theme
-   tangotango-theme
-   tao-theme
-   toxi-theme
-   twilight-anti-bright-theme
-   twilight-bright-theme
-   twilight-theme
-   ujelly-theme
-   underwater-theme
-   vscode-dark-plus-theme
-   white-sand-theme
-   zen-and-art-theme
-   zenburn-theme
-   zerodark-theme
-   ))
+;; speed up CI
+(unless my-disable-idle-timer
+  ;; most popular 100 themes
+  (my-install-popular-themes
+   '(
+     afternoon-theme
+     alect-themes
+     ample-theme
+     ample-zen-theme
+     anti-zenburn-theme
+     apropospriate-theme
+     atom-dark-theme
+     atom-one-dark-theme
+     badwolf-theme
+     base16-theme
+     birds-of-paradise-plus-theme
+     bubbleberry-theme
+     busybee-theme
+     cherry-blossom-theme
+     clues-theme
+     color-theme-sanityinc-solarized
+     color-theme-sanityinc-tomorrow
+     cyberpunk-theme
+     dakrone-theme
+     darkburn-theme
+     darkmine-theme
+     darkokai-theme
+     darktooth-theme
+     django-theme
+     doom-themes
+     dracula-theme
+     espresso-theme
+     exotica-theme
+     eziam-theme
+     fantom-theme
+     farmhouse-theme
+     flatland-theme
+     flatui-theme
+     gandalf-theme
+     gotham-theme
+     grandshell-theme
+     gruber-darker-theme
+     gruvbox-theme
+     hc-zenburn-theme
+     hemisu-theme
+     heroku-theme
+     inkpot-theme
+     ir-black-theme
+     jazz-theme
+     jbeans-theme
+     kaolin-themes
+     leuven-theme
+     light-soap-theme
+     lush-theme
+     madhat2r-theme
+     majapahit-theme
+     material-theme
+     minimal-theme
+     moe-theme
+     molokai-theme
+     monochrome-theme
+     monokai-theme
+     mustang-theme
+     naquadah-theme
+     noctilux-theme
+     nord-theme
+     obsidian-theme
+     occidental-theme
+     oldlace-theme
+     omtose-phellack-theme
+     organic-green-theme
+     phoenix-dark-mono-theme
+     phoenix-dark-pink-theme
+     planet-theme
+     professional-theme
+     purple-haze-theme
+     railscasts-theme
+     rebecca-theme
+     reverse-theme
+     seti-theme
+     smyx-theme
+     soft-charcoal-theme
+     soft-morning-theme
+     soft-stone-theme
+     solarized-theme
+     soothe-theme
+     spacegray-theme
+     spacemacs-theme
+     srcery-theme
+     subatomic-theme
+     subatomic256-theme
+     sublime-themes
+     sunny-day-theme
+     tango-2-theme
+     tango-plus-theme
+     tangotango-theme
+     tao-theme
+     toxi-theme
+     twilight-anti-bright-theme
+     twilight-bright-theme
+     twilight-theme
+     ujelly-theme
+     underwater-theme
+     vscode-dark-plus-theme
+     white-sand-theme
+     zen-and-art-theme
+     zenburn-theme
+     zerodark-theme
+     )))
+
 ;; }}
 
 ;; kill buffer without my confirmation

@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2020 Chen Bin
 ;;
-;; Version: 0.0.1
+;; Version: 0.0.3
 ;; Keywords: unix tools
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: https://github.com/redguardtoo/shellcop
@@ -34,7 +34,7 @@
 ;; `shellcop-reset-with-new-command' will,
 ;;   - kill current running process
 ;;   - erase the content in shell buffer
-;;   - If `shellcop-sub-window-has-error-function' return nil in all sub-windows, run `shellcop-insert-shell-command-function'
+;;   - If `shellcop-sub-window-has-error-function' return nil in all sub-windows, run `shellcop-insert-shell-command-function'.
 ;;
 ;; `shellcop-erase-buffer' erases the content buffer with below names,
 ;;   - "*Messages*" (default)
@@ -79,6 +79,11 @@ If there is error, it returns t."
 (defcustom shellcop-terminal-primary-prompt "^\\$ "
   "The primary prompt of terminal."
   :type 'string
+  :group 'shellcop)
+
+(defcustom shellcop-wait-time-after-kill-running-job 2
+  "Seconds to wait after kill running job in shell."
+  :type 'number
   :group 'shellcop)
 
 (defun shellcop-location-detail (str)
@@ -149,7 +154,8 @@ If ABOVE is t, extract locations above current point; or else below current poin
     (forward-line (1- n))))
 
 (defun shellcop-comint-send-input-hack (orig-func &rest args)
-  "Advice `comint-send-input' with ORIG-FUNC and ARGS."
+  "Advice `comint-send-input' with ORIG-FUNC and ARGS.
+Extract file paths when user presses enter key shell."
   (let* ((artifical (nth 1 args))
          locations)
     (cond
@@ -270,9 +276,12 @@ Keep latest N cli program output if it's not nil."
       ;; back to original window
       (select-window orig-w)
 
+      ;; kill current running process
       (comint-interrupt-subjob)
-      ;; wait 2 seconds
-      (sit-for 2)
+
+      ;; wait
+      (sit-for shellcop-wait-time-after-kill-running-job)
+
       (shellcop-erase-one-visible-buffer (buffer-name (current-buffer)))
       (goto-char (point-max))
 
@@ -287,22 +296,18 @@ Keep latest N cli program output if it's not nil."
     (message "Can't erase buffer in %s" major-mode))))
 
 ;;;###autoload
-(defun shellcop-erase-buffer (&optional n)
-  "Erase the content of the *Messages* buffer.
-N specifies the buffer to erase."
-  (interactive "P")
+(defun shellcop-erase-buffer ()
+  "Erase *Messages* buffer if not in `shell-mode' or `messages-buffer-mode'.
+Or else erase current buffer."
+  (interactive)
   (cond
-   ((null n)
-    (shellcop-erase-one-visible-buffer "*Messages*"))
+   ((memq major-mode '(shell-mode message-buffer-mode))
+    (shellcop-erase-one-visible-buffer (buffer-name (current-buffer)))
+    (when (eq major-mode 'shell-mode)
+      (comint-send-input)))
 
-   ((eq 1 n)
-    (shellcop-erase-one-visible-buffer "*shell*"))
-
-   ((eq 2 n)
-    (shellcop-erase-one-visible-buffer "*Javascript REPL*"))
-
-   ((eq 3 n)
-    (shellcop-erase-one-visible-buffer "*eshell*"))))
+   (t
+    (shellcop-erase-one-visible-buffer "*Messages*"))))
 
 (provide 'shellcop)
 ;;; shellcop.el ends here

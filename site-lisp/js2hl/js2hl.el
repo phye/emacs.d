@@ -3,11 +3,11 @@
 ;; Copyright (C) 2020 Chen Bin <chenbin DOT sh@gmail DOT com>
 ;; Copyright (C) 2016-2017 Mihai Bazon <mihai.bazon@gmail.com>
 ;;
-;; Version: 0.0.2
+;; Version: 0.0.4
 ;; Keywords: convenience
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: https://github.com/redguardtoo/js2hl
-;; Package-Requires: ((emacs "24.4") (js2-mode "20190219"))
+;; Package-Requires: ((emacs "25.1") (js2-mode "20190219"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -39,6 +39,9 @@
 ;;
 ;; `js2hl-rename-thing-at-point' to rename things at point.
 ;;
+;; `js2hl-add-namespace-to-thing-at-point' to prepend namespace to the thing.
+;; The separator of namespace is from `js2hl-namespace-separator'.
+;;
 ;; `js2hl-show-exits' to show exit points from the function surrounding point.
 ;; That is, `return' and `throw' statements.
 ;;
@@ -51,6 +54,10 @@
 
 (require 'cl-lib)
 (require 'js2-mode)
+
+(defvar js2hl-namespace-separator
+  "."
+  "The namespace separator used by `js2hl-add-namespace-to-thing-at-point'.")
 
 (defvar js2-mode-ast)
 
@@ -298,24 +305,61 @@ That is, `return' and `throw' statements."
      (t
       ""))))
 
-;;;###autoload
-(defun js2hl-rename-thing-at-point ()
-  "Replace the highlighted things with NEW-NAME.
-Only works if the mode was called with `js2hl-show-thing-at-point'."
-  (interactive)
+(defun js2hl-rename-thing-at-point-internal (new-name-function n)
+  "Replace the highlighted things with result of calling NEW-NAME-FUNCTION.
+If N > 0, only occurrences in current N lines are renamed."
   (let* ((places (sort (js2hl-get-regions-at-point) #'js2hl-compare-regions))
          (old-name (js2hl-get-old-name places))
-         (new-name (read-string (format "Replace \"%s\" with: " old-name))))
+         (new-name (funcall new-name-function old-name))
+         (edit-begin (point-min))
+         (edit-end (point-max))
+         (cnt (length places)))
+
+    (when (and n (> 0))
+      (setq edit-begin (line-beginning-position))
+      (save-excursion
+       (forward-line (1- n))
+       (setq edit-end (line-end-position))))
+
     (when (and places new-name)
       (save-excursion
         (dolist (p (nreverse places))
           (let* ((begin (car p))
                  (end (cdr p)))
-            (delete-region begin end)
-            (goto-char begin)
-            (insert new-name)))
-        (message "%d occurrences renamed to %s" (length places) new-name)))
+            (when (and (<= edit-begin begin) (< end edit-end))
+              (delete-region begin end)
+              (goto-char begin)
+              (insert new-name)))))
+      ;; force update the AST, so user can start next renaming immediately
+      (js2-do-parse)
+      (message "%d occurrences renamed to %s" cnt new-name))
     (js2hl-forget-it)))
+
+;;;###autoload
+(defun js2hl-rename-thing-at-point (&optional n)
+  "Replace the highlighted things with NEW-NAME.
+If N > 0, only occurrences in current N lines are renamed."
+  (interactive "P")
+  (js2hl-rename-thing-at-point-internal
+   (lambda (old-name)
+     (read-string (format "Replace \"%s\" with: " old-name)))
+   n))
+
+;;;###autoload
+(defun js2hl-add-namespace-to-thing-at-point (&optional n)
+  "Prepend the highlighted things with new namespace.
+If N > 0, only occurrences in current N lines are changed.
+Namespace separator from `js2hl-namespace-separator' is automatically inserted.
+Given the thing \"var1\" and namespace \"sp1\", the new thing is \"sp1.var1\"."
+  (interactive "P")
+  (js2hl-rename-thing-at-point-internal
+   (lambda (old-name)
+     (let* ((namespace (read-string (format "Add namespace to \"%s\": " old-name))))
+       (when namespace
+         (concat namespace
+                 js2hl-namespace-separator
+                 old-name))))
+   n))
 
 ;;;###autoload
 (defun js2hl-forget-it ()
