@@ -146,8 +146,8 @@
 
         ;; ;; {{ Option 1: 163 mirror repository:
         ;; ;; ("gnu" . "https://mirrors.163.com/elpa/gnu/")
-        ("melpa" . "http://mirrors.163.com/elpa/melpa/")
-        ("melpa-stable" . "http://mirrors.163.com/elpa/melpa-stable/")
+        ("melpa" . "http://mirrors.tencent.com/elpa/melpa/")
+        ("melpa-stable" . "http://mirrors.tencent.com/elpa/melpa-stable/")
         ;; ;; }}
 
         ;; ;; {{ Option 2: tsinghua mirror repository

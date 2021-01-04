@@ -220,7 +220,10 @@
 
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((ditaa . t)))
+ '(
+   (ditaa . t)
+   (plantuml . t)
+   ))
 
 ;;(require 'chinese-fonts-setup)
 
@@ -302,8 +305,16 @@
 (local-require 'ox-taskjuggler)
 (add-to-list 'org-export-backends 'taskjuggler)
 (setq org-taskjuggler-target-version 3.6)
-;; }}
 
+;; plantuml
+(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+(setq plantuml-default-exec-mode 'jar)
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list
+  'org-src-lang-modes '("plantuml" . plantuml))
+(setq org-plantuml-jar-path
+      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
+;; }}
 
 (defun artist-mode-toggle-emacs-state ()
   (if artist-mode
