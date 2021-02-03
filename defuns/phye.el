@@ -79,6 +79,7 @@
 
 ;; {{ JavaScript programming
 (setq js-indent-level 4)
+(setq json-encoding-default-indentation "    ")
 
 ;; }}
 
