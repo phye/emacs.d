@@ -79,7 +79,8 @@
 
 ;; {{ JavaScript programming
 (setq js-indent-level 4)
-(setq json-encoding-default-indentation "    ")
+(setq json-encoding-default-indentation "  ")
+(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 
 ;; }}
 
