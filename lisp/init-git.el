@@ -34,6 +34,11 @@
 
 ;; {{ git-gutter
 (with-eval-after-load 'git-gutter
+  (unless (fboundp 'global-display-line-numbers-mode)
+    ;; git-gutter's workaround for linum-mode bug.
+    ;; should not be used in `display-line-number-mode'
+    (git-gutter:linum-setup))
+
   (setq git-gutter:update-interval 2)
   ;; nobody use bzr
   ;; I could be forced to use subversion or hg which has higher priority
@@ -92,11 +97,6 @@ Show the diff between current working code and git head."
 
 (my-run-with-idle-timer 2 #'global-git-gutter-mode)
 
-(unless (fboundp 'global-display-line-numbers-mode)
- ;; git-gutter's workaround for linum-mode bug.
- ;; should not be used in `display-line-number-mode'
- (git-gutter:linum-setup))
-
 (global-set-key (kbd "C-x C-g") 'git-gutter:toggle)
 (global-set-key (kbd "C-x v =") 'git-gutter:popup-hunk)
 ;; Stage current hunk
@@ -110,7 +110,7 @@ Show the diff between current working code and git head."
   "Select commit id from current branch."
   (let* ((git-cmd "git --no-pager log --date=short --pretty=format:'%h|%ad|%s|%an'")
          (collection (nonempty-lines (shell-command-to-string git-cmd)))
-         (item (ffip-completing-read "git log:" collection)))
+         (item (completing-read "git log:" collection)))
     (when item
       (car (split-string item "|" t)))))
 
@@ -344,7 +344,7 @@ If nothing is selected, use the word under cursor as function name to look up."
                                     (line-number-at-pos (region-beginning))
                                     (line-number-at-pos (1- (region-end)))))
         (setq cmd (format "git log -L%s:%s" range-or-func (file-truename buffer-file-name))))
-      ;; (message cmd)
+
       (my-ensure 'find-file-in-project)
       (ffip-show-content-in-diff-mode (shell-command-to-string cmd)))))
 

@@ -5,7 +5,7 @@
 - Fast. Only *one second* to start up
 - Robust. Never crash after package upgrade. Packages could be installed without network
 - Support Windows. You can find&grep files on Windows with minimum setup
-- Tested with Emacs 25.3, 26.3, 27.1, 28 on Linux/Windows/Cygwin/macOS/WSL(Windows Subsystem for Linux)
+- Tested with Emacs 26.3, 27.1, 28 on Linux/Windows/Cygwin/macOS/WSL(Windows Subsystem for Linux)
 - Emacs vanilla key bindings and directory layout is respected
 Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[http://www.putty.org/][PuTTY]]
 
@@ -17,6 +17,7 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
 - [[#installation][Installation]]
   - [[#install-in-normal-way][Install in normal way]]
   - [[#install-stable-version-optional][Install stable version (OPTIONAL)]]
+  - [[#install-everything-in-one-step-optional][Install everything in one step (OPTIONAL)]]
   - [[#third-party-programs-optional][Third party programs (OPTIONAL)]]
 - [[#tutorial-optional][Tutorial (OPTIONAL)]]
   - [[#basic-tutorial][Basic tutorial]]
@@ -41,7 +42,7 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
   - [[#true-colors-in-terminal-emacs][True colors in terminal Emacs]]
   - [[#grepreplace-text-in-project][Grep/Replace text in project]]
   - [[#hydraswipercounselivy][Hydra/Swiper/Counsel/Ivy]]
-  - [[#react-and-jsx][React and JSX]]
+  - [[#set-auto-mode-alist][Set =auto-mode-alist=]]
   - [[#git-gutter][git-gutter]]
   - [[#setup-fonts-in-gui-emacs][Setup fonts in GUI Emacs]]
   - [[#synchronize-setup-with-git][Synchronize setup with Git]]
@@ -74,19 +75,19 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
   - [[#set-up-lsp-mode][Set up lsp-mode]]
   - [[#enable-typewriter-sounds-when-typing][Enable typewriter sounds when typing]]
 - [[#support-legacy-emacs-versions][Support legacy Emacs versions]]
-  - [[#emacs-23][Emacs 23]]
-  - [[#emacs-243][Emacs 24.3]]
+  - [[#emacs-25][Emacs 25]]
   - [[#emacs-244-and-245][Emacs 24.4 and 24.5]]
+  - [[#emacs-243][Emacs 24.3]]
+  - [[#emacs-23][Emacs 23]]
 - [[#tips][Tips]]
 - [[#report-bug][Report bug]]
 
 * Checklist
-- Emacs 26.1 is strongly recommended. It is faster and easier to set up
+- Emacs 26.1 or higher version is required
 - Please read FAQ to disable [[http://www.vim.org][Vim]] key bindings
 - Please read section "Key bindings" to learn key bindings
 - If you use Windows Emacs, you have to [[https://emacs.stackexchange.com/questions/27202/how-do-i-install-gnutls-for-emacs-25-1-on-windows][install GnuTLS Dlls manually]] to install packages from remote repositories. Or else you got error message like =error: Package `async-' is unavailable= on Windows. Please note since =Emacs 26.1=, you can download full version which works out of box
 - Most packages from [[http://melpa.org][MELPA]] are *invisible* but packages from [[https://stable.melpa.org][MELPA Stable]] are visible. You can modify variable =melpa-include-packages= in =lisp/init-elpa.el= to install unstable packages. Please choose stable packages if possible. Even advanced user could under-estimate the risk of unstable packages
-- Emacs 25 support will be dropped on January 2021. Check "Support legacy Emacs versions" if you use old versions
 - Other issues are covered in FAQ
 * Installation
 Most users should follow the section "Install in normal way".
@@ -121,6 +122,10 @@ No worries. You could answer "YES" to the question "Switch to faster package rep
 Now you are using local package repository =~/myelpa=.
 
 You can switch to online repositories like http://elpa.gnu.org or http://melpa.org by modifying =lisp/init-elpa.el=.
+** Install everything in one step (OPTIONAL)
+Download content of [[https://github.com/redguardtoo/my-emacs.d-snapshot]] into =~/.emacs.d=. That's it.
+
+It's not recommdned for daily usage because the third party packages are not optimized for latest Emacs.
 ** Third party programs (OPTIONAL)
 *** Install
 Most command line programs can be installed through =default package manager=.
@@ -465,12 +470,18 @@ You can exclude multiple keywords using =!keyword1 keyword2= in =ivy=.
 I love all the packages from [[https://github.com/abo-abo][Oleh Krehel (AKA abo-abo)]]. Every article from his [[https://oremacs.com/][blog]] is worth reading ten times.
 
 You can input =:pinyin1 pinyin2 !pinyin3 pinyin4= in ivy UI to search by Chinese Pinyin. The key point is to make sure the first character of input is ":".
-** React and JSX
-I use =rjsx-mode= with Emacs v25+. It's based on =js2-mode= so it has excellent imenu support.
+** Set =auto-mode-alist=
+The =auto-mode-alist= associates major modes with files.
 
-But =web-mode= is also very popular to edit jsx files.
+For example, associate =rjsx-mode= file with extension "*.jsx",
+#+begin_src elisp
+(push "\\.jsx\\'" auto-mode-alist)
+#+end_src
 
-You can add =(add-auto-mode 'rjsx-mode "\\.jsx\\'")= into =~/.custome.el= to use =web-mode= for jsx files.
+Or you can use function =my-add-auto-mode= provided by this configuration,
+#+begin_src elisp
+(my-add-auto-mode 'rjsx-mode "\\.jsx\\'")
+#+end_src
 ** git-gutter
 I use modified version of =git-gutter= for now until my pull request is merged into official repository.
 
@@ -698,7 +709,7 @@ typing-extensions==3.7.4.3
 yapf==0.30.0
 #+end_example
 
-I'm actually not a python developer so above suggestions are optional.
+You might want to modify =include-system-site-packages= in =~/.emacs.d/elpy/rpc-venv/pyvenv.cfg=
 ** Set up [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
 You could insert below code into =~/.custom.el=,
 #+begin_src elisp
@@ -738,6 +749,18 @@ Then run `M-x lsp` to start lsp client and server. Check [[https://github.com/em
 ** Enable typewriter sounds when typing
 Run =M-x my-toggle-typewriter=. Please check bundled =typewriter-mode.el= for further setup.
 * Support legacy Emacs versions
+** Emacs 25
+Version 3.2 is the last version to support =Emacs 25=
+
+Please use [[https://github.com/redguardtoo/emacs.d/archive/3.1.zip]] and [[https://github.com/redguardtoo/myelpa/archive/3.1.zip]].
+** Emacs 24.4 and 24.5
+Version 2.9 is the last version to support =Emacs 24.4+=
+
+Please use [[https://github.com/redguardtoo/emacs.d/archive/2.9.zip]] and [[https://github.com/redguardtoo/myelpa/archive/2.9.zip]].
+** Emacs 24.3
+Version 2.6 is the last version to support =Emacs 24.3=.
+
+Download [[https://github.com/redguardtoo/emacs.d/archive/2.6.zip]] and [[https://github.com/redguardtoo/myelpa/archive/2.6.zip]] and you are good to go.
 ** Emacs 23
 Version 1.2 of this setup is the last version to support Emacs v23.
 
@@ -745,14 +768,6 @@ Here are the steps to use that setup:
 - Download [[https://github.com/redguardtoo/emacs.d/archive/1.2.zip]]
 - Download [[https://github.com/redguardtoo/myelpa/archive/1.2.zip]]
 - Follow the section =Install stable version in easiest way= but skip the download steps
-** Emacs 24.3
-Version 2.6 is the last version to support =Emacs 24.3=.
-
-Download [[https://github.com/redguardtoo/emacs.d/archive/2.6.zip]] and [[https://github.com/redguardtoo/myelpa/archive/2.6.zip]] and you are good to go.
-** Emacs 24.4 and 24.5
-Version 2.9 is the last version to support =Emacs 24.4+=
-
-Please use [[https://github.com/redguardtoo/emacs.d/archive/2.9.zip]] and [[https://github.com/redguardtoo/myelpa/archive/2.9.zip]].
 * Tips
 - Never turn off any bundled mode if it's on by default. Future version of Emacs may assume it's on. Tweak its flag in mode hook instead!
 - Git skills are *extremely useful*. Please read the chapters "Git Basics", "Git Branching", "Git Tools" from [[https://git-scm.com/book/en/][Pro Git]]

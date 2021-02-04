@@ -184,7 +184,7 @@ FN checks these characters belong to normal word characters."
   (when (buffer-too-big-p)
     ;; Turn off `linum-mode' when there are more than 5000 lines
     (linum-mode -1)
-    (when (should-use-minimum-resource)
+    (when (my-should-use-minimum-resource)
       (font-lock-mode -1)))
 
   (company-ispell-setup)
@@ -1054,10 +1054,29 @@ might be bad."
   (setq wgrep-too-many-file-length 2024))
 ;; }}
 
+(defun my-browse-file (file)
+  "Browse FILE as url using `browse-url'."
+  (when (and file (file-exists-p file))
+    (browse-url-generic (concat "file://" file))))
+
 (defun my-browse-current-file ()
-  "Open the current file as a URL using `browse-url'."
+  "Browse current file."
   (interactive)
-  (browse-url-generic (concat "file://" (buffer-file-name))))
+  (my-browse-file buffer-file-name))
+
+(defun my-browse-current-file-as-html ()
+  "Browse current file as html."
+  (interactive)
+  (cond
+   ((or (not buffer-file-name)
+        (not (file-exists-p buffer-file-name))
+        (not (string-match-p "html?$" buffer-file-name)))
+    (let* ((file (make-temp-file "my-browse-file-" nil ".html")))
+      (my-write-to-file (format "<html><body>%s</body></html>" (buffer-string)) file)
+      (my-browse-file file)
+      (my-run-with-idle-timer 4 (lambda (delete-file file)))))
+   (t
+    (my-browse-file buffer-file-name))))
 
 ;; {{ which-key-mode
 (defvar my-show-which-key-when-press-C-h nil)
