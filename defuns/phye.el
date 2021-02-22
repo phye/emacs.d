@@ -77,10 +77,11 @@
 
 ;; }}
 
-;; {{ JavaScript programming
+;; {{ JavaScript/JSON programming
 (setq js-indent-level 4)
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+(add-hook 'json-mode-hook #'hs-minor-mode)
 
 ;; }}
 
@@ -151,10 +152,10 @@
      (quote
       ("~/ws/OrgNotes/gtd.org"
        "~/ws/OrgNotes/quick_notes.org"
-       "~/ws/OrgNotes/PlanLearning.org"
-       "~/ws/OrgNotes/PlanLife.org"
-       "~/ws/OrgNotes/life/Birthday.org"
-       "~/ws/OrgNotes/Work.org")))
+       "~/ws/OrgNotes/life/plan_life.org"
+       "~/ws/OrgNotes/life/birthday.org"
+       "~/ws/OrgNotes/learn/plan_learning.org"
+       "~/ws/OrgNotes/work/plan_work.org")))
 
 (add-hook 'org-mode-hook
           (lambda ()
