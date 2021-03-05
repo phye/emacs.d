@@ -15,6 +15,7 @@
         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 
 (setq help-window-select t)
+(run-at-time nil (* 5 60) 'recentf-save-list)
 
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
