@@ -79,7 +79,7 @@
 ;; }}
 
 ;; {{ JavaScript/JSON programming
-(setq js-indent-level 4)
+(setq js-indent-level 2)
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 (add-hook 'json-mode-hook #'hs-minor-mode)
@@ -326,3 +326,6 @@
     (evil-exit-emacs-state)))
 
 (add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
+
+;; markdown
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
