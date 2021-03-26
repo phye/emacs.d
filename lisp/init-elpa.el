@@ -134,6 +134,7 @@
     zoutline
     company-c-headers
     company-statistics
+    exec-path-from-shell
     org-journal)
   "Packages to install from melpa-unstable.")
 
