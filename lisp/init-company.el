@@ -2,13 +2,7 @@
 
 (add-hook 'after-init-hook 'global-company-mode)
 
-(when (fboundp 'evil-declare-change-repeat)
-  (mapc #'evil-declare-change-repeat
-        '(company-complete-common
-          company-select-next
-          company-select-previous
-          company-complete-selection
-          company-complete-number)))
+;; evil has already integrated company-mode, see evil-integration.el
 
 (defvar my-company-zero-key-for-filter nil
   "If t, pressing 0 calls `company-filter-candidates' per company's status.")
@@ -101,7 +95,9 @@ In that case, insert the number."
     (cond
      ((and (derived-mode-p 'prog-mode)
            (or (not (company-in-string-or-comment)) ; respect advice in `company-in-string-or-comment'
-               (not (evilnc-is-pure-comment (point))))) ; auto-complete in comment only
+               ;; I renamed the api in new version of evil-nerd-commenter
+               (not (if (fboundp 'evilnc-pure-comment-p) (evilnc-pure-comment-p (point))
+                      (evilnc-is-pure-comment (point)))))) ; auto-complete in comment only
       ;; only use company-ispell in comment when coding
       nil)
      (t

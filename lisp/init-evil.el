@@ -31,10 +31,6 @@
       undo-strong-limit 8000000
       undo-outer-limit 8000000)
 
-(defvar my-use-m-for-matchit nil
-  "If t, use \"m\" key for `evil-matchit-mode'.
-And \"%\" key is also restored to `evil-jump-item'.")
-
 ;; {{ @see https://github.com/timcharper/evil-surround for tutorial
 (my-run-with-idle-timer 2 #'global-evil-surround-mode)
 (with-eval-after-load 'evil-surround
@@ -54,7 +50,8 @@ And \"%\" key is also restored to `evil-jump-item'.")
       (push '(?\( . ("( " . ")")) evil-surround-pairs-alist)
       (push '(?` . ("`" . "'")) evil-surround-pairs-alist))
 
-    (when (derived-mode-p 'js-mode)
+    (when (or (derived-mode-p 'js-mode)
+              (memq major-mode '(typescript-mode web-mode)))
       (push '(?j . ("JSON.stringify(" . ")")) evil-surround-pairs-alist)
       (push '(?> . ("(e) => " . "(e)")) evil-surround-pairs-alist))
 
@@ -598,7 +595,7 @@ If N > 0, only occurrences in current N lines are renamed."
   ;; p: previous; n: next; w:hash; W:complete hash; g:nth version; q:quit
   "tm" 'my-git-timemachine
   ;; toggle overview,  @see http://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
-  "op" 'compile
+  "op" 'my-compile
   "c$" 'org-archive-subtree ; `C-c $'
   ;; org-do-demote/org-do-premote support selected region
   "c<" 'org-do-promote ; `C-c C-<'
@@ -709,8 +706,14 @@ If N > 0, only occurrences in current N lines are renamed."
 
 ;; Please check "init-ediff.el" which contains `my-space-leader-def' code too
 (my-space-leader-def
-  "nh" 'my-goto-next-hunk
-  "ph" 'my-goto-previous-hunk
+  "nh" (lambda ()
+        (interactive)
+        (if (derived-mode-p 'diff-mode) (my-search-next-diff-hunk)
+          (my-search-next-merge-conflict)))
+  "ph" (lambda ()
+        (interactive)
+        (if (derived-mode-p 'diff-mode) (my-search-prev-diff-hunk)
+          (my-search-prev-merge-conflict)))
   "ch" 'my-dired-redo-from-commands-history
   "dd" 'pwd
   "mm" 'counsel-evil-goto-global-marker
@@ -817,6 +820,8 @@ If N > 0, only occurrences in current N lines are renamed."
 ;; {{ evil-nerd-commenter
 (my-run-with-idle-timer 2 #'evilnc-default-hotkeys)
 (define-key evil-motion-state-map "gc" 'evilnc-comment-operator) ; same as doom-emacs
+(define-key evil-motion-state-map "gb" 'evilnc-copy-and-comment-operator)
+(define-key evil-motion-state-map "gy" 'evilnc-yank-and-comment-operator)
 
 (defun my-current-line-html-p (paragraph-region)
   "Is current line html?"
@@ -927,5 +932,12 @@ If N > 0, only occurrences in current N lines are renamed."
   ;; Cursor is always black because of evil.
   ;; Here is the workaround
   (setq evil-default-cursor t))
+
+(with-eval-after-load 'web-mode
+  (mapc #'evil-declare-change-repeat
+        '(web-mode-element-rename))
+  ;; (mapc #'evil-declare-repeat
+  ;;       '(web-mode-element-rename))
+  )
 
 (provide 'init-evil)

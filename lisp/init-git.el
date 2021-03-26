@@ -13,23 +13,21 @@
 (remove-hook 'find-file-hooks 'vc-find-file-hook)
 ;; }}
 
-;; ;; {{ Solution 3: setup vc-handled-backends per project
-;; (setq vc-handled-backends ())
+;; ;; {{ Solution 3: setup `vc-handled-backends' per project
+;; (setq vc-handled-backends nil)
 ;; (defun my-setup-develop-environment ()
+;;   "Default setup for project under vcs."
 ;;   (interactive)
 ;;   (cond
-;;    ((string-match-p (file-truename my-emacs-d) (file-name-directory (buffer-file-name))
-;;     (setq vc-handled-backends '(Git)))
-;;    (t (setq vc-handled-backends nil)))))
-;; (add-hook 'java-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'emacs-lisp-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'org-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'js2-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'js-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'javascript-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'web-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'c++-mode-hook 'my-setup-develop-environment)
-;; (add-hook 'c-mode-hook 'my-setup-develop-environment)
+;;     ((string-match-p (file-truename user-emacs-directory)
+;;                      (file-name-directory (buffer-file-name)))
+;;       (setq vc-handled-backends '(Git)))
+;;     (t
+;;       (setq vc-handled-backends nil))))
+;; (dolist (hook '(java-mode-hook emacs-lisp-mode-hook org-mode-hook
+;;                 js-mode-hook javascript-mode-hook web-mode-hook
+;;                 c++-mode-hook c-mode-hook))
+;;   (add-hook hook #'my-setup-develop-environment))
 ;; ;; }}
 
 ;; {{ git-gutter
@@ -191,28 +189,71 @@ Show the diff between current working code and git head."
       (shell-command (concat "git add " filename))
       (message "DONE! git add %s" filename))))
 
-;; {{ goto next/previous hunk
-(defun my-goto-next-hunk (arg)
-  "Goto next hunk."
-  (interactive "p")
-  (if (memq major-mode '(diff-mode))
-      (diff-hunk-next)
-    (forward-line)
-    (if (re-search-forward "\\(^<<<<<<<\\|^=======\\|^>>>>>>>\\)" (point-max) t)
-        (goto-char (line-beginning-position))
-      (forward-line -1)
-      (git-gutter:next-hunk arg))))
+;; {{ look up merge conflict
+(defvar my-goto-merge-conflict-fns
+  '(("n" my-next-merge-conflict)
+    ("p" my-prev-merge-conflict)))
 
-(defun my-goto-previous-hunk (arg)
-  "Goto previous hunk."
-  (interactive "p")
-  (if (memq major-mode '(diff-mode))
-      (diff-hunk-prev)
-    (forward-line -1)
-    (if (re-search-backward "\\(^>>>>>>>\\|^=======\\|^<<<<<<<\\)" (point-min) t)
-        (goto-char (line-beginning-position))
-      (forward-line -1)
-      (git-gutter:previous-hunk arg))))
+(defun my-goto-merge-conflict-internal (forward-p)
+  "Goto specific hunk.  If forward-p is t, go in forward direction."
+  ;; @see https://emacs.stackexchange.com/questions/63413/finding-git-conflict-in-the-same-buffer-if-cursor-is-at-end-of-the-buffer#63414
+  (my-ensure 'smerge-mode)
+  (let ((buffer (current-buffer))
+        (hunk-fn (if forward-p 'smerge-next 'smerge-prev)))
+    (unless (funcall hunk-fn)
+      (vc-find-conflicted-file)
+      (when (eq buffer (current-buffer))
+        (let ((prev-pos (point)))
+          (goto-char (if forward-p (point-min) (1- (point-max))))
+          (unless (funcall hunk-fn)
+            (goto-char prev-pos)
+            (message "No conflicts found")))))))
+
+(defun my-next-merge-conflict ()
+  "Go to next merge conflict."
+  (interactive)
+  (my-goto-merge-conflict-internal t))
+
+(defun my-prev-merge-conflict ()
+  "Go to previous merge conflict."
+  (interactive)
+  (my-goto-merge-conflict-internal nil))
+
+(defun my-search-next-merge-conflict ()
+  "Search next merge conflict."
+  (interactive)
+  (my-setup-extra-keymap my-goto-merge-conflict-fns
+                         "Goto merge conflict: [n]ext [p]revious [q]uit"
+                         'my-goto-merge-conflict-internal
+                         t))
+
+(defun my-search-prev-merge-conflict ()
+  "Search previous merge conflict."
+  (interactive)
+  (my-setup-extra-keymap my-goto-merge-conflict-fns
+                         "Goto merge conflict: [n]ext [p]revious [q]uit"
+                         'my-goto-merge-conflict-internal
+                         nil))
+;; }}
+
+;; {{ look up diff hunk
+(defvar my-goto-diff-hunk-fns
+  '(("n" diff-hunk-next)
+    ("p" diff-hunk-prev)))
+
+(defun my-search-next-diff-hunk ()
+  "Search next diff hunk."
+  (interactive)
+  (my-setup-extra-keymap my-goto-diff-hunk-fns
+                         "Goto diff hunk: [n]ext [p]revious [q]uit"
+                         'diff-hunk-next))
+
+(defun my-search-prev-diff-hunk ()
+  "Search previous diff hunk."
+  (interactive)
+  (my-setup-extra-keymap my-goto-diff-hunk-fns
+                         "Goto diff hunk: [n]ext [p]revious [q]uit"
+                         'diff-hunk-prev))
 ;; }}
 
 ;; {{
@@ -263,6 +304,17 @@ If USER-SELECT-BRANCH is not nil, rebase on the tag or branch selected by user."
     (when based
       (magit-rebase-interactive based nil))))
 ;; }}
+
+(defun my-git-cherry-pick-from-reflog ()
+  "Cherry pick a commit from git reflog."
+  (interactive)
+  (let* ((cmd "git --no-pager reflog --date=short")
+         (lines (my-lines-from-command-output cmd))
+         (selected (completing-read "Commit to cherry pick:" lines))
+         (commit-id (and selected (car (split-string selected)))))
+    (when commit-id
+      (my-ensure 'magit)
+      (magit-cherry-copy commit-id))))
 
 ;; {{ git-gutter use ivy
 (defun my-reshape-git-gutter (gutter)
@@ -347,5 +399,31 @@ If nothing is selected, use the word under cursor as function name to look up."
 
       (my-ensure 'find-file-in-project)
       (ffip-show-content-in-diff-mode (shell-command-to-string cmd)))))
+
+
+(defun my-hint-untracked-files ()
+  "If untracked files and commited files share same extension, warn users."
+  (let* ((exts (mapcar 'file-name-extension (my-lines-from-command-output "git diff-tree --no-commit-id --name-only -r HEAD")))
+         (untracked-files (my-lines-from-command-output "git --no-pager ls-files --others --exclude-standard"))
+         (lookup-ext (make-hash-table :test #'equal))
+         rlt)
+    ;; file extensions of files in HEAD commit
+    (dolist (ext exts)
+      (puthash ext t lookup-ext))
+    ;; If untracked file has same file extension as committed files
+    ;; maybe they should be staged too?
+    (dolist (file untracked-files)
+      (when (gethash (file-name-extension file) lookup-ext)
+        (push (file-name-nondirectory file) rlt)))
+    (when rlt
+      (message "Stage files? %s" (mapconcat 'identity rlt " ")))))
+
+(with-eval-after-load 'magit
+  (defun my-git-check-status ()
+    "Check git repo status."
+    ;; use timer here to wait magit cool down
+    (my-run-with-idle-timer 1 #'my-hint-untracked-files))
+  (add-hook 'magit-post-commit-hook #'my-git-check-status)
+  (add-hook 'git-commit-post-finish-hook #'my-git-check-status))
 
 (provide 'init-git)

@@ -180,7 +180,11 @@ FN checks these characters belong to normal word characters."
 (with-eval-after-load 'flymake
   (setq flymake-gui-warnings-enabled nil))
 
+(defvar my-disable-lazyflymake nil
+  "Disable lazyflymake.")
+
 (defun generic-prog-mode-hook-setup ()
+  "Generic programming mode set up."
   (when (buffer-too-big-p)
     ;; Turn off `linum-mode' when there are more than 5000 lines
     (linum-mode -1)
@@ -192,24 +196,41 @@ FN checks these characters belong to normal word characters."
   (unless (is-buffer-file-temp)
 
     (unless (featurep 'esup-child)
-      (my-ensure 'lazyflymake)
-      (lazyflymake-start)
+      (unless my-disable-lazyflymake
+        (my-ensure 'lazyflymake)
+        (lazyflymake-start))
 
-      (my-ensure 'wucuo)
-      (setq-local ispell-extra-args (my-detect-ispell-args t))
-      (wucuo-start))
+      (unless my-disable-wucuo
+        (my-ensure 'wucuo)
+        (setq-local ispell-extra-args (my-detect-ispell-args t))
+        (wucuo-start)))
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
     (setq compilation-finish-functions
           '(compilation-finish-hide-buffer-on-success))
 
-    ;; fic-mode has performance issue on 5000 line C++, we can always use swiper instead
+    ;; fic-mode has performance issue on 5000 line C++, use swiper instead
+
     ;; don't spell check double words
     (setq-local wucuo-flyspell-check-doublon nil)
-    ;; enable for all programming modes
-    ;; http://emacsredux.com/blog/2013/04/21/camelcase-aware-editing/
+    ;; @see http://emacsredux.com/blog/2013/04/21/camelcase-aware-editing/
     (unless (derived-mode-p 'js2-mode)
       (subword-mode 1))
+
+    ;; now css-mode derives from prog-mode
+    ;; see the code of `counsel-css-imenu-setup'
+    (when (counsel-css-imenu-setup)
+      ;; css color
+      (rainbow-mode 1)
+      (imenu-extra-auto-setup
+       ;; post-css mixin
+       '(("Function" "^ *@define-mixin +\\([^ ]+\\)" 1)))
+      (setq beginning-of-defun-function
+            (lambda (arg)
+              (ignore arg)
+              (let* ((closest (my-closest-imenu-item)))
+                (when closest
+                  (goto-char (cdr closest)))))))
 
     (electric-pair-mode 1)
 
@@ -219,10 +240,8 @@ FN checks these characters belong to normal word characters."
     (setq show-trailing-whitespace t)))
 
 (add-hook 'prog-mode-hook 'generic-prog-mode-hook-setup)
-;; some major-modes NOT inherited from prog-mode
-(add-hook 'css-mode-hook 'generic-prog-mode-hook-setup)
 
-;; {{ display long lines in truncated style (end line with $)
+;;; {{ display long lines in truncated style (end line with $)
 (defun truncate-lines-setup ()
   (toggle-truncate-lines 1))
 (add-hook 'grep-mode-hook 'truncate-lines-setup)
@@ -831,6 +850,8 @@ If the shell is already opened in some buffer, switch to that buffer."
 ;; {{ emms
 (with-eval-after-load 'emms
   (emms-all)
+  ;; use mplayer to play video in full screen mode
+  (push "-fs" emms-player-mplayer-parameters)
   (setq emms-player-list '(emms-player-mplayer-playlist
                            emms-player-mplayer
                            emms-player-mpg321
@@ -897,18 +918,11 @@ If the shell is already opened in some buffer, switch to that buffer."
   (beginning-of-buffer))
 
 ;; {{ unique lines
-(defun uniq-lines ()
-  "Delete duplicate lines in region or buffer."
-  (interactive)
-  (let* ((a (region-active-p))
-         (start (if a (region-beginning) (point-min)))
-         (end (if a (region-end) (point-max))))
-    (save-excursion
-      (while
-          (progn
-            (goto-char start)
-            (re-search-forward "^\\(.*\\)\n\\(\\(.*\n\\)*\\)\\1\n" end t))
-        (replace-match "\\1\n\\2")))))
+;; https://gist.github.com/ramn/796527
+;; uniq-lines
+(defun uniq-lines (start end)
+  (interactive "*r")
+  (delete-duplicate-lines start end))
 ;; }}
 
 (defun my-insert-file-link-from-clipboard ()

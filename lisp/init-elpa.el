@@ -33,8 +33,12 @@
   '(ace-window ; latest stable is released on year 2014
     ace-pinyin
     pos-tip
+    web-mode
     racket-mode
     auto-package-update
+    web-mode
+    kv
+    esxml ; nov is dependent on latest esxml
     nov
     bbdb
     esup ; Emacs start up profiler
@@ -45,6 +49,7 @@
     highlight-symbol
     undo-fu
     command-log-mode
+    evil ; @see https://github.com/emacs-evil/evil/commit/19cc5f8eef8bfffdec8082b604c7129782acb332
     ;; lsp-mode ; stable version has performance issue, but unstable version sends too many warnings
     vimrc-mode
     rjsx-mode ; fixed the indent issue in jsx
@@ -218,6 +223,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 ;; On-demand installation of packages
 (defun require-package (package &optional min-version no-refresh)
   "Ask elpa to install given PACKAGE."
+  (my-ensure 'package)
   (cond
    ((package-installed-p package min-version)
     t)
@@ -255,7 +261,6 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'nvm)
 (require-package 'writeroom-mode)
 (require-package 'haml-mode)
-(require-package 'scss-mode)
 (require-package 'markdown-mode)
 (require-package 'link)
 (require-package 'connection)
@@ -350,6 +355,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
 (require-package 'pdf-tools)
 (require-package 'pyim)
 (require-package 'pyim-wbdict) ; someone may use wubi IME, not me
+(require-package 'pyim-basedict)
 (require-package 'esup)
 
 ;; {{ Fixed expiring GNU ELPA keys
