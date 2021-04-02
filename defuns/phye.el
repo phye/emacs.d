@@ -1,5 +1,5 @@
 ;; {{ Misc
-;; (cd "~/ws/OrgNotes/")
+(cd "~")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (load-theme 'doom-dark+ t)
 ;;(load-theme 'railscasts t)
@@ -79,6 +79,7 @@
 ;; }}
 
 ;; {{ JavaScript/JSON programming
+(require-package 'json-mode)
 (setq js-indent-level 2)
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
@@ -329,3 +330,9 @@
 
 ;; markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+
+;; remote edit
+;; devnet
+(defun remote-edit (host)
+  (interactive "sChoose your host: ")
+  (dired (concat "/ssh:phye@" host ":~/ws")))
