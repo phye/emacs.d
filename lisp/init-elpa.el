@@ -135,7 +135,10 @@
     company-c-headers
     company-statistics
     exec-path-from-shell
-    org-journal)
+    org-journal
+    origami
+    vimish-fold
+    )
   "Packages to install from melpa-unstable.")
 
 (defvar melpa-stable-banned-packages nil

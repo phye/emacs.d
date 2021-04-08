@@ -29,6 +29,20 @@
 (global-set-key (kbd "C-x C-q") 'server-shutdown)
 ;; }}
 
+;; {{ folding
+(require-package 'vimish-fold)
+(define-key evil-normal-state-map "zf" 'vimish-fold)
+(define-key evil-normal-state-map "za" 'vimish-fold-toggle)
+(define-key evil-normal-state-map "zA" 'vimish-fold-toggle-all)
+(define-key evil-normal-state-map "zd" 'vimish-fold-delete)
+(define-key evil-normal-state-map "zD" 'vimish-fold-delete-all)
+(define-key evil-normal-state-map "zc" 'vimish-fold-refold)
+(define-key evil-normal-state-map "zC" 'vimish-fold-refold-all)
+(define-key evil-normal-state-map "zo" 'vimish-fold-unfold)
+(define-key evil-normal-state-map "zO" 'vimish-fold-unfold-all)
+(define-key evil-normal-state-map "z;" 'vimish-fold-avy)
+;; }}
+
 ;; buffer related {{
 (global-set-key (kbd "C-x M") 'manual-entry)
 (set-language-environment "utf-8")
