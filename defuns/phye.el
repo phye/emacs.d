@@ -16,6 +16,7 @@
 
 (setq help-window-select t)
 (run-at-time nil (* 5 60) 'recentf-save-list)
+(setq vc-follow-symlinks t)
 
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
