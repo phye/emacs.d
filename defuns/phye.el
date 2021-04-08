@@ -222,6 +222,10 @@
                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 
 (setq org-latex-listings t)
+(setq org-latex-to-pdf-process
+      '("xelatex -interaction nonstopmode -output-directory %o %f"
+        "xelatex -interaction nonstopmode -output-directory %o %f"
+        "xelatex -interaction nonstopmode -output-directory %o %f"))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -330,6 +334,7 @@
 
 ;; markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+(require-package 'ox-gfm)
 
 ;; remote edit
 ;; devnet
