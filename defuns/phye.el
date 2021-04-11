@@ -7,6 +7,34 @@
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 (require-package 'cnfonts)
+(customize-save-variable
+ 'highlight-symbol-colors
+ '("red"
+   "green"
+   "yellow"
+   "blue"
+   "magenta"
+   "cyan"
+   "dim gray"
+   "orange red"
+   "dark gray"
+   "orange"
+   "chartreuse"
+   "gray"
+   "spring green"
+   "deep sky blue"
+   "dark violet"
+   "light coral"
+   "sienna"
+   "navajo white"
+   "cornsilk"
+   "light sea green"
+   "light salmon"
+   "turquoise"
+   "slate blue"
+   "slate gray"
+   "lavender"
+   ))
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
