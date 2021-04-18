@@ -72,3 +72,4 @@ package-quickstart.el
 .lsp-session*
 cnfonts
 *.cache
+.persp.save.txt
