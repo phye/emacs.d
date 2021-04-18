@@ -136,8 +136,8 @@
     company-statistics
     exec-path-from-shell
     org-journal
-    origami
     vimish-fold
+    perspective
     )
   "Packages to install from melpa-unstable.")
 

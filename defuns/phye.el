@@ -57,6 +57,19 @@
 (global-set-key (kbd "C-x C-q") 'server-shutdown)
 ;; }}
 
+;; {{ multi project -- perspective
+(require-package 'perspective)
+;; always enable persp mode
+(persp-mode)
+(setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
+(add-hook 'kill-emacs-hook #'persp-state-save)
+(my-comma-leader-def
+  "xn" 'persp-switch
+  "xx" 'persp-switch-last
+  "xb" 'persp-counsel-switch-buffer)
+
+;; }}
+
 ;; {{ folding
 (require-package 'vimish-fold)
 (define-key evil-normal-state-map "zf" 'vimish-fold)
@@ -383,4 +396,4 @@
 ;; devnet
 (defun remote-edit (host)
   (interactive "sChoose your host: ")
-  (dired (concat "/ssh:phye@" host ":~/ws")))
+  (dired (concat "/ssh:" host ":~/ws")))
