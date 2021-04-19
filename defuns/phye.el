@@ -54,7 +54,7 @@
   (kill-emacs)
   )
 (global-set-key (kbd "C-x C-c") 'delete-frame)
-(global-set-key (kbd "C-x C-q") 'server-shutdown)
+;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 ;; }}
 
 ;; {{ multi project -- perspective
@@ -63,11 +63,13 @@
 (persp-mode)
 (setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
 (add-hook 'kill-emacs-hook #'persp-state-save)
-(my-comma-leader-def
+(my-space-leader-def
+  "ss" 'persp-state-save ;; intentionally shadow workgroups2 config as I use perspective
+  "ll" 'persp-state-load
   "xn" 'persp-switch
   "xx" 'persp-switch-last
+  "xk" 'persp-kill
   "xb" 'persp-counsel-switch-buffer)
-
 ;; }}
 
 ;; {{ folding
