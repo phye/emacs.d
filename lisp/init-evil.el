@@ -495,14 +495,33 @@ If INCLUSIVE is t, the text object is inclusive."
   :prefix ","
   :states '(normal visual))
 
+(defvar my-web-mode-element-rename-previous-tag nil
+  "Used by my-rename-thing-at-point.")
+
+(defun my-detect-new-html-tag (flag)
+  (cond
+   ((eq flag 'pre)
+    (message "str=%s" (buffer-string (line-beginning-position) (line-end-position))))
+   ((eq flag 'post)
+    (message "str=%s" (buffer-string (line-beginning-position) (line-end-position))))))
+(push '(rename-html-tag my-detect-new-html-tag) evil-repeat-types)
+(evil-set-command-property #'web-mode-element-rename :repeat 'rename-html-tag)
+
 (defun my-rename-thing-at-point (&optional n)
   "Rename thing at point.
-If N > 0, only occurrences in current N lines are renamed."
+If N > 0 and working on HTML, repeating previous tag name operation.
+If N > 0 and working on javascript, only occurrences in current N lines are renamed."
   (interactive "P")
   (cond
+   ((eq major-mode 'web-mode)
+     (unless (and n my-web-mode-element-rename-previous-tag)
+       (setq my-web-mode-element-rename-previous-tag (read-string "New tag name? ")))
+     (web-mode-element-rename my-web-mode-element-rename-previous-tag))
+
    ((derived-mode-p 'js2-mode)
     ;; use `js2-mode' parser, much smarter and works in any scope
     (js2hl-rename-thing-at-point n))
+
    (t
     ;; simple string search/replace in function scope
     (evilmr-replace-in-defun))))
@@ -631,7 +650,7 @@ If N > 0, only occurrences in current N lines are renamed."
   "sd" 'split-window-horizontally
   "oo" 'delete-other-windows
   ;; }}
-  "xr" 'rotate-windows
+  "xr" 'my-rotate-windows
   "xt" 'toggle-two-split-window
   "uu" 'my-transient-winner-undo
   "fs" 'ffip-save-ivy-last
@@ -739,21 +758,6 @@ If N > 0, only occurrences in current N lines are renamed."
   "ui" 'gud-stepi
   "uc" 'gud-cont
   "uf" 'gud-finish)
-
-;; per-major-mode setup
-
-(general-create-definer my-javascript-leader-def
-  :prefix "SPC"
-  :non-normal-prefix "M-SPC"
-  :states '(normal motion insert emacs)
-  :keymaps 'js2-mode-map)
-
-(my-javascript-leader-def
-  "de" 'js2-display-error-list
-  "nn" 'js2-next-error
-  "te" 'js2-mode-toggle-element
-  "tf" 'js2-mode-toggle-hide-functions)
-;; }}
 
 ;; {{ Use `;` as leader key, for searching something
 (general-create-definer my-semicolon-leader-def
@@ -933,11 +937,31 @@ If N > 0, only occurrences in current N lines are renamed."
   ;; Here is the workaround
   (setq evil-default-cursor t))
 
-(with-eval-after-load 'web-mode
-  (mapc #'evil-declare-change-repeat
-        '(web-mode-element-rename))
-  ;; (mapc #'evil-declare-repeat
-  ;;       '(web-mode-element-rename))
-  )
+
+;; {{ per-major-mode setup
+(general-create-definer my-javascript-leader-def
+  :prefix "SPC"
+  :non-normal-prefix "M-SPC"
+  :states '(normal motion insert emacs)
+  :keymaps 'js2-mode-map)
+
+(my-javascript-leader-def
+  "de" 'js2-display-error-list
+  "nn" 'js2-next-error
+  "te" 'js2-mode-toggle-element
+  "tf" 'js2-mode-toggle-hide-functions)
+
+(general-create-definer my-org-leader-def
+  :prefix ";"
+  :non-normal-prefix "M-;"
+  :states '(normal motion visual)
+  :keymaps 'org-mode-map)
+
+(my-org-leader-def
+  "f" 'my-open-pdf-from-history
+  "n" 'my-open-pdf-next-page
+  "g" 'my-open-pdf-goto-page
+  "p" 'my-open-pdf-previous-page)
+;; }}
 
 (provide 'init-evil)

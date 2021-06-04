@@ -1190,10 +1190,10 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
     (mybigword-show-big-words-from-current-buffer)))
 ;; }}
 
-;; {{ use pdf-tools to view pdf
-(when (and (display-graphic-p) *linux*)
-  (pdf-loader-install))
-;; }}
+;; ;; {{ use pdf-tools to view pdf
+;; (when (and (display-graphic-p) *linux*)
+;;   (pdf-loader-install))
+;; ;; }}
 
 ;; {{ exe path
 (with-eval-after-load 'exec-path-from-shell
@@ -1225,6 +1225,48 @@ See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
   ;; don't wrap lines because there is table in `markdown-mode'
   (setq truncate-lines t))
 (add-hook 'markdown-mode-hook 'markdown-mode-hook-setup)
+;; }}
+
+;; {{ pdf
+(defun my-open-pdf-from-history ()
+  "Open pdf and go to page from history."
+  (interactive)
+  (let* ((link (completing-read "Open pdf:::page: " my-pdf-view-from-history)))
+    (when link
+      (let* ((items (split-string link ":::"))
+             (pdf-file (nth 0 items))
+             (pdf-page (string-to-number (nth 1 items))))
+        (my-ensure 'org)
+        (my-focus-on-pdf-window-then-back
+         (lambda (pdf-file)
+           (when (string= (file-name-base pdf-file) (file-name-base pdf-file))
+             (my-pdf-view-goto-page pdf-page))))))))
+
+(defun my-open-pdf-next-page (&optional n)
+  "Open pdf and go to next N page."
+  (interactive "p")
+  (my-focus-on-pdf-window-then-back
+   (lambda (pdf-file)
+     (pdf-view-next-page n))))
+
+(defun my-open-pdf-previous-page (&optional n)
+  "Open pdf and go to next N page."
+  (interactive "p")
+  (my-focus-on-pdf-window-then-back
+   (lambda (pdf-file)
+     (pdf-view-previous-page n))))
+
+(defun my-open-pdf-goto-page (&optional n)
+  "Open pdf and go to page N.
+Org node property PDF_PAGE_OFFSET is used to calculate physical page number."
+  (interactive "p")
+  (let* ((page-offset (org-entry-get (point) "PDF_PAGE_OFFSET")))
+    (setq page-offset (if page-offset (string-to-number page-offset) 0))
+    (unless n (setq n 1))
+    (setq n (+ n page-offset))
+    (my-focus-on-pdf-window-then-back
+     (lambda (pdf-file)
+       (pdf-view-goto-page n)))))
 ;; }}
 
 (provide 'init-misc)
