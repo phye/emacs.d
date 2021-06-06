@@ -1,6 +1,7 @@
 ;; {{ Misc
 (cd "~")
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+;; Donot turn on auto fill for all text mode
+;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (load-theme 'doom-dark+ t)
 ;;(load-theme 'railscasts t)
 ;;(load-theme 'sanityinc-tomorrow-night t)
@@ -101,6 +102,18 @@
 (setq-default evil-escape-key-sequence "jk")
 ;; }}
 
+;; {{ generic programming
+;; company
+(setq company-tooltip-limit 20)                      ; bigger popup window
+(setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+(setq company-echo-delay 0)                          ; remove annoying blinking
+(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+
+;; lsp-mode for c++/go .etc
+(require-package 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'c-mode-common-hook #'lsp-deferred)
+;; }}
 
 ;; {{ c programming
 (local-require 'google-c-style)
@@ -124,17 +137,7 @@
 
 ;; {{ Golang programming
 (with-eval-after-load 'go-mode
-  (require 'company-go)
   (require 'go-guru))
-(setq company-tooltip-limit 20)                      ; bigger popup window
-(setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
-(setq company-echo-delay 0)                          ; remove annoying blinking
-(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
-(add-hook 'go-mode-hook
-          (lambda ()
-            (set (make-local-variable 'company-backends) '(company-go))
-            (company-mode)))
-
 ;; }}
 
 ;; {{ JavaScript/JSON programming
