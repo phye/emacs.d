@@ -123,7 +123,7 @@
           (lambda ()
             (setq fill-column 80)
             (setq c-basic-offset 4)
-            (c-set-offset 'inlamda 0)
+            (c-set-offset 'inlambda 0)
             ) t)
 ;; }}
 
