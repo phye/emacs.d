@@ -186,24 +186,6 @@
 (add-to-list 'company-backends 'company-math-symbols-unicode)
 ;; }}
 
-;; {{ plantuml
-(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
-(setq plantuml-default-exec-mode 'jar)
-(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-(add-to-list
-  'org-src-lang-modes '("plantuml" . plantuml))
-(setq org-plantuml-jar-path
-      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
-;; }}
-
-;; {{ artist
-(defun artist-mode-toggle-emacs-state ()
-  (if artist-mode
-      (evil-emacs-state)
-    (evil-exit-emacs-state)))
-(add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
-;; }}
-
 ;; {{ Org Mode
 
 ;; {{ OrgMode keybindings
@@ -427,6 +409,24 @@
     (cfw:ical-create-source "gtd" "https://calendar.google.com/calendar/ical/semimiracle%40gmail.com/private-a04b71b8d901ec5c2abb2cf8f4397ec0/basic.ics" "Orange")
     (cfw:ical-create-source "birthday" "https://calendar.google.com/calendar/htmlembed?src=%23contacts%40group.v.calendar.google.com&ctz=Asia%2FShanghai" "Red")
     )))
+;; }}
+
+;; {{ plantuml
+(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+(setq plantuml-default-exec-mode 'jar)
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list
+  'org-src-lang-modes '("plantuml" . plantuml))
+(setq org-plantuml-jar-path
+      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
+;; }}
+
+;; {{ artist
+(defun artist-mode-toggle-emacs-state ()
+  (if artist-mode
+      (evil-emacs-state)
+    (evil-exit-emacs-state)))
+(add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
 ;; }}
 
 
