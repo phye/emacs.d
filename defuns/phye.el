@@ -1,10 +1,12 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; General Edit Configs ;; ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; {{ Misc
-(cd "~")
+(cd "~/ws")
 ;; Donot turn on auto fill for all text mode
 ;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(load-theme 'doom-dark+ t)
-;;(load-theme 'railscasts t)
-;;(load-theme 'sanityinc-tomorrow-night t)
+(load-theme 'doom-dark+ t) ;; other favorites: railscasts
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 (require-package 'cnfonts)
@@ -39,12 +41,11 @@
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
-(setq electric-pair-inhibit-predicate
-      (lambda (c)
-        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+;; (setq electric-pair-inhibit-predicate
+;;       (lambda (c)
+;;         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 
 (setq help-window-select t)
-(run-at-time nil (* 5 60) 'recentf-save-list)
 (setq vc-follow-symlinks t)
 
 ;; define function to shutdown emacs server instance
@@ -54,7 +55,21 @@
   (save-some-buffers)
   (kill-emacs)
   )
-(global-set-key (kbd "C-x C-c") 'delete-frame)
+
+;; remote edit
+;; devnet
+(defun remote-edit (host)
+  (interactive "sChoose your host: ")
+  (dired (concat "/ssh:" host ":~/ws")))
+
+;; {{ macOS
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'super)
+;; }}
+
+;; (require 'chinese-fonts-setup)
+;; (run-at-time nil (* 5 60) 'recentf-save-list)
+;; (global-set-key (kbd "C-x C-c") 'delete-frame)
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 ;; }}
 
@@ -63,7 +78,7 @@
 ;; always enable persp mode
 (persp-mode)
 (setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
-(add-hook 'kill-emacs-hook #'persp-state-save)
+;;(add-hook 'kill-emacs-hook #'persp-state-save)
 (my-space-leader-def
   "ss" 'persp-state-save ;; intentionally shadow workgroups2 config as I use perspective
   "ll" 'persp-state-load
@@ -87,88 +102,81 @@
 (define-key evil-normal-state-map "z;" 'vimish-fold-avy)
 ;; }}
 
-;; buffer related {{
+;; {{ buffer related
 (global-set-key (kbd "C-x M") 'manual-entry)
 (set-language-environment "utf-8")
 ;; }}
-
-;; {{ macOS
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
-;; }}
-
 
 ;; {{ evil customizations
 (setq-default evil-escape-key-sequence "jk")
 ;; }}
 
-;; {{ generic programming
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Programming Related Settings ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; {{ general programming
 ;; company
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
 (setq company-echo-delay 0)                          ; remove annoying blinking
 (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
 
-;; lsp-mode for c++/go .etc
-(require-package 'lsp-mode)
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'c-mode-common-hook #'lsp-deferred)
+;; camelCase, snake_case .etc
+(require-package 'string-inflection)
+(global-set-key (kbd "C-c i") 'string-inflection-cycle)
+(global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
+(global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
 ;; }}
 
-;; {{ c programming
+;; {{ protobuf
+(require-package 'protobuf-mode)
+(require 'protobuf-mode)
+;; }}
+
+;; {{ c
 (local-require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook
           (lambda ()
             (setq fill-column 80)
-            (setq c-basic-offset 4)
+            (setq c-basic-offset 2)
             (c-set-offset 'inlambda 0)
             ) t)
 ;; }}
 
-;; {{ cpp programming
-(require-package 'string-inflection)
-(global-set-key (kbd "C-c i") 'string-inflection-cycle)
-(global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
-(global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
+;; {{ cpp
+(require-package 'lsp-mode)
+(add-hook 'go-mode-hook #'lsp-deferred)
+(add-hook 'c-mode-common-hook #'lsp-deferred)
 (my-ensure 'clang-format)
 ;; }}
 
-;; {{ Golang programming
+;; {{ Golang
 (with-eval-after-load 'go-mode
   (require 'go-guru))
 ;; }}
 
-;; {{ JavaScript/JSON programming
+;; {{ JavaScript/JSON
 (require-package 'json-mode)
 (setq js-indent-level 2)
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 (add-hook 'json-mode-hook #'hs-minor-mode)
-
 ;; }}
 
-;; {{ calfw
-(require-package 'calfw)
-(require-package 'calfw-org)
-(require-package 'calfw-ical)
-(require-package 'protobuf-mode)
-(require 'calfw)
-(require 'calfw-org)
-(require 'calfw-ical)
-(require 'protobuf-mode)
 
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:ical-create-source "chn-holidays" "https://calendar.google.com/calendar/ical/en.china%23holiday%40group.v.calendar.google.com/public/basic.ics" "Yellow")
-    (cfw:ical-create-source "gtd" "https://calendar.google.com/calendar/ical/semimiracle%40gmail.com/private-a04b71b8d901ec5c2abb2cf8f4397ec0/basic.ics" "Orange")
-    (cfw:ical-create-source "birthday" "https://calendar.google.com/calendar/htmlembed?src=%23contacts%40group.v.calendar.google.com&ctz=Asia%2FShanghai" "Red")
-    )))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; Document Edit Configs ;; ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; {{ markdown
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
+(require-package 'ox-gfm)
 ;; }}
 
 ;; {{ latex
@@ -178,7 +186,61 @@
 (add-to-list 'company-backends 'company-math-symbols-unicode)
 ;; }}
 
+;; {{ plantuml
+(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+(setq plantuml-default-exec-mode 'jar)
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list
+  'org-src-lang-modes '("plantuml" . plantuml))
+(setq org-plantuml-jar-path
+      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
+;; }}
+
+;; {{ artist
+(defun artist-mode-toggle-emacs-state ()
+  (if artist-mode
+      (evil-emacs-state)
+    (evil-exit-emacs-state)))
+(add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
+;; }}
+
 ;; {{ Org Mode
+
+;; {{ OrgMode keybindings
+;; Protect my favorite short keys
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-cl" 'org-store-link)
+
+;; My often used org commands
+(my-comma-leader-def
+       "ol" 'org-open-at-point
+       "sl" 'org-store-link
+       "il" 'org-insert-link)
+
+(my-space-leader-def
+       "rt" 'my-random-color-theme
+       "nn" 'highlight-symbol-next
+       "pp" 'highlight-symbol-prev)
+;; }}
+
+;; {{ hooks
+(add-hook 'org-mode-hook
+          (lambda ()
+            (set-fill-column 100)))
+;; }}
+
+;; {{ Simple Org settings
+(setq org-catch-invisible-edits (quote error))
+(setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
+(setq org-tags-column -80)
+(setq org-deadline-warning-days 7)
+(setq org-log-into-drawer t)
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+(setq org-src-window-setup 'current-window)
+;; }}
+
+;; {{ Complex Org settings
 (setq org-tag-alist '((:startgroup . nil) ;; tag group for address
                       ("@work" . ?w)
                       ("@home" . ?h)
@@ -210,7 +272,6 @@
         (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
         (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
-(setq org-log-into-drawer t)
 
 (setq org-agenda-files
      (quote
@@ -221,36 +282,12 @@
        "~/ws/OrgNotes/learn/plan_learning.org"
        "~/ws/OrgNotes/work/plan_work.org")))
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (set-fill-column 100)))
-
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-
 (setq org-refile-targets
       '((nil :maxlevel . 5)
         (org-agenda-files :maxlevel . 5)
         ("KnowledgeBase.org" :maxlevel . 5)
         ("done.org" :maxlevel . 5)))
 
-
-;; Protect my favorite short keys
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-cl" 'org-store-link)
-
-;; My often used org commands
-(my-comma-leader-def
-       "ol" 'org-open-at-point
-       "sl" 'org-store-link
-       "il" 'org-insert-link)
-
-(my-space-leader-def
-       "rt" 'my-random-color-theme
-       "nn" 'highlight-symbol-next
-       "pp" 'highlight-symbol-prev)
-
-(setq org-src-window-setup 'current-window)
 
 ;; Org Mode Capture
 (setq org-capture-templates
@@ -261,14 +298,22 @@
         ("j" "Journal entry" entry (function org-journal-find-location)
                                "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
 
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (ditaa . t)
+   (plantuml . t)
+   ))
+;; }}
 
-;; OrgMode Output
+;; {{ OrgMode Output
+(setq org-export-with-sub-superscripts nil)
+(setq org-export-with-properties t)
+
 (eval-after-load "org"
                  '(require 'ox-md nil t))
 (eval-after-load "org"
                  '(require 'ox-odt nil t))
-(setq org-export-with-sub-superscripts nil)
-(setq org-export-with-properties t)
 
 (eval-after-load "ox-latex"
   ;; update the list of LaTeX classes and associated header (encoding, etc.)
@@ -289,47 +334,13 @@
         "xelatex -interaction nonstopmode -output-directory %o %f"
         "xelatex -interaction nonstopmode -output-directory %o %f"))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (ditaa . t)
-   (plantuml . t)
-   ))
+;; ox-taskjuggler
+(local-require 'ox-taskjuggler)
+(add-to-list 'org-export-backends 'taskjuggler)
+(setq org-taskjuggler-target-version 3.6)
+;; }}
 
-;;(require 'chinese-fonts-setup)
-
-
-;; org-journal related
-(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
-(customize-set-variable 'org-journal-enable-agenda-integration t)
-(customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
-(customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
-(customize-set-variable 'org-journal-file-format "%Y%m%d.org")
-(customize-set-variable 'org-journal-file-type 'weekly)
-(require-package 'org-journal)
-;; org-journal capture
-;; Refer to https://github.com/bastibe/org-journal
-(defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
-  (org-journal-new-entry t)
-  ;; Position point on the journal's top-level heading so that org-capture
-  ;; will add the new entry as a child entry.
-  (goto-char (point-min)))
-
-(defun org-journal-delete ()
-  ;; Delete current journal file and buffer
-  (interactive)
-  (delete-file (buffer-name))
-  (kill-buffer))
-
-;; Misc Org settings
-(setq org-catch-invisible-edits (quote error))
-(setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-(setq org-tags-column -80)
-(setq org-deadline-warning-days 7)
-
-
+;; {{ custom orgmode functions
 ;; My useless functions (can be achieved via much easier yasnippet)
 (defun insert-src-in-orgmode (lang)
   "Insert src prefix and postfix for LANG in OrgMode"
@@ -371,35 +382,56 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
-
-;; ox-taskjuggler
-(local-require 'ox-taskjuggler)
-(add-to-list 'org-export-backends 'taskjuggler)
-(setq org-taskjuggler-target-version 3.6)
-
-;; plantuml
-(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
-(setq plantuml-default-exec-mode 'jar)
-(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-(add-to-list
-  'org-src-lang-modes '("plantuml" . plantuml))
-(setq org-plantuml-jar-path
-      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
 ;; }}
 
-(defun artist-mode-toggle-emacs-state ()
-  (if artist-mode
-      (evil-emacs-state)
-    (evil-exit-emacs-state)))
+;; {{ org-journal related
+(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
+(customize-set-variable 'org-journal-enable-agenda-integration t)
+(customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
+(customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+(customize-set-variable 'org-journal-file-format "%Y%m%d.org")
+(customize-set-variable 'org-journal-file-type 'weekly)
+(require-package 'org-journal)
+;; org-journal capture
+;; Refer to https://github.com/bastibe/org-journal
+(defun org-journal-find-location ()
+  ;; Open today's journal, but specify a non-nil prefix argument in order to
+  ;; inhibit inserting the heading; org-capture will insert the heading.
+  (org-journal-new-entry t)
+  ;; Position point on the journal's top-level heading so that org-capture
+  ;; will add the new entry as a child entry.
+  (goto-char (point-min)))
 
-(add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
+(defun org-journal-delete ()
+  ;; Delete current journal file and buffer
+  (interactive)
+  (delete-file (buffer-name))
+  (kill-buffer))
+;; }}
 
-;; markdown
-(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
-(require-package 'ox-gfm)
+;; {{ calfw
+(require-package 'calfw)
+(require-package 'calfw-org)
+(require-package 'calfw-ical)
+(require 'calfw)
+(require 'calfw-org)
+(require 'calfw-ical)
 
-;; remote edit
-;; devnet
-(defun remote-edit (host)
-  (interactive "sChoose your host: ")
-  (dired (concat "/ssh:" host ":~/ws")))
+(defun my-open-calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")
+    (cfw:ical-create-source "chn-holidays" "https://calendar.google.com/calendar/ical/en.china%23holiday%40group.v.calendar.google.com/public/basic.ics" "Yellow")
+    (cfw:ical-create-source "gtd" "https://calendar.google.com/calendar/ical/semimiracle%40gmail.com/private-a04b71b8d901ec5c2abb2cf8f4397ec0/basic.ics" "Orange")
+    (cfw:ical-create-source "birthday" "https://calendar.google.com/calendar/htmlembed?src=%23contacts%40group.v.calendar.google.com&ctz=Asia%2FShanghai" "Red")
+    )))
+;; }}
+
+
+;; }}
+
+;;;;;;;;;;;;;;;
+;; ;; End ;; ;;
+;;;;;;;;;;;;;;;
