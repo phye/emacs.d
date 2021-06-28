@@ -73,20 +73,20 @@
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 ;; }}
 
-;; {{ multi project -- perspective
-(require-package 'perspective)
-;; always enable persp mode
-(persp-mode)
-(setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
-;;(add-hook 'kill-emacs-hook #'persp-state-save)
-(my-space-leader-def
-  "ss" 'persp-state-save ;; intentionally shadow workgroups2 config as I use perspective
-  "ll" 'persp-state-load
-  "xn" 'persp-switch
-  "xx" 'persp-switch-last
-  "xk" 'persp-kill
-  "xb" 'persp-counsel-switch-buffer)
-;; }}
+;; ;; {{ multi project -- perspective
+;; (require-package 'perspective)
+;; ;; always enable persp mode
+;; (persp-mode)
+;; (setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
+;; ;;(add-hook 'kill-emacs-hook #'persp-state-save)
+;; (my-space-leader-def
+;;   "ss" 'persp-state-save ;; intentionally shadow workgroups2 config as I use perspective
+;;   "ll" 'persp-state-load
+;;   "xn" 'persp-switch
+;;   "xx" 'persp-switch-last
+;;   "xk" 'persp-kill
+;;   "xb" 'persp-counsel-switch-buffer)
+;; ;; }}
 
 ;; {{ folding
 (require-package 'vimish-fold)
@@ -132,6 +132,10 @@
 (global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
 ;; }}
 
+;; {{ lsp-mode
+(require-package 'lsp-mode)
+;; }}
+
 ;; {{ protobuf
 (require-package 'protobuf-mode)
 (require 'protobuf-mode)
@@ -150,13 +154,12 @@
 ;; }}
 
 ;; {{ cpp
-(require-package 'lsp-mode)
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'c-mode-common-hook #'lsp-deferred)
+;; (add-hook 'c-mode-common-hook #'lsp-deferred)
 (my-ensure 'clang-format)
 ;; }}
 
 ;; {{ Golang
+(add-hook 'go-mode-hook #'lsp-deferred)
 (with-eval-after-load 'go-mode
   (require 'go-guru))
 ;; }}
