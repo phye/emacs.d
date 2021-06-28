@@ -1,6 +1,6 @@
 * A fast and robust Emacs setup
 
-[[https://travis-ci.org/redguardtoo/emacs.d][https://travis-ci.org/redguardtoo/emacs.d.svg?branch=master]]
+[[https://github.com/redguardtoo/emacs.d/actions/workflows/test.yml][https://github.com/redguardtoo/emacs.d/actions/workflows/test.yml/badge.svg]]
 
 - Fast. Only *one second* to start up
 - Robust. Never crash after package upgrade. Packages could be installed without network
@@ -28,6 +28,7 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
   - [[#better-runtime-performance][Better runtime performance]]
   - [[#key-bindings][Key bindings]]
 - [[#faq][FAQ]]
+  - [[#hardcore-debug-technique][Hardcore debug technique]]
   - [[#spell-check-code][Spell check code]]
   - [[#lock-packages][Lock packages]]
   - [[#how-to-install-new-packages][How to install new packages?]]
@@ -48,7 +49,7 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
   - [[#indentation][Indentation]]
   - [[#editing-lisp][Editing Lisp]]
   - [[#use-smart-mode-line-or-powerline][Use smart-mode-line or powerline?]]
-  - [[#key-bindings-doesnt-work][Key bindings doesn't work?]]
+  - [[#key-bindings-dont-work][Key bindings don't work?]]
   - [[#org-mode][Org-mode]]
   - [[#macos-user][macOS user?]]
   - [[#customize-global-variables][Customize global variables]]
@@ -74,6 +75,7 @@ Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]] and works in [[ht
   - [[#python-environment][Python environment]]
   - [[#set-up-lsp-mode][Set up lsp-mode]]
   - [[#enable-typewriter-sounds-when-typing][Enable typewriter sounds when typing]]
+  - [[#pdf-tools][pdf-tools]]
 - [[#support-legacy-emacs-versions][Support legacy Emacs versions]]
   - [[#emacs-25][Emacs 25]]
   - [[#emacs-244-and-245][Emacs 24.4 and 24.5]]
@@ -249,7 +251,7 @@ On Windows, you need install Cygwin which provides command line programs to Emac
 
 Install Ctags (Universal Ctags is better. Exuberant Ctags is fine). On Windows, you could install Ctags through Cygwin.
 
-Run =M-x counsel-etags-find-tag-at-point= from =counsel-etags= to navigate code. It uses tags files created by ctags. Tags file will be automatically created/update when you start using `counsel-etags`.
+Run =M-x counsel-etags-find-tag-at-point= from =counsel-etags= to navigate code. It uses tags files created by ctags. Tags file will be automatically created/update when you start using =counsel-etags=.
 
 Run =M-x counsel-etags-grep= to search text (grep) in project. Project root is automatically detected.
 
@@ -284,6 +286,22 @@ Besides, "[[http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs
 
 Press =kj= to escape from =evil-insert-state= and everything else in Emacs. It's much more efficient than =ESC= in Vim or =C-g= in Emacs. Search =evil-escape= in =init-evil.el= for details.
 * FAQ
+** Hardcore debug technique
+This Emacs configuration is fast and robust.
+
+So most tricky problems come from extra third party packages you installed.
+
+Try [[https://en.wikipedia.org/wiki/Strace][Strace]] if you can't resolve the issue by grepping the Emacs Lisp code.
+
+Debug network request sent by Emacs,
+#+begin_src sh
+strace -f -e trace=network -s 10000 -o ~/emacs-err.txt /usr/bin/emacs -nw
+#+end_src
+
+Debug system API call sent by Emacs,
+#+begin_src sh
+strace -o ~/emacs-err.txt /usr/bin/emacs -nw
+#+end_src
 ** Spell check code
 This configuration uses [[https://github.com/redguardtoo/wucuo][wucuo]] which is alternative of =flyspell-mode= and =flyspell-prog-mode=.
 
@@ -454,10 +472,10 @@ Learn [[http://www.emacswiki.org/emacs/IndentationBasics][basics]]. Then use [[h
 Please note [[http://emacswiki.org/emacs/ParEdit][paredit-mode]] is enabled when editing Lisp. Search "paredit cheat sheet" to learn its key bindings.
 ** Use [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]] or [[https://github.com/milkypostman/powerline][powerline]]?
 Comment out =(require 'init-modeline)= in =init.el= at first.
-** Key bindings doesn't work?
+** Key bindings don't work?
 Other desktop applications may intercept the key bindings. For example, [[https://github.com/redguardtoo/emacs.d/issues/320][it's reported QQ on windows 8 can intercept "M-x"]].
 ** Org-mode
-Press =M-x org-version=, then read corresponding online manual to set up.
+Press =M-x org-version=, then read online manual to set up.
 
 For example, =org-capture= requires [[http://orgmode.org/manual/Setting-up-capture.html#Setting-up-capture][manual setup]].
 
@@ -687,6 +705,21 @@ You could insert below code into =~/.custom.el=,
 Then run `M-x lsp` to start lsp client and server. Check [[https://github.com/emacs-lsp/lsp-mode]] on how to install lsp server.
 ** Enable typewriter sounds when typing
 Run =M-x my-toggle-typewriter=. Please check bundled =typewriter-mode.el= for further setup.
+** pdf-tools
+Check its official documentation.
+
+Here is my setup in =~/.custom.el=,
+#+begin_src elisp
+;; @see https://github.com/vedang/pdf-tools/
+;; Don't bother Windows
+(when (and (display-graphic-p) (or *linux* *is-a-mac*))
+  (my-run-with-idle-timer
+   2
+   (lambda ()
+     (when *is-a-mac*
+       (setenv "PKG_CONFIG_PATH" "/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig:/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig"))
+     (pdf-loader-install))))
+#+end_src
 * Support legacy Emacs versions
 ** Emacs 25
 Version 3.2 is the last version to support =Emacs 25=

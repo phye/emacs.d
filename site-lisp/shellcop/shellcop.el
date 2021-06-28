@@ -1,8 +1,8 @@
-;;; shellcop.el --- analyze errors reported in Emacs builtin shell  -*- lexical-binding: t -*-
+;;; shellcop.el --- Analyze info&error in shell-mode  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020 Chen Bin
+;; Copyright (C) 2020-2021 Chen Bin
 ;;
-;; Version: 0.0.3
+;; Version: 0.0.6
 ;; Keywords: unix tools
 ;; Author: Chen Bin <chenbin DOT sh AT gmail DOT com>
 ;; URL: https://github.com/redguardtoo/shellcop
@@ -27,14 +27,16 @@
 
 ;;  Open the file from command line error report,
 ;;   - Insert "(add-hook 'shell-mode-hook 'shellcop-start)" into ~/.emacs
-;;   - Start shell by "M-x shell"
+;;   - Start shell-mode by "M-x shell"
 ;;   - Run any command line program in shell
-;;   - Press ENTER in the program's output which contains file and line number
+;;   - Press ENTER in the program's output containing file and line number
+;;   - Cursor is NOT required to be on the same line containing file path.
 ;;
 ;; `shellcop-reset-with-new-command' will,
 ;;   - kill current running process
 ;;   - erase the content in shell buffer
-;;   - If `shellcop-sub-window-has-error-function' return nil in all sub-windows, run `shellcop-insert-shell-command-function'.
+;;   - If `shellcop-sub-window-has-error-function' return nil in all sub-windows,
+;;     run `shellcop-insert-shell-command-function'.
 ;;
 ;; `shellcop-erase-buffer' erases the content buffer with below names,
 ;;   - "*Messages*" (default)
@@ -42,12 +44,16 @@
 ;;   - "*Javascript REPL*" (if parameter 2 is passed)
 ;;   - "*eshell*" (if parameter 3 is passed)
 ;;
+;; `shellcop-search-in-shell-buffer-of-other-window' uses current word or selected text
+;; to search in *shell* buffer of the other window.
+;;
 
 ;;; Code:
 
 ;;;
 
 (require 'cl-lib)
+(require 'comint)
 
 (defgroup shellcop nil
   "Analyze errors reported in Emacs builtin shell."
@@ -86,15 +92,29 @@ If there is error, it returns t."
   :type 'number
   :group 'shellcop)
 
+(defcustom shellcop-string-search-function 'search-backward
+  "The string search function used in `shellcop-search-in-shell-buffer-of-other-window'."
+  :type 'function
+  :group 'shellcop)
+
+(defcustom shellcop-shell-buffer-name "*shell*"
+  "The name of buffer in `shell-mode'."
+  :type 'string
+  :group 'shellcop)
+
+(defvar shellcop-debug nil "Enable debug output if not nil.")
+
 (defun shellcop-location-detail (str)
   "Get file, line and column from STR."
-  (when (string-match "^\\([^:]+\\):\\([0-9]+\\)+\\(:[0-9]+\\)?$" str)
+  (when shellcop-debug (message "shellcop-location-details (%s)" str))
+  (when (string-match "^\\([^:]+\\):\\([0-9]+\\)+\\(:[0-9]+\\)?" str)
     (let* ((file (match-string 1 str))
            (line (match-string 2 str))
            (col (match-string 3 str)))
       ;; clean the column format
       (when col
         (setq col (replace-regexp-in-string ":" "" col)))
+      (when shellcop-debug (message "file=%s line=%s col=%s" file line col))
       (list file line col))))
 
 (defun shellcop-extract-location ()
@@ -139,6 +159,10 @@ If ABOVE is t, extract locations above current point; or else below current poin
   "Extract all locations near current point."
   (let* ((location (shellcop-extract-location))
          rlt)
+
+    (when shellcop-debug
+      (message "shellcop-extract-all-locations called. location=%s" location))
+
     ;; at least current line should contain file path
     (when location
       (shellcop-push-location location rlt)
@@ -158,6 +182,8 @@ If ABOVE is t, extract locations above current point; or else below current poin
 Extract file paths when user presses enter key shell."
   (let* ((artifical (nth 1 args))
          locations)
+    (when shellcop-debug
+      (message "shellcop-comint-send-input-hack (%s)" artifical))
     (cond
      ((or artifical (not (eq major-mode 'shell-mode)))
       ;; do nothing
@@ -186,21 +212,18 @@ Extract file paths when user presses enter key shell."
   (interactive)
   (advice-add 'comint-send-input :around #'shellcop-comint-send-input-hack))
 
-;;;###autoload
 (defun shellcop-all-windows ()
   "Return all windows."
   (cl-mapcan (lambda (f)
                (window-list f 0 (frame-first-window f)))
              (visible-frame-list)))
 
-;;;###autoload
 (defun shellcop-current-line ()
   "Get current line text."
   (let* ((inhibit-field-text-motion t))
     (buffer-substring-no-properties (line-beginning-position)
                                     (line-end-position))))
 
-;;;###autoload
 (defun shellcop-prompt-line-p (&optional position)
   "If line at POSITION has prompt at the beginning."
   (let* (rlt)
@@ -242,6 +265,7 @@ Keep latest N cli program output if it's not nil."
     (cond
      ((not target-window)
       (message "Buffer %s is not visible!" buf-name))
+
      (t
       (select-window target-window)
       (let* ((inhibit-read-only t))
@@ -249,6 +273,7 @@ Keep latest N cli program output if it's not nil."
           ;; skip current prompt line
           (forward-line -2)
           (setq beg (shellcop-search-backward-prompt n)))
+
         (cond
          (beg
           (delete-region (point-min) beg))
@@ -288,7 +313,7 @@ Keep latest N cli program output if it's not nil."
       (cond
        (err-wins
         (message "Code syntax error in windows %s"
-                 (mapconcat 'identity err-wins " ")))
+                 (mapconcat #'identity err-wins " ")))
        (shellcop-insert-shell-command-function
         (funcall shellcop-insert-shell-command-function)))))
 
@@ -308,6 +333,41 @@ Or else erase current buffer."
 
    (t
     (shellcop-erase-one-visible-buffer "*Messages*"))))
+
+(defun shellcop-visible-window-list ()
+  "Visible window list."
+  (cl-mapcan (lambda (frame)
+               (window-list frame 0 (frame-first-window frame)))
+             (visible-frame-list)))
+
+;;;###autoload
+(defun shellcop-focus-window (buffer-name fn)
+  "Focus on window with BUFFER-NAME and run function FN."
+  (let* ((sub-window (cl-find-if `(lambda (w)
+                                    (string= (buffer-name (window-buffer w)) ,buffer-name))
+                                 (shellcop-visible-window-list)))
+         (keyword (cond
+                   ((region-active-p)
+                    (buffer-substring (region-beginning) (region-end)))
+                   (t
+                    (thing-at-point 'word)))))
+    (when shellcop-debug
+      (message "shellcop-focus-window called. sub-window=%s keyword=%s" sub-window keyword))
+    (when sub-window
+      ;; select sub-window
+      (select-window sub-window)
+      ;; do something
+      (funcall fn keyword))))
+
+;;;###autoload
+(defun shellcop-search-in-shell-buffer-of-other-window ()
+  "Search symbol or selected text in *shell* buffer of the other window."
+  (interactive)
+  (shellcop-focus-window
+   shellcop-shell-buffer-name
+   (lambda (keyword)
+     (when keyword
+       (funcall shellcop-string-search-function keyword)))))
 
 (provide 'shellcop)
 ;;; shellcop.el ends here
