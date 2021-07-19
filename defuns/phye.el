@@ -211,7 +211,8 @@
 ;; {{ hooks
 (add-hook 'org-mode-hook
           (lambda ()
-            (set-fill-column 100)))
+            (set-fill-column 100)
+            (turn-on-auto-fill)))
 ;; }}
 
 ;; {{ Simple Org settings
