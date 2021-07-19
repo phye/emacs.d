@@ -5,8 +5,8 @@
 ;; {{ Misc
 (cd "~/ws")
 ;; Donot turn on auto fill for all text mode
-;; (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (load-theme 'doom-dark+ t) ;; other favorites: railscasts
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 (require-package 'cnfonts)
@@ -69,7 +69,7 @@
 
 ;; (require 'chinese-fonts-setup)
 ;; (run-at-time nil (* 5 60) 'recentf-save-list)
-;; (global-set-key (kbd "C-x C-c") 'delete-frame)
+(global-set-key (kbd "C-x C-c") 'delete-frame)
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 ;; }}
 
@@ -105,6 +105,7 @@
 ;; {{ buffer related
 (global-set-key (kbd "C-x M") 'manual-entry)
 (set-language-environment "utf-8")
+(local-require 'dedicate-windows-manually)
 ;; }}
 
 ;; {{ evil customizations
@@ -137,8 +138,7 @@
 ;; }}
 
 ;; {{ protobuf
-(require-package 'protobuf-mode)
-(require 'protobuf-mode)
+;; (require-package 'protobuf-mode)
 ;; }}
 
 ;; {{ c
