@@ -79,6 +79,8 @@
 (add-to-list 'purpose-user-mode-purposes '(cc-mode . cpp))
 (add-to-list 'purpose-user-mode-purposes '(go-mode . golang))
 (add-to-list 'purpose-user-mode-purposes '(org-mode . orgmode))
+(add-to-list 'purpose-user-mode-purposes '(json-mode . json))
+(add-to-list 'purpose-user-mode-purposes '(elisp-mode . elisp))
 (purpose-compile-user-configuration)
 (my-comma-leader-def
   "xb" 'purpose-switch-buffer-with-purpose
@@ -144,6 +146,7 @@
 
 ;; {{ lsp-mode
 (require-package 'lsp-mode)
+(setq lsp-enable-symbol-highlighting nil)
 ;; }}
 
 ;; {{ protobuf
