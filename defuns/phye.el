@@ -5,8 +5,8 @@
 ;; {{ Misc
 (cd "~/ws")
 ;; Donot turn on auto fill for all text mode
-(load-theme 'doom-dark+ t) ;; other favorites: railscasts
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
+(load-theme 'kaolin-galaxy t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/OrgNotes/diary.org")
 (require-package 'cnfonts)
@@ -73,20 +73,20 @@
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 ;; }}
 
-;; ;; {{ multi project -- perspective
-;; (require-package 'perspective)
-;; ;; always enable persp mode
-;; (persp-mode)
-;; (setq persp-state-default-file "~/.emacs.d/.persp.save.txt")
-;; ;;(add-hook 'kill-emacs-hook #'persp-state-save)
-;; (my-space-leader-def
-;;   "ss" 'persp-state-save ;; intentionally shadow workgroups2 config as I use perspective
-;;   "ll" 'persp-state-load
-;;   "xn" 'persp-switch
-;;   "xx" 'persp-switch-last
-;;   "xk" 'persp-kill
-;;   "xb" 'persp-counsel-switch-buffer)
-;; ;; }}
+;; {{ multi project -- emacs-purpose
+(require-package 'window-purpose)
+(purpose-mode)
+(add-to-list 'purpose-user-mode-purposes '(cc-mode . cpp))
+(add-to-list 'purpose-user-mode-purposes '(go-mode . golang))
+(add-to-list 'purpose-user-mode-purposes '(org-mode . orgmode))
+(purpose-compile-user-configuration)
+(my-comma-leader-def
+  "xb" 'purpose-switch-buffer-with-purpose
+  "xd" 'purpose-toggle-window-purpose-dedicated)
+(my-space-leader-def
+  "xs" 'purpose-save-window-layout
+  "xl" 'purpose-load-window-layout)
+;; }}
 
 ;; {{ folding
 (require-package 'vimish-fold)
@@ -102,10 +102,19 @@
 (define-key evil-normal-state-map "z;" 'vimish-fold-avy)
 ;; }}
 
-;; {{ buffer related
+;; {{ buffer and window related
 (global-set-key (kbd "C-x M") 'manual-entry)
+(setq split-height-threshold 150)
 (set-language-environment "utf-8")
 (local-require 'dedicate-windows-manually)
+(defun phye/split-windows ()
+  (interactive)
+  (split-window-right)
+  (other-window 1)
+  (split-window-right)
+  (other-window 1)
+  (balance-windows)
+  )
 ;; }}
 
 ;; {{ evil customizations
