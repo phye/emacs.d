@@ -109,7 +109,6 @@
 
 ;; {{ buffer and window related
 (global-set-key (kbd "C-x M") 'manual-entry)
-(setq split-height-threshold 150)
 (set-language-environment "utf-8")
 (local-require 'dedicate-windows-manually)
 (defun phye/split-windows ()
@@ -208,8 +207,10 @@
 
 ;; {{ OrgMode keybindings
 ;; Protect my favorite short keys
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c l") 'org-store-link)
+(define-key global-map (kbd "C-c o") 'org-open-at-point)
+(define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
 
 ;; My often used org commands
 (my-comma-leader-def
