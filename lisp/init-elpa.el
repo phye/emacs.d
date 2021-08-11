@@ -156,7 +156,7 @@
     exec-path-from-shell
     org-journal
     vimish-fold
-    perspective
+    org-roam
     )
   "Packages to install from melpa-unstable.")
 
