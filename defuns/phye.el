@@ -38,6 +38,9 @@
    "slate gray"
    "lavender"
    ))
+(setq my-disable-wucuo t)
+(setq my-disable-lazyflymake t)
+
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
