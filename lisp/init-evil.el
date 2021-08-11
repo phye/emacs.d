@@ -70,6 +70,7 @@
   (evil-local-set-key 'normal "q" (lambda () (interactive) (quit-window t)))
   (evil-local-set-key 'normal (kbd "RET") 'ffip-diff-find-file)
   ;; "C-c C-a" is binding to `diff-apply-hunk' in `diff-mode'
+  (evil-local-set-key 'normal "u" 'diff-undo)
   (evil-local-set-key 'normal "a" 'ffip-diff-apply-hunk)
   (evil-local-set-key 'normal "o" 'ffip-diff-find-file))
 (add-hook 'ffip-diff-mode-hook 'ffip-diff-mode-hook-setup)
@@ -607,7 +608,6 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
   "gg" 'my-counsel-git-grep ; quickest grep should be easy to press
   "gd" 'ffip-show-diff-by-description ;find-file-in-project 5.3.0+
   "vv" 'my-evil-goto-definition ; frequently used
-  "gl" 'my-git-log-trace-definition ; find history of a function or range
   "sh" 'my-select-from-search-text-history
   "rjs" 'run-js
   "jsr" 'js-comint-send-region
@@ -657,8 +657,7 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
   "sd" 'split-window-horizontally
   "oo" 'delete-other-windows
   ;; }}
-  "xr" 'my-rotate-windows
-  "xt" 'toggle-two-split-window
+  "xr" 'my-subwindow-setup
   "uu" 'my-transient-winner-undo
   "fs" 'ffip-save-ivy-last
   "fr" 'ivy-resume
@@ -966,10 +965,8 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
   :keymaps 'org-mode-map)
 
 (my-org-leader-def
-  "f" 'my-open-pdf-from-history
-  "n" 'my-open-pdf-next-page
-  "g" 'my-open-pdf-goto-page
-  "p" 'my-open-pdf-previous-page)
+  "f" 'my-navigate-in-pdf
+  "g" 'my-open-pdf-goto-page)
 ;; }}
 
 (provide 'init-evil)
