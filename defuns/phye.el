@@ -8,7 +8,7 @@
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 (load-theme 'kaolin-galaxy t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
-(setq diary-file "~/ws/OrgNotes/diary.org")
+(setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
 (customize-save-variable
  'highlight-symbol-colors
@@ -74,6 +74,10 @@
 ;; (run-at-time nil (* 5 60) 'recentf-save-list)
 (global-set-key (kbd "C-x C-c") 'delete-frame)
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
+
+;; gpg encrypt
+(require 'epa-file)
+(epa-file-enable)
 ;; }}
 
 ;; {{ multi project -- emacs-purpose
@@ -227,7 +231,11 @@
 ;; {{ hooks
 (add-hook 'org-mode-hook
           (lambda ()
+            (setq org-confirm-babel-evaluate nil)
             (set-fill-column 100)
+            (setq org-babel-default-header-args:planuml
+                  '((:results . "replace")
+                    (:exports . "results")))
             (turn-on-auto-fill)))
 ;; }}
 
@@ -277,12 +285,12 @@
 
 (setq org-agenda-files
      (quote
-      ("~/ws/OrgNotes/gtd.org"
-       "~/ws/OrgNotes/quick_notes.org"
-       "~/ws/OrgNotes/life/plan_life.org"
-       "~/ws/OrgNotes/life/birthday.org"
-       "~/ws/OrgNotes/learn/plan_learning.org"
-       "~/ws/OrgNotes/work/plan_work.org")))
+      ("~/ws/gtd/gtd.org"
+       "~/ws/gtd/quick_notes.org"
+       "~/ws/gtd/life/plan_life.org"
+       "~/ws/gtd/life/birthday.org"
+       "~/ws/gtd/learn/plan_learning.org"
+       "~/ws/gtd/work/plan_work.org")))
 
 (setq org-refile-targets
       '((nil :maxlevel . 5)
@@ -293,9 +301,9 @@
 
 ;; Org Mode Capture
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/ws/OrgNotes/gtd.org" "Tasks")
+      '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
          "* TODO %?\n %i\n %a")
-        ("n" "Note" entry (file+datetree "~/ws/OrgNotes/quick_notes.org")
+        ("n" "Note" entry (file+datetree "~/ws/gtd/quick_notes.org")
          "* %?\nEntered on %U\n %i\n %a")
         ("j" "Journal entry" entry (function org-journal-find-location)
                                "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
@@ -389,7 +397,7 @@
 ;; {{ org-journal related
 (customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
-(customize-set-variable 'org-journal-dir "~/ws/OrgNotes/journals/")
+(customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
 (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
 (customize-set-variable 'org-journal-file-type 'weekly)
@@ -418,7 +426,7 @@
       :init
       (setq org-roam-v2-ack t)
       :custom
-      (org-roam-directory (file-truename "~/ws/OrgNotes/roam"))
+      (org-roam-directory (file-truename "~/ws/gtd/roam"))
       (org-roam-graph-viewer #'eww-open-file)
       (org-roam-completion-everywhere t)
       :bind (("C-c n l" . org-roam-buffer-toggle)
