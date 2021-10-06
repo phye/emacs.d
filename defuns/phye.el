@@ -78,6 +78,12 @@
 ;; gpg encrypt
 (require 'epa-file)
 (epa-file-enable)
+
+;; code toggle
+;; from: https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
+(defun jao-toggle-selective-display ()
+  (interactive)
+  (set-selective-display (if selective-display nil 1)))
 ;; }}
 
 ;; {{ multi project -- emacs-purpose
@@ -220,7 +226,8 @@
 (my-comma-leader-def
        "ol" 'org-open-at-point
        "sl" 'org-store-link
-       "il" 'org-insert-link)
+       "il" 'org-insert-link
+       "ov" 'jao-toggle-selective-display)
 
 (my-space-leader-def
        "rt" 'my-random-color-theme
