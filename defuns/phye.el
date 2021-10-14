@@ -297,7 +297,7 @@
        "~/ws/gtd/life/plan_life.org"
        "~/ws/gtd/life/birthday.org"
        "~/ws/gtd/learn/plan_learning.org"
-       "~/ws/gtd/work/plan_work.org")))
+       "~/ws/gtd/work/plan_work.org.gpg")))
 
 (setq org-refile-targets
       '((nil :maxlevel . 5)
