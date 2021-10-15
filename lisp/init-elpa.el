@@ -176,9 +176,9 @@
         ;; is slow or shutdown.
 
         ;; ;; {{ Option 1: 163 mirror repository:
-        ("gnu" . "https://mirrors.163.com/elpa/gnu/")
+        ("gnu" . "http://mirrors.163.com/elpa/gnu/")
         ("melpa" . "http://mirrors.163.com/elpa/melpa/")
-        ("melpa-stable" . "http://mirrors.163.com/elpa/melpa-stable/")
+        ("melpa-stable" . "http://mirrors.163.com/elpa/stable-melpa/")
         ;; ;; }}
 
         ;; ;; {{ Option 2: tsinghua mirror repository
