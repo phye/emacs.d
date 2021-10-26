@@ -86,35 +86,42 @@
   (set-selective-display (if selective-display nil 1)))
 ;; }}
 
-;; {{ multi project -- emacs-purpose
-(require-package 'window-purpose)
-(purpose-mode)
-(add-to-list 'purpose-user-mode-purposes '(cc-mode . cpp))
-(add-to-list 'purpose-user-mode-purposes '(go-mode . golang))
-(add-to-list 'purpose-user-mode-purposes '(org-mode . orgmode))
-(add-to-list 'purpose-user-mode-purposes '(json-mode . json))
-(add-to-list 'purpose-user-mode-purposes '(elisp-mode . elisp))
-(purpose-compile-user-configuration)
-(my-comma-leader-def
-  "xb" 'purpose-switch-buffer-with-purpose
-  "xd" 'purpose-toggle-window-purpose-dedicated)
-(my-space-leader-def
-  "xs" 'purpose-save-window-layout
-  "xl" 'purpose-load-window-layout)
+;; {{ multi project
+;; ;; -- emacs-purpose
+;; (require-package 'window-purpose)
+;; (purpose-mode)
+;; (add-to-list 'purpose-user-mode-purposes '(cc-mode . cpp))
+;; (add-to-list 'purpose-user-mode-purposes '(go-mode . golang))
+;; (add-to-list 'purpose-user-mode-purposes '(org-mode . orgmode))
+;; (add-to-list 'purpose-user-mode-purposes '(json-mode . json))
+;; (add-to-list 'purpose-user-mode-purposes '(elisp-mode . elisp))
+;; (purpose-compile-user-configuration)
+;; (my-comma-leader-def
+;;   "xb" 'purpose-switch-buffer-with-purpose
+;;   "xd" 'purpose-toggle-window-purpose-dedicated
+;;   "xD" 'purpose-toggle-window-buffer-dedicated)
+;; (my-space-leader-def
+;;   "xs" 'purpose-save-window-layout
+;;   "xl" 'purpose-load-window-layout)
+;; -- projectile-mode
+(require-package 'projectile)
+(projectile-mode +1)
+(define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
 ;; }}
 
 ;; {{ folding
-(require-package 'vimish-fold)
-(define-key evil-normal-state-map "zf" 'vimish-fold)
-(define-key evil-normal-state-map "za" 'vimish-fold-toggle)
-(define-key evil-normal-state-map "zA" 'vimish-fold-toggle-all)
-(define-key evil-normal-state-map "zd" 'vimish-fold-delete)
-(define-key evil-normal-state-map "zD" 'vimish-fold-delete-all)
-(define-key evil-normal-state-map "zc" 'vimish-fold-refold)
-(define-key evil-normal-state-map "zC" 'vimish-fold-refold-all)
-(define-key evil-normal-state-map "zo" 'vimish-fold-unfold)
-(define-key evil-normal-state-map "zO" 'vimish-fold-unfold-all)
-(define-key evil-normal-state-map "z;" 'vimish-fold-avy)
+(require-package 'origami)
+;; (require-package 'vimish-fold)
+;; (define-key evil-normal-state-map "zf" 'vimish-fold)
+;; (define-key evil-normal-state-map "za" 'vimish-fold-toggle)
+;; (define-key evil-normal-state-map "zA" 'vimish-fold-toggle-all)
+;; (define-key evil-normal-state-map "zd" 'vimish-fold-delete)
+;; (define-key evil-normal-state-map "zD" 'vimish-fold-delete-all)
+;; (define-key evil-normal-state-map "zc" 'vimish-fold-refold)
+;; (define-key evil-normal-state-map "zC" 'vimish-fold-refold-all)
+;; (define-key evil-normal-state-map "zo" 'vimish-fold-unfold)
+;; (define-key evil-normal-state-map "zO" 'vimish-fold-unfold-all)
+;; (define-key evil-normal-state-map "z;" 'vimish-fold-avy)
 ;; }}
 
 ;; {{ buffer and window related
