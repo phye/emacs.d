@@ -74,3 +74,4 @@ package-quickstart.el
 cnfonts
 *.cache
 .persp.save.txt
+org-roam.db
