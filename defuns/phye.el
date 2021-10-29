@@ -103,10 +103,43 @@
 ;; (my-space-leader-def
 ;;   "xs" 'purpose-save-window-layout
 ;;   "xl" 'purpose-load-window-layout)
+
 ;; -- projectile-mode
 (require-package 'projectile)
 (projectile-mode +1)
 (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
+
+(defun my-xref-pop-marker-stack ()
+  "Project aware buffer pop"
+  (interactive)
+  (let ((ring xref--marker-ring)
+        (history-buffers (window-prev-buffers)))
+    (when (ring-empty-p ring)
+      (user-error "Marker stack is empty"))
+    (let ((ring-length (ring-length ring))
+          (i 0)
+          (found nil))
+      (message "ring length is %d" ring-length)
+      (while (and (< i ring-length) (not found))
+        (let* ((marker (ring-ref ring i))
+               (buffer (marker-buffer marker)))
+          (let ((j 0))
+            (while (and (< j (length history-buffers) ) (not found))
+              (when (eq (buffer-name buffer)
+                        (buffer-name (car (nth j history-buffers))))
+                  (setq found t))
+              (setq j (1+ j))
+              )))
+        (setq i (1+ i)))
+      (unless found
+        (user-error "Marker stack not found"))
+      (let ((marker (ring-remove ring i)))
+        (switch-to-buffer (or (marker-buffer marker)
+                              (user-error "The marker buffer has been deleted")))
+        (goto-char (marker-position marker))
+        (set-marker marker nil nil)
+        (run-hooks 'xref-after-return-hook)))))
+(global-set-key (kbd "C-t") 'my-xref-pop-marker-stack)
 ;; }}
 
 ;; {{ folding
