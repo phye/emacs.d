@@ -139,7 +139,7 @@
         (goto-char (marker-position marker))
         (set-marker marker nil nil)
         (run-hooks 'xref-after-return-hook)))))
-(global-set-key (kbd "C-t") 'my-xref-pop-marker-stack)
+(define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
 ;; }}
 
 ;; {{ folding
