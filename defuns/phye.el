@@ -6,7 +6,8 @@
 (cd "~/ws")
 ;; Donot turn on auto fill for all text mode
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
-(load-theme 'kaolin-galaxy t)
+;; (load-theme 'kaolin-galaxy t)
+(load-theme 'kaolin-bubblegum t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
@@ -116,11 +117,11 @@
         (history-buffers (window-prev-buffers)))
     (when (ring-empty-p ring)
       (user-error "Marker stack is empty"))
-    (let ((ring-length (ring-length ring))
-          (i 0)
+    (let* ((ring-length (ring-length ring))
+          (i (1- ring-length))
           (found nil))
-      (message "ring length is %d" ring-length)
-      (while (and (< i ring-length) (not found))
+      ;; xref--marker-ring is a stack, hence need to access it from the back
+      (while (and (>= i 0) (not found))
         (let* ((marker (ring-ref ring i))
                (buffer (marker-buffer marker)))
           (let ((j 0))
@@ -130,7 +131,7 @@
                   (setq found t))
               (setq j (1+ j))
               )))
-        (setq i (1+ i)))
+        (setq i (1- i)))
       (unless found
         (user-error "Marker stack not found"))
       (let ((marker (ring-remove ring i)))
