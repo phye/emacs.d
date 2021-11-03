@@ -115,6 +115,7 @@
   (interactive)
   (let ((ring xref--marker-ring)
         (history-buffers (window-prev-buffers)))
+    (add-to-list 'history-buffers (list (window-buffer) (point-min) (point)))
     (when (ring-empty-p ring)
       (user-error "Marker stack is empty"))
     (let* ((ring-length (ring-length ring))
