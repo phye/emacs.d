@@ -64,7 +64,7 @@
 ;; devnet
 (defun remote-edit (host)
   (interactive "sChoose your host: ")
-  (dired (concat "/ssh:" host ":~/ws")))
+  (dired (concat "/sshx:" host ":~/ws")))
 
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
@@ -118,23 +118,25 @@
     (when (ring-empty-p ring)
       (user-error "Marker stack is empty"))
     (let* ((ring-length (ring-length ring))
-          (i (1- ring-length))
+          (i 0)
           (found nil))
-      ;; xref--marker-ring is a stack, hence need to access it from the back
-      (while (and (>= i 0) (not found))
+      ;; xref--marker-ring is a ring, 0 means the newest inserted element, which
+      ;; should be popped firstly in this case
+      (while (and (< i ring-length) (not found))
         (let* ((marker (ring-ref ring i))
-               (buffer (marker-buffer marker)))
+               (buffer (marker-buffer marker))
+               (buffer-name (buffer-name buffer)))
           (let ((j 0))
-            (while (and (< j (length history-buffers) ) (not found))
-              (when (eq (buffer-name buffer)
-                        (buffer-name (car (nth j history-buffers))))
+            (while (and (< j (length history-buffers)) (not found))
+              (when (eq buffer-name (buffer-name (car (nth j history-buffers))))
                   (setq found t))
               (setq j (1+ j))
               )))
-        (setq i (1- i)))
+        (setq i (1+ i)))
       (unless found
         (user-error "Marker stack not found"))
-      (let ((marker (ring-remove ring i)))
+      ;; NOTE (phye): i is incred even when found, hence the 1-
+      (let ((marker (ring-remove ring (1- i))))
         (switch-to-buffer (or (marker-buffer marker)
                               (user-error "The marker buffer has been deleted")))
         (goto-char (marker-position marker))
