@@ -533,6 +533,47 @@
 (add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
 ;; }}
 
+;; {{ org-mode inline chinese markup using zero width space
+(defun phye/insert-char-with-zero-width-space (count char)
+  "If count is even, add zero-width-space prefix, otherwise, add suffix"
+  (if (= (mod count 2) 0)
+      (progn
+        (insert-char #x200b)
+        (insert-char char))
+    (progn
+      (insert-char char)
+      (insert-char #x200b))))
+
+(setq lexical-binding t)
+(let ((my-org-markup-count-hash (make-hash-table :test 'eq)))
+  (puthash ?~ 0 my-org-markup-count-hash)
+  (puthash ?= 0 my-org-markup-count-hash)
+  (puthash ?* 0 my-org-markup-count-hash)
+  (puthash ?/ 0 my-org-markup-count-hash)
+  (puthash ?_ 0 my-org-markup-count-hash)
+  (puthash ?+ 0 my-org-markup-count-hash)
+  (puthash ?$ 0 my-org-markup-count-hash)
+  (defun phye/org-add-nws (char)
+    "add prefix/suffix zero-width-space automatically"
+    (setq count (gethash char my-org-markup-count-hash -1))
+    (if (eq count -1)
+        (progn
+          (ding)
+          (message "Incorrect orgmode markup character %s", char)
+          )
+      (progn
+        (phye/insert-char-with-zero-width-space count char)
+        (puthash char (1+ count) my-org-markup-count-hash))
+      )))
+
+;; (define-key org-mode-map (kbd "~") (phye/org-add-nws ?~))
+;; (define-key org-mode-map (kbd "=") (phye/org-add-nws ?=))
+;; (define-key org-mode-map (kbd "*") (phye/org-add-nws ?*))
+;; (define-key org-mode-map (kbd "/") (phye/org-add-nws ?/))
+;; (define-key org-mode-map (kbd "_") (phye/org-add-nws ?_))
+;; (define-key org-mode-map (kbd "+") (phye/org-add-nws ?+))
+;; (define-key org-mode-map (kbd "$") (phye/org-add-nws ?$))
+
 
 ;; }}
 
