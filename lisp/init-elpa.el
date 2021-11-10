@@ -400,7 +400,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
   (dolist (theme popular-themes)
     (require-package theme)))
 
-(require-package 'git-modes)
+;; (require-package 'git-modes)
 (require-package 'magit)
 (require-package 'ace-pinyin)
 (require-package 'which-key)
