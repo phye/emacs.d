@@ -194,6 +194,8 @@ FN checks these characters belong to normal word characters."
   (company-ispell-setup)
 
   (unless (is-buffer-file-temp)
+    ;;  trim spaces from end of changed line
+    (ws-butler-mode 1)
 
     (unless (featurep 'esup-child)
       (unless my-disable-lazyflymake
@@ -283,9 +285,6 @@ FN checks these characters belong to normal word characters."
 
 (defalias 'list-buffers 'ibuffer)
 
-(defun my-download-subtitles ()
-  (interactive)
-  (shell-command "periscope.py -l en *.mkv *.mp4 *.avi &"))
 
 ;; {{ show email sent by `git send-email' in gnus
 (with-eval-after-load 'gnus
@@ -477,6 +476,7 @@ FN checks these characters belong to normal word characters."
   (memq major-mode my-auto-save-exclude-major-mode-list))
 
 (with-eval-after-load 'auto-save
+  (push 'file-remote-p auto-save-exclude)
   (push 'my-file-too-big-p auto-save-exclude)
   (push 'my-check-major-mode-for-auto-save auto-save-exclude)
   (setq auto-save-idle 2) ; 2 seconds
@@ -1023,29 +1023,6 @@ might be bad."
   (setq eldoc-echo-area-use-multiline-p t))
 ;;}}
 
-;; {{ fetch subtitles
-(defvar my-fetch-subtitles-proxy nil
-  "http proxy to fetch subtitles, like http://127.0.0.1:8118 (privoxy).")
-
-(defun my-fetch-subtitles (&optional video-file)
-  "Fetch subtitles of VIDEO-FILE.
-See https://github.com/RafayGhafoor/Subscene-Subtitle-Grabber."
-  (let* ((cmd-prefix "subgrab -l EN"))
-    (when my-fetch-subtitles-proxy
-      (setq cmd-prefix (format "http_proxy=%s https_proxy=%s %s"
-                               my-fetch-subtitles-proxy
-                               my-fetch-subtitles-proxy
-                               cmd-prefix)))
-    (cond
-     (video-file
-      (let* ((default-directory (file-name-directory video-file)))
-        (shell-command (format "%s -m \"%s\" &"
-                               cmd-prefix
-                               (file-name-base video-file)))))
-     (t
-      (shell-command (format "%s --dir . &" cmd-prefix))))))
-;; }}
-
 (defvar my-sdcv-org-head-level 2)
 ;; {{ use sdcv dictionary to find big word definition
 (defun my-sdcv-format-bigword (word zipf)
@@ -1173,7 +1150,7 @@ Org node property PDF_PAGE_OFFSET is used to calculate physical page number."
                            ("j" my-open-pdf-scroll-or-next-page)
                            ("p" my-open-pdf-previous-page)
                            ("n" my-open-pdf-next-page)
-                           ("g" (lambda () (interactive) (my-open-pdf-goto-page (read-number "Page number: " 1))))
+                           ("g" (my-open-pdf-goto-page (read-number "Page number: " 1)))
                            ("f" my-open-pdf-from-history))
                          "PDF: [k]up [j]down [p]revious-page [n]ext-page [g]oto [f]rom-history [q]uit"
                          nil))
