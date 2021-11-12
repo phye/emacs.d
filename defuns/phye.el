@@ -265,8 +265,6 @@
 ;; Protect my favorite short keys
 (define-key global-map (kbd "C-c c") 'org-capture)
 (define-key global-map (kbd "C-c l") 'org-store-link)
-(define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
-(define-key org-mode-map (kbd "C-c t") 'org-mark-ring-goto)
 
 ;; My often used org commands
 (my-comma-leader-def
@@ -568,6 +566,8 @@
         (puthash char (1+ count) my-org-markup-count-hash))
       )))
 
+(define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
+(define-key org-mode-map (kbd "C-c t") 'org-mark-ring-goto)
 ;; (define-key org-mode-map (kbd "~") (phye/org-add-nws ?~))
 ;; (define-key org-mode-map (kbd "=") (phye/org-add-nws ?=))
 ;; (define-key org-mode-map (kbd "*") (phye/org-add-nws ?*))
