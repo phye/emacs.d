@@ -1,7 +1,7 @@
 #+Author: Philip Ye (phye8080@gmail.com)
 
 # Common In Buffer Settings {{
-#+STARTUP: overview
+#+STARTUP: content
 #+STARTUP: hidestars
 #+STARTUP: logdone
 #+COLUMNS: %38ITEM(Details) %10TAGS(Context) %7TODO(To Do) %5Effort(Time){:} %6CLOCKSUM{Total}

@@ -5,6 +5,7 @@
 ;; {{ Misc
 (cd "~/ws")
 ;; Donot turn on auto fill for all text mode
+(add-hook 'go-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 ;; (load-theme 'kaolin-galaxy t)
 (load-theme 'kaolin-bubblegum t)
@@ -240,6 +241,9 @@
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 (add-hook 'json-mode-hook #'hs-minor-mode)
+;; }}
+
+;; {{ ASM
 ;; }}
 
 
