@@ -254,6 +254,11 @@
 ;; {{ markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 (require-package 'ox-gfm)
+(defun phye/disable-truncate-lines ()
+    "diasable trunc lines"
+  (interactive)
+  (setq truncate-lines nil))
+(add-hook 'markdown-mode-hook 'phye/disable-truncate-lines 90)
 ;; }}
 
 ;; {{ latex
