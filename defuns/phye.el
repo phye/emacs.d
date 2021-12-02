@@ -4,9 +4,6 @@
 
 ;; {{ Misc
 (cd "~/ws")
-;; Donot turn on auto fill for all text mode
-(add-hook 'prog-mode-hook 'turn-on-auto-fill)
-(add-hook 'org-mode-hook 'turn-on-auto-fill)
 ;; (load-theme 'kaolin-galaxy t)
 (load-theme 'kaolin-bubblegum t)
 ;; although I don't use Diary Mode, change the default file in case of mistyping
@@ -191,6 +188,8 @@
 
 ;; {{ general programming
 ;; company
+(add-hook 'prog-mode-hook 'turn-on-auto-fill)
+(add-hook 'prog-mode-hook 'hs-minor-mode)
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
 (setq company-echo-delay 0)                          ; remove annoying blinking
@@ -290,26 +289,29 @@
 ;; }}
 
 ;; {{ hooks
-(add-hook 'org-mode-hook
-          (lambda ()
-            (setq org-confirm-babel-evaluate nil)
-            (set-fill-column 100)
-            (setq org-babel-default-header-args:planuml
-                  '((:results . "replace")
-                    (:exports . "results")))
-            (turn-on-auto-fill)))
+(defun phye/org-mode-hook ()
+  "custom orgmode settings"
+  (interactive)
+  (setq org-confirm-babel-evaluate nil)
+  (set-fill-column 100)
+  (setq org-babel-default-header-args:planuml
+        '((:results . "replace")
+          (:exports . "results")))
+  (turn-on-auto-fill)
+  (setq org-tags-column -80)
+  (setq org-catch-invisible-edits (quote error))
+  (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
+  (setq org-deadline-warning-days 7)
+  (setq org-log-into-drawer t)
+  (setq org-clock-persist 'history)
+  (org-clock-persistence-insinuate)
+  (setq org-src-window-setup 'plain)
+  )
+(add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
 ;; {{ Simple Org settings
-(setq org-catch-invisible-edits (quote error))
-(setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-(setq org-tags-column -80)
-(setq org-deadline-warning-days 7)
-(setq org-log-into-drawer t)
-(setq org-clock-persist 'history)
-(org-clock-persistence-insinuate)
-(setq org-src-window-setup 'current-window)
-;; }}
+  ;; }}
 
 ;; {{ Complex Org settings
 (setq org-tag-alist '((:startgroup . nil) ;; tag group for address
