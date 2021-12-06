@@ -39,6 +39,7 @@
    ))
 (setq my-disable-wucuo t)
 (setq my-disable-lazyflymake t)
+(set-fill-column 80)
 
 
 ;; Don't pair double quotes
@@ -217,7 +218,6 @@
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq fill-column 80)
             (setq c-basic-offset 2)
             (c-set-offset 'inlambda 0)
             ) t)
@@ -229,9 +229,14 @@
 ;; }}
 
 ;; {{ Golang
+;; (with-eval-after-load 'go-mode
+;;   (require 'go-guru))
+(defun phye/golang-hook ()
+    "phye's golang hook"
+  (interactive)
+  (set-fill-column 100))
 (add-hook 'go-mode-hook #'lsp-deferred)
-(with-eval-after-load 'go-mode
-  (require 'go-guru))
+(add-hook 'go-mode-hook 'phye/golang-hook 90)
 ;; }}
 
 ;; {{ JavaScript/JSON
