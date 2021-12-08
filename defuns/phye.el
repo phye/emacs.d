@@ -178,6 +178,8 @@
 
 ;; {{ evil customizations
 (setq-default evil-escape-key-sequence "jk")
+(require-package 'evil-numbers)
+(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 ;; }}
 
 
@@ -258,11 +260,12 @@
 ;; {{ markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 (require-package 'ox-gfm)
-(defun phye/disable-truncate-lines ()
+(defun phye/markdown-hook ()
     "diasable trunc lines"
   (interactive)
-  (setq truncate-lines nil))
-(add-hook 'markdown-mode-hook 'phye/disable-truncate-lines 90)
+  (setq truncate-lines nil)
+  (set-fill-column 100))
+(add-hook 'markdown-mode-hook 'phye/markdown-hook 90)
 ;; }}
 
 ;; {{ latex
