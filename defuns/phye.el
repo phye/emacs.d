@@ -5,37 +5,42 @@
 ;; {{ Misc
 (cd "~/ws")
 ;; (load-theme 'kaolin-galaxy t)
-(load-theme 'kaolin-bubblegum t)
+(load-theme 'planet t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
 (customize-save-variable
  'highlight-symbol-colors
- '("red"
-   "green"
-   "yellow"
-   "blue"
-   "magenta"
-   "cyan"
-   "dim gray"
-   "orange red"
-   "dark gray"
-   "orange"
-   "chartreuse"
-   "gray"
-   "spring green"
-   "deep sky blue"
-   "dark violet"
-   "light coral"
-   "sienna"
-   "navajo white"
-   "cornsilk"
-   "light sea green"
-   "light salmon"
-   "turquoise"
-   "slate blue"
-   "slate gray"
-   "lavender"
+ '("red"                                ;; red
+   "white"                              ;; white
+   "green"                              ;; green
+   "gray"                               ;; gray
+   "blue"                               ;; blue
+   "yellow"                             ;; yellow
+   "magenta"                            ;; red
+   "ivory"                              ;; white
+   "cyan"                               ;; green
+   "thistle"                            ;; gray
+   "navy"                               ;; blue
+   "gold"                               ;; yellow
+   "maroon"                             ;; red
+   "lavender"                           ;; white
+   "turquoise"                          ;; green
+   "slate gray"                         ;; gray
+   "slate blue"                         ;; blue
+   "moccasin"                           ;; yellow
+   "salmon"                             ;; red
+   "snow"                               ;; white
+   "chartreuse"                         ;; green
+   "honeydew"                           ;; gray
+   "dodger blue"                        ;; blue
+   "khaki"                              ;; yellow
+   "violet red"                         ;; red
+   "navajo white"                       ;; white
+   "light sea green"                    ;; green
+   "light slate gray"                   ;; gray
+   "deep sky blue"                      ;; blue
+   "light coral"                        ;; yellow
    ))
 (setq my-disable-wucuo t)
 (setq my-disable-lazyflymake t)
