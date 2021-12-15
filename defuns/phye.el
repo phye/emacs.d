@@ -196,8 +196,11 @@
 
 ;; {{ general programming
 ;; company
-(add-hook 'prog-mode-hook 'turn-on-auto-fill)
-(add-hook 'prog-mode-hook 'hs-minor-mode)
+(defun phye/prog-mode-hook ()
+  (turn-on-auto-fill)
+  (hs-minor-mode)
+  (subword-mode))
+(add-hook 'prog-mode-hook 'phye/prog-mode-hook)
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
 (setq company-echo-delay 0)                          ; remove annoying blinking
@@ -216,7 +219,7 @@
 ;; }}
 
 ;; {{ protobuf
-;; (require-package 'protobuf-mode)
+(require-package 'protobuf-mode)
 ;; }}
 
 ;; {{ c
