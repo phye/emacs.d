@@ -260,6 +260,9 @@
 ;; {{ ASM
 ;; }}
 
+;; {{ python
+(setq elpy-rpc-python-command (string-trim (shell-command-to-string "which python3")))
+;; }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Document Edit Configs ;; ;;
