@@ -153,7 +153,7 @@
 ;; }}
 
 ;; {{ folding
-(require-package 'origami)
+;; (require-package 'rigami)
 ;; (require-package 'vimish-fold)
 ;; (define-key evil-normal-state-map "zf" 'vimish-fold)
 ;; (define-key evil-normal-state-map "za" 'vimish-fold-toggle)
