@@ -153,7 +153,7 @@
 ;; }}
 
 ;; {{ folding
-;; (require-package 'rigami)
+;; (require-package 'origami)
 ;; (require-package 'vimish-fold)
 ;; (define-key evil-normal-state-map "zf" 'vimish-fold)
 ;; (define-key evil-normal-state-map "za" 'vimish-fold-toggle)
@@ -524,7 +524,7 @@
       (org-roam-db-autosync-mode)
       ;; If using org-roam-protocol
       (require 'org-roam-protocol))
-(setq org-roam-node-display-template "${title} ${tag}")
+(setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
 ;; {{ calfw
