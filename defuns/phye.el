@@ -216,6 +216,8 @@
 ;; {{ lsp-mode
 (require-package 'lsp-mode)
 (setq lsp-enable-symbol-highlighting nil)
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-file-watch-ignored-directories "vendor"))
 ;; }}
 
 ;; {{ protobuf
@@ -241,10 +243,12 @@
 ;; {{ Golang
 ;; (with-eval-after-load 'go-mode
 ;;   (require 'go-guru))
+(setq lsp-go-directory-filters ["-vendor"])
 (defun phye/golang-hook ()
     "phye's golang hook"
   (interactive)
-  (set-fill-column 100))
+  (set-fill-column 100)
+  (turn-off-auto-fill))
 (add-hook 'go-mode-hook #'lsp-deferred)
 (add-hook 'go-mode-hook 'phye/golang-hook 90)
 ;; }}
