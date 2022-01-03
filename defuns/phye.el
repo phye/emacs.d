@@ -199,6 +199,7 @@
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
+  (electric-pair-mode 0)
   (subword-mode))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 (setq company-tooltip-limit 20)                      ; bigger popup window
@@ -329,7 +330,7 @@
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'plain)
-  )
+  (electric-pair-mode 0))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
@@ -521,7 +522,7 @@
              ("C-c n i" . org-roam-node-insert)
              ("C-c n c" . org-roam-capture)
              :map org-mode-map
-             ("C-M-c" . completion-at-point)
+             ("C-M-i" . completion-at-point)
              ;; Dailies
              ("C-c n j" . org-roam-dailies-capture-today))
       :config
