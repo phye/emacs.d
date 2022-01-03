@@ -200,7 +200,7 @@
   (turn-on-auto-fill)
   (hs-minor-mode)
   (subword-mode))
-(add-hook 'prog-mode-hook 'phye/prog-mode-hook)
+(add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
 (setq company-echo-delay 0)                          ; remove annoying blinking
