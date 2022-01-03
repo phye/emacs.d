@@ -217,7 +217,7 @@
 (require-package 'lsp-mode)
 (setq lsp-enable-symbol-highlighting nil)
 (with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-file-watch-ignored-directories "vendor"))
+  (add-to-list 'lsp-file-watch-ignored-directories " [/\\\\]vendor"))
 ;; }}
 
 ;; {{ protobuf
