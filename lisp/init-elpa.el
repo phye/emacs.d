@@ -168,31 +168,31 @@
 (setq package-archives
       '(
         ;; uncomment below line if you need use GNU ELPA
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
-        ;; ("melpa" . "https://melpa.org/packages/")
-        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
 
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is slow or shutdown.
 
-        ;; ;; {{ Option 1: 163 mirror repository:
-        ("gnu" . "http://mirrors.163.com/elpa/gnu/")
-        ("melpa" . "http://mirrors.163.com/elpa/melpa/")
-        ("melpa-stable" . "http://mirrors.163.com/elpa/stable-melpa/")
-        ;; ;; }}
+        ;; {{ Option 1: 163 mirror repository:
+        ;; ("gnu" . "http://mirrors.163.com/elpa/gnu/")
+        ;; ("melpa" . "http://mirrors.163.com/elpa/melpa/")
+        ;; ("melpa-stable" . "http://mirrors.163.com/elpa/stable-melpa/")
+        ;; }}
 
-        ;; ;; {{ Option 2: tsinghua mirror repository
-        ;; ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
-        ;; ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ;; {{ Option 2: tsinghua mirror repository
+        ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
+        ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ;; ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ;; ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
         ;; }}
 
-        ;; ;; {{ Option 3: tencent mirror repository:
-        ;; ;; ("gnu" . "https://mirrors.tencent.com/elpa/gnu/")
-        ;; ;; ("melpa" . "http://mirrors.tencent.com/elpa/melpa/")
-        ;; ;; ("melpa-stable" . "http://mirrors.tencent.com/elpa/melpa-stable/")
-        ;; ;; }}
+        ;; {{ Option 3: tencent mirror repository:
+        ;; ("gnu" . "https://mirrors.tencent.com/elpa/gnu/")
+        ;; ("melpa" . "http://mirrors.tencent.com/elpa/melpa/")
+        ;; ("melpa-stable" . "http://mirrors.tencent.com/elpa/melpa-stable/")
+        ;; }}
         ))
 
 (defvar my-ask-elpa-mirror t)
