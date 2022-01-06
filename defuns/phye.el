@@ -220,7 +220,7 @@
 (with-eval-after-load 'lsp-mode
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-idle-delay 0.500)
-  (add-to-list 'lsp-file-watch-ignored-directories " [/\\\\]vendor")
+  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
 )
 
 ;; }}
