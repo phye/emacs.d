@@ -199,7 +199,7 @@
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
-  (electric-pair-mode 0)
+  (electric-pair-mode 1)
   (subword-mode))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 (setq company-tooltip-limit 20)                      ; bigger popup window
@@ -334,6 +334,7 @@
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'plain)
+  (setq org-archive-location "archive.org::datetree/* From %s")
   (electric-pair-mode 0))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
