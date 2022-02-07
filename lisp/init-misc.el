@@ -606,14 +606,6 @@ FN checks these characters belong to normal word characters."
 (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 ;; }}
 
-;; {{ eacl - emacs auto complete line(s)
-(global-set-key (kbd "C-x C-l") 'eacl-complete-line)
-(global-set-key (kbd "C-c ;") 'eacl-complete-multiline)
-(with-eval-after-load 'eacl
-  ;; not interested in untracked files in git repository
-  (setq eacl-git-grep-untracked nil))
-;; }}
-
 ;; {{
 (defun my-toggle-typewriter ()
   "Turn on/off typewriter."
@@ -1196,10 +1188,69 @@ It's also controlled by `my-lazy-before-save-timer'."
     (comint-read-input-ring t)))
 (add-hook 'gud-gdb-mode-hook 'gud-gdb-mode-hook-setup)
 
-(defun my-emms-play-current-directory ()
-  "Play all media files of current directory."
+(defun my-emms-play ()
+  "Play media files which are marked or in marked sub-directories."
   (interactive)
   (my-ensure 'emms)
-  (emms-play-directory default-directory))
+  (unless (eq major-mode 'dired-mode)
+    (error "This command is only used in `dired-mode'"))
+
+  (let* ((items (dired-get-marked-files t current-prefix-arg))
+         (regexp (my-file-extensions-to-regexp my-media-file-extensions))
+         found)
+    (cond
+     ;; at least two items are selected
+     ((> (length items) 1)
+      ;; clear existing playlist
+      (emms-playlist-current-clear)
+      (sit-for 1)
+
+      (dolist (item items)
+        (cond
+         ((file-directory-p item)
+          (emms-add-directory-tree item)
+          (setq found t))
+
+         ((string-match-p regexp item)
+          ;; add media file to the playlist
+          (emms-add-file item)
+          (setq found t))))
+
+      (when found
+        (with-current-buffer emms-playlist-buffer-name
+          (emms-start))))
+
+     (t
+      (emms-play-directory default-directory)))))
+
+;; {{ helpful (https://github.com/Wilfred/helpful)
+;; Note that the built-in `describe-function' includes both functions
+;; and macros. `helpful-function' is functions only, so we provide
+;; `helpful-callable' as a drop-in replacement.
+(global-set-key (kbd "C-h f") #'helpful-callable)
+
+(global-set-key (kbd "C-h v") #'helpful-variable)
+
+;; Lookup the current symbol at point. C-c C-d is a common keybinding
+;; for this in lisp modes.
+(global-set-key (kbd "C-c C-d") #'helpful-at-point)
+
+;; Look up *F*unctions (excludes macros).
+;;
+;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+;; already links to the manual, if a function is referenced there.
+(global-set-key (kbd "C-h F") #'helpful-function)
+
+;; Look up Commands.
+;;
+;; By default, C-h C is bound to describe `describe-coding-system'. I
+;; don't find this very useful, but it's frequently useful to only
+;; look at interactive functions.
+(global-set-key (kbd "C-h C") #'helpful-command)
+
+(with-eval-after-load 'counsel
+  (setq counsel-describe-function-function #'helpful-callable)
+  (setq counsel-describe-variable-function #'helpful-variable))
+;; }}
 
 (provide 'init-misc)

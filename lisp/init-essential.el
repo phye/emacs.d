@@ -140,14 +140,10 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
 
 ;; {{ Write backup files to its own directory
 ;; @see https://www.gnu.org/software/emacs/manual/html_node/tramp/Auto_002dsave-and-Backup.html
-(defvar my-binary-file-name-regexp
-  "\\.\\(avi\\|wav\\|pdf\\|mp[34g]\\|mkv\\|exe\\|3gp\\|rmvb\\|rm\\|pyim\\|\\.recentf\\)$"
-  "Is binary file name?")
-
 (setq backup-enable-predicate
-      (lambda (name)
-        (and (normal-backup-enable-predicate name)
-             (not (string-match-p my-binary-file-name-regexp name)))))
+      (lambda (file-name)
+        (and (normal-backup-enable-predicate file-name)
+             (not (my-binary-file-p file-name)))))
 
 (let* ((backup-dir (expand-file-name "~/.backups")))
   (unless (file-exists-p backup-dir) (make-directory backup-dir))
@@ -229,5 +225,14 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
         (setq extra-opt (format "\"%s\" " extra-opt))))
       (if extra-opt (kill-new extra-opt))))
   (call-interactively 'compile))
+
+;; {{ eacl - emacs auto complete line(s)
+(global-set-key (kbd "C-x C-l") 'eacl-complete-line-from-buffer-or-project)
+(global-set-key (kbd "C-c C-l") 'eacl-complete-line-from-buffer)
+(global-set-key (kbd "C-c C-;") 'eacl-complete-multiline)
+(with-eval-after-load 'eacl
+  ;; not interested in untracked files in git repository
+  (setq eacl-git-grep-untracked nil))
+;; }}
 
 (provide 'init-essential)
