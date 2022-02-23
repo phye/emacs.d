@@ -550,8 +550,14 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
    (t
     (message "Can only beautify code written in python/javascript"))))
 
+(general-imap ","
+              (general-key-dispatch 'self-insert-command
+                :timeout 0.5
+                "/" 'my-toggle-input-method))
+
 (my-comma-leader-def
   "," 'evilnc-comment-operator
+  "/" 'my-toggle-input-method
   "bf" 'beginning-of-defun
   "bu" 'backward-up-list
   "bb" (lambda () (interactive) (switch-to-buffer nil)) ; to previous buffer
@@ -634,6 +640,7 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
   "cxr" 'org-clock-report ; `C-c C-x C-r'
   "qq" 'my-multi-purpose-grep
   "dd" 'counsel-etags-grep-current-directory
+  "dc" 'my-grep-pinyin-in-current-directory
   "rr" 'my-counsel-recentf
   "da" 'diff-lisp-mark-selected-text-as-a
   "db" 'diff-lisp-diff-a-and-b
@@ -755,9 +762,9 @@ If N > 0 and working on javascript, only occurrences in current N lines are rena
   "jj" 'scroll-other-window
   "kk" 'scroll-other-window-up
   "hh" 'random-healthy-color-theme
-  "yy" 'hydra-launcher/body
+  "yy" 'my-hydra-zoom/body
   "ii" 'my-toggle-indentation
-  "g" 'hydra-git/body
+  "g" 'my-hydra-git/body
   "ur" 'gud-remove
   "ub" 'gud-break
   "uu" 'gud-run
