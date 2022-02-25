@@ -152,21 +152,6 @@
 (define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
 ;; }}
 
-;; {{ folding
-;; (require-package 'origami)
-;; (require-package 'vimish-fold)
-;; (define-key evil-normal-state-map "zf" 'vimish-fold)
-;; (define-key evil-normal-state-map "za" 'vimish-fold-toggle)
-;; (define-key evil-normal-state-map "zA" 'vimish-fold-toggle-all)
-;; (define-key evil-normal-state-map "zd" 'vimish-fold-delete)
-;; (define-key evil-normal-state-map "zD" 'vimish-fold-delete-all)
-;; (define-key evil-normal-state-map "zc" 'vimish-fold-refold)
-;; (define-key evil-normal-state-map "zC" 'vimish-fold-refold-all)
-;; (define-key evil-normal-state-map "zo" 'vimish-fold-unfold)
-;; (define-key evil-normal-state-map "zO" 'vimish-fold-unfold-all)
-;; (define-key evil-normal-state-map "z;" 'vimish-fold-avy)
-;; }}
-
 ;; {{ buffer and window related
 (global-set-key (kbd "C-x M") 'manual-entry)
 (set-language-environment "utf-8")
@@ -186,8 +171,6 @@
 (require-package 'evil-numbers)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 ;; }}
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -273,6 +256,7 @@
 (setq elpy-rpc-python-command (string-trim (shell-command-to-string "which python3")))
 ;; }}
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Document Edit Configs ;; ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -339,73 +323,72 @@
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
-;; {{ Simple Org settings
-  ;; }}
-
 ;; {{ Complex Org settings
-(setq org-tag-alist '((:startgroup . nil) ;; tag group for address
-                      ("@work" . ?w)
-                      ("@home" . ?h)
-                      ("@travel" . ?t)
-                      (:endgroup . nil)
-                      (:startgroup . nil) ;; tag group for reading
-                      ("book" . ?b)
-                      ("kindle" . ?k)
-                      ("pad" . ?d)
-                      ("computer" . ?c)
-                      (:endgroup . nil)
-                      (:startgroup . nil) ;; tag group for privacy
-                      ("personal" . ?p)
-                      ("office" . ?o)
-                      ("public" . ?a)
-                      (:endgroup . nil)
-                      (:startgroup . nil) ;; tag group for kind of things
-                      ("project" . ?j)
-                      ("reading" . ?r)
-                      ("ideas" . ?i)
-                      ("misc" . ?m)
-                      ("financial" . ?f)
-                      ("health" . ?h)
-                      ("gtd" . ?g)
-                      (:endgroup)))
+(with-eval-after-load 'org
+  (setq org-tag-alist '((:startgroup . nil) ;; tag group for address
+                        ("@work" . ?w)
+                        ("@home" . ?h)
+                        ("@travel" . ?t)
+                        (:endgroup . nil)
+                        (:startgroup . nil) ;; tag group for reading
+                        ("book" . ?b)
+                        ("kindle" . ?k)
+                        ("pad" . ?d)
+                        ("computer" . ?c)
+                        (:endgroup . nil)
+                        (:startgroup . nil) ;; tag group for privacy
+                        ("personal" . ?p)
+                        ("office" . ?o)
+                        ("public" . ?a)
+                        (:endgroup . nil)
+                        (:startgroup . nil) ;; tag group for kind of things
+                        ("project" . ?j)
+                        ("reading" . ?r)
+                        ("ideas" . ?i)
+                        ("misc" . ?m)
+                        ("financial" . ?f)
+                        ("health" . ?h)
+                        ("gtd" . ?g)
+                        (:endgroup)))
 
-(setq org-todo-keywords
-      '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
-        (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
-        (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
-
-
-(setq org-agenda-files
-     (quote
-      ("~/ws/gtd/gtd.org"
-       "~/ws/gtd/quick_notes.org"
-       "~/ws/gtd/life/plan_life.org"
-       "~/ws/gtd/life/birthday.org"
-       "~/ws/gtd/learn/plan_learning.org"
-       "~/ws/gtd/work/plan_work.org.gpg")))
-
-(setq org-refile-targets
-      '((nil :maxlevel . 5)
-        (org-agenda-files :maxlevel . 5)
-        ("KnowledgeBase.org" :maxlevel . 5)
-        ("done.org" :maxlevel . 5)))
+  (setq org-todo-keywords
+        '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "STARTED(s!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
+          (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
+          (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
 
-;; Org Mode Capture
-(setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
-         "* TODO %?\n %i\n %a")
-        ("n" "Note" entry (file+datetree "~/ws/gtd/quick_notes.org")
-         "* %?\nEntered on %U\n %i\n %a")
-        ("j" "Journal entry" entry (function org-journal-find-location)
-                               "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
+  (setq org-agenda-files
+        (quote
+         ("~/ws/gtd/gtd.org"
+          "~/ws/gtd/quick_notes.org"
+          "~/ws/gtd/life/plan_life.org"
+          "~/ws/gtd/life/birthday.org"
+          "~/ws/gtd/learn/plan_learning.org"
+          "~/ws/gtd/work/plan_work.org.gpg")))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '(
-   (ditaa . t)
-   (plantuml . t)
-   ))
+  (setq org-refile-targets
+        '((nil :maxlevel . 5)
+          (org-agenda-files :maxlevel . 5)
+          ("KnowledgeBase.org" :maxlevel . 5)
+          ("done.org" :maxlevel . 5)))
+
+
+  ;; Org Mode Capture
+  (setq org-capture-templates
+        '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
+           "* TODO %?\n %i\n %a")
+          ("n" "Note" entry (file+datetree "~/ws/gtd/quick_notes.org")
+           "* %?\nEntered on %U\n %i\n %a")
+          ("j" "Journal entry" entry (function org-journal-find-location)
+           "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (ditaa . t)
+     (plantuml . t)
+     ))
+  (define-key org-mode-map (kbd "C-c o") 'org-open-at-point))
 ;; }}
 
 ;; {{ OrgMode Output
@@ -442,58 +425,16 @@
 (setq org-taskjuggler-target-version 3.6)
 ;; }}
 
-;; {{ custom orgmode functions
-;; My useless functions (can be achieved via much easier yasnippet)
-(defun insert-src-in-orgmode (lang)
-  "Insert src prefix and postfix for LANG in OrgMode"
-  (interactive "sChoose your language: ")
-  (newline)
-  (indent-for-tab-command)
-  (insert "#+begin_src " lang "\n")
-  (indent-for-tab-command)
-  (save-excursion
-    (insert "#+end_src"))
-  (org-edit-special)
-  )
-
-;; My org template
-(defun phye/org-template ()
-  (insert "#+title: \n")
-  (insert "#+setupfile: ~/.emacs.d/misc/include.org\n"))
-
-(define-auto-insert "\\.org$" #'phye/org-template)
-
-;; see http://thread.gmane.org/gmane.emacs.orgmode/42715
-(eval-after-load 'org-list
-  '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
-
-(defun ndk/checkbox-list-complete ()
-  (save-excursion
-    (org-back-to-heading t)
-    (let ((beg (point)) end)
-      (end-of-line)
-      (setq end (point))
-      (goto-char beg)
-      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
-            (if (match-end 1)
-                (if (equal (match-string 1) "100%")
-                    ;; all done - do the state change
-                    (org-todo 'done)
-                  (org-todo 'todo))
-              (if (and (> (match-end 2) (match-beginning 2))
-                       (equal (match-string 2) (match-string 3)))
-                  (org-todo 'done)
-                (org-todo 'todo)))))))
-;; }}
+;; {{ org-mode extensions
 
 ;; {{ org-journal related
+(require-package 'org-journal)
 (customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
 (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
 (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
 (customize-set-variable 'org-journal-file-type 'weekly)
-(require-package 'org-journal)
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
@@ -537,26 +478,6 @@
 (setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
-;; {{ calfw
-(require-package 'calfw)
-(require-package 'calfw-org)
-(require-package 'calfw-ical)
-(require 'calfw)
-(require 'calfw-org)
-(require 'calfw-ical)
-
-(defun my-open-calendar ()
-  (interactive)
-  (cfw:open-calendar-buffer
-   :contents-sources
-   (list
-    (cfw:org-create-source "Green")
-    (cfw:ical-create-source "chn-holidays" "https://calendar.google.com/calendar/ical/en.china%23holiday%40group.v.calendar.google.com/public/basic.ics" "Yellow")
-    (cfw:ical-create-source "gtd" "https://calendar.google.com/calendar/ical/semimiracle%40gmail.com/private-a04b71b8d901ec5c2abb2cf8f4397ec0/basic.ics" "Orange")
-    (cfw:ical-create-source "birthday" "https://calendar.google.com/calendar/htmlembed?src=%23contacts%40group.v.calendar.google.com&ctz=Asia%2FShanghai" "Red")
-    )))
-;; }}
-
 ;; {{ plantuml
 (setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
 (setq plantuml-default-exec-mode 'jar)
@@ -574,6 +495,54 @@
     (evil-exit-emacs-state)))
 (add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
 ;; }}
+
+;; }} Org Mode extensions
+
+;; }} Org Mode
+
+
+;; {{ custom orgmode functions
+;; My useless functions (can be achieved via much easier yasnippet)
+(defun insert-src-in-orgmode (lang)
+  "Insert src prefix and postfix for LANG in OrgMode"
+  (interactive "sChoose your language: ")
+  (newline)
+  (indent-for-tab-command)
+  (insert "#+begin_src " lang "\n")
+  (indent-for-tab-command)
+  (save-excursion
+    (insert "#+end_src"))
+  (org-edit-special)
+  )
+
+;; My org template
+(defun phye/org-template ()
+  (insert "#+title: \n")
+  (insert "#+setupfile: ~/.emacs.d/misc/include.org\n"))
+
+(define-auto-insert "\\.org$" #'phye/org-template)
+
+;; see http://thread.gmane.org/gmane.emacs.orgmode/42715
+(eval-after-load 'org-list
+  '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
+
+(defun ndk/checkbox-list-complete ()
+  (save-excursion
+    (org-back-to-heading t)
+    (let ((beg (point)) end)
+      (end-of-line)
+      (setq end (point))
+      (goto-char beg)
+      (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
+            (if (match-end 1)
+                (if (equal (match-string 1) "100%")
+                    ;; all done - do the state change
+                    (org-todo 'done)
+                  (org-todo 'todo))
+              (if (and (> (match-end 2) (match-beginning 2))
+                       (equal (match-string 2) (match-string 3)))
+                  (org-todo 'done)
+                (org-todo 'todo)))))))
 
 ;; {{ org-mode inline chinese markup using zero width space
 (defun phye/insert-char-with-zero-width-space (count char)
@@ -608,7 +577,6 @@
         (puthash char (1+ count) my-org-markup-count-hash))
       )))
 
-(define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
 ;; (define-key org-mode-map (kbd "~") (phye/org-add-nws ?~))
 ;; (define-key org-mode-map (kbd "=") (phye/org-add-nws ?=))
 ;; (define-key org-mode-map (kbd "*") (phye/org-add-nws ?*))
@@ -617,8 +585,10 @@
 ;; (define-key org-mode-map (kbd "+") (phye/org-add-nws ?+))
 ;; (define-key org-mode-map (kbd "$") (phye/org-add-nws ?$))
 
+;; }}
 
 ;; }}
+
 
 ;;;;;;;;;;;;;;;
 ;; ;; End ;; ;;
