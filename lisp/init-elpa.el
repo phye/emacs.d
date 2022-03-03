@@ -158,6 +158,7 @@
     org-journal
     vimish-fold
     org-roam
+    org-present
     )
   "Packages to install from melpa-unstable.")
 
