@@ -213,13 +213,30 @@
 ;; }}
 
 ;; {{ lsp-mode
-(require-package 'lsp-mode)
-(setq lsp-enable-symbol-highlighting nil)
-(with-eval-after-load 'lsp-mode
+(use-package lsp-mode
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "M-l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (go-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :config
+  (setq lsp-enable-symbol-highlighting nil)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (setq lsp-idle-delay 0.500)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
-)
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :ensure t :commands lsp-ui-mode)
+(use-package lsp-ivy :ensure t :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+
+;; optional if you want which-key integration
+(use-package which-key
+    :config
+    (which-key-mode))
 
 ;; }}
 
@@ -267,6 +284,47 @@
 (setq json-encoding-default-indentation "  ")
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
 (add-hook 'json-mode-hook #'hs-minor-mode)
+;; }}
+
+;; {{ YAML
+;; from: https://github.com/yoshiki/yaml-mode/issues/25
+(use-package yaml-mode
+  :ensure t
+  :mode (".yaml$")
+  :hook
+  (yaml-mode . yaml-mode-outline-hook)
+
+  :init
+  (defun yaml-outline-level ()
+    "Return the outline level based on the indentation, hardcoded at 2 spaces."
+    (s-count-matches "[ ]\\{2\\}" (match-string 0)))
+
+  (defun yaml-mode-outline-hook ()
+    (outline-minor-mode)
+    (setq outline-regexp
+          (rx
+           (seq
+            bol
+            (group (zero-or-more "  ")
+                   (or (group
+                        (seq (or (seq "\"" (*? (not (in "\"" "\n"))) "\"")
+                                 (seq "'" (*? (not (in "'" "\n"))) "'")
+                                 (*? (not (in ":" "\n"))))
+                             ":"
+                             (?? (seq
+                                  (*? " ")
+                                  (or (seq "&" (one-or-more nonl))
+                                      (seq ">-")
+                                      (seq "|"))
+			                      eol))))
+		               (group (seq
+			                   "- "
+			                   (+ (not (in ":" "\n")))
+			                   ":"
+			                   (+ nonl)
+			                   eol)))))))
+    (setq outline-level 'yaml-outline-level))
+  )
 ;; }}
 
 ;; {{ ASM

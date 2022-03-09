@@ -160,6 +160,10 @@
     org-roam
     org-present
     popper
+    lsp-ui
+    lsp-ivy
+    lsp-treemacs
+    lsp-mode
     )
   "Packages to install from melpa-unstable.")
 
