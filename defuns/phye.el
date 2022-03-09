@@ -46,6 +46,7 @@
 (setq my-disable-lazyflymake t)
 (set-fill-column 80)
 
+(require-package 'use-package)
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
@@ -155,7 +156,6 @@
 ;; {{ buffer and window related
 (global-set-key (kbd "C-x M") 'manual-entry)
 (set-language-environment "utf-8")
-(local-require 'dedicate-windows-manually)
 (defun phye/split-windows ()
   (interactive)
   (split-window-right)
@@ -164,6 +164,21 @@
   (other-window 1)
   (balance-windows)
   )
+
+(use-package popper
+  :ensure t ; or :straight t
+  :bind (("C-`"   . popper-toggle-latest)
+         ("M-`"   . popper-cycle)
+         ("C-M-`" . popper-toggle-type))
+  :init
+  (setq popper-reference-buffers
+        '("\\*Messages\\*"
+          "Output\\*$"
+          "\\*Async Shell Command\\*"
+          help-mode
+          compilation-mode))
+  (popper-mode +1)
+  (popper-echo-mode +1))
 ;; }}
 
 ;; {{ evil customizations
@@ -453,7 +468,6 @@
 ;; }}
 
 ;; {{ org-roam
-(require-package 'use-package)
 (use-package org-roam
       :ensure t
       :init

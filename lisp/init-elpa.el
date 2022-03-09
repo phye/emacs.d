@@ -159,6 +159,7 @@
     vimish-fold
     org-roam
     org-present
+    popper
     )
   "Packages to install from melpa-unstable.")
 
