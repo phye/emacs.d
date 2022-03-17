@@ -5,7 +5,20 @@
 ;; {{ Misc
 (cd "~/ws")
 ;; (load-theme 'kaolin-galaxy t)
-(load-theme 'planet t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
+;; (load-theme 'planet t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
+(load-theme 'tango-dark t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
+(customize-set-variable
+ 'my-favourite-color-themes
+ '(planet
+   dakrone
+   doom-city-lights
+   doom-material
+   kaolin-galaxy
+   kaolin-bubblegum
+   kaolin-temple
+   tango-dark
+   vscode-dark-plus
+   ))
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
