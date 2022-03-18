@@ -9,7 +9,8 @@
 (load-theme 'tango-dark t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
 (customize-set-variable
  'my-favourite-color-themes
- '(planet
+ '(ample-zen
+   planet
    dakrone
    doom-city-lights
    doom-material
@@ -187,6 +188,7 @@
   (setq popper-reference-buffers
         '("\\*Messages\\*"
           "Output\\*$"
+          "\\*godoc\\*"
           "\\*Async Shell Command\\*"
           help-mode
           compilation-mode))
