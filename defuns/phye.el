@@ -4,9 +4,7 @@
 
 ;; {{ Misc
 (cd "~/ws")
-;; (load-theme 'kaolin-galaxy t)
-;; (load-theme 'planet t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
-(load-theme 'tango-dark t) ;; My favorites: kaolin-galaxy, kaolin-bubblegum
+(load-theme 'doom-city-lights t)
 (customize-set-variable
  'my-favourite-color-themes
  '(ample-zen
@@ -104,6 +102,13 @@
 (defun jao-toggle-selective-display ()
   (interactive)
   (set-selective-display (if selective-display nil 1)))
+
+;; customize avy jump colors
+(with-eval-after-load 'avy
+  (set-face-attribute 'avy-lead-face nil :foreground "red")
+  (set-face-attribute 'avy-lead-face nil :background "navy")
+  (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
+  (set-face-attribute 'avy-lead-face-0 nil :background "green"))
 ;; }}
 
 ;; {{ multi project
@@ -315,7 +320,7 @@
     (s-count-matches "[ ]\\{2\\}" (match-string 0)))
 
   (defun yaml-mode-outline-hook ()
-    (outline-minor-mode)
+    (outline-minor-mode t)
     (setq outline-regexp
           (rx
            (seq
