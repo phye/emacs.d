@@ -5,20 +5,6 @@
 ;; {{ Misc
 (cd "~/ws")
 (load-theme 'doom-city-lights t)
-(customize-set-variable
- 'my-favourite-color-themes
- '(ample-zen
-   apropospriate
-   planet
-   dakrone
-   doom-city-lights
-   doom-material
-   kaolin-galaxy
-   kaolin-bubblegum
-   kaolin-temple
-   tango-dark
-   vscode-dark-plus
-   ))
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
@@ -388,15 +374,16 @@
 
 ;; My often used org commands
 (my-comma-leader-def
-       "ol" 'org-open-at-point
-       "sl" 'org-store-link
-       "il" 'org-insert-link
-       "ov" 'jao-toggle-selective-display)
+  "ls" 'highlight-symbol
+  "ol" 'org-open-at-point
+  "sl" 'org-store-link
+  "il" 'org-insert-link
+  "ov" 'jao-toggle-selective-display)
 
 (my-space-leader-def
-       "rt" 'my-random-color-theme
-       "nn" 'highlight-symbol-next
-       "pp" 'highlight-symbol-prev)
+  "rt" 'my-random-color-theme
+  "nn" 'highlight-symbol-next
+  "pp" 'highlight-symbol-prev)
 ;; }}
 
 ;; {{ hooks
