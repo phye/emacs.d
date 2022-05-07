@@ -8,6 +8,7 @@
 (customize-set-variable
  'my-favourite-color-themes
  '(ample-zen
+   apropospriate
    planet
    dakrone
    doom-city-lights
