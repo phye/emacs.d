@@ -203,7 +203,7 @@
 ;; }}
 
 ;; {{ evil customizations
-(setq-default evil-escape-key-sequence "jk")
+(setq-default evil-escape-key-sequence "fd")
 (require-package 'evil-numbers)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 ;; }}
