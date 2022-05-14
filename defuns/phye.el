@@ -274,7 +274,7 @@
 (defun phye/golang-hook ()
     "phye's golang hook"
   (interactive)
-  (set-fill-column 100)
+  (set-fill-column 90)
   (turn-off-auto-fill))
 (add-hook 'go-mode-hook #'lsp-deferred)
 (add-hook 'go-mode-hook 'phye/golang-hook 90)
@@ -391,7 +391,7 @@
   "custom orgmode settings"
   (interactive)
   (setq org-confirm-babel-evaluate nil)
-  (set-fill-column 100)
+  (set-fill-column 90)
   (setq org-babel-default-header-args:planuml
         '((:results . "replace")
           (:exports . "results")))
