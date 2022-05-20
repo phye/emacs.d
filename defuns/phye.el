@@ -405,7 +405,8 @@
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'plain)
   (setq org-archive-location "archive.org::datetree/* From %s")
-  (electric-pair-mode 0))
+  (electric-pair-mode 1)
+  (my-yas-reload-all))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
