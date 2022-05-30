@@ -190,6 +190,7 @@
 
 ;; {{ evil customizations
 (setq-default evil-escape-key-sequence "fd")
+(setq evil-escape-unordered-key-sequence t)
 (require-package 'evil-numbers)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 ;; }}
@@ -378,7 +379,9 @@
   "ol" 'org-open-at-point
   "sl" 'org-store-link
   "il" 'org-insert-link
-  "ov" 'jao-toggle-selective-display)
+  "ov" 'jao-toggle-selective-display
+  "gt" 'lsp-find-definition
+  "gr" 'lsp-find-references)
 
 (my-space-leader-def
   "rt" 'my-random-color-theme
