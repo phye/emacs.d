@@ -42,8 +42,7 @@
    "light coral"                        ;; yellow
    ))
 (setq my-disable-wucuo t)
-(setq my-disable-lazyflymake t)
-(set-fill-column 80)
+(set-fill-column 90)
 
 (require-package 'use-package)
 
@@ -206,7 +205,8 @@
   (turn-on-auto-fill)
   (hs-minor-mode)
   (electric-pair-mode 1)
-  (subword-mode))
+  (subword-mode)
+  (ws-butler-mode -1))                  ; disable auto white space removal
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
