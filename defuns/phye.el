@@ -48,9 +48,9 @@
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
-;; (setq electric-pair-inhibit-predicate
-;;       (lambda (c)
-;;         (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+(setq electric-pair-inhibit-predicate
+      (lambda (c)
+        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
 
 (setq help-window-select t)
 (setq vc-follow-symlinks t)
@@ -91,6 +91,10 @@
 
 ;; customize avy jump colors
 (with-eval-after-load 'avy
+  (recover-avy-lead-face)
+  )
+(defun recover-avy-lead-face ()
+  (interactive)
   (set-face-attribute 'avy-lead-face nil :foreground "red")
   (set-face-attribute 'avy-lead-face nil :background "navy")
   (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
@@ -189,7 +193,6 @@
 
 ;; {{ evil customizations
 (setq-default evil-escape-key-sequence "fd")
-(setq evil-escape-unordered-key-sequence t)
 (require-package 'evil-numbers)
 (define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
 ;; }}
@@ -204,7 +207,6 @@
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
-  (electric-pair-mode 1)
   (subword-mode)
   (ws-butler-mode -1))                  ; disable auto white space removal
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
@@ -408,7 +410,6 @@
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'plain)
   (setq org-archive-location "archive.org::datetree/* From %s")
-  (electric-pair-mode 1)
   (my-yas-reload-all))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
