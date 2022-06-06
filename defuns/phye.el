@@ -189,6 +189,9 @@
           compilation-mode))
   (popper-mode +1)
   (popper-echo-mode +1))
+
+(use-package hide-mode-line
+  :ensure t)
 ;; }}
 
 ;; {{ evil customizations
