@@ -559,26 +559,26 @@
 
 ;; {{ org-roam
 (use-package org-roam
-      :ensure t
-      :init
-      (setq org-roam-v2-ack t)
-      :custom
-      (org-roam-directory (file-truename "~/ws/gtd/roam"))
-      (org-roam-graph-viewer #'eww-open-file)
-      (org-roam-completion-everywhere t)
-      :bind (("C-c n l" . org-roam-buffer-toggle)
-             ("C-c n f" . org-roam-node-find)
-             ("C-c n g" . org-roam-graph)
-             ("C-c n i" . org-roam-node-insert)
-             ("C-c n c" . org-roam-capture)
-             :map org-mode-map
-             ("C-M-i" . completion-at-point)
-             ;; Dailies
-             ("C-c n j" . org-roam-dailies-capture-today))
-      :config
-      (org-roam-db-autosync-mode)
-      ;; If using org-roam-protocol
-      (require 'org-roam-protocol))
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory (file-truename "~/ws/gtd/roam"))
+  (org-roam-graph-viewer #'eww-open-file)
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         :map org-mode-map
+         ("C-M-i" . completion-at-point)
+         ;; Dailies
+         ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-db-autosync-mode)
+  ;; If using org-roam-protocol
+  (require 'org-roam-protocol))
 (setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
