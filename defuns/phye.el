@@ -203,10 +203,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; {{ general programming
+(use-package hl-todo
+  :ensure t
+  :custom
+  (setq hl-todo-keyword-faces
+        '(("TODO"   . "red")
+          ("FIXME"  . "yellow")
+          ("DEBUG"  . "blue")
+          ("NOTE" . "blue")
+          ("GOTCHA" . "#FF4500")
+          ("STUB"   . "#1E90FF"))))
 ;; company
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
+  (hl-todo-mode)
   (subword-mode)
   (ws-butler-mode -1))                  ; disable auto white space removal
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
