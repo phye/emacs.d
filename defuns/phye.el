@@ -422,7 +422,7 @@
   (setq org-log-into-drawer t)
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
-  (setq org-src-window-setup 'plain)
+  (setq org-src-window-setup 'split-window-below)
   (setq org-archive-location "archive.org::datetree/* From %s")
   (my-yas-reload-all))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
