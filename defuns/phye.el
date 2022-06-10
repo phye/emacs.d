@@ -424,6 +424,7 @@
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'split-window-below)
   (setq org-archive-location "archive.org::datetree/* From %s")
+  (setq org-adapt-indentation t)
   (my-yas-reload-all))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}

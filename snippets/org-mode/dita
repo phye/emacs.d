@@ -1,4 +1,5 @@
 #name : DITAA
+#key: ditaa
 #contributor : Rick Moynihan <rick@sourcesmouth.co.uk>
 # --
 #+BEGIN_DITAA ${1:export-file-name} -r -S -E
