@@ -276,6 +276,7 @@
           (lambda ()
             (setq c-basic-offset 2)
             (c-set-offset 'inlambda 0)
+            (setq fill-column 90)
             ) t)
 ;; }}
 
