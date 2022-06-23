@@ -12,7 +12,7 @@
      ((eq major-mode 'lisp-interaction-mode)
       ;; The *Message* buffer is the first buffer to display during startup
       ;; lazy load yasnippet to speed up startup
-      (my-run-with-idle-timer 2 (lambda () (yas-minor-mode 1))))
+      (my-run-with-idle-timer 2 #'yas-minor-mode))
      (t
       (yas-minor-mode 1)))))
 
@@ -91,7 +91,7 @@
     rlt))
 
 (defun my-read-n-from-kill-ring ()
-  (let* ((cands (subseq kill-ring 0 (min (read-number "fetch N `kill-ring'?" 1)
+  (let* ((cands (cl-subseq kill-ring 0 (min (read-number "fetch N `kill-ring'?" 1)
                                          (length kill-ring)))))
     (mapc (lambda (txt)
             (set-text-properties 0 (length txt) nil txt)

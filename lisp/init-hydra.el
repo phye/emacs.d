@@ -12,11 +12,11 @@
 [_ll_] Load workgroup     [_W_] Big words definition [_n_] Emms Next
 [_B_] New bookmark        [_v_] Play big word video  [_p_] Emms Previous
 [_m_] Goto bookmark       [_im_] Image of word       [_P_] Emms Pause
-[_bb_] Switch Gnus buffer [_s1_] Pomodoro tiny task  [_O_] Emms Open
-[_e_] Erase buffer        [_s2_] Pomodoro big task   [_L_] Emms Playlist
-[_r_] Erase this buffer   [_st_] Pomodoro stop       [_E_] Typewriter on
-[_f_] Recent file         [_sr_] Pomodoro resume     [_V_] Old typewriter
-[_d_] Recent directory    [_sp_] Pomodoro pause
+[_bb_] Switch Gnus buffer [_s1_] Pomodoro tiny task  [_S_] Emms Stop
+[_e_] Erase buffer        [_s2_] Pomodoro big task   [_O_] Emms Open
+[_r_] Erase this buffer   [_st_] Pomodoro stop       [_L_] Emms Playlist
+[_f_] Recent file         [_sr_] Pomodoro resume     [_E_] Typewriter on
+[_d_] Recent directory    [_sp_] Pomodoro pause      [_V_] Old typewriter
 [_z_] Jump around (z.sh)  [_as_] Ascii table
 [_bh_] Bash history
 [_hh_] Favorite theme
@@ -50,7 +50,7 @@
   ("st" pomodoro-stop)
   ("sr" pomodoro-resume)
   ("sp" pomodoro-pause)
-  ("R" emms-random)
+  ("R" (progn (emms-shuffle) (emms-random)))
   ("n" emms-next)
   ("w" mybigword-pronounce-word)
   ("im" mybigword-show-image-of-word)
@@ -58,6 +58,7 @@
   ("v" mybigword-play-video-of-word-at-point)
   ("p" emms-previous)
   ("P" emms-pause)
+  ("S" emms-stop)
   ("O" emms-play-playlist)
   ("bb" dianyou-switch-gnus-buffer)
   ("L" emms-playlist-mode-go)
@@ -127,19 +128,19 @@
 [_v_] Play video/audio       [_r_] Reply
 [_d_] CLI to download stream [_R_] Reply with original
 [_b_] Open external browser  [_w_] Reply all (S w)
-[_f_] Click link/button      [_W_] Reply all with original (S W)
+[_;_] Click link/button      [_W_] Reply all with original (S W)
 [_g_] Focus link/button      [_b_] Switch Gnus buffer
 "
     ("F" gnus-summary-mail-forward)
-    ("r" gnus-article-reply)
+    ("r" gnus-summary-reply)
     ("R" gnus-article-reply-with-original)
-    ("w" gnus-article-wide-reply)
+    ("w" gnus-summary-wide-reply)
     ("W" gnus-article-wide-reply-with-original)
     ("o" (lambda () (interactive) (let* ((file (gnus-mime-save-part))) (when file (copy-yank-str file)))))
-    ("v" w3mext-open-with-mplayer)
-    ("d" w3mext-download-rss-stream)
-    ("b" w3mext-open-link-or-image-or-url)
-    ("f" w3m-lnum-follow)
+    ("v" my-w3m-open-with-mplayer)
+    ("d" my-w3m-download-rss-stream)
+    ("b" my-w3m-open-link-or-image-or-url)
+    (";" w3m-lnum-follow)
     ("g" w3m-lnum-goto)
     ("b" dianyou-switch-gnus-buffer)
     ("q" nil))
@@ -212,14 +213,13 @@
     (let* ((file (file-name-nondirectory (dired-file-name-at-point)))
            (ext (file-name-extension file))
            (default-directory (file-name-directory (dired-file-name-at-point)))
-           lines
            trunks
            track-number)
       (cond
        ((not (string= "mkv" ext))
         (message "Only mkv files can be processed."))
        ((not (executable-find "mkvextract"))
-        ("Please install mkvtoolnix."))
+        (message "Please install mkvtoolnix."))
        (t
         ;; split output into trunks
         (setq trunks (split-string (shell-command-to-string (format "mkvinfo \"%s\"" file))
@@ -280,11 +280,10 @@
 [_vv_] video2mp3           [_R_] Move           [_pp_] Path
 [_aa_] Record by mp3       [_cf_] New           [_nn_] Name
 [_zz_] Play wav&mp3        [_rr_] Rename        [_bb_] Base name
-[_cc_] Last command        [_ff_] Find          [_dd_] directory
-[_sa_] Fetch subtitle(s)   [_C_]  Copy
+[_sa_] Fetch subtitle(s)   [_C_]  Copy          [_dd_] directory
 [_vv_] Video => Mp3        [_rb_] Change base
 [_aa_] Recording Wav       [_df_] Diff 2 files
-[_ee_] Mkv => Srt
+[_ee_] Mkv => Srt          [_ff_] Find
 [_+_] Create directory
 "
     ("sa" shenshou-download-subtitle)
@@ -296,7 +295,6 @@
     ("vv" my-extract-mp3-from-video)
     ("ee" my-extract-mkv-subtitle)
     ("aa" my-record-wav-by-mp3)
-    ("cc" my-dired-redo-last-command)
     ("zz" my-play-both-mp3-and-wav)
     ("C" dired-do-copy)
     ("R" dired-do-rename)
@@ -467,7 +465,7 @@ Git:
   ("rh" my-git-gutter-reset-to-head-parent)
   ("s" my-git-show-commit)
   ("l" magit-log-buffer-file)
-  ("b" magit-show-refs-popup)
+  ("b" magit-show-refs)
   ("k" git-link)
   ("g" magit-status)
   ("ta" magit-stash-apply)
@@ -477,7 +475,9 @@ Git:
   ("dr" (magit-diff-range (my-git-commit-id)))
   ("cc" magit-commit-create)
   ("ca" magit-commit-amend)
-  ("ja" (magit-commit-amend '("--reuse-message=HEAD" "--no-verify")))
+  ("nn" my-commit-create)
+  ("na" my-commit-amend)
+  ("ja" (my-commit-amend t))
   ("au" magit-stage-modified)
   ("Q" git-gutter-toggle)
   ("f" my-git-find-file-in-commit)
@@ -499,10 +499,10 @@ _m_ Man
   ("b" sdcv-search-input)
   ("t" sdcv-search-input+)
   ("d" my-lookup-dict-org)
-  ("g" w3m-google-search)
-  ("f" w3m-search-financial-dictionary)
-  ("s" w3m-stackoverflow-search)
-  ("h" w3mext-hacker-search)
+  ("g" my-w3m-generic-search)
+  ("f" my-w3m-search-financial-dictionary)
+  ("s" my-w3m-stackoverflow-search)
+  ("h" my-w3m-hacker-search)
   ("m" my-lookup-doc-in-man)
   ("q" nil))
 (global-set-key (kbd "C-c C-s") 'my-hydra-search/body)
@@ -512,16 +512,13 @@ _m_ Man
 Describe Something: (q to quit)
 _a_ all help for everything screen
 _b_ bindings
-_B_ personal bindings
 _c_ char
 _C_ coding system
 _f_ function
-_F_ flycheck checker
 _i_ input method
 _k_ key briefly
 _K_ key
 _l_ language environment
-_L_ mode lineage
 _m_ major mode
 _M_ minor mode
 _n_ current coding system briefly
@@ -536,17 +533,14 @@ _v_ variable
 _w_ where is something defined
 "
   ("b" describe-bindings)
-  ("B" describe-personal-keybindings)
   ("C" describe-categories)
   ("c" describe-char)
   ("C" describe-coding-system)
   ("f" describe-function)
-  ("F" flycheck-describe-checker)
   ("i" describe-input-method)
   ("K" describe-key)
   ("k" describe-key-briefly)
   ("l" describe-language-environment)
-  ("L" help/parent-mode-display)
   ("M" describe-minor-mode)
   ("m" describe-mode)
   ("N" describe-current-coding-system)

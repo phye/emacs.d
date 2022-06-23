@@ -38,7 +38,7 @@
     (beginning-of-line)
     (unless (or (region-active-p)
                 (let ((line (thing-at-point 'line t)))
-                  (and (string-match-p "^\\*+ $" line) ;; is node only one spaced
+                  (and (string-match "^\\*+ $" line) ;; is node only one spaced
                        (= (point) (- (point-max) (length line))) ;; is line at EOF
                        )))
       (org-mark-subtree)))
@@ -102,6 +102,7 @@
   (defvar my-org-src--saved-temp-window-config nil
     "Window layout before edit special element.")
   (defun my-org-edit-special (&optional arg)
+    (ignore arg)
     "Save current window layout before `org-edit' buffer is open.
 ARG is ignored."
     (setq my-org-src--saved-temp-window-config (current-window-configuration)))
@@ -124,20 +125,16 @@ ARG is ignored."
   (my-ensure 'org-re-reveal)
 
   ;; odt export
-  (add-to-list 'org-export-backends 'odt)
+  (push 'odt org-export-backends)
 
   ;; markdown export
   (my-ensure 'ox-md)
   (add-to-list 'org-export-backends 'md)
 
-  (defun org-agenda-show-agenda-and-todo (&optional arg)
-    "Better org-mode agenda view."
-    (interactive "P")
-    (org-agenda arg "n"))
-
   ;; {{ org pdf link
   (defun my-org-docview-open-hack (orig-func &rest args)
-    (let* ((link (car args)) path page)
+    (ignore orig-func)
+    (let ((link (car args)) path page pdf-from-page)
       (string-match "\\(.*?\\)\\(?:::\\([0-9]+\\)\\)?$" link)
       (setq path (match-string 1 link))
       (setq page (and (match-beginning 2)
@@ -169,7 +166,7 @@ ARG is ignored."
       (apply orig-func args)))
   (advice-add 'org-publish :around #'my-org-publish-hack)
 
-  ;; {{ convert to odt
+  ;; {{ convert from odt to other format (doc, pdf, ...)
   (defun my-setup-odt-org-convert-process ()
     (interactive)
     (let* ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
@@ -197,13 +194,28 @@ ARG is ignored."
           "xelatex -interaction nonstopmode -output-directory %o %f")) ;; org v8
   ;; }}
 
+  ;; {{ org-babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (C . t)
+     (lisp . t)
+     (java . t)
+     (perl . t)
+     (latex . t)
+     (shell . t)
+     (lua . t)
+     (js . t)))
+  ;; disable prompt when executing code block in org mode
+  (setq org-confirm-babel-evaluate nil)
+  ;; }}
+
   ;; misc
-  (setq org-log-done t
-        org-completion-use-ido t
+  (setq org-log-done 'time
         org-edit-src-content-indentation 0
         org-edit-timestamp-down-means-later t
-        org-agenda-start-on-weekday nil
-        org-agenda-span 14
+        org-agenda-start-on-weekday nil ; start on the current day
         org-agenda-include-diary t
         org-agenda-window-setup 'current-window
         org-fast-tag-selection-single-key 'expert
@@ -224,8 +236,14 @@ ARG is ignored."
         org-outline-path-complete-in-steps nil
         org-todo-keywords (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
                                   (sequence "WAITING(w@/!)" "SOMEDAY(S)" "PROJECT(P@)" "|" "CANCELLED(c@/!)")))
-        org-imenu-depth 9
-        ;; @see http://irreal.org/blog/1
-        org-src-fontify-natively t))
+        org-imenu-depth 9))
+
+;; executing sage in org babel
+(with-eval-after-load 'ob-sagemath
+  ;; Ob-sagemath supports only evaluating with a session.
+  (setq org-babel-default-header-args:sage '((:session . t)
+                                             (:results . "drawer")))
+  (setq sage-shell:input-history-cache-file "~/data/sage_history")
+  (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view-mode))
 
 (provide 'init-org)

@@ -1,6 +1,6 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(my-run-with-idle-timer 1 #'ivy-mode) ; it enables ivy UI for `kill-buffer'
+(my-run-with-idle-timer 1 #'ivy-mode)
 
 (with-eval-after-load 'counsel
   ;; automatically pick up cygwin cli tools for counsel
@@ -13,25 +13,24 @@
                   " -n -M 512 --no-heading --color never -i \"%s\" %s")))
 
    (*win64*
-    (let* ((path (getenv "path"))
-           (cygpath (or (and (file-exists-p "c:/cygwin64/bin") "c:/cygwin64/bin")
+    (let* ((cygpath (or (and (file-exists-p "c:/cygwin64/bin") "c:/cygwin64/bin")
                         (and (file-exists-p "d:/cygwin64/bin") "d:/cygwin64/bin")
                         (and (file-exists-p "e:/cygwin64/bin") "e:/cygwin64/bin"))))
       ;; `cygpath' could be nil on Windows
       (when cygpath
-        (unless (string-match-p cygpath counsel-git-cmd)
+        (unless (string-match cygpath counsel-git-cmd)
           (setq counsel-git-cmd (concat cygpath "/" counsel-git-cmd)))
 
-        (unless (string-match-p cygpath counsel-git-grep-cmd-default)
+        (unless (string-match cygpath counsel-git-grep-cmd-default)
           (setq counsel-git-grep-cmd-default (concat cygpath "/" counsel-git-grep-cmd-default)))
         ;; ;; git-log does not work
-        ;; (unless (string-match-p cygpath counsel-git-log-cmd)
+        ;; (unless (string-match cygpath counsel-git-log-cmd)
         ;;   (setq counsel-git-log-cmd (concat "GIT_PAGER="
         ;;                                     cygpath
         ;;                                     "/cat "
         ;;                                     cygpath
         ;;                                     "/git log --grep '%s'")))
-        (unless (string-match-p cygpath counsel-grep-base-command)
+        (unless (string-match cygpath counsel-grep-base-command)
           (setq counsel-grep-base-command (concat cygpath "/" counsel-grep-base-command)))))))
 
   ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
@@ -191,10 +190,9 @@ If N is 2, list files in my recent 20 commits."
      (t
       (counsel-git-grep str)))))
 
-(defun counsel-browse-kill-ring (&optional n)
-  "If N > 1, assume just yank the Nth item in `kill-ring'.
-If N is nil, use `ivy-mode' to browse `kill-ring'."
-  (interactive "P")
+(defun my-counsel-browse-kill-ring ()
+  "If N > 1, assume just yank the Nth item in `kill-ring'."
+  (interactive)
   (my-select-from-kill-ring (lambda (s)
                               (let* ((plain-str (my-insert-str s))
                                      (trimmed (string-trim plain-str)))

@@ -72,6 +72,7 @@
     git-timemachine ; stable version is broken when git rename file
     highlight-symbol
     undo-fu
+    ob-sagemath
     command-log-mode
     evil ; @see https://github.com/emacs-evil/evil/commit/19cc5f8eef8bfffdec8082b604c7129782acb332
     ;; lsp-mode ; stable version has performance issue, but unstable version sends too many warnings
@@ -249,7 +250,7 @@ You still need modify `package-archives' in \"init-elpa.el\" to PERMANENTLY use 
       (setq add-to-p
             (or (member pkg-name melpa-include-packages)
                 ;; color themes are welcomed
-                (string-match-p "-theme" (format "%s" pkg-name))))))
+                (string-match "-theme" (format "%s" pkg-name))))))
 
     (when my-debug
       (message "package name=%s version=%s package=%s" pkg-name version package))
@@ -266,6 +267,7 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
   (my-ensure 'package)
   (unless (package-installed-p package min-version)
     (unless (or (assoc package package-archive-contents) no-refresh)
+      (message "Missing package: %s" package)
       (package-refresh-contents))
     (package-install package)))
 
@@ -296,9 +298,11 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 (require-package 'writeroom-mode)
 (require-package 'haml-mode)
 (require-package 'markdown-mode)
-(require-package 'link)
-(require-package 'connection)
-(require-package 'dictionary) ; dictionary requires 'link and 'connection
+(unless *emacs28*
+  (require-package 'link)
+  (require-package 'connection)
+  ;; dictionary requires 'link and 'connection
+  (require-package 'dictionary))
 (require-package 'htmlize) ; prefer stable version
 (require-package 'jade-mode)
 (require-package 'diminish)
@@ -413,6 +417,7 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 (require-package 'ws-butler)
 (require-package 'sage-shell-mode)
 (require-package 'graphql-mode)
+(require-package 'ob-sagemath)
 
 (defvar my-color-themes
   '(afternoon-theme

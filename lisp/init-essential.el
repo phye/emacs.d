@@ -67,7 +67,7 @@
 (defun narrow-or-widen-dwim (&optional use-indirect-buffer)
   "If the buffer is narrowed, it widens.
  Otherwise, it narrows to region, or Org subtree.
-If USE-INDIRECT-BUFFER is not nil, use `indirect-buffer' to hold the widen content."
+If USE-INDIRECT-BUFFER is t, use `indirect-buffer' to hold widen content."
   (interactive "P")
   (cond
    ((and (not use-indirect-buffer) (buffer-narrowed-p))
@@ -128,7 +128,7 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
     (swiper keyword)))
 
 (defun my-swiper-hack (&optional arg)
-  "Undo region selection before swiper.  ARG is ingored."
+  "Undo region selection before swiper.  ARG is ignored."
   (ignore arg)
   (if (region-active-p) (deactivate-mark)))
 (advice-add 'swiper :before #'my-swiper-hack)
@@ -221,7 +221,7 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
 
       (cond
        ;; jest unit test
-       ((and buffer-file-name (string-match-p "\\.[tj]s$" buffer-file-name))
+       ((and buffer-file-name (string-match "\\.[tj]s$" buffer-file-name))
         (setq extra-opt (format " -t \"%s\" " extra-opt)))
 
        ;; do nothing
@@ -253,5 +253,46 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
   "Goto current string's end."
   (interactive)
   (goto-char (1- (cdr (my-create-range t)))))
+
+(defun my-switch-to-shell ()
+  "Switch to built in or 3rd party shell."
+  (interactive)
+  (cond
+   ((or (display-graphic-p) (daemonp))
+    (switch-to-builtin-shell))
+   (t
+    (suspend-frame))))
+
+(global-set-key (kbd "C-x C-z") #'my-switch-to-shell)
+(global-set-key (kbd "C-x C-m") 'execute-extended-command)
+
+(defun my-save-current-buffer ()
+  "Save current buffer (Dired, Grep, ...) to re-use in the future."
+  (interactive)
+  (let* ((file (read-file-name "Save buffer to file (its extension must be \"el\"): "))
+         (content (buffer-string))
+         (can-save-p t)
+         (header (format "-*- mode:%s; default-directory: \"%s\" -*-\n"
+                         (replace-regexp-in-string "-mode" "" (format "%s" major-mode))
+                         default-directory)))
+    (when file
+      ;; double check file name extension
+      (unless (equal (file-name-extension file) "el")
+        (setq file (concat (file-name-base file) ".el")))
+
+      (when (file-exists-p file)
+        (setq can-save-p
+              (yes-or-no-p (format "File %s exists.  Override it?" file))))
+      (when can-save-p
+        (with-temp-buffer
+          (insert header)
+          (insert content)
+          ;; write buffer content into file
+          (write-region (point-min) (point-max) file))))))
+
+(with-eval-after-load 'flymake
+  ;; if `flymake-no-changes-timeout' is nil, linting code ONLY after saving buffer.
+  ;; This might speeds up Emacs if some some kind of auto-save package is used
+  (setq flymake-no-changes-timeout 1))
 
 (provide 'init-essential)

@@ -24,7 +24,8 @@
 ;; @see http://lists.gnu.org/archive/html/aspell-announce/2011-09/msg00000.html
 (defun my-detect-ispell-args (&optional run-together)
   "If RUN-TOGETHER is true, spell check the CamelCase words.
-Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `prog-mode-hook' only."
+RUN-TOGETHER makes aspell less capable to find plain English typo.
+So it should be used in `prog-mode-hook' only."
   (let* (args)
     (when ispell-program-name
       (cond
@@ -40,7 +41,7 @@ Please note RUN-TOGETHER makes aspell less capable.  So it should be used in `pr
           (cond
            ;; Kevin Atkinson said now aspell supports camel case directly
            ;; https://github.com/redguardtoo/emacs.d/issues/796
-           ((string-match-p "--.*camel-case"
+           ((string-match "--.*camel-case"
                             (shell-command-to-string (concat ispell-program-name " --help")))
             (setq args (append args '("--camel-case"))))
 
@@ -195,7 +196,7 @@ When fixing a typo, avoid pass camel case option to cli program."
                           (string-match "^=(" th)
                           (string-match ")=$" th)
                           (string= "w3m" th)))
-                 ;; embedded code like =code= or org-link [[http://google.com][google]] or [[www.google.com]]
+                 ;; embedded code like =code= or org-link [[https://gnu.org][GNU Operation System]] or [[www.gnu.org]]
                  ;; langtool could finish checking before major mode prepare font face for all texts
                  (setq rlt nil))
                 (t
