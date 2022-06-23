@@ -587,6 +587,7 @@
 ;; {{ plantuml
 (setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
 (setq plantuml-default-exec-mode 'jar)
+(setq plantuml-indent-level 0)
 (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
 (add-to-list
   'org-src-lang-modes '("plantuml" . plantuml))
