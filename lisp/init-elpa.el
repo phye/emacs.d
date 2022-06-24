@@ -166,6 +166,7 @@
     lsp-ivy
     lsp-treemacs
     lsp-mode
+    dockerfile-mode
     )
   "Packages to install from melpa-unstable.")
 
