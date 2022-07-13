@@ -528,10 +528,6 @@
         "xelatex -interaction nonstopmode -output-directory %o %f"
         "xelatex -interaction nonstopmode -output-directory %o %f"))
 
-;; ox-taskjuggler
-(local-require 'ox-taskjuggler)
-(add-to-list 'org-export-backends 'taskjuggler)
-(setq org-taskjuggler-target-version 3.6)
 ;; }}
 
 ;; {{ org-mode extensions
