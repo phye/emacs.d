@@ -80,7 +80,7 @@
 (use-package sync-recentf
   :ensure t
   :custom
-  (recentf-auto-cleanup 60)
+  (recentf-auto-cleanup 10)
   :config
   (recentf-mode 1))
 (global-set-key (kbd "C-x C-c") 'delete-frame)
