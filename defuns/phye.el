@@ -43,6 +43,7 @@
    ))
 (setq my-disable-wucuo t)
 (set-fill-column 90)
+(setq my-term-program "/usr/local/bin/zsh")
 
 (require-package 'use-package)
 
