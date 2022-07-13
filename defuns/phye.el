@@ -398,7 +398,8 @@
   "il" 'org-insert-link
   "ov" 'jao-toggle-selective-display
   "gt" 'lsp-find-definition
-  "gr" 'lsp-find-references)
+  "gr" 'lsp-find-references
+  "xc" 'suspend-frame)
 
 (my-space-leader-def
   "rt" 'my-random-color-theme
