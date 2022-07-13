@@ -582,15 +582,18 @@
 (setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
-;; {{ plantuml
-(setq plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
-(setq plantuml-default-exec-mode 'jar)
-(setq plantuml-indent-level 0)
-(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
-(add-to-list
-  'org-src-lang-modes '("plantuml" . plantuml))
-(setq org-plantuml-jar-path
-      (expand-file-name "~/.emacs.d/misc/plantuml.jar"))
+(use-package plantuml-mode
+    :ensure t
+    :custom
+    (org-plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+    (plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+    (plantuml-default-exec-mode 'jar)
+    (plantuml-indent-level 0)
+    :config
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+(with-eval-after-load 'org
+  (add-to-list
+   'org-src-lang-modes '("plantuml" . plantuml)))
 ;; }}
 
 ;; {{ artist

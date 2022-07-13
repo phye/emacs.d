@@ -168,6 +168,7 @@
     lsp-treemacs
     lsp-mode
     dockerfile-mode
+    sync-recentf
     )
   "Packages to install from melpa-unstable.")
 
