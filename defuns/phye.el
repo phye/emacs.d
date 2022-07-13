@@ -77,6 +77,12 @@
 
 ;; (require 'chinese-fonts-setup)
 ;; (run-at-time nil (* 5 60) 'recentf-save-list)
+(use-package sync-recentf
+  :ensure t
+  :custom
+  (recentf-auto-cleanup 60)
+  :config
+  (recentf-mode 1))
 (global-set-key (kbd "C-x C-c") 'delete-frame)
 ;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 
