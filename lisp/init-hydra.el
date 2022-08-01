@@ -6,20 +6,20 @@
 ;; use similar key bindings as init-evil.el
 (defhydra my-hydra-launcher (:color blue)
   "
-^Misc^                    ^Study^                    ^Audio^
---------------------------------------------------------------------------
-[_ss_] Save workgroup     [_w_] Pronounce word       [_R_] Emms Random
-[_ll_] Load workgroup     [_W_] Big words definition [_n_] Emms Next
-[_B_] New bookmark        [_v_] Play big word video  [_p_] Emms Previous
-[_m_] Goto bookmark       [_im_] Image of word       [_P_] Emms Pause
-[_bb_] Switch Gnus buffer [_s1_] Pomodoro tiny task  [_S_] Emms Stop
-[_e_] Erase buffer        [_s2_] Pomodoro big task   [_O_] Emms Open
-[_r_] Erase this buffer   [_st_] Pomodoro stop       [_L_] Emms Playlist
-[_f_] Recent file         [_sr_] Pomodoro resume     [_E_] Typewriter on
-[_d_] Recent directory    [_sp_] Pomodoro pause      [_V_] Old typewriter
+^Misc^                    ^Study^                    ^Emms^
+-------------------------------------------------------------------
+[_ss_] Save workgroup     [_w_] Pronounce word       [_R_] Random
+[_ll_] Load workgroup     [_W_] Big words definition [_n_] Next
+[_B_] New bookmark        [_v_] Play big word video  [_p_] Previous
+[_m_] Goto bookmark       [_im_] Image of word       [_P_] Pause
+[_bb_] Switch Gnus buffer [_s1_] Pomodoro tiny task  [_S_] Stop
+[_e_] Erase buffer        [_s2_] Pomodoro big task   [_O_] Open
+[_r_] Erase this buffer   [_st_] Pomodoro stop       [_L_] Playlist
+[_f_] Recent file         [_sr_] Pomodoro resume     [_K_] Search
+[_d_] Recent directory    [_sp_] Pomodoro pause      [_F_] filter
 [_z_] Jump around (z.sh)  [_as_] Ascii table
-[_bh_] Bash history
-[_hh_] Favorite theme
+[_bh_] Bash history       [_E_] Typewriter on/off
+[_hh_] Favorite theme     [_V_] Old typewriter
 [_hr_] Random theme
 [_ka_] Kill other buffers
 [_ii_] Imenu
@@ -51,6 +51,8 @@
   ("sr" pomodoro-resume)
   ("sp" pomodoro-pause)
   ("R" (progn (emms-shuffle) (emms-random)))
+  ("F" my-emms-playlist-filter)
+  ("K" my-emms-playlist-random-track)
   ("n" emms-next)
   ("w" mybigword-pronounce-word)
   ("im" mybigword-show-image-of-word)
@@ -281,12 +283,14 @@
 [_aa_] Record by mp3       [_cf_] New           [_nn_] Name
 [_zz_] Play wav&mp3        [_rr_] Rename        [_bb_] Base name
 [_sa_] Fetch subtitle(s)   [_C_]  Copy          [_dd_] directory
-[_vv_] Video => Mp3        [_rb_] Change base
-[_aa_] Recording Wav       [_df_] Diff 2 files
-[_ee_] Mkv => Srt          [_ff_] Find
+[_se_] Extract subtitle    [_rb_] Change base
+[_vv_] Video => Mp3        [_df_] Diff 2 files
+[_aa_] Recording Wav       [_ff_] Find
+[_ee_] Mkv => Srt
 [_+_] Create directory
 "
     ("sa" shenshou-download-subtitle)
+    ("se" shenshou-extract-subtitle-from-zip)
     ("pp" (my-copy-file-info 'file-truename))
     ("nn" (my-copy-file-info 'file-name-nondirectory))
     ("bb" (my-copy-file-info 'file-name-base))

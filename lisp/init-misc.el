@@ -556,14 +556,14 @@ So it's at the top of clipboard manager."
   (mapc 'kill-buffer (cdr (buffer-list (current-buffer))))
   "All other buffers have been killed!")
 
-(defun minibuffer-inactive-mode-hook-setup ()
+(defun my-minibuffer-inactive-mode-hook-setup ()
   "Set up mini buffer so auto complete works."
   ;; Make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer.
   ;; @see `he-dabbrev-beg', so we need re-define syntax for '/'.
   (set-syntax-table (let* ((table (make-syntax-table)))
                       (modify-syntax-entry ?/ "." table)
                       table)))
-(add-hook 'minibuffer-inactive-mode-hook 'minibuffer-inactive-mode-hook-setup)
+(add-hook 'minibuffer-inactive-mode-hook 'my-minibuffer-inactive-mode-hook-setup)
 
 ;; {{ vc-msg
 (defun vc-msg-hook-setup (vcs-type commit-info)
@@ -700,26 +700,6 @@ If the shell is already opened in some buffer, switch to that buffer."
      ;; Linux
      (t
       (ansi-term my-term-program)))))
-
-;; {{ emms
-(with-eval-after-load 'emms
-  ;; minimum setup is more robust
-  (emms-minimalistic)
-  ;; only show file track's base name
-  (setq emms-track-description-function
-        (lambda (track)
-          (let ((desc (emms-track-simple-description track))
-                (type (emms-track-type track)))
-            (when (eq 'file type)
-              (setq desc (my-strip-path desc 2)))
-            desc)))
-
-  (setq emms-source-file-exclude-regexp
-        (concat "\\`\\(#.*#\\|.*,v\\|.*~\\|\\.\\.?\\|\\.#.*\\|,.*\\)\\'\\|"
-                "/\\(CVS\\|RCS\\|\\.dropbox.attr\\|\\.git\\|,.*\\|\\.svn\\)\\(/\\|\\'\\)"))
-  (setq emms-player-list '(emms-player-mplayer
-                           emms-player-vlc)))
-;; }}
 
 (transient-mark-mode t)
 
@@ -1170,41 +1150,6 @@ It's also controlled by `my-lazy-before-save-timer'."
     (comint-read-input-ring t)))
 (add-hook 'gud-gdb-mode-hook 'gud-gdb-mode-hook-setup)
 
-(defun my-emms-play ()
-  "Play media files which are marked or in marked sub-directories."
-  (interactive)
-  (my-ensure 'emms)
-  (unless (eq major-mode 'dired-mode)
-    (error "This command is only used in `dired-mode'"))
-
-  (let* ((items (dired-get-marked-files t current-prefix-arg))
-         (regexp (my-file-extensions-to-regexp my-media-file-extensions))
-         found)
-    (cond
-     ;; at least two items are selected
-     ((> (length items) 1)
-      ;; clear existing playlist
-      (emms-playlist-current-clear)
-      (sit-for 1)
-
-      (dolist (item items)
-        (cond
-         ((file-directory-p item)
-          (emms-add-directory-tree item)
-          (setq found t))
-
-         ((string-match regexp item)
-          ;; add media file to the playlist
-          (emms-add-file item)
-          (setq found t))))
-
-      (when found
-        (with-current-buffer emms-playlist-buffer-name
-          (emms-start))))
-
-     (t
-      (emms-play-directory default-directory)))))
-
 ;; {{ helpful (https://github.com/Wilfred/helpful)
 ;; Note that the built-in `describe-function' includes both functions
 ;; and macros. `helpful-function' is functions only, so we provide
@@ -1275,7 +1220,7 @@ It's also controlled by `my-lazy-before-save-timer'."
     (calendar arg)))
 ;; }}
 
-(defun my-srt-my-player-play-video-at-point ()
+(defun my-srt-play-video-at-point ()
   "In srt file, play video from current time stamp.
 Emacs 27 is required."
   (interactive)
@@ -1313,6 +1258,23 @@ Emacs 27 is required."
   (let* ((org-agenda-files my-org-agenda-files)
          (org-tags-match-list-sublevels nil))
     (call-interactively 'org-tags-view)))
+
+(defun my-count-items ()
+  "Count items separated by SEPARATORS.  White spaces are ignored."
+  (interactive)
+  (let* ((separators (read-string "Separators (default is \",\"): "))
+         (str (string-trim (cond
+                            ((region-active-p)
+                             (buffer-substring (region-beginning) (region-end)))
+                            (t
+                             (buffer-string))))))
+    (when (equal separators "")
+      (setq separators ","))
+    (setq str (string-trim str separators separators))
+    (message "%s has %d words separated by \"%s\"."
+             (if (region-active-p) "Buffer" "Region")
+             (length (split-string str separators))
+             separators)))
 
 (provide 'init-misc)
 ;;; init-misc.el ends here

@@ -67,9 +67,9 @@
           (append
            (delq nil
                  (mapcar (lambda (dir)
-                           (unless (string-match-p "^\\." dir)
+                           (unless (string-match "^\\." dir)
                              (expand-file-name dir)))
-                         (directory-files my-site-lisp-dir)))
+                         (directory-files lisp-dir)))
            load-path))))
 
 ;; @see https://www.reddit.com/r/emacs/comments/3kqt6e/2_easy_little_known_steps_to_speed_up_emacs_start/
@@ -124,10 +124,11 @@
   ;; color themes are already installed in `init-elpa.el'
   (require-init 'init-theme)
 
-  ;; crucial tools
+  ;; essential tools
   (require-init 'init-essential)
   ;; tools nice to have
   (require-init 'init-misc t)
+  (require-init 'init-emms t)
 
   (require-init 'init-emacs-w3m t)
   (require-init 'init-shackle t)
