@@ -420,7 +420,7 @@
   (interactive)
   (setq org-confirm-babel-evaluate nil)
   (set-fill-column 90)
-  (setq org-babel-default-header-args:planuml
+  (setq org-babel-default-header-args:plantuml
         '((:results . "replace")
           (:exports . "results")))
   (turn-on-auto-fill)
@@ -502,6 +502,7 @@
    '(
      (ditaa . t)
      (plantuml . t)
+     (dot . t)
      ))
   (define-key org-mode-map (kbd "C-c o") 'org-open-at-point))
 ;; }}
