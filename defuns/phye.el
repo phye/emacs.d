@@ -49,9 +49,15 @@
 
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
-(setq electric-pair-inhibit-predicate
-      (lambda (c)
-        (if (char-equal c ?\") t (electric-pair-default-inhibit c))))
+(with-eval-after-load 'elec-pair
+  (setq electric-pair-inhibit-predicate
+        (lambda (c)
+          (if (or
+               (char-equal c ?\{)
+               (char-equal c ?\')
+               (char-equal c ?\"))
+              t
+            (electric-pair-default-inhibit c)))))
 
 (setq help-window-select t)
 (setq vc-follow-symlinks t)
@@ -406,6 +412,7 @@
   "ov" 'jao-toggle-selective-display
   "gt" 'lsp-find-definition
   "gr" 'lsp-find-references
+  "dc" 'godoc-at-point
   "xc" 'suspend-frame)
 
 (my-space-leader-def
@@ -434,6 +441,7 @@
   (setq org-src-window-setup 'split-window-below)
   (setq org-archive-location "archive.org::datetree/* From %s")
   (setq org-adapt-indentation t)
+  (hl-todo-mode 1)
   (my-yas-reload-all))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
