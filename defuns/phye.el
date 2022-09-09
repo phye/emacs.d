@@ -439,7 +439,7 @@
   (setq org-clock-persist 'history)
   (org-clock-persistence-insinuate)
   (setq org-src-window-setup 'split-window-below)
-  (setq org-archive-location "archive.org::datetree/* From %s")
+  (setq org-archive-location "archive.org.gpg::datetree/* From %s")
   (setq org-adapt-indentation t)
   (hl-todo-mode 1)
   (my-yas-reload-all))
