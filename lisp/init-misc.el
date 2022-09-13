@@ -177,6 +177,39 @@ FN checks these characters belong to normal word characters."
 (defvar my-disable-lazyflymake nil
   "Disable lazyflymake.")
 
+;; {{
+(defvar my-save-run-timer nil "Internal timer.")
+
+(defvar my-save-run-rules nil
+  "Rules to execute shell command when saving.
+In each rule, 1st item is default directory, 2nd item is the shell command.")
+
+(defvar my-save-run-interval 4
+  "The interval (seconds) to execute shell command.")
+
+(defun my-save-run-function ()
+  "Run shell command in `after-save-hook'."
+  (interactive)
+  (cond
+   ((or (not my-save-run-timer)
+        (> (- (float-time (current-time)) (float-time my-save-run-timer))
+           my-save-run-interval))
+
+    ;; start timer if not started yet
+    (setq my-save-run-timer (current-time))
+
+    ;; start updating
+    (when buffer-file-name
+      (dolist (rule my-save-run-rules)
+        (let* ((default-directory (nth 0 rule))
+               (cmd (nth 1 rule)))
+          (when (string-match (concat "^" (file-truename default-directory)) buffer-file-name)
+            (my-async-shell-command cmd))))))
+   (t
+    ;; do nothing, can't run ctags too often
+    )))
+;; }}
+
 (defun my-generic-prog-mode-hook-setup ()
   "Generic programming mode set up."
   (when (buffer-too-big-p)
@@ -184,6 +217,8 @@ FN checks these characters belong to normal word characters."
     (linum-mode -1)
     (when (my-should-use-minimum-resource)
       (font-lock-mode -1)))
+
+  (add-hook 'after-save-hook #'my-save-run-function nil t)
 
   (my-company-ispell-setup)
 
@@ -193,8 +228,7 @@ FN checks these characters belong to normal word characters."
 
     (unless (featurep 'esup-child)
       (cond
-       ((and (not my-disable-lazyflymake) *emacs27*)
-        ;; lazyflymake v0.5 requires emacs27
+       ((not my-disable-lazyflymake)
         (my-ensure 'lazyflymake)
         (lazyflymake-start))
        (t
@@ -232,7 +266,7 @@ FN checks these characters belong to normal word characters."
                 (when closest
                   (goto-char (cdr closest)))))))
 
-    (electric-pair-mode 1)
+    (my-run-with-idle-timer 2 (lambda () (electric-pair-mode 1)))
 
     ;; eldoc, show API doc in minibuffer echo area
     ;; (turn-on-eldoc-mode)
@@ -267,25 +301,15 @@ FN checks these characters belong to normal word characters."
 ;; @see http://stackoverflow.com/questions/4222183/emacs-how-to-jump-to-function-definition-in-el-file
 (global-set-key (kbd "C-h C-f") 'find-function)
 
-;; {{ time format
-;; If you want to customize time format, read document of `format-time-string'
-;; and customize `display-time-format'.
-;; (setq display-time-format "%a %b %e")
-
-;; from RobinH, Time management
-(setq display-time-24hr-format t) ; the date in modeline is English too, magic!
-(setq display-time-day-and-date t)
+(with-eval-after-load 'time
+  ;; If you want to customize time format, read document of `format-time-string'
+  ;; and customize `display-time-format'.
+  ;; (setq display-time-format "%a %b %e")
+  (setq display-time-24hr-format t) ; the date in modeline is English too, magic!
+  (setq display-time-day-and-date t))
 (my-run-with-idle-timer 2 #'display-time)
-;; }}
 
 (defalias 'list-buffers 'ibuffer)
-
-;; {{ show email sent by `git send-email' in gnus
-(with-eval-after-load 'gnus
-  (local-require 'gnus-article-treat-patch)
-  (setq gnus-article-patch-conditions
-        '( "^@@ -[0-9]+,[0-9]+ \\+[0-9]+,[0-9]+ @@" )))
-;; }}
 
 (defun my-add-pwd-into-load-path ()
   "Add current directory into `load-path', useful for elisp developers."
@@ -328,11 +352,6 @@ FN checks these characters belong to normal word characters."
 ;; }}
 
 ;; {{ popup functions
-(defun my-which-file ()
-  "Return current file name for Yasnippets."
-  (if (buffer-file-name) (format "%s:" (file-name-nondirectory (buffer-file-name)))
-    ""))
-
 (defun my-which-function ()
   "Return current function name."
   ;; @see http://stackoverflow.com/questions/13426564/how-to-force-a-rescan-in-imenu-by-a-function
@@ -1275,6 +1294,17 @@ Emacs 27 is required."
              (if (region-active-p) "Buffer" "Region")
              (length (split-string str separators))
              separators)))
+
+(defun my-mplayer-setup-extra-opts ()
+  "Set up `my-mplayer-extra-opts'."
+  (interactive)
+  (let* ((opts '(("Clockwise 90 degree rotation" . "-vf rotate=1")
+                 ("Anticlockwise 90 degree rotation" . "-vf rotate=2")))
+         (selected (completing-read "Mplayer setup: " opts)))
+    (when selected
+      (setq selected (cdr (assoc selected opts)))
+      (kill-new selected)
+      (message "\"%s\" => kill-ring" selected))))
 
 (provide 'init-misc)
 ;;; init-misc.el ends here
