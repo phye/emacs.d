@@ -552,7 +552,7 @@
 (customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
 (customize-set-variable 'org-journal-enable-agenda-integration t)
 (customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
-(customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
 (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
 (customize-set-variable 'org-journal-file-type 'weekly)
 ;; org-journal capture
