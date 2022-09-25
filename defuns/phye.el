@@ -220,8 +220,9 @@
 
 ;; {{ general programming
 (use-package hl-todo
-  :ensure t
-  :custom
+  :ensure t)
+
+(with-eval-after-load 'hl-todo-mode
   (setq hl-todo-keyword-faces
         '(("TODO"   . "red")
           ("FIXME"  . "yellow")
@@ -229,6 +230,7 @@
           ("NOTE" . "blue")
           ("GOTCHA" . "#FF4500")
           ("STUB"   . "#1E90FF"))))
+
 ;; company
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
