@@ -117,22 +117,6 @@
 ;; {{ multi project
 
 (define-key global-map (kbd "M-`") 'other-frame)
-;; ;; -- emacs-purpose
-;; (require-package 'window-purpose)
-;; (purpose-mode)
-;; (add-to-list 'purpose-user-mode-purposes '(cc-mode . cpp))
-;; (add-to-list 'purpose-user-mode-purposes '(go-mode . golang))
-;; (add-to-list 'purpose-user-mode-purposes '(org-mode . orgmode))
-;; (add-to-list 'purpose-user-mode-purposes '(json-mode . json))
-;; (add-to-list 'purpose-user-mode-purposes '(elisp-mode . elisp))
-;; (purpose-compile-user-configuration)
-;; (my-comma-leader-def
-;;   "xb" 'purpose-switch-buffer-with-purpose
-;;   "xd" 'purpose-toggle-window-purpose-dedicated
-;;   "xD" 'purpose-toggle-window-buffer-dedicated)
-;; (my-space-leader-def
-;;   "xs" 'purpose-save-window-layout
-;;   "xl" 'purpose-load-window-layout)
 
 ;; -- projectile-mode
 (require-package 'projectile)
