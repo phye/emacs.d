@@ -24,6 +24,7 @@
         doom-xcode
         doom-nova
         doom-nord
+        doom-nord-aurora
         doom-material-dark
         doom-zenburn
         tango-dark
