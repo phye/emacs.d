@@ -5,6 +5,43 @@
 ;; {{ Misc
 (cd "~/ws")
 (load-theme 'doom-city-lights t)
+(setq my-favorite-color-themes
+      '(srcery
+        atom-dark
+        atom-one-dark
+        doom-dracula
+        doom-gruvbox
+        doom-molokai
+        doom-monokai-classic
+        doom-monokai-machine
+        doom-monokai-octagon
+        doom-monokai-pro
+        doom-monokai-ristretto
+        doom-monokai-spectrum
+        doom-material-dark
+        doom-moonlight
+        doom-gruvbox
+        doom-xcode
+        doom-nova
+        doom-nord
+        doom-material-dark
+        doom-zenburn
+        tango-dark
+        leuven-dark
+        solarized-dark-high-contrast
+        sanityinc-solarized-dark
+        sanityinc-tomorrow-eighties
+        sanityinc-tomorrow-night
+        modus-vivendi
+        spacemacs-dark
+        planet
+        dakrone
+        doom-city-lights
+        doom-material
+        kaolin-galaxy
+        kaolin-bubblegum
+        kaolin-temple
+        vscode-dark-plus))
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (require-package 'cnfonts)
@@ -54,6 +91,8 @@
         (lambda (c)
           (if (or
                (char-equal c ?\{)
+               (char-equal c ?\[)
+               (char-equal c ?\()
                (char-equal c ?\')
                (char-equal c ?\"))
               t
@@ -213,13 +252,14 @@
           ("DEBUG"  . "blue")
           ("NOTE" . "blue")
           ("GOTCHA" . "#FF4500")
+          ("Deprecated" . "white")
           ("STUB"   . "#1E90FF"))))
 
 ;; company
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
-  (hl-todo-mode)
+  (hl-todo-mode 1)
   (subword-mode)
   (ws-butler-mode -1))                  ; disable auto white space removal
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
