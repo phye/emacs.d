@@ -9,6 +9,9 @@
       '(srcery
         atom-dark
         atom-one-dark
+        doom-Iosvkem
+        doom-acario-dark
+        doom-challenger-deep
         doom-dracula
         doom-gruvbox
         doom-molokai
