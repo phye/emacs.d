@@ -85,6 +85,7 @@
 (setq my-disable-wucuo t)
 (set-fill-column 90)
 (setq my-term-program "/usr/local/bin/zsh")
+(setq pdf-view-use-scaling t)
 
 (require-package 'use-package)
 
