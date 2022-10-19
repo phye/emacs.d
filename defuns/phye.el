@@ -87,6 +87,8 @@
 (setq my-term-program "/usr/local/bin/zsh")
 (setq pdf-view-use-scaling t)
 
+(add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
+
 (require-package 'use-package)
 
 ;; Don't pair double quotes
@@ -247,6 +249,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; {{ general programming
+
+(with-eval-after-load 'counsel-etags
+  (setq counsel-etags-stop-auto-update-tags nil)
+  (add-to-list 'counsel-etags-ignore-directories "pack")
+  (add-to-list 'counsel-etags-ignore-directories "model")
+  (add-to-list 'counsel-etags-ignore-directories "third_path")
+  )
+
 (use-package hl-todo
   :ensure t)
 
