@@ -27,7 +27,6 @@
         doom-monokai-ristretto
         doom-monokai-spectrum
         doom-material-dark
-        doom-moonlight
         doom-gruvbox
         doom-xcode
         doom-nova
