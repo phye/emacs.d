@@ -6,7 +6,18 @@
 (cd "~/ws")
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
-(global-set-key (kbd "C-x C-c") 'delete-frame)
+(setq help-window-select t)
+(setq vc-follow-symlinks t)
+(setq my-disable-wucuo t)
+(set-fill-column 100)
+(setq my-term-program "/usr/local/bin/zsh")
+(set-language-environment "utf-8")
+
+;; {{ macOS
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'super)
+;; }}
+
 
 ;; color and theme settings
 (load-theme 'doom-city-lights t)
@@ -93,12 +104,29 @@
 (with-eval-after-load 'avy
   (recover-avy-lead-face))
 
-(setq my-disable-wucuo t)
-(set-fill-column 100)
-(setq my-term-program "/usr/local/bin/zsh")
 
-(require-package 'use-package)
+(define-key global-map (kbd "C-x C-c") 'delete-frame)
+(define-key global-map (kbd "C-x M") 'manual-entry)
+(define-key global-map (kbd "M-`") 'other-frame)
+(define-key global-map (kbd "C-c c") 'org-capture)
+(define-key global-map (kbd "C-c l") 'org-store-link)
+(define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
 
+(my-comma-leader-def
+  "ls" 'highlight-symbol
+  "ol" 'org-open-at-point
+  "sl" 'org-store-link
+  "il" 'org-insert-link
+  "ov" 'jao-toggle-selective-display
+  "gt" 'lsp-find-definition
+  "gr" 'lsp-find-references
+  "dc" 'godoc-at-point
+  "xc" 'suspend-frame)
+
+(my-space-leader-def
+  "rt" 'my-random-color-theme
+  "nn" 'highlight-symbol-next
+  "pp" 'highlight-symbol-prev)
 
 ;; {{ my own util functions
 ;; Don't pair double quotes
@@ -119,9 +147,6 @@
 (with-eval-after-load 'elec-pair
   (phye/set-electric-pair-inhibit-predicate))
 
-(setq help-window-select t)
-(setq vc-follow-symlinks t)
-
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server"
@@ -138,10 +163,7 @@
 
 ;; }}
 
-;; {{ macOS
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
-;; }}
+(require-package 'use-package)
 
 ;; chinese font
 (use-package cnfonts
@@ -167,7 +189,6 @@
 ;; }}
 
 ;; {{ multi project
-(define-key global-map (kbd "M-`") 'other-frame)
 
 ;; -- projectile-mode
 (use-package projectile
@@ -214,17 +235,6 @@
 ;; }}
 
 ;; {{ buffer and window related
-(global-set-key (kbd "C-x M") 'manual-entry)
-(set-language-environment "utf-8")
-(defun phye/split-windows ()
-  (interactive)
-  (split-window-right)
-  (other-window 1)
-  (split-window-right)
-  (other-window 1)
-  (balance-windows)
-  )
-
 (use-package popper
   :ensure t ; or :straight t
   :bind (("C-`"   . popper-toggle-latest)
@@ -246,7 +256,10 @@
 ;; }}
 
 ;; {{ evil customizations
-(setq-default evil-escape-key-sequence "fd")
+(use-package evil-escape
+  :ensure t
+  :custom
+  (evil-escape-key-sequence "fd"))
 (use-package evil-numbers
   :ensure t
   :bind (("C-a" . evil-numbers/inc-at-pt)))
@@ -259,24 +272,19 @@
 ;; {{ general programming
 
 (with-eval-after-load 'counsel-etags
-  (setq counsel-etags-stop-auto-update-tags nil)
   (setq counsel-etags-debug t)
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
 (use-package hl-todo
-  :ensure t)
-
-(with-eval-after-load 'hl-todo-mode
-  (setq hl-todo-keyword-faces
-        '(("TODO"   . "red")
-          ("FIXME"  . "yellow")
-          ("DEBUG"  . "blue")
-          ("NOTE" . "blue")
-          ("GOTCHA" . "#FF4500")
-          ("Deprecated" . "white")
-          ("STUB"   . "#1E90FF"))))
+  :ensure t
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("DEBUG"  . "blue"))
+  (add-to-list 'hl-todo-keyword-faces '("NOTE"  . "blue"))
+  (add-to-list 'hl-todo-keyword-faces '("GOTCHA"  . "#FF4500"))
+  (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
+  (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
 
 ;; company
 (defun phye/prog-mode-hook ()
@@ -284,20 +292,25 @@
   (hs-minor-mode)
   (hl-todo-mode 1)
   (subword-mode)
+  (set-fill-column 80)
   (ws-butler-mode -1)  ; disable auto white space removal
   (phye/set-electric-pair-inhibit-predicate))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
-(setq company-tooltip-limit 20)                      ; bigger popup window
-(setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
-(setq company-echo-delay 0)                          ; remove annoying blinking
-(setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+
+(use-package company
+  :custom
+  (company-tooltip-limit 20)                      ; bigger popup window
+  (company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+  (company-echo-delay 0)                          ; remove annoying blinking
+  (company-begin-commands '(self-insert-command))) ; start autocompletion only after typing
 
 ;; camelCase, snake_case .etc
 (use-package string-inflection
-  :ensure t)
-(global-set-key (kbd "C-c i") 'string-inflection-cycle)
-(global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
-(global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
+  :ensure t
+  :config
+  (define-key global-map (kbd "C-c i") 'string-inflection-cycle)
+  (define-key global-map (kbd "C-c C") 'string-inflection-camelcase)
+  (define-key global-map (kbd "C-c L") 'string-inflection-lower-camelcase))
 ;; }}
 
 ;; {{ lsp-mode
@@ -310,11 +323,13 @@
          (go-mode . lsp)
          ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
+  :custom
+  (lsp-idle-delay 0.500)
+  (lsp-enable-symbol-highlighting nil)
   :config
-  (setq lsp-enable-symbol-highlighting nil)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  (setq lsp-idle-delay 0.500)
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
+  (setq lsp-go-directory-filters ["-vendor"])
   :commands lsp)
 
 ;; optionally
@@ -356,19 +371,20 @@
 ;; {{ Golang
 ;; (with-eval-after-load 'go-mode
 ;;   (require 'go-guru))
-(setq lsp-go-directory-filters ["-vendor"])
+(use-package go-mode
+  :ensure t
+  :hook
+  (go-mode . #'lsp-deferred)
+  (go-mode . #'phye/golang-hook)
+  )
 (defun phye/golang-hook ()
     "phye's golang hook"
   (interactive)
   (set-fill-column 90)
-  (turn-off-auto-fill))
-(add-hook 'go-mode-hook #'lsp-deferred)
-(add-hook 'go-mode-hook 'phye/golang-hook 90)
-
-(defun lsp-go-install-save-hooks ()
-  ;; (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (turn-off-auto-fill)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+;; (add-hook 'go-mode-hook #'lsp-deferred)
+;; (add-hook 'go-mode-hook 'phye/golang-hook 90)
 ;; }}
 
 ;; {{ JavaScript/JSON
@@ -444,16 +460,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; {{ markdown
-(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 (defun phye/markdown-hook ()
     "diasable trunc lines"
   (interactive)
   (setq truncate-lines nil)
   (set-fill-column 100))
-(use-package ox-gfm
+(use-package markdown-mode
   :ensure t
   :config
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
   (add-hook 'markdown-mode-hook 'phye/markdown-hook 90))
+(use-package ox-gfm
+  :ensure t)
 ;; }}
 
 ;; {{ latex
@@ -465,35 +483,16 @@
 ;; }}
 
 ;; {{ pdf
-(setq pdf-view-use-scaling t)
+(use-package pdf-tools
+  :ensure t
+  :custom
+  (pdf-view-use-scaling t))
 ;; }}
 
 ;; {{ Org Mode
 
 ;; {{ OrgMode keybindings
 ;; Protect my favorite short keys
-(define-key global-map (kbd "C-c c") 'org-capture)
-(define-key global-map (kbd "C-c l") 'org-store-link)
-(define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
-
-;; My often used org commands
-(my-comma-leader-def
-  "ls" 'highlight-symbol
-  "ol" 'org-open-at-point
-  "sl" 'org-store-link
-  "il" 'org-insert-link
-  "ov" 'jao-toggle-selective-display
-  "gt" 'lsp-find-definition
-  "gr" 'lsp-find-references
-  "dc" 'godoc-at-point
-  "xc" 'suspend-frame)
-
-(my-space-leader-def
-  "rt" 'my-random-color-theme
-  "nn" 'highlight-symbol-next
-  "pp" 'highlight-symbol-prev)
-;; }}
-
 ;; {{ hooks
 (defun phye/org-mode-hook ()
   "custom orgmode settings"
@@ -552,7 +551,6 @@
           (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
-
   (setq org-agenda-files
         (quote
          ("~/ws/gtd/gtd.org"
@@ -568,7 +566,6 @@
           ("KnowledgeBase.org" :maxlevel . 5)
           ("done.org" :maxlevel . 5)))
 
-
   ;; Org Mode Capture
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
@@ -578,6 +575,8 @@
           ("j" "Journal entry" entry (function org-journal-find-location)
            "* %(format-time-string org-journal-time-format)%^{Title}\n%i%?")))
 
+  (require 'ox-md nil t)
+  (require 'ox-odt nil t)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
@@ -585,17 +584,13 @@
      (plantuml . t)
      (dot . t)
      ))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (define-key org-mode-map (kbd "C-c o") 'org-open-at-point))
 ;; }}
 
 ;; {{ OrgMode Output
 (setq org-export-with-sub-superscripts nil)
 (setq org-export-with-properties t)
-
-(eval-after-load "org"
-                 '(require 'ox-md nil t))
-(eval-after-load "org"
-                 '(require 'ox-odt nil t))
 
 (eval-after-load "ox-latex"
   ;; update the list of LaTeX classes and associated header (encoding, etc.)
@@ -683,8 +678,7 @@
     :config
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 (with-eval-after-load 'org
-  (add-to-list
-   'org-src-lang-modes '("plantuml" . plantuml)))
+  )
 ;; }}
 
 ;; {{ artist
