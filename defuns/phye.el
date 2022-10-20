@@ -4,6 +4,11 @@
 
 ;; {{ Misc
 (cd "~/ws")
+;; although I don't use Diary Mode, change the default file in case of mistyping
+(setq diary-file "~/ws/gtd/diary.org")
+(global-set-key (kbd "C-x C-c") 'delete-frame)
+
+;; color and theme settings
 (load-theme 'doom-city-lights t)
 (setq my-favorite-color-themes
       '(srcery
@@ -46,9 +51,6 @@
         kaolin-bubblegum
         kaolin-temple
         vscode-dark-plus))
-;; although I don't use Diary Mode, change the default file in case of mistyping
-(setq diary-file "~/ws/gtd/diary.org")
-(require-package 'cnfonts)
 (customize-save-variable
  'highlight-symbol-colors
  '("red"                                ;; red
@@ -82,28 +84,41 @@
    "deep sky blue"                      ;; blue
    "light coral"                        ;; yellow
    ))
-(setq my-disable-wucuo t)
-(set-fill-column 90)
-(setq my-term-program "/usr/local/bin/zsh")
-(setq pdf-view-use-scaling t)
+;; customize avy jump colors
+(defun recover-avy-lead-face ()
+  (interactive)
+  (set-face-attribute 'avy-lead-face nil :foreground "red")
+  (set-face-attribute 'avy-lead-face nil :background "navy")
+  (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
+  (set-face-attribute 'avy-lead-face-0 nil :background "green"))
+(with-eval-after-load 'avy
+  (recover-avy-lead-face))
 
-(add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
+(setq my-disable-wucuo t)
+(set-fill-column 100)
+(setq my-term-program "/usr/local/bin/zsh")
 
 (require-package 'use-package)
 
+
+;; {{ my own util functions
 ;; Don't pair double quotes
 ;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
-(with-eval-after-load 'elec-pair
+(defun phye/set-electric-pair-inhibit-predicate()
+  "set electric-pair-inhibit-predicate "
+  (interactive)
   (setq electric-pair-inhibit-predicate
-        (lambda (c)
-          (if (or
-               (char-equal c ?\{)
-               (char-equal c ?\[)
-               (char-equal c ?\()
-               (char-equal c ?\')
-               (char-equal c ?\"))
-              t
-            (electric-pair-default-inhibit c)))))
+    (lambda (c)
+      (if (or
+           (char-equal c ?\{)
+           (char-equal c ?\[)
+           (char-equal c ?\()
+           (char-equal c ?\')
+           (char-equal c ?\"))
+          t
+        (electric-pair-default-inhibit c)))))
+(with-eval-after-load 'elec-pair
+  (phye/set-electric-pair-inhibit-predicate))
 
 (setq help-window-select t)
 (setq vc-follow-symlinks t)
@@ -122,21 +137,24 @@
   (interactive "sChoose your host: ")
   (dired (concat "/sshx:" host ":~/ws")))
 
+;; }}
+
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
 ;; }}
 
-;; (require 'chinese-fonts-setup)
-;; (run-at-time nil (* 5 60) 'recentf-save-list)
+;; chinese font
+(use-package cnfonts
+  :ensure t)
+
+;; recentf
 (use-package sync-recentf
   :ensure t
   :custom
   (recentf-auto-cleanup 10)
   :config
   (recentf-mode 1))
-(global-set-key (kbd "C-x C-c") 'delete-frame)
-;; (global-set-key (kbd "C-x C-q") 'server-shutdown) prevent server shutdown
 
 ;; gpg encrypt
 (require 'epa-file)
@@ -147,28 +165,19 @@
 (defun jao-toggle-selective-display ()
   (interactive)
   (set-selective-display (if selective-display nil 1)))
-
-;; customize avy jump colors
-(with-eval-after-load 'avy
-  (recover-avy-lead-face)
-  )
-(defun recover-avy-lead-face ()
-  (interactive)
-  (set-face-attribute 'avy-lead-face nil :foreground "red")
-  (set-face-attribute 'avy-lead-face nil :background "navy")
-  (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
-  (set-face-attribute 'avy-lead-face-0 nil :background "green"))
 ;; }}
 
 ;; {{ multi project
-
 (define-key global-map (kbd "M-`") 'other-frame)
 
 ;; -- projectile-mode
-(require-package 'projectile)
-(projectile-mode +1)
-(define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map))
 
+;; per window call stack
 (defun my-xref-pop-marker-stack ()
   "Project aware buffer pop"
   (interactive)
@@ -239,10 +248,10 @@
 
 ;; {{ evil customizations
 (setq-default evil-escape-key-sequence "fd")
-(require-package 'evil-numbers)
-(define-key evil-normal-state-map (kbd "C-a") 'evil-numbers/inc-at-pt)
+(use-package evil-numbers
+  :ensure t
+  :bind (("C-a" . evil-numbers/inc-at-pt)))
 ;; }}
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; Programming Related Settings ;;
@@ -252,10 +261,10 @@
 
 (with-eval-after-load 'counsel-etags
   (setq counsel-etags-stop-auto-update-tags nil)
+  (setq counsel-etags-debug t)
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
-  (add-to-list 'counsel-etags-ignore-directories "third_path")
-  )
+  (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
 (use-package hl-todo
   :ensure t)
@@ -276,7 +285,8 @@
   (hs-minor-mode)
   (hl-todo-mode 1)
   (subword-mode)
-  (ws-butler-mode -1))                  ; disable auto white space removal
+  (ws-butler-mode -1)  ; disable auto white space removal
+  (phye/set-electric-pair-inhibit-predicate))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 (setq company-tooltip-limit 20)                      ; bigger popup window
 (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
@@ -284,7 +294,8 @@
 (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
 
 ;; camelCase, snake_case .etc
-(require-package 'string-inflection)
+(use-package string-inflection
+  :ensure t)
 (global-set-key (kbd "C-c i") 'string-inflection-cycle)
 (global-set-key (kbd "C-c C") 'string-inflection-camelcase)        ;; Force to CamelCase
 (global-set-key (kbd "C-c L") 'string-inflection-lower-camelcase)  ;; Force to lowerCamelCase
@@ -320,7 +331,10 @@
 ;; }}
 
 ;; {{ protobuf
-(require-package 'protobuf-mode)
+(use-package protobuf-mode
+  :ensure t
+  :config
+  (add-hook 'protobuf-mode-hook 'phye/prog-mode-hook 90))
 ;; }}
 
 ;; {{ c
@@ -359,11 +373,14 @@
 ;; }}
 
 ;; {{ JavaScript/JSON
-(require-package 'json-mode)
-(setq js-indent-level 2)
-(setq json-encoding-default-indentation "  ")
-(add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
-(add-hook 'json-mode-hook #'hs-minor-mode)
+(use-package json-mode
+  :ensure t
+  :custom
+  (js-indent-level 2)
+  (json-encoding-default-indentation "  ")
+  :config
+  (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+  (add-hook 'json-mode-hook #'hs-minor-mode))
 ;; }}
 
 ;; {{ YAML
@@ -410,6 +427,14 @@
 ;; {{ ASM
 ;; }}
 
+;; {{ Dockerfile
+(use-package dockerfile-mode
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
+  )
+;; }}
+
 ;; {{ python
 (setq elpy-rpc-python-command (string-trim (shell-command-to-string "which python3")))
 ;; }}
@@ -421,20 +446,27 @@
 
 ;; {{ markdown
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
-(require-package 'ox-gfm)
 (defun phye/markdown-hook ()
     "diasable trunc lines"
   (interactive)
   (setq truncate-lines nil)
   (set-fill-column 100))
-(add-hook 'markdown-mode-hook 'phye/markdown-hook 90)
+(use-package ox-gfm
+  :ensure t
+  :config
+  (add-hook 'markdown-mode-hook 'phye/markdown-hook 90))
 ;; }}
 
 ;; {{ latex
-(require-package 'company-math)
-(require 'company-math)
-(add-to-list 'company-backends 'company-math-symbols-latex)
-(add-to-list 'company-backends 'company-math-symbols-unicode)
+(use-package company-math
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-math-symbols-latex)
+  (add-to-list 'company-backends 'company-math-symbols-unicode))
+;; }}
+
+;; {{ pdf
+(setq pdf-view-use-scaling t)
 ;; }}
 
 ;; {{ Org Mode
@@ -590,13 +622,16 @@
 ;; {{ org-mode extensions
 
 ;; {{ org-journal related
-(require-package 'org-journal)
-(customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
-(customize-set-variable 'org-journal-enable-agenda-integration t)
-(customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
-;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
-(customize-set-variable 'org-journal-file-format "%Y%m%d.org")
-(customize-set-variable 'org-journal-file-type 'weekly)
+(use-package org-journal
+  :ensure t
+  :config
+  (customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
+  (customize-set-variable 'org-journal-enable-agenda-integration t)
+  (customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
+  ;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+  (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
+  (customize-set-variable 'org-journal-file-type 'weekly))
+
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
