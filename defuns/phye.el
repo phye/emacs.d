@@ -6,12 +6,13 @@
 (cd "~/ws")
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
-(setq help-window-select t)
+;; (setq help-window-select t)
 (setq vc-follow-symlinks t)
 (setq my-disable-wucuo t)
 (set-fill-column 100)
 (setq my-term-program "/usr/local/bin/zsh")
 (set-language-environment "utf-8")
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
@@ -103,8 +104,16 @@
   (set-face-attribute 'avy-lead-face-0 nil :background "green"))
 (with-eval-after-load 'avy
   (recover-avy-lead-face))
+(use-package hl-todo
+  :ensure t
+  :config
+  (add-to-list 'hl-todo-keyword-faces '("DEBUG"  . "blue"))
+  (add-to-list 'hl-todo-keyword-faces '("NOTE"  . "blue"))
+  (add-to-list 'hl-todo-keyword-faces '("GOTCHA"  . "#FF4500"))
+  (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
+  (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
 
-
+;; {{ global keymaps
 (define-key global-map (kbd "C-x C-c") 'delete-frame)
 (define-key global-map (kbd "C-x M") 'manual-entry)
 (define-key global-map (kbd "M-`") 'other-frame)
@@ -127,6 +136,7 @@
   "rt" 'my-random-color-theme
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev)
+;; }}
 
 ;; {{ my own util functions
 ;; Don't pair double quotes
@@ -167,7 +177,8 @@
 
 ;; chinese font
 (use-package cnfonts
-  :ensure t)
+  :ensure t
+  :defer 5)
 
 ;; recentf
 (use-package sync-recentf
@@ -193,9 +204,11 @@
 ;; -- projectile-mode
 (use-package projectile
   :ensure t
+  :bind (("C-c x" . projectile-command-map))
   :config
   (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map))
+  ;;(define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
+  )
 
 ;; per window call stack
 (defun my-xref-pop-marker-stack ()
@@ -236,7 +249,7 @@
 
 ;; {{ buffer and window related
 (use-package popper
-  :ensure t ; or :straight t
+  :ensure t
   :bind (("C-`"   . popper-toggle-latest)
          ("M-`"   . popper-cycle)
          ("C-M-`" . popper-toggle-type))
@@ -252,7 +265,8 @@
   (popper-echo-mode +1))
 
 (use-package hide-mode-line
-  :ensure t)
+  :ensure nil
+  :defer 10)
 ;; }}
 
 ;; {{ evil customizations
@@ -276,15 +290,6 @@
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
-
-(use-package hl-todo
-  :ensure t
-  :config
-  (add-to-list 'hl-todo-keyword-faces '("DEBUG"  . "blue"))
-  (add-to-list 'hl-todo-keyword-faces '("NOTE"  . "blue"))
-  (add-to-list 'hl-todo-keyword-faces '("GOTCHA"  . "#FF4500"))
-  (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
-  (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
 
 ;; company
 (defun phye/prog-mode-hook ()
@@ -319,34 +324,41 @@
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "M-l")
   :ensure t
-  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+  :hook (
          (go-mode . lsp)
-         ;; if you want which-key integration
          (lsp-mode . lsp-enable-which-key-integration))
   :custom
   (lsp-idle-delay 0.500)
   (lsp-enable-symbol-highlighting nil)
+  (lsp-go-directory-filters ["-vendor"])
   :config
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
-  (setq lsp-go-directory-filters ["-vendor"])
   :commands lsp)
 
-;; optionally
-(use-package lsp-ui :ensure t :commands lsp-ui-mode)
-(use-package lsp-ivy :ensure t :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs :ensure t :commands lsp-treemacs-errors-list)
+;; optionally lsp dependencies
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode
+  :after (lsp-mode))
+(use-package lsp-ivy
+  :ensure t
+  :commands lsp-ivy-workspace-symbol
+  :after (lsp-mode))
+(use-package lsp-treemacs
+  :ensure t
+  :commands lsp-treemacs-errors-list
+  :after (lsp-mode))
 
 ;; optional if you want which-key integration
-(use-package which-key
-    :config
-    (which-key-mode))
-
+;; (use-package which-key
+;;     :config
+;;     (which-key-mode))
 ;; }}
 
 ;; {{ protobuf
 (use-package protobuf-mode
   :ensure t
+  :defer 5
   :config
   (add-hook 'protobuf-mode-hook 'phye/prog-mode-hook 90))
 ;; }}
@@ -373,23 +385,22 @@
 ;;   (require 'go-guru))
 (use-package go-mode
   :ensure t
-  :hook
-  (go-mode . #'lsp-deferred)
-  (go-mode . #'phye/golang-hook)
-  )
+  :defer 5)
 (defun phye/golang-hook ()
     "phye's golang hook"
   (interactive)
   (set-fill-column 90)
-  (turn-off-auto-fill)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-;; (add-hook 'go-mode-hook #'lsp-deferred)
-;; (add-hook 'go-mode-hook 'phye/golang-hook 90)
+  (turn-off-auto-fill))
+(with-eval-after-load 'go-mode
+  (add-hook 'go-mode-hook #'lsp-deferred)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t)
+  (add-hook 'go-mode-hook 'phye/golang-hook 90))
 ;; }}
 
 ;; {{ JavaScript/JSON
 (use-package json-mode
   :ensure t
+  :defer 5
   :custom
   (js-indent-level 2)
   (json-encoding-default-indentation "  ")
@@ -402,6 +413,7 @@
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
 (use-package yaml-mode
   :ensure t
+  :defer 5
   :mode (".yaml$")
   :hook
   (yaml-mode . yaml-mode-outline-hook)
@@ -445,6 +457,7 @@
 ;; {{ Dockerfile
 (use-package dockerfile-mode
   :ensure t
+  :defer 5
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
   )
@@ -463,20 +476,22 @@
 (defun phye/markdown-hook ()
     "diasable trunc lines"
   (interactive)
-  (setq truncate-lines nil)
-  (set-fill-column 100))
+  (setq truncate-lines nil))
 (use-package markdown-mode
   :ensure t
+  :defer 5
   :config
   (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
   (add-hook 'markdown-mode-hook 'phye/markdown-hook 90))
 (use-package ox-gfm
-  :ensure t)
+  :ensure t
+  :defer 5)
 ;; }}
 
 ;; {{ latex
 (use-package company-math
   :ensure t
+  :defer 5
   :config
   (add-to-list 'company-backends 'company-math-symbols-latex)
   (add-to-list 'company-backends 'company-math-symbols-unicode))
@@ -485,8 +500,22 @@
 ;; {{ pdf
 (use-package pdf-tools
   :ensure t
+  :defer 5
   :custom
   (pdf-view-use-scaling t))
+;; }}
+
+;; {{ plantuml
+(use-package plantuml-mode
+    :ensure t
+    :defer 5
+    :custom
+    (org-plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+    (plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
+    (plantuml-default-exec-mode 'jar)
+    (plantuml-indent-level 0)
+    :config
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 ;; }}
 
 ;; {{ Org Mode
@@ -577,6 +606,31 @@
 
   (require 'ox-md nil t)
   (require 'ox-odt nil t)
+
+  ;; {{ OrgMode Output
+  (setq org-export-with-sub-superscripts nil)
+  (setq org-export-with-properties t)
+
+  (with-eval-after-load 'ox-latex
+    ;; update the list of LaTeX classes and associated header (encoding, etc.)
+    ;; and structure
+    (add-to-list 'org-latex-classes
+                 `("beamer"
+                   ,(concat "\\documentclass[presentation]{beamer}\n"
+                            "[DEFAULT-PACKAGES]"
+                            "[PACKAGES]"
+                            "[EXTRA]\n")
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+
+  (setq org-latex-listings t)
+  (setq org-latex-to-pdf-process
+        '("xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f"
+          "xelatex -interaction nonstopmode -output-directory %o %f"))
+
+  ;; org babel
   (org-babel-do-load-languages
    'org-babel-load-languages
    '(
@@ -588,29 +642,6 @@
   (define-key org-mode-map (kbd "C-c o") 'org-open-at-point))
 ;; }}
 
-;; {{ OrgMode Output
-(setq org-export-with-sub-superscripts nil)
-(setq org-export-with-properties t)
-
-(eval-after-load "ox-latex"
-  ;; update the list of LaTeX classes and associated header (encoding, etc.)
-  ;; and structure
-  '(add-to-list 'org-latex-classes
-                `("beamer"
-                  ,(concat "\\documentclass[presentation]{beamer}\n"
-                           "[DEFAULT-PACKAGES]"
-                           "[PACKAGES]"
-                           "[EXTRA]\n")
-                  ("\\section{%s}" . "\\section*{%s}")
-                  ("\\subsection{%s}" . "\\subsection*{%s}")
-                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-
-(setq org-latex-listings t)
-(setq org-latex-to-pdf-process
-      '("xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"
-        "xelatex -interaction nonstopmode -output-directory %o %f"))
-
 ;; }}
 
 ;; {{ org-mode extensions
@@ -618,13 +649,14 @@
 ;; {{ org-journal related
 (use-package org-journal
   :ensure t
-  :config
-  (customize-set-variable 'org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
-  (customize-set-variable 'org-journal-enable-agenda-integration t)
-  (customize-set-variable 'org-journal-dir "~/ws/gtd/journals/")
+  :defer 5
+  :custom
+  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
+  (org-journal-enable-agenda-integration t)
+  (org-journal-dir "~/ws/gtd/journals/")
   ;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
-  (customize-set-variable 'org-journal-file-format "%Y%m%d.org")
-  (customize-set-variable 'org-journal-file-type 'weekly))
+  (org-journal-file-format "%Y%m%d.org")
+  (org-journal-file-type 'weekly))
 
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
@@ -668,17 +700,6 @@
 (setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
-(use-package plantuml-mode
-    :ensure t
-    :custom
-    (org-plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
-    (plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
-    (plantuml-default-exec-mode 'jar)
-    (plantuml-indent-level 0)
-    :config
-    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
-(with-eval-after-load 'org
-  )
 ;; }}
 
 ;; {{ artist
@@ -716,9 +737,8 @@
 (define-auto-insert "\\.org$" #'phye/org-template)
 
 ;; see http://thread.gmane.org/gmane.emacs.orgmode/42715
-(eval-after-load 'org-list
+(with-eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
-
 (defun ndk/checkbox-list-complete ()
   (save-excursion
     (org-back-to-heading t)
@@ -736,49 +756,6 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
-
-;; {{ org-mode inline chinese markup using zero width space
-(defun phye/insert-char-with-zero-width-space (count char)
-  "If count is even, add zero-width-space prefix, otherwise, add suffix"
-  (if (= (mod count 2) 0)
-      (progn
-        (insert-char #x200b)
-        (insert-char char))
-    (progn
-      (insert-char char)
-      (insert-char #x200b))))
-
-(setq lexical-binding t)
-(let ((my-org-markup-count-hash (make-hash-table :test 'eq)))
-  (puthash ?~ 0 my-org-markup-count-hash)
-  (puthash ?= 0 my-org-markup-count-hash)
-  (puthash ?* 0 my-org-markup-count-hash)
-  (puthash ?/ 0 my-org-markup-count-hash)
-  (puthash ?_ 0 my-org-markup-count-hash)
-  (puthash ?+ 0 my-org-markup-count-hash)
-  (puthash ?$ 0 my-org-markup-count-hash)
-  (defun phye/org-add-nws (char)
-    "add prefix/suffix zero-width-space automatically"
-    (setq count (gethash char my-org-markup-count-hash -1))
-    (if (eq count -1)
-        (progn
-          (ding)
-          (message "Incorrect orgmode markup character %s", char)
-          )
-      (progn
-        (phye/insert-char-with-zero-width-space count char)
-        (puthash char (1+ count) my-org-markup-count-hash))
-      )))
-
-;; (define-key org-mode-map (kbd "~") (phye/org-add-nws ?~))
-;; (define-key org-mode-map (kbd "=") (phye/org-add-nws ?=))
-;; (define-key org-mode-map (kbd "*") (phye/org-add-nws ?*))
-;; (define-key org-mode-map (kbd "/") (phye/org-add-nws ?/))
-;; (define-key org-mode-map (kbd "_") (phye/org-add-nws ?_))
-;; (define-key org-mode-map (kbd "+") (phye/org-add-nws ?+))
-;; (define-key org-mode-map (kbd "$") (phye/org-add-nws ?$))
-
-;; }}
 
 ;; }}
 
