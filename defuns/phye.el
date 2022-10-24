@@ -47,7 +47,6 @@
         doom-material-dark
         doom-zenburn
         tango-dark
-        leuven-dark
         solarized-dark-high-contrast
         sanityinc-solarized-dark
         sanityinc-tomorrow-eighties
