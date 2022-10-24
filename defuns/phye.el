@@ -203,10 +203,10 @@
 ;; -- projectile-mode
 (use-package projectile
   :ensure t
-  :bind (("C-c x" . projectile-command-map))
+  ;; :bind (("C-c x" . projectile-command-map))
   :config
   (projectile-mode +1)
-  ;;(define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
   )
 
 ;; per window call stack
@@ -392,8 +392,10 @@
   (turn-off-auto-fill))
 (with-eval-after-load 'go-mode
   (add-hook 'go-mode-hook #'lsp-deferred)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t)
+  (add-hook 'go-mode-hook #'lsp-go-install-save-hook)
   (add-hook 'go-mode-hook 'phye/golang-hook 90))
+(defun lsp-go-install-save-hook ()
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
 ;; }}
 
 ;; {{ JavaScript/JSON
