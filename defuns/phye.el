@@ -395,7 +395,8 @@
   (add-hook 'go-mode-hook #'lsp-go-install-save-hook)
   (add-hook 'go-mode-hook 'phye/golang-hook 90))
 (defun lsp-go-install-save-hook ()
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+  (add-hook 'before-save-hook #'lsp-organize-imports t t)
+  (add-hook 'before-save-hook 'gofmt))
 ;; }}
 
 ;; {{ JavaScript/JSON
