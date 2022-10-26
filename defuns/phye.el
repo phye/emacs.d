@@ -112,6 +112,10 @@
   (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
   (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
 
+(advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
+(advice-add 'my-random-healthy-color-theme :after #'recover-avy-lead-face)
+(advice-add 'my-random-color-themes :after #'recover-avy-lead-face)
+
 ;; {{ global keymaps
 (define-key global-map (kbd "C-x C-c") 'delete-frame)
 (define-key global-map (kbd "C-x M") 'manual-entry)
