@@ -290,6 +290,9 @@
 
 (with-eval-after-load 'counsel-etags
   (setq counsel-etags-debug t)
+  (add-to-list 'counsel-etags-ignore-directories "duiqi")
+  (add-to-list 'counsel-etags-ignore-directories "data")
+  (add-to-list 'counsel-etags-ignore-directories "cache")
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
@@ -307,8 +310,6 @@
 
 (use-package company
   :custom
-  (company-tooltip-limit 20)                      ; bigger popup window
-  (company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
   (company-echo-delay 0)                          ; remove annoying blinking
   (company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
   :config
