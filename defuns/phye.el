@@ -310,7 +310,19 @@
   (company-tooltip-limit 20)                      ; bigger popup window
   (company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
   (company-echo-delay 0)                          ; remove annoying blinking
-  (company-begin-commands '(self-insert-command))) ; start autocompletion only after typing
+  (company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
+  :config
+  (global-set-key (kbd "<tab>") #'company-indent-or-complete-common))
+
+(with-eval-after-load 'company
+  (define-key company-active-map
+              (kbd "TAB")
+              #'company-complete-common-or-cycle)
+  (define-key company-active-map
+              (kbd "<backtab>")
+              (lambda ()
+                (interactive)
+                (company-complete-common-or-cycle -1))))
 
 ;; camelCase, snake_case .etc
 (use-package string-inflection
