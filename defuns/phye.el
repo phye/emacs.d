@@ -315,7 +315,7 @@
   :config
   (global-set-key (kbd "<tab>") #'company-indent-or-complete-common))
 
-(with-eval-after-load 'company
+(with-eval-after-load 'prog-mode
   (define-key company-active-map
               (kbd "TAB")
               #'company-complete-common-or-cycle)
