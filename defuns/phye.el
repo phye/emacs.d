@@ -315,16 +315,6 @@
   :config
   (global-set-key (kbd "<tab>") #'company-indent-or-complete-common))
 
-(with-eval-after-load 'prog-mode
-  (define-key company-active-map
-              (kbd "TAB")
-              #'company-complete-common-or-cycle)
-  (define-key company-active-map
-              (kbd "<backtab>")
-              (lambda ()
-                (interactive)
-                (company-complete-common-or-cycle -1))))
-
 ;; camelCase, snake_case .etc
 (use-package string-inflection
   :ensure t
