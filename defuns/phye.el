@@ -311,9 +311,7 @@
 (use-package company
   :custom
   (company-echo-delay 0)                          ; remove annoying blinking
-  (company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
-  :config
-  (global-set-key (kbd "<tab>") #'company-indent-or-complete-common))
+  (company-begin-commands '(self-insert-command))) ; start autocompletion only after typin)
 
 ;; camelCase, snake_case .etc
 (use-package string-inflection
