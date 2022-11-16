@@ -335,6 +335,7 @@
   (lsp-idle-delay 0.500)
   (lsp-enable-symbol-highlighting nil)
   (lsp-go-directory-filters ["-vendor"])
+  (lsp-verify-signature nil)
   :config
   (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
   :commands lsp)
@@ -403,6 +404,21 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t)
   ;;(add-hook 'before-save-hook 'gofmt-before-save)
   )
+;; }}
+
+;; {{
+(use-package lsp-java
+  :ensure t
+  :config
+  (add-hook 'java-mode-hook #'lsp))
+(use-package lsp-metals
+  :ensure t
+  :custom
+  ;; Metals claims to support range formatting by default but it supports range
+  ;; formatting of multiline strings only. You might want to disable it so that
+  ;; emacs can use indentation provided by scala-mode.
+  (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off"))
+  :hook (scala-mode . lsp))
 ;; }}
 
 ;; {{ JavaScript/JSON
