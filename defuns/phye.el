@@ -129,6 +129,7 @@
   "ol" 'org-open-at-point
   "sl" 'org-store-link
   "il" 'org-insert-link
+  "id" 'find-file-in-current-directory
   "ov" 'jao-toggle-selective-display
   "gt" 'lsp-find-definition
   "gr" 'lsp-find-references
