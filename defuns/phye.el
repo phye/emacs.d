@@ -133,6 +133,7 @@
   "ov" 'jao-toggle-selective-display
   "gt" 'lsp-find-definition
   "gr" 'lsp-find-references
+  "id" 'find-file-in-current-directory
   "dc" 'godoc-at-point
   "xc" 'suspend-frame)
 
