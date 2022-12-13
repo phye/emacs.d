@@ -21,11 +21,12 @@
 
 
 ;; color and theme settings
-(load-theme 'doom-city-lights t)
+(load-theme 'doom-dark+ t)
 (setq my-favorite-color-themes
       '(srcery
         atom-dark
         atom-one-dark
+        doom-dark+
         doom-Iosvkem
         doom-acario-dark
         doom-challenger-deep
@@ -272,6 +273,10 @@
 (use-package hide-mode-line
   :ensure nil
   :defer 10)
+
+(define-key minibuffer-local-map (kbd "C-a") 'move-beginning-of-line)
+(define-key minibuffer-local-map (kbd "C-e") 'move-end-of-line)
+(define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
 ;; }}
 
 ;; {{ evil customizations
