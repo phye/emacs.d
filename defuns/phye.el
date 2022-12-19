@@ -277,6 +277,7 @@
 (define-key minibuffer-local-map (kbd "C-a") 'move-beginning-of-line)
 (define-key minibuffer-local-map (kbd "C-e") 'move-end-of-line)
 (define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
+(define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word)
 ;; }}
 
 ;; {{ evil customizations
@@ -286,7 +287,7 @@
   (evil-escape-key-sequence "fd"))
 (use-package evil-numbers
   :ensure t
-  :bind (("C-a" . evil-numbers/inc-at-pt)))
+  :bind (:map evil-normal-state-map ("C-a" . evil-numbers/inc-at-pt)))
 ;; }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
