@@ -116,6 +116,19 @@
 (advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-healthy-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-color-themes :after #'recover-avy-lead-face)
+(defun phye/clean-symbol (&optional symbol)
+  (interactive)
+  "Filter symbol without leading $,@ characters"
+  (let* ((symbol (or symbol
+                     (symbol-at-point)
+                    (error "No symbol at point")))
+         (symbolstr (symbol-name symbol))
+         (c (elt symbolstr 0)))
+    (if (or (= c ?$)
+            (= c ?@))
+        (list (seq-subseq symbolstr 1)) ;; return symbol without first char
+      (list symbolstr))))
+(advice-add 'highlight-symbol :filter-args #'phye/clean-symbol)
 
 ;; {{ global keymaps
 (define-key global-map (kbd "C-x C-c") 'delete-frame)
@@ -419,6 +432,12 @@
   :ensure t
   :config
   (add-hook 'java-mode-hook #'lsp))
+;; }}
+
+;; {{
+(use-package php-mode
+  :ensure t
+  :defer 5)
 ;; }}
 
 ;; {{ JavaScript/JSON
