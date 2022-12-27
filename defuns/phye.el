@@ -128,7 +128,7 @@
             (= c ?@))
         (list (seq-subseq symbolstr 1)) ;; return symbol without first char
       (list symbolstr))))
-(advice-add 'highlight-symbol :filter-args #'phye/clean-symbol)
+;; (advice-add 'highlight-symbol :filter-args #'phye/clean-symbol)
 
 ;; {{ global keymaps
 (define-key global-map (kbd "C-x C-c") 'delete-frame)
@@ -318,7 +318,6 @@
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
-;; company
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
@@ -329,10 +328,15 @@
   (phye/set-electric-pair-inhibit-predicate))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
+;; company
 (use-package company
   :custom
   (company-echo-delay 0)                          ; remove annoying blinking
-  (company-begin-commands '(self-insert-command))) ; start autocompletion only after typin)
+  (company-begin-commands '(self-insert-command))
+  :config
+  (setq company-backends (delete 'company-semantic company-backends))
+  (setq company-backends (delete 'company-clang company-backends))
+  ) ; start autocompletion only after typin)
 
 ;; camelCase, snake_case .etc
 (use-package string-inflection
