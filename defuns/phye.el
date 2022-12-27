@@ -19,7 +19,6 @@
 (setq mac-option-modifier 'super)
 ;; }}
 
-
 ;; color and theme settings
 (load-theme 'doom-dark+ t)
 (setq my-favorite-color-themes
@@ -137,6 +136,7 @@
 (define-key global-map (kbd "C-c c") 'org-capture)
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
+(define-key global-map (kbd "M-v") 'paste-from-x-clipboard)
 
 (my-comma-leader-def
   "ls" 'highlight-symbol
