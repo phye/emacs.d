@@ -578,6 +578,13 @@
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 ;; }}
 
+;; {{ graphviz-dot-mode
+(use-package graphviz-dot-mode
+  :ensure t
+  :defer 5)
+(add-hook 'graphviz-dot-mode-hook #'turn-off-auto-fill)
+;; }}
+
 ;; {{ Org Mode
 
 ;; {{ OrgMode keybindings
