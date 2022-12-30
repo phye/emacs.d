@@ -85,14 +85,6 @@
                                    dictionary-default-dictionary)))))
 ;; }}
 
-;; {{ bookmark
-;; use my own bookmark if it exists
-(with-eval-after-load 'bookmark
-  (let ((file "~/.emacs.bmk"))
-    (when (file-exists-p file)
-      (setq bookmark-default-file file))))
-;; }}
-
 (defun my-lookup-doc-in-man ()
   "Read man by querying keyword at point."
   (interactive)
@@ -689,7 +681,7 @@ ARG is ignored."
                (list 'mocha "at [^()]+ (\\([^:]+\\):\\([^:]+\\):\\([^:]+\\))" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'mocha))
 
-(defun switch-to-builtin-shell ()
+(defun my-switch-to-builtin-shell ()
   "Switch to builtin shell.
 If the shell is already opened in some buffer, switch to that buffer."
   (interactive)
@@ -898,8 +890,8 @@ might be bad."
 		   (forward-word)
 		   (forward-char -1)
 		   (sdcv-search-input (thing-at-point 'word))))
-  (local-set-key (kbd "w") 'mybigword-pronounce-word)
-  (local-set-key (kbd ";") 'avy-goto-char-2))
+  (local-set-key (kbd ";") 'my-hydra-ebook/body)
+  (local-set-key (kbd "w") 'mybigword-big-words-in-current-window))
 (add-hook 'nov-mode-hook 'nov-mode-hook-setup)
 ;; }}
 
@@ -1261,6 +1253,19 @@ Emacs 27 is required."
     (when (and (> (length videos) 0) start-time)
       ;; plays the matched video
       (mybigword-run-mplayer start-time (car videos)))))
+
+(defun my-srt-offset-subtitles-from-point (seconds)
+  "Offset subtitles from point by SECONDS (float, e.g. -2.74).
+Continue the video with updated subtitle."
+  (interactive "NSeconds to offset (float e.g. -2.74): ")
+  (my-ensure 'subtitles)
+  (save-excursion
+    (save-restriction
+      (goto-char (car (bounds-of-thing-at-point 'paragraph)))
+      (narrow-to-region (point) (point-max))
+      (srt-offset-subtitles seconds)))
+  (save-buffer)
+  (my-srt-play-video-at-point))
 
 (defvar org-agenda-files)
 (defvar org-tags-match-list-sublevels)

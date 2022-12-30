@@ -87,13 +87,15 @@
   (require-init 'init-file-type)
   (require-init 'init-elpa)
 
-  ;; for unit test
-  (when my-disable-idle-timer
+  ;; make all packages in "site-lisp/" loadable right now because idle loader
+  ;; are not used and packages need be available on the spot.
+  (when (or my-lightweight-mode-p my-disable-idle-timer)
     (my-add-subdirs-to-load-path (file-name-as-directory my-site-lisp-dir)))
 
   ;; Any file use flyspell should be initialized after init-spelling.el
   (require-init 'init-spelling t)
   (require-init 'init-ibuffer t)
+  (require-init 'init-bookmark)
   (require-init 'init-ivy)
   (require-init 'init-windows)
   (require-init 'init-javascript t)

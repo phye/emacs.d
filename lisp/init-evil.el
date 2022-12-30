@@ -330,6 +330,7 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
     (help-mode . emacs)
     (eshell-mode . emacs)
     (shell-mode . emacs)
+    (vterm-mode . emacs)
     (xref--xref-buffer-mode . emacs)
     (epa-key-list-mode . emacs)
     (fundamental-mode . emacs)
@@ -758,7 +759,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "v=" 'git-gutter:popup-hunk
   "hh" 'cliphist-paste-item
   "yu" 'cliphist-select-item
-  "ih" 'my-goto-git-gutter ; use ivy-mode
+  "ih" 'my-git-goto-gutter ; use ivy-mode
   "ir" 'ivy-resume
   "ww" 'my-narrow-or-widen-dwim
   "wf" 'popup-which-function)
@@ -818,7 +819,8 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   ;;    (set-face-attribute 'avy-lead-face-0 nil :foreground "black")
   ;;    (set-face-attribute 'avy-lead-face-0 nil :background "#f86bf3"))
   ";" 'ace-pinyin-jump-char-2
-  "w" 'avy-goto-word-or-subword-1
+  "w" 'mybigword-big-words-in-current-window
+  "s" 'avy-goto-word-or-subword-1
   "a" 'avy-goto-char-timer
   "db" 'sdcv-search-input ; details
   "dt" 'sdcv-search-input+ ; summary

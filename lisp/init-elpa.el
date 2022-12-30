@@ -100,7 +100,6 @@
     sublime-themes
     pyim-wbdict
     tangotango-theme
-    darkburn-theme
     ujelly-theme
     afternoon-theme
     organic-green-theme
@@ -124,12 +123,14 @@
     badger-theme
     distinguished-theme
     tao-theme
+    pdf-tools ; @see https://github.com/vedang/pdf-tools/issues/102
     ;; }}
     groovy-mode
     company ; I won't wait another 2 years for stable
     simple-httpd
     findr
     mwe-log-commands
+    vterm
     noflet
     db
     creole
@@ -416,6 +417,7 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 (require-package 'graphql-mode)
 (require-package 'ob-sagemath)
 (require-package 'pulseaudio-control)
+(require-package 'vterm)
 
 (defvar my-color-themes
   '(afternoon-theme
@@ -437,7 +439,6 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
     color-theme-sanityinc-tomorrow
     cyberpunk-theme
     dakrone-theme
-    darkburn-theme
     darkmine-theme
     darkokai-theme
     darktooth-theme
@@ -446,9 +447,9 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
     dracula-theme
     espresso-theme
     exotica-theme
-    eziam-theme
+    eziam-themes
     fantom-theme
-    farmhouse-theme
+    farmhouse-themes
     flatland-theme
     flatui-theme
     gandalf-theme
