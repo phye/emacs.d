@@ -162,7 +162,7 @@
     popper
     lsp-ui
     lsp-ivy
-    lsp-treemacs
+    ;; lsp-treemacs
     lsp-mode
     dockerfile-mode
     sync-recentf

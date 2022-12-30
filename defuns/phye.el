@@ -434,7 +434,6 @@
 
 ;; {{
 (use-package lsp-java
-  :ensure t
   :config
   (add-hook 'java-mode-hook #'lsp))
 ;; }}
