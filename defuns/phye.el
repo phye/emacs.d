@@ -433,12 +433,6 @@
 ;; }}
 
 ;; {{
-(use-package lsp-java
-  :config
-  (add-hook 'java-mode-hook #'lsp))
-;; }}
-
-;; {{
 (use-package php-mode
   :ensure t
   :defer 5)
