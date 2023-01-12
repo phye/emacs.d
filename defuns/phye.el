@@ -97,6 +97,7 @@
 ;; customize avy jump colors
 (defun recover-avy-lead-face ()
   (interactive)
+  (require 'avy)
   (set-face-attribute 'avy-lead-face nil :foreground "red")
   (set-face-attribute 'avy-lead-face nil :background "navy")
   (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
