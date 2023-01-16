@@ -150,6 +150,7 @@
   "gr" 'lsp-find-references
   "id" 'find-file-in-current-directory
   "dc" 'godoc-at-point
+  "xb" 'ivy-switch-buffer
   "xc" 'suspend-frame)
 
 (my-space-leader-def
@@ -299,6 +300,7 @@
 (use-package evil-escape
   :ensure t
   :custom
+  (evil-escape-delay 0.2)
   (evil-escape-key-sequence "fd"))
 (use-package evil-numbers
   :ensure t
