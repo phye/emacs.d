@@ -218,6 +218,16 @@
 (defun jao-toggle-selective-display ()
   (interactive)
   (set-selective-display (if selective-display nil 1)))
+
+;; ediff
+(setq previous-theme nil)
+(defun phye/ediff-startup-hook ()
+  (setq previous-theme (car custom-enabled-themes))
+  (load-theme 'doom-dracula t))
+(defun phye/ediff-cleanup-hook ()
+    (load-theme previous-theme t))
+(add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
+(add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
 ;; }}
 
 ;; {{ multi project
