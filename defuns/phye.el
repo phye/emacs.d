@@ -47,8 +47,8 @@
         doom-material-dark
         doom-zenburn
         tango-dark
-        solarized-dark-high-contrast
-        sanityinc-solarized-dark
+        ;; solarized-dark-high-contrast
+        ;; sanityinc-solarized-dark
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         modus-vivendi
