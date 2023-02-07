@@ -13,6 +13,7 @@
 (setq my-term-program "/usr/local/bin/zsh")
 (set-language-environment "utf-8")
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq split-height-threshold nil)
 
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
@@ -53,6 +54,7 @@
         sanityinc-tomorrow-night
         modus-vivendi
         spacemacs-dark
+        seti
         planet
         dakrone
         doom-city-lights
@@ -304,6 +306,16 @@
 (define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
 (with-eval-after-load 'ivy-mode
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word))
+
+(defun dedicate-current-window (&optional flag)
+  "Dedicate current window and prevent it from being split"
+  (interactive "P")
+  (if (eq nil flag)
+      (progn
+        (message "Dedicate window")
+        (set-window-dedicated-p (selected-window) nil))
+    (message "Undedicate window")
+    (set-window-dedicated-p (selected-window) t)))
 ;; }}
 
 ;; {{ evil customizations
