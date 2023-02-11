@@ -21,7 +21,7 @@
 ;; }}
 
 ;; color and theme settings
-(load-theme 'doom-dark+ t)
+(load-theme 'doom-spacegrey t)
 (setq my-favorite-color-themes
       '(srcery
         atom-dark
@@ -32,6 +32,7 @@
         doom-challenger-deep
         doom-dracula
         doom-gruvbox
+        doom-ir-black
         doom-molokai
         doom-monokai-classic
         doom-monokai-machine
@@ -46,7 +47,12 @@
         doom-nord
         doom-nord-aurora
         doom-material-dark
+        doom-oceanic-next
+        doom-old-hope
+        doom-opera
         doom-zenburn
+        doom-palenight
+        doom-spacegrey
         tango-dark
         ;; solarized-dark-high-contrast
         ;; sanityinc-solarized-dark
@@ -62,7 +68,9 @@
         kaolin-galaxy
         kaolin-bubblegum
         kaolin-temple
-        vscode-dark-plus))
+        cyberpunk
+        ;; vscode-dark-plus
+        ))
 (customize-save-variable
  'highlight-symbol-colors
  '("red"                                ;; red
@@ -111,6 +119,11 @@
   :config
   (add-to-list 'hl-todo-keyword-faces '("DEBUG"  . "blue"))
   (add-to-list 'hl-todo-keyword-faces '("NOTE"  . "blue"))
+  (add-to-list 'hl-todo-keyword-faces '("THOUGHT" . "orange"))
+  (add-to-list 'hl-todo-keyword-faces '("QUESTION" . "red"))
+  (add-to-list 'hl-todo-keyword-faces '("SOLUTION" . "green"))
+  (add-to-list 'hl-todo-keyword-faces '("FUNCTION" . "lavender"))
+  (add-to-list 'hl-todo-keyword-faces '("LOGIC" . "yellow"))
   (add-to-list 'hl-todo-keyword-faces '("GOTCHA"  . "#FF4500"))
   (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
   (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
