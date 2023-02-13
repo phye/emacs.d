@@ -124,7 +124,7 @@
   (add-to-list 'hl-todo-keyword-faces '("SOLUTION" . "green"))
   (add-to-list 'hl-todo-keyword-faces '("FUNCTION" . "lavender"))
   (add-to-list 'hl-todo-keyword-faces '("LOGIC" . "yellow"))
-  (add-to-list 'hl-todo-keyword-faces '("GOTCHA"  . "#FF4500"))
+  (add-to-list 'hl-todo-keyword-faces '("PITFALL"  . "#FF4500"))
   (add-to-list 'hl-todo-keyword-faces '("Deprecated"  . "white"))
   (add-to-list 'hl-todo-keyword-faces '("STUB"  . "#1E90FF")))
 
@@ -191,7 +191,8 @@
           t
         (electric-pair-default-inhibit c)))))
 (with-eval-after-load 'elec-pair
-  (phye/set-electric-pair-inhibit-predicate))
+  ;; (phye/set-electric-pair-inhibit-predicate)
+  )
 
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
@@ -320,15 +321,16 @@
 (with-eval-after-load 'ivy-mode
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word))
 
-(defun dedicate-current-window (&optional flag)
-  "Dedicate current window and prevent it from being split"
-  (interactive "P")
-  (if (eq nil flag)
-      (progn
-        (message "Dedicate window")
-        (set-window-dedicated-p (selected-window) nil))
-    (message "Undedicate window")
-    (set-window-dedicated-p (selected-window) t)))
+(defun dedicate-current-window ()
+  "Dedicate current window"
+  (interactive)
+  (set-window-dedicated-p (selected-window) t)
+  (message "window dedicated"))
+(defun undedicate-current-window ()
+  "Undedicate current window"
+  (interactive)
+  (set-window-dedicated-p (selected-window) nil)
+  (message "window undedicated"))
 ;; }}
 
 ;; {{ evil customizations
@@ -355,6 +357,7 @@
   (add-to-list 'counsel-etags-ignore-directories "cache")
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
+  (add-to-list 'counsel-etags-ignore-directories "lib")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
 (defun phye/prog-mode-hook ()
@@ -364,7 +367,8 @@
   (subword-mode)
   (set-fill-column 80)
   (ws-butler-mode -1)  ; disable auto white space removal
-  (phye/set-electric-pair-inhibit-predicate))
+  ;; (phye/set-electric-pair-inhibit-predicate)
+  )
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
 ;; company
