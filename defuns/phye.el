@@ -375,6 +375,10 @@
   )
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
+(defun phye/view-log-with-color ()
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
 ;; company
 (use-package company
   :custom
