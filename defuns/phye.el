@@ -241,7 +241,8 @@
   (setq previous-theme (car custom-enabled-themes))
   (load-theme 'doom-dracula t))
 (defun phye/ediff-cleanup-hook ()
-    (load-theme previous-theme t))
+    (load-theme previous-theme t)
+    (winner-undo))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
 ;; }}
@@ -292,6 +293,8 @@
         (set-marker marker nil nil)
         (run-hooks 'xref-after-return-hook)))))
 (define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
+(define-key evil-motion-state-map (kbd "C-w C-l") 'winner-undo)
+(define-key evil-motion-state-map (kbd "C-w C-r") 'winner-redo)
 ;; }}
 
 ;; {{ buffer and window related
@@ -358,6 +361,7 @@
   (add-to-list 'counsel-etags-ignore-directories "pack")
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "lib")
+  (add-to-list 'counsel-etags-ignore-directories "build")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
 (defun phye/prog-mode-hook ()
@@ -365,7 +369,7 @@
   (hs-minor-mode)
   (hl-todo-mode 1)
   (subword-mode)
-  (set-fill-column 80)
+  (set-fill-column 100)
   (ws-butler-mode -1)  ; disable auto white space removal
   ;; (phye/set-electric-pair-inhibit-predicate)
   )
