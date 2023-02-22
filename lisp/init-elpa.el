@@ -166,6 +166,7 @@
     lsp-mode
     dockerfile-mode
     sync-recentf
+    clipetty
     )
   "Packages to install from melpa-unstable.")
 
