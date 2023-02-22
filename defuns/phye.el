@@ -167,7 +167,7 @@
   "dc" 'godoc-at-point
   "xb" 'ivy-switch-buffer
   "xc" 'suspend-frame
-  "cp" 'clipetty-kill-ring-save)
+  "cc" 'clipetty-kill-ring-save)
 
 (my-space-leader-def
   "rt" 'my-random-color-theme
@@ -458,7 +458,7 @@
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook
           (lambda ()
-            (setq c-basic-offset 2)
+            (setq c-basic-offset 4)
             (c-set-offset 'inlambda 0)
             (setq fill-column 90)
             (rainbow-mode -1)
