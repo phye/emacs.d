@@ -166,7 +166,8 @@
   "id" 'find-file-in-current-directory
   "dc" 'godoc-at-point
   "xb" 'ivy-switch-buffer
-  "xc" 'suspend-frame)
+  "xc" 'suspend-frame
+  "cp" 'clipetty-kill-ring-save)
 
 (my-space-leader-def
   "rt" 'my-random-color-theme
@@ -245,6 +246,13 @@
     (winner-undo))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
+
+;; clipboard
+(use-package clipetty
+  :ensure t
+  :hook (after-init . global-clipetty-mode)
+  :custom
+  (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY"))
 ;; }}
 
 ;; {{ multi project
@@ -293,8 +301,8 @@
         (set-marker marker nil nil)
         (run-hooks 'xref-after-return-hook)))))
 (define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
-(define-key evil-motion-state-map (kbd "C-w C-l") 'winner-undo)
-(define-key evil-motion-state-map (kbd "C-w C-r") 'winner-redo)
+(define-key evil-motion-state-map (kbd "C-x C-l") 'winner-undo)
+(define-key evil-motion-state-map (kbd "C-x C-r") 'winner-redo)
 ;; }}
 
 ;; {{ buffer and window related
