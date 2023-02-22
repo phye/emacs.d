@@ -21,7 +21,7 @@
 ;; }}
 
 ;; color and theme settings
-(load-theme 'doom-spacegrey t)
+(load-theme 'spacemacs-dark t)
 (setq my-favorite-color-themes
       '(srcery
         atom-dark
@@ -484,6 +484,8 @@
 ;; }}
 
 ;; {{
+;; conf
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . conf-mode))
 (use-package php-mode
   :ensure t
   :defer 5)

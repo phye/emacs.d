@@ -133,7 +133,7 @@
 
   (require-init 'init-emacs-w3m t)
   (require-init 'init-shackle t)
-  (require-init 'init-dired t)
+  ;; (require-init 'init-dired t)
   (require-init 'init-writting t)
   (require-init 'init-hydra) ; hotkey is required everywhere
   ;; use evil mode (vi key binding)
