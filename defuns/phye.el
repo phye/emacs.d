@@ -250,7 +250,6 @@
 ;; clipboard
 (use-package clipetty
   :ensure t
-  :hook (after-init . global-clipetty-mode)
   :custom
   (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY"))
 ;; }}
