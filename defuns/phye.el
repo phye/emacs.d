@@ -14,6 +14,7 @@
 (set-language-environment "utf-8")
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 (setq split-height-threshold nil)
+(require-package 'use-package)
 
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
@@ -210,8 +211,6 @@
   (dired (concat "/sshx:" host ":~/ws")))
 
 ;; }}
-
-(require-package 'use-package)
 
 ;; chinese font
 (use-package cnfonts
