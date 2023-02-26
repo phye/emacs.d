@@ -167,6 +167,7 @@
     dockerfile-mode
     sync-recentf
     clipetty
+    annotate-mode
     )
   "Packages to install from melpa-unstable.")
 

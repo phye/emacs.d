@@ -383,6 +383,9 @@
   (add-to-list 'counsel-etags-ignore-directories "build")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
+(use-package annotate-mode
+  :ensure t)
+
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
   (hs-minor-mode)
@@ -390,6 +393,7 @@
   (subword-mode)
   (set-fill-column 100)
   (ws-butler-mode -1)  ; disable auto white space removal
+  (annotate-mode 1) ;; enable annotate mode
   ;; (phye/set-electric-pair-inhibit-predicate)
   )
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
