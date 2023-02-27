@@ -383,7 +383,7 @@
   (add-to-list 'counsel-etags-ignore-directories "build")
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
-(use-package annotate-mode
+(use-package annotate
   :ensure t)
 
 (defun phye/prog-mode-hook ()
