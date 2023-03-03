@@ -609,8 +609,9 @@
   :ensure t
   :defer 5
   :config
-  (add-to-list 'company-backends 'company-math-symbols-latex)
-  (add-to-list 'company-backends 'company-math-symbols-unicode))
+  ;; (add-to-list 'company-backends 'company-math-symbols-latex)
+  ;; (add-to-list 'company-backends 'company-math-symbols-unicode)
+  )
 ;; }}
 
 ;; {{ pdf
