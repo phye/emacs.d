@@ -232,11 +232,11 @@
 
 ;; recentf
 (use-package sync-recentf
-  :ensure t
-  :custom
-  (recentf-auto-cleanup 10)
-  :config
-  (recentf-mode 1))
+   :ensure t
+   :custom
+   (recentf-auto-cleanup 60)
+   :config
+   (recentf-mode 1))
 
 ;; gpg encrypt
 (require 'epa-file)
