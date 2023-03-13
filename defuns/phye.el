@@ -620,6 +620,10 @@
   :defer 5
   :custom
   (pdf-view-use-scaling t))
+
+(use-package org-noter
+  :ensure t
+  :defer 5)
 ;; }}
 
 ;; {{ info mode
