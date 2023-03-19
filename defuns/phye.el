@@ -795,8 +795,8 @@
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
   ;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
-  (org-journal-file-format "%Y%m%d.org")
-  (org-journal-file-type 'weekly))
+  (org-journal-file-format "%Y%m.org")
+  (org-journal-file-type 'monthly))
 
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
