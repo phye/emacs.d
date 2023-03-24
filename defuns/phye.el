@@ -320,8 +320,8 @@
 (use-package popper
   :ensure t
   :bind (("C-`"   . popper-toggle-latest)
-         ("M-`"   . popper-cycle)
-         ("C-M-`" . popper-toggle-type))
+         ("s-`"   . popper-cycle)
+         ("C-s-`" . popper-toggle-type))
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"
