@@ -489,7 +489,9 @@
 ;;   (require 'go-guru))
 (use-package go-mode
   :ensure t
-  :defer 5)
+  :defer 5
+  :custom
+  (gofmt-command "goimports"))
 (defun phye/golang-hook ()
     "phye's golang hook"
   (interactive)
@@ -503,6 +505,26 @@
   (add-hook 'before-save-hook #'lsp-organize-imports t t)
   ;;(add-hook 'before-save-hook 'gofmt-before-save)
   )
+;; }}
+
+;; {{ binary
+(evil-set-initial-state 'hexl-mode 'emacs)
+(defun phye/hexl-mode-hook ()
+  "phye's hexl mode hook"
+    (interactive)
+    (read-only-mode t))
+(use-package hexl
+  :config
+  (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
+  (add-to-list 'auto-mode-alist '("\\.data\\'" . hexl-mode))
+  (define-key hexl-mode-map (kbd "n") 'hexl-forward-char)
+  (define-key hexl-mode-map (kbd "e") 'hexl-forward-short)
+  (define-key hexl-mode-map (kbd "E") 'hexl-forward-word)
+  (define-key hexl-mode-map (kbd "p") 'hexl-backward-char)
+  (define-key hexl-mode-map (kbd "b") 'hexl-backward-short)
+  (define-key hexl-mode-map (kbd "B") 'hexl-backward-word)
+  :hook
+  (hexl-mode . phye/hexl-mode-hook))
 ;; }}
 
 ;; {{
