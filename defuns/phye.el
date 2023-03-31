@@ -334,7 +334,7 @@
   (popper-echo-mode +1))
 
 (use-package hide-mode-line
-  :ensure nil
+  :ensure t
   :defer 10)
 
 (define-key minibuffer-local-map (kbd "C-a") 'move-beginning-of-line)
@@ -384,7 +384,9 @@
   (add-to-list 'counsel-etags-ignore-directories "third_path"))
 
 (use-package annotate
-  :ensure t)
+  :ensure t
+  :custom
+  (annotate-summary-ask-query t))
 
 (defun phye/prog-mode-hook ()
   (turn-on-auto-fill)
@@ -530,9 +532,6 @@
 ;; {{
 ;; conf
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . conf-mode))
-(use-package php-mode
-  :ensure t
-  :defer 5)
 ;; }}
 
 ;; {{ JavaScript/JSON
@@ -642,10 +641,6 @@
   :defer 5
   :custom
   (pdf-view-use-scaling t))
-
-(use-package org-noter
-  :ensure t
-  :defer 5)
 ;; }}
 
 ;; {{ info mode
@@ -870,6 +865,12 @@
       (evil-emacs-state)
     (evil-exit-emacs-state)))
 (add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
+;; }}
+
+;; {{ org-noter
+(use-package org-noter
+  :ensure t
+  :defer 5)
 ;; }}
 
 ;; }} Org Mode extensions
