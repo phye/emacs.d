@@ -355,6 +355,14 @@
   (message "window undedicated"))
 ;; }}
 
+;; file and dirs
+;;preview files in dired
+(use-package peep-dired
+  :ensure t
+  :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+  :bind (:map dired-mode-map
+              ("P" . peep-dired)))
+
 ;; {{ evil customizations
 (use-package evil-escape
   :ensure t
@@ -586,13 +594,13 @@
                                   (or (seq "&" (one-or-more nonl))
                                       (seq ">-")
                                       (seq "|"))
-			                      eol))))
-		               (group (seq
-			                   "- "
-			                   (+ (not (in ":" "\n")))
-			                   ":"
-			                   (+ nonl)
-			                   eol)))))))
+                                  eol))))
+                       (group (seq
+                               "- "
+                               (+ (not (in ":" "\n")))
+                               ":"
+                               (+ nonl)
+                               eol)))))))
     (setq outline-level 'yaml-outline-level))
   )
 ;; }}
@@ -648,8 +656,14 @@
 (use-package pdf-tools
   :ensure t
   :defer 5
+  :config
+  (pdf-tools-install)
+  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
   :custom
-  (pdf-view-use-scaling t))
+  (pdf-view-use-scaling t)
+  (pdf-annot-activate-created-annotations t)
+  (pdf-view-display-size 'fit-page)
+  (pdf-view-resize-factor 1.1))
 ;; }}
 
 ;; {{ info mode
