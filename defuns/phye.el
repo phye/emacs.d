@@ -656,8 +656,12 @@
 (use-package pdf-tools
   :ensure t
   :defer t
+  :bind (:map pdf-view-mode-map
+         (";" . ace-pinyin-jump-char-2)
+         ("C-x o" . other-window))
   :config
   (pdf-tools-install)
+  (blink-cursor-mode nil)
   (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
   :custom
   (pdf-view-use-scaling t)
@@ -893,7 +897,9 @@
 ;; {{ org-noter
 (use-package org-noter
   :ensure t
-  :defer t)
+  :defer t
+  :bind (:map org-noter-notes-mode-map
+         ("C-x o" . other-window)))
 ;; }}
 
 ;; }} Org Mode extensions
