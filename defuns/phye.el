@@ -228,7 +228,7 @@
 ;; chinese font
 (use-package cnfonts
   :ensure t
-  :defer 5)
+  :defer t)
 
 ;; recentf
 (use-package sync-recentf
@@ -335,7 +335,7 @@
 
 (use-package hide-mode-line
   :ensure t
-  :defer 10)
+  :defer t)
 
 (define-key minibuffer-local-map (kbd "C-a") 'move-beginning-of-line)
 (define-key minibuffer-local-map (kbd "C-e") 'move-end-of-line)
@@ -381,7 +381,7 @@
 ;; {{ general programming
 (use-package shell-pop
   :ensure t
-  :defer 5
+  :defer t
   :bind (("M-t" . shell-pop))
   :config
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
@@ -480,7 +480,7 @@
 ;; {{ protobuf
 (use-package protobuf-mode
   :ensure t
-  :defer 5
+  :defer t
   :config
   (add-hook 'protobuf-mode-hook 'phye/prog-mode-hook 90))
 ;; }}
@@ -508,7 +508,7 @@
 ;;   (require 'go-guru))
 (use-package go-mode
   :ensure t
-  :defer 5
+  :defer t
   :custom
   (gofmt-command "goimports"))
 (defun phye/golang-hook ()
@@ -554,7 +554,7 @@
 ;; {{ JavaScript/JSON
 (use-package json-mode
   :ensure t
-  :defer 5
+  :defer t
   :custom
   (js-indent-level 2)
   (json-encoding-default-indentation "  ")
@@ -567,7 +567,7 @@
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
 (use-package yaml-mode
   :ensure t
-  :defer 5
+  :defer t
   :mode (".yaml$")
   :hook
   (yaml-mode . yaml-mode-outline-hook)
@@ -611,7 +611,7 @@
 ;; {{ Dockerfile
 (use-package dockerfile-mode
   :ensure t
-  :defer 5
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
   )
@@ -633,19 +633,19 @@
   (setq truncate-lines nil))
 (use-package markdown-mode
   :ensure t
-  :defer 5
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
   (add-hook 'markdown-mode-hook 'phye/markdown-hook 90))
 (use-package ox-gfm
   :ensure t
-  :defer 5)
+  :defer t)
 ;; }}
 
 ;; {{ latex
 (use-package company-math
   :ensure t
-  :defer 5
+  :defer t
   :config
   ;; (add-to-list 'company-backends 'company-math-symbols-latex)
   ;; (add-to-list 'company-backends 'company-math-symbols-unicode)
@@ -655,7 +655,7 @@
 ;; {{ pdf
 (use-package pdf-tools
   :ensure t
-  :defer 5
+  :defer t
   :config
   (pdf-tools-install)
   (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
@@ -681,7 +681,7 @@
 ;; {{ plantuml
 (use-package plantuml-mode
     :ensure t
-    :defer 5
+    :defer t
     :custom
     (org-plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
     (plantuml-jar-path "~/.emacs.d/misc/plantuml.jar")
@@ -694,7 +694,7 @@
 ;; {{ graphviz-dot-mode
 (use-package graphviz-dot-mode
   :ensure t
-  :defer 5)
+  :defer t)
 (add-hook 'graphviz-dot-mode-hook #'turn-off-auto-fill)
 ;; }}
 
@@ -829,7 +829,7 @@
 ;; {{ org-journal related
 (use-package org-journal
   :ensure t
-  :defer 5
+  :defer t
   :custom
   (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
@@ -893,7 +893,7 @@
 ;; {{ org-noter
 (use-package org-noter
   :ensure t
-  :defer 5)
+  :defer t)
 ;; }}
 
 ;; }} Org Mode extensions
