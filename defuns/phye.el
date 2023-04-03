@@ -398,7 +398,12 @@
   (add-to-list 'counsel-etags-ignore-directories "model")
   (add-to-list 'counsel-etags-ignore-directories "lib")
   (add-to-list 'counsel-etags-ignore-directories "build")
-  (add-to-list 'counsel-etags-ignore-directories "third_path"))
+  (add-to-list 'counsel-etags-ignore-directories "third_path")
+  (add-to-list 'counsel-etags-ignore-directories "netcapture/proto")
+  (add-to-list 'counsel-etags-ignore-directories "crm_client/dm_nlp_svrs/nlp_structured_msg_svr/client/proto")
+  (add-to-list 'counsel-etags-ignore-filenames "*_pb2.py")
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb.h")
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb2.cc"))
 
 (use-package annotate
   :ensure t
