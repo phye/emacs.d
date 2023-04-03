@@ -784,6 +784,9 @@
           ("KnowledgeBase.org" :maxlevel . 5)
           ("done.org" :maxlevel . 5)))
 
+  (define-key org-agenda-mode-map (kbd "F") 'org-agenda-fortnight-view)
+  (define-key org-agenda-mode-map (kbd "M") 'org-agenda-month-view)
+
   ;; Org Mode Capture
   (setq org-capture-templates
         '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
