@@ -168,6 +168,7 @@
     sync-recentf
     clipetty
     annotate-mode
+    peep-dired
     )
   "Packages to install from melpa-unstable.")
 
