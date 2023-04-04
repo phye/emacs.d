@@ -736,6 +736,18 @@
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
+;; org-agenda-mode-map
+(with-eval-after-load 'org-agenda
+  (define-key org-agenda-mode-map (kbd "W") 'org-agenda-week-view)
+  (define-key org-agenda-mode-map (kbd "F") 'org-agenda-fortnight-view)
+  (define-key org-agenda-mode-map (kbd "M") 'org-agenda-month-view)
+  (define-key org-agenda-mode-map (kbd "Y") 'org-agenda-year-view)
+  (customize-set-variable 'calendar-chinese-all-holidays-flag t)
+  (customize-set-variable 'calendar-holidays
+                          (append holiday-oriental-holidays
+                                  holiday-local-holidays
+                                  holiday-other-holidays)))
+
 ;; {{ Complex Org settings
 (with-eval-after-load 'org
   (setq org-tag-alist '((:startgroup . nil) ;; tag group for address
@@ -783,9 +795,6 @@
           (org-agenda-files :maxlevel . 5)
           ("KnowledgeBase.org" :maxlevel . 5)
           ("done.org" :maxlevel . 5)))
-
-  (define-key org-agenda-mode-map (kbd "F") 'org-agenda-fortnight-view)
-  (define-key org-agenda-mode-map (kbd "M") 'org-agenda-month-view)
 
   ;; Org Mode Capture
   (setq org-capture-templates
@@ -846,7 +855,7 @@
   (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
-  ;; (customize-set-variable 'org-journal-date-format "%A, %Y-%m-%d")
+  (customize-set-variable 'org-journal-date-format "%A, %x")
   (org-journal-file-format "%Y%m.org")
   (org-journal-file-type 'monthly))
 
