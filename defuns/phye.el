@@ -538,6 +538,7 @@ Git gutter:
 ;; {{ cpp
 ;; (add-hook 'c-mode-common-hook #'lsp-deferred)
 (my-ensure 'clang-format)
+(add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
 ;; }}
 
 ;; {{ Golang
