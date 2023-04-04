@@ -736,6 +736,18 @@
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
+;; calendar and org-agenda
+(customize-set-variable 'holiday-local-holidays
+                        '(append
+                          (holiday-fixed 1 1 "元旦")
+                          (holiday-fixed 3 8 "妇女节")
+                          (holiday-fixed 5 1 "劳动节")
+                          (holiday-fixed 5 4 "青年节")
+                          (holiday-fixed 6 1 "儿童节")
+                          (holiday-fixed 7 1 "建党节")
+                          (holiday-fixed 8 1 "建军节")
+                          (holiday-fixed 10 1 "国庆节")
+                          ))
 ;; org-agenda-mode-map
 (with-eval-after-load 'org-agenda
   (define-key org-agenda-mode-map (kbd "W") 'org-agenda-week-view)
