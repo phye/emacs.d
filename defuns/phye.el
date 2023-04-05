@@ -312,8 +312,6 @@
         (set-marker marker nil nil)
         (run-hooks 'xref-after-return-hook)))))
 (define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
-(define-key evil-motion-state-map (kbd "C-x C-l") 'winner-undo)
-(define-key evil-motion-state-map (kbd "C-x C-r") 'winner-redo)
 ;; }}
 
 ;; {{ buffer and window related
