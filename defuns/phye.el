@@ -989,7 +989,9 @@ Git gutter:
   :ensure t
   :defer t
   :bind (:map org-noter-notes-mode-map
-         ("C-x o" . other-window)))
+         ("C-x o" . other-window))
+  :config
+  (pdf-tools-install))
 ;; }}
 
 ;; }} Org Mode extensions
