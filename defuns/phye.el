@@ -423,6 +423,7 @@ Git gutter:
 (with-eval-after-load 'counsel-etags
   (setq counsel-etags-debug t)
   (add-to-list 'counsel-etags-ignore-directories "duiqi")
+  (add-to-list 'counsel-etags-ignore-directories "cc_tool")
   (add-to-list 'counsel-etags-ignore-directories "data")
   (add-to-list 'counsel-etags-ignore-directories "cache")
   (add-to-list 'counsel-etags-ignore-directories "pack")
