@@ -415,6 +415,7 @@ Git gutter:
   :ensure t
   :defer t
   :bind (("M-t" . shell-pop))
+  :bind (("s-t" . shell-pop))
   :config
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
   (setq shell-pop-term-shell "/bin/zsh")
