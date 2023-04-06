@@ -223,6 +223,20 @@
   (interactive "sChoose your host: ")
   (dired (concat "/sshx:" host ":~/ws")))
 
+
+;; timestamp
+(defun ts-to-human (ts)
+  "given ts INTEGER, return human readable string"
+  (interactive "nts: ")
+  (message (format-time-string "%Y-%m-%d %h:%m:%S" ts)))
+(defun current-ts ()
+  (interactive)
+  (setq ts (format "%s" (time-convert (current-time) 'integer)))
+  (with-temp-buffer
+    (insert ts)
+    (mark-whole-buffer)
+    (copy-to-x-clipboard))
+  (message "ts: %s" ts))
 ;; }}
 
 ;; chinese font
