@@ -574,6 +574,7 @@ Git gutter:
   :config
   (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
   (add-to-list 'auto-mode-alist '("\\.data\\'" . hexl-mode))
+  (add-to-list 'auto-mode-alist '("\\.o\\'" . hexl-mode))
   (define-key hexl-mode-map (kbd "n") 'hexl-forward-char)
   (define-key hexl-mode-map (kbd "e") 'hexl-forward-short)
   (define-key hexl-mode-map (kbd "E") 'hexl-forward-word)
@@ -644,6 +645,7 @@ Git gutter:
 ;; }}
 
 ;; {{ ASM
+(add-to-list 'auto-mode-alist '("\\.dump\\'" . asm-mode))
 ;; }}
 
 ;; {{ Dockerfile
