@@ -772,8 +772,7 @@ Git gutter:
 
 ;; calendar and org-agenda
 (customize-set-variable 'holiday-local-holidays
-                        '(append
-                          (holiday-fixed 1 1 "元旦")
+                        '((holiday-fixed 1 1 "元旦")
                           (holiday-fixed 3 8 "妇女节")
                           (holiday-fixed 5 1 "劳动节")
                           (holiday-fixed 5 4 "青年节")
