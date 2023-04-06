@@ -117,6 +117,7 @@
   (recover-avy-lead-face))
 (use-package hl-todo
   :ensure t
+  :defer t
   :custom
   (hl-todo-keyword-faces
    '(("STUB" . "#1E90FF")
@@ -285,6 +286,7 @@
 ;; -- projectile-mode
 (use-package projectile
   :ensure t
+  :defer t
   ;; :bind (("C-c x" . projectile-command-map))
   :config
   (projectile-mode +1)
@@ -331,6 +333,7 @@
 ;; {{ buffer and window related
 (use-package popper
   :ensure t
+  :defer t
   :bind (("C-`"   . popper-toggle-latest)
          ("s-`"   . popper-cycle)
          ("C-s-`" . popper-toggle-type))
@@ -383,6 +386,7 @@
   (evil-escape-key-sequence "fd"))
 (use-package evil-numbers
   :ensure t
+  :defer t
   :bind (:map evil-normal-state-map ("C-a" . evil-numbers/inc-at-pt)))
 ;; }}
 
@@ -453,6 +457,7 @@ Git gutter:
 
 (use-package annotate
   :ensure t
+  :defer t
   :custom
   (annotate-summary-ask-query t))
 
@@ -484,6 +489,7 @@ Git gutter:
 ;; camelCase, snake_case .etc
 (use-package string-inflection
   :ensure t
+  :defer t
   :config
   (define-key global-map (kbd "C-c i") 'string-inflection-cycle)
   (define-key global-map (kbd "C-c C") 'string-inflection-camelcase)
@@ -939,6 +945,7 @@ Git gutter:
 ;; {{ org-roam
 (use-package org-roam
   :ensure t
+  :defer t
   :init
   (setq org-roam-v2-ack t)
   :custom
