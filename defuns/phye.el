@@ -224,10 +224,9 @@
   (interactive "sChoose your host: ")
   (dired (concat "/sshx:" host ":~/ws")))
 
-
 ;; timestamp
 (defun ts-to-human (ts)
-  "given ts INTEGER, return human readable string"
+  "Given ts INTEGER, return human readable string"
   (interactive "nts: ")
   (message (format-time-string "%Y-%m-%d %h:%m:%S" ts)))
 (defun current-ts ()
@@ -238,6 +237,13 @@
     (mark-whole-buffer)
     (copy-to-x-clipboard))
   (message "ts: %s" ts))
+
+;; hex to ascii, copied from stackoverflow
+(defun decode-hex-string (hex-string)
+  (apply #'concat
+         (cl-loop for i from 0 to (- (/ (length hex-string) 2) 1)
+                  for hex-byte = (substring hex-string (* 2 i) (* 2 (+ i 1)))
+                  collect (format "%c" (string-to-number hex-byte 16)))))
 ;; }}
 
 ;; chinese font
