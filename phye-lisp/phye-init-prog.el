@@ -5,20 +5,21 @@
 (use-package shell-pop
   :ensure t
   :defer t
-  :bind (("M-t" . shell-pop))
-  :bind (("s-t" . shell-pop))
   :config
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
   (setq shell-pop-term-shell "/bin/zsh")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+  (my-comma-leader-def
+    "tt" . shell-pop))
 
 ;; code annotation
 (use-package annotate
   :ensure t
   :defer t
   :custom
-  (annotate-summary-ask-query t))
+  (annotate-summary-ask-query t)
+  (annotate-file "~/.data/annotations"))
 
 ;; company
 (use-package company
