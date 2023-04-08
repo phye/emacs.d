@@ -161,7 +161,7 @@
 
     ;; my personal setup, other major-mode specific setup need it.
     ;; It's dependent on *.el in `my-site-lisp-dir'
-    (my-run-with-idle-timer 1 (lambda () (load "~/.emacs.d/defuns/phye.el" t nil)))
+    (my-run-with-idle-timer 1 (lambda () (load "~/.emacs.d/phye-lisp/phye-init.el" t nil)))
     (my-run-with-idle-timer 1 (lambda () (load "~/.custom.el" t nil)))))
 
 
