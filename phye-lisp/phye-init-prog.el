@@ -11,7 +11,7 @@
   ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
   (my-comma-leader-def
-    "tt" . shell-pop))
+    "tt" 'shell-pop))
 
 ;; code annotation
 (use-package annotate
