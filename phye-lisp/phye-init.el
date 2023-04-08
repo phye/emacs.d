@@ -2,6 +2,10 @@
 ;; ;; General Edit Configs ;; ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defconst phye-lisp-dir (concat my-emacs-d "phye-lisp")
+  "Directory of phye-lisp.")
+(setq load-path (append (list phye-lisp-dir) load-path))
+
 ;; {{ Misc
 (cd "~/ws")
 ;; although I don't use Diary Mode, change the default file in case of mistyping
@@ -1043,7 +1047,9 @@ Git gutter:
 
 ;; }}
 
+(require 'phye-init-org)
 
+(provide 'phye-init)
 ;;;;;;;;;;;;;;;
 ;; ;; End ;; ;;
 ;;;;;;;;;;;;;;;
