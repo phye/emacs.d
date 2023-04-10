@@ -33,6 +33,7 @@
   (set-window-dedicated-p (selected-window) nil)
   (message "window undedicated"))
 
+(setq xref-history-storage 'xref-window-local-history)
 ;; }}
 
 ;; per window call stack
@@ -69,6 +70,6 @@
         (goto-char (marker-position marker))
         (set-marker marker nil nil)
         (run-hooks 'xref-after-return-hook)))))
-(define-key evil-normal-state-map (kbd "C-t") 'my-xref-pop-marker-stack)
+(define-key evil-normal-state-map (kbd "C-t") 'xref-pop-marker-stack)
 
 (provide 'phye-init-window)
