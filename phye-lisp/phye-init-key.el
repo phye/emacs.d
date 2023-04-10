@@ -19,7 +19,13 @@
   "dc" 'godoc-at-point
   "xb" 'ivy-switch-buffer
   "xc" 'suspend-frame
-  "cc" 'clipetty-kill-ring-save)
+  "cc" 'clipetty-kill-ring-save
+  "hd" 'hide-ifdef-block
+  "hs" 'show-ifdef-block
+  "ha" 'show-ifdefs
+  "hb" 'hs-hide-block
+  "hl" 'hs-hide-level
+  "ho" 'hs-show-block)
 
 (my-space-leader-def
   "rt" 'my-random-color-theme
