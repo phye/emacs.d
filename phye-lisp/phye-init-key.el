@@ -28,7 +28,8 @@
   "ho" 'hs-show-block)
 
 (my-space-leader-def
-  "rt" 'my-random-color-theme
+  "rt" 'my-random-favorite-color-theme
+  "hh" 'my-random-healthy-color-theme
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev)
 ;; }}
