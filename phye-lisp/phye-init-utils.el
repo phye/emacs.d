@@ -16,7 +16,7 @@
 (defun ts-to-human (ts)
   "Given ts INTEGER, return human readable string"
   (interactive "nts: ")
-  (message (format-time-string "%Y-%m-%d %h:%m:%S" ts)))
+  (message (format-time-string "%Y-%m-%d %H:%M:%S" ts)))
 (defun current-ts ()
   (interactive)
   (setq ts (format "%s" (time-convert (current-time) 'integer)))
