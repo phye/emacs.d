@@ -47,7 +47,7 @@
   (add-to-list 'counsel-etags-ignore-directories "crm_client/dm_nlp_svrs/nlp_structured_msg_svr/client/proto")
   (add-to-list 'counsel-etags-ignore-filenames "*_pb2.py")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.h")
-  (add-to-list 'counsel-etags-ignore-filenames "*.pb2.cc"))
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb.cc"))
 
 ;; ediff
 (defvar previous-theme nil "previous theme before ediff for backup")
