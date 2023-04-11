@@ -157,6 +157,7 @@
     exec-path-from-shell
     org-journal
     vimish-fold
+    emacssql
     org-roam
     org-present
     popper
@@ -169,6 +170,7 @@
     clipetty
     annotate-mode
     peep-dired
+    helpful
     )
   "Packages to install from melpa-unstable.")
 
