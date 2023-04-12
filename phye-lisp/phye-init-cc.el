@@ -7,8 +7,9 @@
             (setq c-basic-offset 4)
             (c-set-offset 'inlambda 0)
             (setq fill-column 90)
-            (rainbow-mode -1)
-            ) t)
+            (hide-ifdef-mode)
+            (rainbow-mode -1))
+          t)
 ;; }}
 
 ;; {{ cpp
