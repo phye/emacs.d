@@ -25,7 +25,8 @@
   "ha" 'show-ifdefs
   "hb" 'hs-hide-block
   "hl" 'hs-hide-level
-  "ho" 'hs-show-block)
+  "ho" 'hs-show-block
+  "tt" 'shell-pop)
 
 (my-space-leader-def
   "rt" 'my-random-favorite-color-theme

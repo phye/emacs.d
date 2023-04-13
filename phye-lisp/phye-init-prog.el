@@ -9,9 +9,7 @@
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
   (setq shell-pop-term-shell "/bin/zsh")
   ;; need to do this manually or not picked up by `shell-pop'
-  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
-  (my-comma-leader-def
-    "tt" 'shell-pop))
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 
 ;; code annotation
 (use-package annotate
@@ -53,7 +51,7 @@
 (defvar previous-theme nil "previous theme before ediff for backup")
 (defun phye/ediff-startup-hook ()
   (setq previous-theme (car custom-enabled-themes))
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-gruvbox t))
 (defun phye/ediff-cleanup-hook ()
     (load-theme previous-theme t)
     (winner-undo))
