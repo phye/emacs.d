@@ -39,4 +39,10 @@
   (interactive)
   (set-selective-display (if selective-display nil 1)))
 
+(defun dos2unix ()
+  "Not exactly but it's easier to remember"
+  (interactive)
+  (set-buffer-file-coding-system 'unix 't)
+  (save-buffer))
+
 (provide 'phye-init-utils)
