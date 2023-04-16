@@ -131,7 +131,7 @@
         (dot . t)
         ))
      (require 'ox-md nil t)
-     (require 'ox-odt nil t)))
+     (require 'ox-odt nil t))
   )
 
 ;; {{ Org Mode Extensions
