@@ -1034,8 +1034,7 @@ might be bad."
 ;; {{ exe path
 (with-eval-after-load 'exec-path-from-shell
   (dolist (var '("SSH_AUTH_SOCK" "SSH_AGENT_PID" "GPG_AGENT_INFO"))
-    (push var exec-path-from-shell-variables))
-  (setq exec-path-from-shell-arguments nil))
+    (push var exec-path-from-shell-variables)))
 
 (when (and window-system (memq window-system '(mac ns)))
   ;; @see https://github.com/purcell/exec-path-from-shell/issues/75
