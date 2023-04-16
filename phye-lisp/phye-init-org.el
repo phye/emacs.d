@@ -122,7 +122,7 @@
      ;; org babel
      (my-yas-reload-all)
      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-     (define-key org-mode-map (kbd "C-c o") 'org-open-at-point))
+     (define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
      (org-babel-do-load-languages
       'org-babel-load-languages
       '(
@@ -131,8 +131,7 @@
         (dot . t)
         ))
      (require 'ox-md nil t)
-     (require 'ox-odt nil t))
-  )
+     (require 'ox-odt nil t))))
 
 ;; {{ Org Mode Extensions
 
@@ -237,8 +236,8 @@
   (set-fill-column 90)
   (turn-on-auto-fill)
   (org-clock-persistence-insinuate)
-  (hl-todo-mode 1)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
+  (hl-todo-mode 1))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 ;; }}
 
