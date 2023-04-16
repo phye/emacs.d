@@ -215,26 +215,11 @@
 ;; }} Org Mode Extensions
 
 ;; {{ Custom Org Mode Functions
-;; My useless functions (can be achieved via much easier yasnippet)
-(defun insert-src-in-orgmode (lang)
-  "Insert src prefix and postfix for LANG in OrgMode"
-  (interactive "sChoose your language: ")
-  (newline)
-  (indent-for-tab-command)
-  (insert "#+begin_src " lang "\n")
-  (indent-for-tab-command)
-  (save-excursion
-    (insert "#+end_src"))
-  (org-edit-special)
-  )
-
 ;; My org template
 (defun phye/org-template ()
   (insert "#+title: \n")
   (insert "#+setupfile: ~/.emacs.d/misc/include.org\n"))
-
 (define-auto-insert "\\.org$" #'phye/org-template)
-
 ;; see http://thread.gmane.org/gmane.emacs.orgmode/42715
 (with-eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
