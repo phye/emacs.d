@@ -8,6 +8,7 @@
 
 (require-package 'use-package)
 
+(require 'phye-init-elpa)
 (require 'phye-init-misc)
 (require 'phye-init-edit)
 (require 'phye-init-themes)

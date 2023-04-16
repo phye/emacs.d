@@ -1,10 +1,5 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
-(defun my-initialize-package-internal ()
-  "Initialize package system."
-  (unless (and (boundp 'package--initialized) package--initialized)
-    (package-initialize t)))
-
 (defun my-initialize-package ()
   "Package loading optimization.  No need to activate all the packages so early."
   ;; @see https://www.gnu.org/software/emacs/news/NEWS.27.1
@@ -153,25 +148,7 @@
     zoutline
     company-c-headers
     graphql-mode
-    company-statistics
-    exec-path-from-shell
-    org-journal
-    vimish-fold
-    emacssql
-    org-roam
-    org-present
-    popper
-    lsp-ui
-    lsp-ivy
-    ;; lsp-treemacs
-    lsp-mode
-    dockerfile-mode
-    sync-recentf
-    clipetty
-    annotate-mode
-    peep-dired
-    helpful
-    )
+    company-statistics)
   "Packages to install from melpa-unstable.")
 
 (defvar melpa-stable-banned-packages nil
@@ -183,29 +160,23 @@
       '(
         ;; uncomment below line if you need use GNU ELPA
         ;; ("gnu" . "https://elpa.gnu.org/packages/")
-        ;; ("melpa" . "https://melpa.org/packages/")
-        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
 
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is slow or shutdown.
 
         ;; ;; {{ Option 1: 163 mirror repository:
-        ("gnu" . "https://mirrors.163.com/elpa/gnu/")
-        ("melpa" . "https://mirrors.163.com/elpa/melpa/")
-        ("melpa-stable" . "https://mirrors.163.com/elpa/stable-melpa/")
+        ;; ;; ("gnu" . "https://mirrors.163.com/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.163.com/elpa/melpa/")
+        ;; ("melpa-stable" . "https://mirrors.163.com/elpa/stable-melpa/")
         ;; ;; }}
 
-        ;; {{ Option 2: tsinghua mirror repository
-        ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
-        ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ;; ;; {{ Option 2: tsinghua mirror repository
+        ;; ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
+        ;; ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
         ;; ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ;; ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/stable-melpa/")
-        ;; }}
-
-        ;; {{ Option 3: tencent mirror repository:
-        ;; ("gnu" . "https://mirrors.tencent.com/elpa/gnu/")
-        ;; ("melpa" . "http://mirrors.tencent.com/elpa/melpa/")
-        ;; ("melpa-stable" . "http://mirrors.tencent.com/elpa/melpa-stable/")
         ;; }}
         ))
 
@@ -372,14 +343,10 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
 (require-package 'evil-surround)
 (require-package 'evil-visualstar)
 (require-package 'undo-fu)
-(require-package 'slime)
 (require-package 'counsel-css)
 (require-package 'auto-package-update)
 (require-package 'keyfreq)
 (require-package 'adoc-mode) ; asciidoc files
-(require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
-(require-package 'go-guru)
-;; (require-package 'company-go)
 (require-package 'shackle)
 (require-package 'toc-org)
 (require-package 'elpa-mirror)
