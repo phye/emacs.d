@@ -6,6 +6,8 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
 (define-key global-map (kbd "M-v") 'paste-from-x-clipboard)
+(define-key global-map (kbd "C-c a") 'org-agenda)
+(define-key global-map (kbd "C-c l") 'org-store-link)
 
 (my-comma-leader-def
   "ls" 'highlight-symbol
