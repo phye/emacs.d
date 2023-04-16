@@ -1,5 +1,4 @@
 ;; general editting
-(setq org-tags-column -80)
 (setq org-catch-invisible-edits (quote error))
 (setq org-adapt-indentation t)
 
@@ -115,24 +114,6 @@
         "xelatex -interaction nonstopmode -output-directory %o %f"
         "xelatex -interaction nonstopmode -output-directory %o %f"))
 
-;; {{ settings after org loaded
-(with-eval-after-load 'org
-  (my-run-with-idle-timer 1
-   (lambda ()
-     ;; org babel
-     (my-yas-reload-all)
-     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-     (define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '(
-        (ditaa . t)
-        (plantuml . t)
-        (dot . t)
-        ))
-     (require 'ox-md nil t)
-     (require 'ox-odt nil t))))
-
 ;; {{ Org Mode Extensions
 
 ;; {{ org-journal related
@@ -233,12 +214,32 @@
 (defun phye/org-mode-hook ()
   "custom orgmode settings"
   (interactive)
+  (setq org-tags-column -80)
   (set-fill-column 90)
   (turn-on-auto-fill)
   (org-clock-persistence-insinuate)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
   (hl-todo-mode 1))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
+
 ;; }}
+
+;; settings after org loaded
+(with-eval-after-load 'org
+  (my-run-with-idle-timer 1
+   (lambda ()
+     ;; org babel
+     (my-yas-reload-all)
+     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+     (define-key org-mode-map (kbd "C-c o") 'org-open-at-point)
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '(
+        (ditaa . t)
+        (plantuml . t)
+        (dot . t)
+        ))
+     (require 'ox-md nil t)
+     (require 'ox-odt nil t))))
 
 (provide 'phye-init-org)
