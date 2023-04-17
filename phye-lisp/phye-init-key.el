@@ -28,13 +28,14 @@
   "hb" 'hs-hide-block
   "hl" 'hs-hide-level
   "ho" 'hs-show-block
-  "tt" 'shell-pop)
+  "tt" 'shell-pop
+  "nn" 'highlight-symbol-next
+  "pp" 'highlight-symbol-prev
+  )
 
 (my-space-leader-def
   "rt" 'my-random-favorite-color-theme
-  "hh" 'my-random-healthy-color-theme
-  "nn" 'highlight-symbol-next
-  "pp" 'highlight-symbol-prev)
+  "hh" 'my-random-healthy-color-theme)
 ;; }}
 
 ;; {{ mini buffer edit
