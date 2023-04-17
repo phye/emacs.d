@@ -5,15 +5,26 @@
   :ensure t
   :defer t
   :init
-  (setq popper-reference-buffers
-        '("\\*Messages\\*"
-          "Output\\*$"
-          "\\*godoc"
-          "\\*Async Shell Command\\*"
-          help-mode
-          compilation-mode))
+  :custom
+  (popper-reference-buffers
+   '(
+     "Output\\*$"
+     "\\*godoc"
+     "\\*Async Shell Command\\*"
+     "^\\*helpful.*\\*$"
+     help-mode
+     compilation-mode))
+  (popper-group-function #'popper-group-by-directory)
   (popper-mode +1)
   (popper-echo-mode +1))
+
+(with-eval-after-load 'helpful
+  (define-key helpful-mode-map (kbd "N") 'forward-button)
+  (define-key helpful-mode-map (kbd "P") 'backward-button)
+  (define-key helpful-mode-map (kbd "n") 'popper-cycle)
+  (define-key helpful-mode-map (kbd "p") 'popper-cycle)
+  (define-key helpful-mode-map (kbd "k") 'popper-kill-latest-popup)
+  )
 
 (use-package hide-mode-line
   :ensure t
