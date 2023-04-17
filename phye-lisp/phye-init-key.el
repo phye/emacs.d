@@ -10,6 +10,8 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 
 (my-comma-leader-def
+  "fb" 'clang-format-buffer
+  "ft" 'clang-format
   "ls" 'highlight-symbol
   "ol" 'org-open-at-point
   "sl" 'org-store-link
