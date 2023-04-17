@@ -109,6 +109,10 @@
   :after (lsp-mode))
 ;; }}
 
+(with-eval-after-load 'find-file-in-project
+  (add-to-list 'ffip-prune-patterns "*/build")
+  (add-to-list 'ffip-prune-patterns "*/rpm_build")
+  )
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
