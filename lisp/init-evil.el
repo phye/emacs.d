@@ -773,11 +773,11 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
 
 ;; Please check "init-ediff.el" which contains `my-space-leader-def' code too
 (my-space-leader-def
-  "n" (lambda ()
+  "nh" (lambda ()
         (interactive)
         (if (derived-mode-p 'diff-mode) (my-search-next-diff-hunk)
           (my-search-next-merge-conflict)))
-  "p" (lambda ()
+  "ph" (lambda ()
         (interactive)
         (if (derived-mode-p 'diff-mode) (my-search-prev-diff-hunk)
           (my-search-prev-merge-conflict)))
