@@ -4,9 +4,6 @@
 (use-package popper
   :ensure t
   :defer t
-  :bind (("C-`"   . popper-toggle-latest)
-         ("s-`"   . popper-cycle)
-         ("C-s-`" . popper-toggle-type))
   :init
   (setq popper-reference-buffers
         '("\\*Messages\\*"

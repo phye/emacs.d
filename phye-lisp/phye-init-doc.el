@@ -20,11 +20,10 @@
 (defun phye/info-mode-hook ()
   "bind evil like windmov"
   (interactive)
-  (global-unset-key (kbd "C-w"))
-  (define-key global-map (kbd "C-w h") 'evil-window-left)
-  (define-key global-map (kbd "C-w l") 'evil-window-right)
-  (define-key global-map (kbd "C-w j") 'evil-window-down)
-  (define-key global-map (kbd "C-w k") 'evil-window-up))
+  (define-key Info-mode-map (kbd "C-w h") 'evil-window-left)
+  (define-key Info-mode-map (kbd "C-w l") 'evil-window-right)
+  (define-key Info-mode-map (kbd "C-w j") 'evil-window-down)
+  (define-key Info-mode-map (kbd "C-w k") 'evil-window-up))
 (add-hook 'Info-mode-hook #'phye/info-mode-hook 90)
 ;; }}
 

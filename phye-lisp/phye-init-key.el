@@ -31,6 +31,8 @@
   "tt" 'shell-pop
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev
+  "pc" 'popper-cycle
+  "pl" 'popper-toggle-latest
   )
 
 (my-space-leader-def
@@ -41,9 +43,9 @@
 ;; {{ mini buffer edit
 (define-key minibuffer-local-map (kbd "C-a") 'move-beginning-of-line)
 (define-key minibuffer-local-map (kbd "C-e") 'move-end-of-line)
-(define-key minibuffer-local-map (kbd "C-w") 'evil-delete-backward-word)
-(with-eval-after-load 'ivy-mode
+(defun phye/ivy-mode-hook ()
   (define-key ivy-minibuffer-map (kbd "C-w") 'evil-delete-backward-word))
+(add-hook 'ivy-mode-hook 'phye/ivy-mode-hook)
 ;; }}
 
 (provide 'phye-init-key)
