@@ -1,15 +1,15 @@
 ;; {{ c
+(defun phye/cc-mode-hook ()
+  (setq c-basic-offset 4)
+  (set-fill-column 80)
+  (c-set-offset 'inlambda 0)
+  (hide-ifdef-mode)
+  (annotate-mode)
+  (rainbow-mode -1))
 (local-require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (setq c-basic-offset 4)
-            (c-set-offset 'inlambda 0)
-            (setq fill-column 90)
-            (hide-ifdef-mode)
-            (rainbow-mode -1))
-          t)
+(add-hook 'c-mode-common-hook 'phye/cc-mode-hook 90)
 ;; }}
 
 ;; {{ cpp
@@ -26,15 +26,15 @@
   :defer t
   :custom
   (gofmt-command "goimports"))
-(defun phye/golang-hook ()
+(defun phye/go-mode-hook ()
     "phye's golang hook"
   (interactive)
-  (set-fill-column 90)
-  (turn-off-auto-fill))
+  (set-fill-column 80)
+  (annotate-mode))
 (with-eval-after-load 'go-mode
   (add-hook 'go-mode-hook #'lsp-deferred)
   (add-hook 'go-mode-hook #'lsp-go-install-save-hook)
-  (add-hook 'go-mode-hook 'phye/golang-hook 90))
+  (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
 (defun lsp-go-install-save-hook ()
   (add-hook 'before-save-hook #'lsp-organize-imports t t)
   ;;(add-hook 'before-save-hook 'gofmt-before-save)

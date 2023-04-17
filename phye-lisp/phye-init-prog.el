@@ -119,9 +119,9 @@
   (subword-mode)
   (set-fill-column 100)
   (ws-butler-mode -1)                   ; disable auto white space removal
-  (annotate-mode)
-  (hide-ifdef-mode)
   ;; (phye/set-electric-pair-inhibit-predicate)
+  )
+(defun phye/prog-mode-hook ()
   )
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
