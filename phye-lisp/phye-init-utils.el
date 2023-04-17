@@ -20,11 +20,7 @@
 (defun current-ts ()
   (interactive)
   (setq ts (format "%s" (time-convert (current-time) 'integer)))
-  (with-temp-buffer
-    (insert ts)
-    (mark-whole-buffer)
-    (copy-to-x-clipboard))
-  (message "ts: %s" ts))
+  (copy-variable-to-clipboard ts))
 
 ;; hex to ascii, copied from stackoverflow
 (defun decode-hex-string (hex-string)
@@ -49,6 +45,21 @@
   (interactive)
   (find-file-in-current-directory 1)
   )
+
+(defun copy-variable-to-clipboard (val)
+  (with-temp-buffer
+    (insert val)
+    (mark-whole-buffer)
+    (clipetty-kill-ring-save))
+  (message "copied: %s" val))
+
+(defun copy-relative-path-in-project ()
+  (interactive)
+  (setq path (file-name-directory
+              (file-relative-name
+               (buffer-file-name)
+               (ffip-project-root))))
+  (copy-variable-to-clipboard path))
 
 ;; My useless functions (can be achieved via much easier yasnippet)
 (defun insert-src-in-orgmode (lang)

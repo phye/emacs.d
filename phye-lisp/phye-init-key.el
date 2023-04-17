@@ -36,9 +36,12 @@
   "pp" 'highlight-symbol-prev
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
+  "cd" 'copy-relative-path-in-project
   )
 
 (my-space-leader-def
+  "nn" 'highlight-symbol-next
+  "pp" 'highlight-symbol-prev
   "rt" 'my-random-favorite-color-theme
   "hh" 'my-random-healthy-color-theme)
 ;; }}
