@@ -11,6 +11,7 @@
      "Output\\*$"
      "\\*godoc"
      "\\*Async Shell Command\\*"
+     "^\\*ansi-term.*\\*$"
      "^\\*helpful.*\\*$"
      help-mode
      compilation-mode))

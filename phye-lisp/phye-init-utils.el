@@ -45,6 +45,11 @@
   (set-buffer-file-coding-system 'unix 't)
   (save-buffer))
 
+(defun find-file-in-cpp-module ()
+  (interactive)
+  (find-file-in-current-directory 1)
+  )
+
 ;; My useless functions (can be achieved via much easier yasnippet)
 (defun insert-src-in-orgmode (lang)
   "Insert src prefix and postfix for LANG in OrgMode"
