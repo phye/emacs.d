@@ -51,10 +51,6 @@
                       ("health" . ?h)
                       ("gtd" . ?g)
                       (:endgroup)))
-(setq org-todo-keywords
-      '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
-        (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
-        (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
 
 ;; gtd time related
 (setq org-deadline-warning-days 7)
@@ -227,6 +223,10 @@
   (my-run-with-idle-timer 1
    (lambda ()
      ;; org babel
+     (setq org-todo-keywords
+           '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
+             (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
+             (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
      (setq org-tags-column -80)
      (org-clock-persistence-insinuate)
      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
