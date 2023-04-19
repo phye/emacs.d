@@ -1,4 +1,4 @@
-(load-theme 'doom-opera t)
+(load-theme 'atom-one-dark t)
 (setq my-favorite-color-themes
       '(srcery
         atom-dark
