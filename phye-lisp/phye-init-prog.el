@@ -112,6 +112,8 @@
 (with-eval-after-load 'find-file-in-project
   (add-to-list 'ffip-prune-patterns "*/build")
   (add-to-list 'ffip-prune-patterns "*/rpm_build")
+  (add-to-list 'ffip-prune-patterns "*/cc_tool")
+  (add-to-list 'ffip-prune-patterns "*/qci_files")
   (add-to-list 'ffip-ignore-filenames "*.pb.cc")
   (add-to-list 'ffip-ignore-filenames "*.pb.h")
   (add-to-list 'ffip-ignore-filenames "*_pb2.py")

@@ -15,7 +15,7 @@
      "^\\*helpful.*\\*$"
      help-mode
      compilation-mode))
-  (popper-group-function #'popper-group-by-directory)
+  ;; (popper-group-function #'popper-group-by-directory)
   (popper-mode +1)
   (popper-echo-mode +1))
 

@@ -37,6 +37,7 @@
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   "cd" 'copy-relative-path-in-project
+  "xe" 'exit-recursive-edit
   )
 
 (my-space-leader-def

@@ -3,6 +3,7 @@
   (setq c-basic-offset 4)
   (set-fill-column 80)
   (c-set-offset 'inlambda 0)
+  (hs-minor-mode)
   (hide-ifdef-mode)
   (annotate-mode)
   (rainbow-mode -1))
