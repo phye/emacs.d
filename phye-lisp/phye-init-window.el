@@ -10,6 +10,7 @@
    '(
      "Output\\*$"
      "\\*godoc"
+     "\\*Compile-Log\\*$"
      "\\*Async Shell Command\\*"
      "^\\*ansi-term.*\\*$"
      "^\\*helpful.*\\*$"

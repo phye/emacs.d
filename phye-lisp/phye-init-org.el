@@ -237,6 +237,7 @@
         (ditaa . t)
         (plantuml . t)
         (dot . t)
+        (emacs-lisp . t)
         ))
      (require 'ox-md nil t)
      (require 'ox-odt nil t)
