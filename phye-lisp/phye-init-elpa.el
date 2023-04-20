@@ -14,6 +14,7 @@
         clipetty
         annotate-mode
         peep-dired
+        rg
         helpful))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))

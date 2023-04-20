@@ -137,17 +137,15 @@
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
+  (interactive)
   "phye's prog mode hook"
   (turn-on-auto-fill)
   (hs-minor-mode)
   (hl-todo-mode 1)
   (subword-mode)
-  (set-fill-column 100)
   (ws-butler-mode -1)    ; disable auto white space removal
   ;; (phye/set-electric-pair-inhibit-predicate)
-  )
-(defun phye/prog-mode-hook ()
-  )
+  (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
 (provide 'phye-init-prog)
