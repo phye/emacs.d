@@ -29,20 +29,25 @@
   (setq company-backends (delete 'company-clang company-backends))
   ) ; start autocompletion only after typin)
 
+(setq phye/general-ignore-directories
+  '(
+    "build"
+    "duiqi"
+    "data"
+    "pack"
+    "cache"
+    "model"
+    "lib"
+    "third_path"
+    "cc_tool"
+    "netcapture/proto"
+    "crm_client/dm_nlp_svrs/nlp_structured_msg_svr/client/proto"
+    ))
+
 ;; counsel
 (with-eval-after-load 'counsel-etags
   (setq counsel-etags-debug t)
-  (add-to-list 'counsel-etags-ignore-directories "duiqi")
-  (add-to-list 'counsel-etags-ignore-directories "cc_tool")
-  (add-to-list 'counsel-etags-ignore-directories "data")
-  (add-to-list 'counsel-etags-ignore-directories "cache")
-  (add-to-list 'counsel-etags-ignore-directories "pack")
-  (add-to-list 'counsel-etags-ignore-directories "model")
-  (add-to-list 'counsel-etags-ignore-directories "lib")
-  (add-to-list 'counsel-etags-ignore-directories "build")
-  (add-to-list 'counsel-etags-ignore-directories "third_path")
-  (add-to-list 'counsel-etags-ignore-directories "netcapture/proto")
-  (add-to-list 'counsel-etags-ignore-directories "crm_client/dm_nlp_svrs/nlp_structured_msg_svr/client/proto")
+  (setq counsel-etags-ignore-directories (append phye/general-ignore-directories counsel-etags-ignore-directories))
   (add-to-list 'counsel-etags-ignore-filenames "*_pb2.py")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.h")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.cc"))
@@ -66,7 +71,13 @@
   :config
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
-  )
+  (setq projectile-indexing-method 'hybrid)
+  (setq projectile-globally-ignored-directories
+        (append phye/general-ignore-directories projectile-globally-ignored-directories))
+  (add-to-list 'projectile-globally-ignored-file-suffixes "pb.cc")
+  (add-to-list 'projectile-globally-ignored-file-suffixes "pb.h")
+  (add-to-list 'projectile-globally-ignored-file-suffixes "py")
+  (add-to-list 'projectile-globally-ignored-file-suffixes "pyc"))
 
 ;; log
 (defun phye/view-log-with-color ()
@@ -119,6 +130,11 @@
   (add-to-list 'ffip-ignore-filenames "*_pb2.py")
   )
 
+(with-eval-after-load 'rg
+  (define-key rg-mode-map (kbd "n") 'rg-next-file)
+  (define-key rg-mode-map (kbd "p") 'rg-prev-file)
+  )
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   "phye's prog mode hook"
@@ -127,7 +143,7 @@
   (hl-todo-mode 1)
   (subword-mode)
   (set-fill-column 100)
-  (ws-butler-mode -1)                   ; disable auto white space removal
+  (ws-butler-mode -1)    ; disable auto white space removal
   ;; (phye/set-electric-pair-inhibit-predicate)
   )
 (defun phye/prog-mode-hook ()

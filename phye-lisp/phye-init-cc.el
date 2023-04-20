@@ -10,6 +10,7 @@
 (local-require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
+(add-hook 'c-mode-common-hook 'phye/prog-mode-hook 80)
 (add-hook 'c-mode-common-hook 'phye/cc-mode-hook 90)
 ;; }}
 

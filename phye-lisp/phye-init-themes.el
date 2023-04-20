@@ -140,4 +140,12 @@
       (list symbolstr))))
 ;; (advice-add 'highlight-symbol :filter-args #'phye/clean-symbol)
 
+(unless (boundp font-lock-reference-face)
+  (defface font-lock-reference-face
+    '((t :inherit t
+         :weight bold))
+    "add missing font-lock-reference-face")
+  (defvar font-lock-reference-face 'font-lock-reference-face)
+  )
+
 (provide 'phye-init-themes)

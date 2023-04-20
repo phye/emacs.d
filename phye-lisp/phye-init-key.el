@@ -38,6 +38,7 @@
   "pl" 'popper-toggle-latest
   "cd" 'copy-relative-path-in-project
   "xe" 'exit-recursive-edit
+  "gg" 'projectile-ripgrep
   )
 
 (my-space-leader-def
