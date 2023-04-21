@@ -1,7 +1,8 @@
 (defun phye/markdown-hook ()
     "diasable trunc lines"
   (interactive)
-  (setq truncate-lines nil))
+  (setq truncate-lines nil)
+  (linum-mode))
 
 (use-package markdown-mode
   :ensure t

@@ -211,6 +211,7 @@
   "custom orgmode settings"
   (interactive)
   (set-fill-column 90)
+  (linum-mode)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
   )
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
