@@ -72,6 +72,24 @@
   (define-key global-map (kbd "C-c C") 'string-inflection-camelcase)
   (define-key global-map (kbd "C-c L") 'string-inflection-lower-camelcase))
 
+(use-package linum-relative
+  :ensure t
+  :defer t)
+
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package crux
+  :ensure t
+  :defer t)
+
+(use-package aggressive-indent
+  :ensure t
+  :defer t)
+
 ;; optional if you want which-key integration
 ;; (use-package which-key
 ;;     :config

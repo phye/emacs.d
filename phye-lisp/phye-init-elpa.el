@@ -1,5 +1,6 @@
 (setq phye-elpa-packages
       '(org-journal
+        beacon
         vimish-fold
         emacsql
         org-roam

@@ -147,4 +147,11 @@
     "add missing font-lock-reference-face")
   (defvar font-lock-reference-face 'font-lock-reference-face))
 
+(use-package beacon
+  :ensure t
+  :custom
+  (beacon-blink-duration 0.5)
+  :config
+  (beacon-mode 1))
+
 (provide 'phye-init-themes)
