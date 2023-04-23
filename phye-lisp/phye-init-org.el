@@ -175,6 +175,15 @@
   (pdf-tools-install))
 ;; }}
 
+;; {{ calfw
+(use-package calfw
+  :ensure t
+  :defer t)
+(use-package calfw-org
+  :ensure t
+  :defer t)
+;; }}
+
 ;; }} Org Mode Extensions
 
 ;; {{ Custom Org Mode Functions
@@ -243,6 +252,7 @@
      (require 'graphviz-dot-mode)
      (require 'ox-md nil t)
      (require 'ox-odt nil t)
+     (require 'calfw-org)
      (my-yas-reload-all)
      )))
 
