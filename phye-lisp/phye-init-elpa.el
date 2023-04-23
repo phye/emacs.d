@@ -1,23 +1,23 @@
 (setq phye-elpa-packages
-      '(org-journal
-        beacon
-        vimish-fold
-        emacsql
-        org-roam
-        org-present
-        popper
-        lsp-ui
-        lsp-ivy
+      '(
         ;; lsp-treemacs
-        lsp-mode
-        dockerfile-mode
-        sync-recentf
-        clipetty
         annotate-mode
+        clipetty
+        dockerfile-mode
+        emacsql
+        helpful
+        lsp-ivy
+        lsp-mode
+        lsp-ui
+        org-journal
+        org-present
+        org-roam
         peep-dired
+        popper
         rg
-        orderless
-        helpful))
+        sync-recentf
+        vimish-fold
+        ))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
 
