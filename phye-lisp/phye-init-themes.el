@@ -1,4 +1,4 @@
-(load-theme 'atom-one-dark t)
+(load-theme 'cyberpunk t)
 (setq my-favorite-color-themes
       '(srcery
         atom-dark
