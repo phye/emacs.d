@@ -16,6 +16,7 @@
         popper
         rg
         sync-recentf
+        tiny
         vimish-fold
         ))
 (setq melpa-include-packages
