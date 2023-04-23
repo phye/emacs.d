@@ -598,7 +598,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "bf" 'beginning-of-defun
   "bu" 'backward-up-list
   "ef" 'end-of-defun
-  "m" 'evil-set-marker
+  "mm" 'evil-set-marker
   "em" 'shellcop-erase-buffer
   "eb" 'eval-buffer
   "ee" 'eval-expression
