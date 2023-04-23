@@ -240,6 +240,7 @@
         (dot . t)
         (emacs-lisp . t)
         ))
+     (require 'graphviz-dot-mode)
      (require 'ox-md nil t)
      (require 'ox-odt nil t)
      (my-yas-reload-all)

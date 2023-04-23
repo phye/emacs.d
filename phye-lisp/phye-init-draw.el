@@ -14,7 +14,9 @@
 ;; {{ graphviz-dot-mode
 (use-package graphviz-dot-mode
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode)))
 (add-hook 'graphviz-dot-mode-hook #'turn-off-auto-fill)
 ;; }}
 
