@@ -16,6 +16,7 @@
         annotate-mode
         peep-dired
         rg
+        orderless
         helpful))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
