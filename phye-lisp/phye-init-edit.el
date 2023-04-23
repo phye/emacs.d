@@ -84,6 +84,14 @@
   :ensure t
   :defer t)
 
+(use-package ialign
+  :ensure t
+  :defer t)
+
+(use-package tiny
+  :ensure t
+  :defer t)
+
 ;; optional if you want which-key integration
 ;; (use-package which-key
 ;;     :config
