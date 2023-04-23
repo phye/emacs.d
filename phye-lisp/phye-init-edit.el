@@ -76,12 +76,6 @@
   :ensure t
   :defer t)
 
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-
 (use-package crux
   :ensure t
   :defer t)
