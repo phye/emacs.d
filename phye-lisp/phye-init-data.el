@@ -62,6 +62,9 @@
 ;; conf
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . conf-mode))
 
+;; log
+(add-to-list 'auto-mode-alist '("\\.log\\'" . log-view-mode))
+
 ;; Dockerfile
 (use-package dockerfile-mode
   :ensure t

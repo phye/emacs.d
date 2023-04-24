@@ -150,7 +150,7 @@
 (use-package beacon
   :ensure t
   :custom
-  (beacon-blink-duration 0.5)
+  (beacon-blink-duration 0.3)
   :config
   (beacon-mode 1))
 

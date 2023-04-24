@@ -92,6 +92,16 @@
   :ensure t
   :defer t)
 
+(use-package rg
+  :ensure t
+  :defer t)
+
+(defun select-rg-buffer (pattern files dir &optional literal confirm flags)
+  "Unconditionally select rg buffer"
+  (select-window (get-buffer-window "*rg*")))
+(advice-add 'rg-run
+            :after-until #'select-rg-buffer)
+
 ;; optional if you want which-key integration
 ;; (use-package which-key
 ;;     :config

@@ -15,6 +15,7 @@
         peep-dired
         popper
         rg
+        tiny
         sync-recentf
         tiny
         vimish-fold
