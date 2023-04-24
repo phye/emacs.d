@@ -10,36 +10,36 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 
 (my-comma-leader-def
+  "cc" 'clipetty-kill-ring-save
+  "cd" 'copy-relative-path-in-project
+  "dc" 'godoc-at-point
   "fb" 'clang-format-buffer
   "ft" 'clang-format
-  "ls" 'highlight-symbol
-  "ol" 'org-open-at-point
-  "sl" 'org-store-link
-  "il" 'org-insert-link
-  "id" 'find-file-in-current-directory
-  "xd" 'find-file-in-cpp-module
-  "ov" 'jao-toggle-selective-display
-  "gt" 'lsp-find-definition
+  "gb" 'magit-blame
   "gr" 'lsp-find-references
-  "dc" 'godoc-at-point
-  "xb" 'ivy-switch-buffer
-  "xc" 'suspend-frame
-  "cc" 'clipetty-kill-ring-save
-  "hd" 'hide-ifdef-block
-  "hs" 'show-ifdef-block
+  "gt" 'lsp-find-definition
   "ha" 'show-ifdefs
   "hb" 'hs-hide-block
+  "hd" 'hide-ifdef-block
   "hl" 'hs-hide-level
   "ho" 'hs-show-block
-  "tt" 'shell-pop
+  "hs" 'show-ifdef-block
+  "id" 'find-file-in-current-directory
+  "il" 'org-insert-link
+  "ls" 'highlight-symbol
   "nn" 'highlight-symbol-next
-  "pp" 'highlight-symbol-prev
+  "ol" 'org-open-at-point
+  "ov" 'jao-toggle-selective-display
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
-  "cd" 'copy-relative-path-in-project
-  "xe" 'exit-recursive-edit
+  "pp" 'highlight-symbol-prev
   "rg" 'projectile-ripgrep
-  )
+  "sl" 'org-store-link
+  "tt" 'shell-pop
+  "xb" 'ivy-switch-buffer
+  "xc" 'suspend-frame
+  "xd" 'find-file-in-cpp-module
+  "xe" 'exit-recursive-edit)
 
 (my-space-leader-def
   "nn" 'highlight-symbol-next

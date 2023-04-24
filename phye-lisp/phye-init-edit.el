@@ -102,6 +102,9 @@
 (advice-add 'rg-run
             :after-until #'select-rg-buffer)
 
+(with-eval-after-load 'rg-mode
+  (define-key rg-mode-map (kbd ";") 'ace-pinyin-jump-char-2))
+
 ;; optional if you want which-key integration
 ;; (use-package which-key
 ;;     :config
