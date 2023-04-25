@@ -31,7 +31,4 @@ Git gutter:
        :color blue))
 (global-set-key (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
 
-(with-eval-after-load 'magit-mode
-  (define-key magit-blame-mode-map (kbd "q") 'magit-blame-quit))
-
 (provide 'phye-init-git)
