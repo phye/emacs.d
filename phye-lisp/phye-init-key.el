@@ -13,6 +13,7 @@
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
   "dc" 'godoc-at-point
+  "dg" 'deadgrep
   "fb" 'clang-format-buffer
   "ft" 'clang-format
   "gb" 'magit-blame

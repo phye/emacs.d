@@ -96,14 +96,35 @@
   :ensure t
   :defer t)
 
-(defun select-rg-buffer (pattern files dir &optional literal confirm flags)
-  "Unconditionally select rg buffer"
+(defun select-rg-window-advice (pattern files dir &optional literal confirm flags)
+  "Select rg buffer"
   (select-window (get-buffer-window "*rg*")))
 (advice-add 'rg-run
-            :after-until #'select-rg-buffer)
+            :after-until #'select-rg-window-advice)
 
 (with-eval-after-load 'rg-mode
-  (define-key rg-mode-map (kbd ";") 'ace-pinyin-jump-char-2))
+  (define-key rg-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
+  (define-key rg-mode-map (kbd "j") 'next-line)
+  (define-key rg-mode-map (kbd "k") 'previous-line)
+  )
+
+(use-package deadgrep
+  :ensure t
+  :debug t)
+
+(defun select-deadgrep-window-advice (SEARCH_TERM &optional DIRECTORY)
+  "Select deadgrep buffer"
+  (select-window (get-buffer-window "*deadgrep\\.*")))
+(advice-add 'deadgrep
+            :after-until #'select-deadgrep-window-advice)
+
+(with-eval-after-load 'deadgrep-mode
+  (define-key deadgrep-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
+  (define-key deadgrep-mode-map (kbd "n") 'deadgrep-forward-filename)
+  (define-key deadgrep-mode-map (kbd "p") 'deadgrep-backward-filename)
+  (define-key deadgrep-mode-map (kbd "j") 'next-line)
+  (define-key deadgrep-mode-map (kbd "k") 'previous-line)
+  )
 
 ;; optional if you want which-key integration
 ;; (use-package which-key
