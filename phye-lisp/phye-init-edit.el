@@ -110,7 +110,7 @@
 
 (use-package deadgrep
   :ensure t
-  :debug t)
+  :defer t)
 
 (defun select-deadgrep-window-advice (SEARCH_TERM &optional DIRECTORY)
   "Select deadgrep buffer"
