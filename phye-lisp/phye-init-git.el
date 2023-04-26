@@ -29,6 +29,5 @@ Git gutter:
               (sit-for 0.1)
               (git-gutter:clear))
        :color blue))
-(global-set-key (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
 
 (provide 'phye-init-git)

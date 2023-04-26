@@ -8,6 +8,9 @@
 (define-key global-map (kbd "M-v") 'paste-from-x-clipboard)
 (define-key global-map (kbd "C-c a") 'org-agenda)
 (define-key global-map (kbd "C-c l") 'org-store-link)
+(define-key global-map (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
+
+(evil-define-key 'normal 'magit-blame-mode-map "q" #'magit-blame-quit)
 
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
@@ -16,7 +19,7 @@
   "dg" 'deadgrep
   "fb" 'clang-format-buffer
   "ft" 'clang-format
-  "gb" 'magit-blame
+  "mb" 'magit-blame
   "gr" 'lsp-find-references
   "gt" 'lsp-find-definition
   "ha" 'show-ifdefs
