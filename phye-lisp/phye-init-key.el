@@ -32,6 +32,7 @@
   "il" 'org-insert-link
   "ls" 'highlight-symbol
   "nn" 'highlight-symbol-next
+  "oc" 'cfw:open-org-calendar
   "ol" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
   "pc" 'popper-cycle

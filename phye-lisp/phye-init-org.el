@@ -220,7 +220,7 @@
   "custom orgmode settings"
   (interactive)
   (set-fill-column 90)
-  (linum-mode)
+  ;; (linum-mode)
   (pangu-spacing-mode 1)
   (set (make-local-variable 'pangu-spacing-real-insert-separtor) t)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
