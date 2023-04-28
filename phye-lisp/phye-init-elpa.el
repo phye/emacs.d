@@ -3,6 +3,7 @@
         ;; lsp-treemacs
         annotate-mode
         clipetty
+        deadgrep
         dockerfile-mode
         emacsql
         helpful
