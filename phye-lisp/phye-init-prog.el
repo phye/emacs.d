@@ -64,20 +64,20 @@
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
 
 ;; projectile-mode, multiple projects
-(use-package projectile
-  :ensure t
-  :defer t
-  ;; :bind (("C-c x" . projectile-command-map))
-  :config
-  (projectile-mode +1)
-  (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
-  (setq projectile-indexing-method 'hybrid)
-  (setq projectile-globally-ignored-directories
-        (append phye/general-ignore-directories projectile-globally-ignored-directories))
-  (add-to-list 'projectile-globally-ignored-file-suffixes "pb.cc")
-  (add-to-list 'projectile-globally-ignored-file-suffixes "pb.h")
-  (add-to-list 'projectile-globally-ignored-file-suffixes "py")
-  (add-to-list 'projectile-globally-ignored-file-suffixes "pyc"))
+;; (use-package projectile
+;;   :ensure t
+;;   :defer t
+;;   ;; :bind (("C-c x" . projectile-command-map))
+;;   :config
+;;   (projectile-mode +1)
+;;   (define-key projectile-mode-map (kbd "C-c x") 'projectile-command-map)
+;;   (setq projectile-indexing-method 'hybrid)
+;;   (setq projectile-globally-ignored-directories
+;;         (append phye/general-ignore-directories projectile-globally-ignored-directories))
+;;   (add-to-list 'projectile-globally-ignored-file-suffixes "pb.cc")
+;;   (add-to-list 'projectile-globally-ignored-file-suffixes "pb.h")
+;;   (add-to-list 'projectile-globally-ignored-file-suffixes "py")
+;;   (add-to-list 'projectile-globally-ignored-file-suffixes "pyc"))
 
 ;; log
 (defun phye/view-log-with-color ()

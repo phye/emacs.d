@@ -37,7 +37,7 @@
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   "pp" 'highlight-symbol-prev
-  "rg" 'projectile-ripgrep
+  "rg" 'deadgrep
   "sl" 'org-store-link
   "tt" 'shell-pop
   "xb" 'ivy-switch-buffer
