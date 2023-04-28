@@ -26,6 +26,7 @@
   :config
   (setq company-backends (delete 'company-semantic company-backends))
   (setq company-backends (delete 'company-clang company-backends))
+  (setq company-backends (cl-remove-duplicates company-backends))
   ) ; start autocompletion only after typin)
 
 (setq phye/general-ignore-directories
