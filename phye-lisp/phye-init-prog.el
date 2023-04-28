@@ -23,7 +23,6 @@
 (use-package company
   :custom
   (company-echo-delay 0)                          ; remove annoying blinking
-  (company-begin-commands '(self-insert-command))
   :config
   (setq company-backends (delete 'company-semantic company-backends))
   (setq company-backends (delete 'company-clang company-backends))

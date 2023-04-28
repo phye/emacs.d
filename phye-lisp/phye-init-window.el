@@ -12,6 +12,7 @@
      "\\*godoc"
      "\\*Compile-Log\\*$"
      "\\*Async Shell Command\\*"
+     "\\*Messages\\*"
      "^\\*ansi-term.*\\*$"
      "^\\*helpful.*\\*$"
      help-mode
