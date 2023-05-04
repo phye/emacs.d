@@ -33,7 +33,8 @@
     "phye's golang hook"
   (interactive)
   (set-fill-column 80)
-  (annotate-mode))
+  ; (annotate-mode)
+  )
 (with-eval-after-load 'go-mode
   (add-hook 'go-mode-hook #'lsp-deferred)
   (add-hook 'go-mode-hook #'lsp-go-install-save-hook)
