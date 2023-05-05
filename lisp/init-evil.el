@@ -822,8 +822,8 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "w" 'mybigword-big-words-in-current-window
   "s" 'avy-goto-word-or-subword-1
   "a" 'avy-goto-char-timer
-  "db" 'sdcv-search-input ; details
-  "dt" 'sdcv-search-input+ ; summary
+  "db" 'my-dict-complete-definition ; details
+  "dt" 'my-dict-simple-definition ; summary
   "dd" 'my-lookup-dict-org
   "mm" 'my-lookup-doc-in-man
   "gg" 'my-w3m-generic-search
@@ -961,6 +961,8 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   (setq evil-undo-system 'undo-redo)
   (define-key evil-normal-state-map "u" 'undo-fu-only-undo)
   (define-key evil-normal-state-map (kbd "C-r") 'undo-fu-only-redo)
+  ;; @see https://www.reddit.com/r/emacs/comments/12arjtn/my_basic_keybinding_setup_for_emacs_with_evilmode/
+  (define-key evil-normal-state-map "U" 'undo-fu-only-redo)
 
   ;; initial evil state per major mode
   (dolist (p my-initial-evil-state-setup)
