@@ -131,4 +131,8 @@
 ;;     (which-key-mode))
 ;; }}
 
+(with-eval-after-load 'company-ispell
+  (setq company-ispell-available nil)
+  )
+
 (provide 'phye-init-edit)
