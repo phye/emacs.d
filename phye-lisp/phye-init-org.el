@@ -117,7 +117,7 @@
   :ensure t
   :defer t
   :custom
-  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"STARTED\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
+  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"INPROGRESS\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
   (customize-set-variable 'org-journal-date-format "%A, %x")
