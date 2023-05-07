@@ -119,11 +119,19 @@
             :after-until #'select-deadgrep-window-advice)
 
 (with-eval-after-load 'deadgrep
-  (define-key deadgrep-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
-  (define-key deadgrep-mode-map (kbd "n") 'deadgrep-forward-filename)
-  (define-key deadgrep-mode-map (kbd "p") 'deadgrep-backward-filename)
-  (define-key deadgrep-mode-map (kbd "j") 'next-line)
-  (define-key deadgrep-mode-map (kbd "k") 'previous-line))
+  ;; (define-key deadgrep-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
+  (unbind-key (kbd ";")  'deadgrep-mode-map)
+  (general-define-key
+   :keymaps 'deadgrep-mode-map
+   :prefix ";"
+   ";" 'ace-pinyin-jump-char-2)
+  (general-define-key
+   :keymaps 'deadgrep-mode-map
+   "n" 'deadgrep-forward-filename
+   "p" 'deadgrep-backward-filename
+   "j" 'next-line
+   "k" 'previous-line
+   ))
 
 ;; optional if you want which-key integration
 ;; (use-package which-key
