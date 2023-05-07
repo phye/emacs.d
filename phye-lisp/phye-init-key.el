@@ -10,7 +10,18 @@
 (define-key global-map (kbd "C-c l") 'org-store-link)
 (define-key global-map (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
 
-(evil-define-key 'normal 'magit-blame-mode-map "q" #'magit-blame-quit)
+;; (evil-define-key 'normal 'magit-blame-mode-map "q" #'magit-blame-quit)
+
+(general-define-key
+ :states 'normal
+ :keymaps 'magit-blame-mode-map
+ "q" #'magit-blame-quit)
+
+(general-define-key
+ :states 'normal
+ :keymaps 'go-mode-map
+ :prefix ","
+ "ft" 'gofmt)
 
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
