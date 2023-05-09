@@ -23,6 +23,11 @@
  :prefix ","
  "ft" 'gofmt)
 
+(general-define-key
+ :states 'insert
+ :prefix "C-;"
+ ";" 'ace-pinyin-jump-char-2)
+
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
