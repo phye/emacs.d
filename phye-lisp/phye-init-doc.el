@@ -2,7 +2,8 @@
     "diasable trunc lines"
   (interactive)
   (setq truncate-lines nil)
-  (linum-mode))
+  ;;(linum-mode)
+  )
 
 (use-package markdown-mode
   :ensure t

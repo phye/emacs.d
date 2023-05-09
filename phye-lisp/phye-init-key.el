@@ -28,6 +28,10 @@
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2)
 
+(general-define-key
+ :keymaps 'image-mode-map
+ "q" #'quit-window)
+
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
