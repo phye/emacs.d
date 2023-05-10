@@ -32,7 +32,7 @@
 (defun phye/go-mode-hook ()
     "phye's golang hook"
   (interactive)
-  (set-fill-column 80)
+  (set-fill-column 100)
   ; (annotate-mode)
   )
 (with-eval-after-load 'go-mode

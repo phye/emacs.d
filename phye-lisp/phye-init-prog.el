@@ -7,7 +7,7 @@
   :defer t
   :config
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
-  (setq shell-pop-term-shell "/bin/zsh")
+  (setq shell-pop-term-shell "/usr/local/bin/zsh")
   ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 

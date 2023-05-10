@@ -21,7 +21,7 @@
  :states 'normal
  :keymaps 'go-mode-map
  :prefix ","
- "ft" 'gofmt)
+ "fb" 'gofmt)
 
 (general-define-key
  :states 'insert
