@@ -131,6 +131,7 @@
    "p" 'deadgrep-backward-filename
    "j" 'next-line
    "k" 'previous-line
+   "RET" 'deadgrep-visit-result-other-window
    ))
 
 ;; optional if you want which-key integration

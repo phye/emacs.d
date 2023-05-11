@@ -44,6 +44,7 @@
   "cd" 'copy-relative-path-in-project
   "dc" 'godoc-at-point
   "dg" 'deadgrep
+  "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
   "fd" 'delete-frame
   "fn" 'phye/select-next-frame
@@ -71,7 +72,6 @@
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   "pp" 'highlight-symbol-prev
-  "rg" 'deadgrep
   "sl" 'org-store-link
   "tt" 'shell-pop
   "xb" 'ivy-switch-buffer
