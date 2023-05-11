@@ -45,7 +45,12 @@
   "dc" 'godoc-at-point
   "dg" 'deadgrep
   "fb" 'clang-format-buffer
-  "ft" 'clang-format
+  "fd" 'delete-frame
+  "fn" 'phye/select-next-frame
+  "fp" 'phye/select-previous-frame
+  "fr" 'set-frame-name
+  "fs" 'select-frame-by-name
+  "fo" 'find-file-other-frame
   "mb" 'magit-blame
   "mk" 'compile
   "gr" 'lsp-find-references

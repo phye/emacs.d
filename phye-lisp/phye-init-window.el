@@ -88,4 +88,15 @@
         (run-hooks 'xref-after-return-hook)))))
 (define-key evil-normal-state-map (kbd "C-t") 'xref-pop-marker-stack)
 
+(defun phye/select-next-frame ()
+  "Select next frame and raise it"
+  (interactive)
+  (select-frame (next-frame)))
+
+(defun phye/select-previous-frame ()
+  "Select previous frame and raise it"
+  (interactive)
+  (select-frame (previous-frame)))
+
+
 (provide 'phye-init-window)
