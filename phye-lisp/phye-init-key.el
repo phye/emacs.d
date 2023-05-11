@@ -32,6 +32,13 @@
  :keymaps 'image-mode-map
  "q" #'quit-window)
 
+(defun phye/goto-definition-at-point ()
+  "my mode-aware go to definition"
+  (interactive)
+  (if (string= major-mode "go-mode")
+      (lsp-find-definition)
+    (counsel-etags-find-tag-at-point)))
+
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
@@ -40,8 +47,9 @@
   "fb" 'clang-format-buffer
   "ft" 'clang-format
   "mb" 'magit-blame
+  "mk" 'compile
   "gr" 'lsp-find-references
-  "gt" 'lsp-find-definition
+  "gt" 'phye/goto-definition-at-point
   "ha" 'show-ifdefs
   "hb" 'hs-hide-block
   "hd" 'hide-ifdef-block
