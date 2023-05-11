@@ -33,6 +33,8 @@
     "phye's golang hook"
   (interactive)
   (set-fill-column 100)
+  (auto-fill-mode -1)
+  (setq compile-command "go test")
   ; (annotate-mode)
   )
 (with-eval-after-load 'go-mode
