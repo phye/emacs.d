@@ -135,6 +135,17 @@
   (define-key rg-mode-map (kbd "p") 'rg-prev-file)
   )
 
+(use-package tree-sitter
+  :ensure t
+  :defer t
+  :config
+  (global-tree-sitter-mode))
+
+(use-package tree-sitter-langs
+  :ensure t
+  :defer t
+  :after (tree-sitter))
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
