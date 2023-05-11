@@ -74,10 +74,16 @@
                           (holiday-fixed 10 1 "国庆节")
                           ))
 (with-eval-after-load 'org-agenda
-  (define-key org-agenda-mode-map (kbd "W") 'org-agenda-week-view)
-  (define-key org-agenda-mode-map (kbd "F") 'org-agenda-fortnight-view)
-  (define-key org-agenda-mode-map (kbd "M") 'org-agenda-month-view)
-  (define-key org-agenda-mode-map (kbd "Y") 'org-agenda-year-view)
+  (general-define-key
+   :keymaps 'org-agenda-mode-map
+   "W" 'org-agenda-week-view
+   "F" 'org-agenda-fortnight-view
+   "M" 'org-agenda-month-view
+   "Y" 'org-agenda-year-view
+   "j" 'org-agenda-next-line
+   "k" 'org-agenda-previous-line
+   "C" 'org-agenda-capture
+   "D" 'org-agenda-convert-date)
   (customize-set-variable 'calendar-chinese-all-holidays-flag t)
   (customize-set-variable 'calendar-holidays
                           (append holiday-oriental-holidays
