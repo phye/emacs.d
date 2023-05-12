@@ -89,14 +89,34 @@
 (define-key evil-normal-state-map (kbd "C-t") 'xref-pop-marker-stack)
 
 (defun phye/select-next-frame ()
-  "Select next frame and raise it"
+  "Select next frame and raise it."
   (interactive)
   (select-frame (next-frame)))
 
 (defun phye/select-previous-frame ()
-  "Select previous frame and raise it"
+  "Select previous frame and raise it."
   (interactive)
   (select-frame (previous-frame)))
 
+(defun phye/current-frame-name ()
+  "Return current frame name."
+  (substring-no-properties
+   (cdr (assoc 'name (frame-parameters)))))
+
+(defvar phye/last-frame-name (phye/current-frame-name))
+(defvar phye/frame-name-before-switch (phye/current-frame-name))
+(defvar phye/frame-name-after-switch (phye/current-frame-name))
+(defun phye/buffer-list-update-hook ()
+  "Update phye/last-frame-name on buffer change."
+  (unless (string= (phye/current-frame-name) phye/frame-name-before-switch)
+    (setq phye/frame-name-after-switch (phye/current-frame-name))
+    (setq phye/last-frame-name phye/frame-name-before-switch)
+    (setq phye/frame-name-before-switch phye/frame-name-after-switch)))
+(add-hook 'buffer-list-update-hook #'phye/buffer-list-update-hook)
+
+(defun phye/toggle-last-frame ()
+  "Toggle between last used frame"
+  (interactive)
+  (select-frame-by-name phye/last-frame-name))
 
 (provide 'phye-init-window)

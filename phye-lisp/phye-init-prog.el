@@ -137,9 +137,7 @@
 
 (use-package tree-sitter
   :ensure t
-  :defer t
-  :config
-  (global-tree-sitter-mode))
+  :defer t)
 
 (use-package tree-sitter-langs
   :ensure t
