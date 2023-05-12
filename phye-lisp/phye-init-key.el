@@ -52,7 +52,8 @@
   "fr" 'set-frame-name
   "fs" 'select-frame-by-name
   "fo" 'find-file-other-frame
-  "ft" 'phye/toggle-last-frame
+  "ff" 'phye/toggle-last-frame
+  "ft" 'my-toggle-full-window
   "mb" 'magit-blame
   "mk" 'compile
   "gr" 'lsp-find-references
@@ -78,7 +79,8 @@
   "xb" 'ivy-switch-buffer
   "xc" 'suspend-frame
   "xd" 'find-file-in-cpp-module
-  "xe" 'exit-recursive-edit)
+  "xe" 'exit-recursive-edit
+  "xg" 'magit-status)
 
 (my-space-leader-def
   "nn" 'highlight-symbol-next
