@@ -10,6 +10,7 @@
 
  "C-c a" 'org-agenda
  "C-c c" 'org-capture
+ "C-c o" 'org-open-at-point
  "C-c t" 'org-mark-ring-goto)
 
 (my-comma-leader-def
