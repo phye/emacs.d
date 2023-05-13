@@ -1,4 +1,5 @@
-(setq my-term-program "/usr/local/bin/zsh")
+(setq zsh-program (string-trim (shell-command-to-string "which zsh")))
+(setq my-term-program zsh-program)
 (set-language-environment "utf-8")
 
 ;; quick pop shell
@@ -7,7 +8,7 @@
   :defer t
   :config
   (setq shell-pop-shell-type '("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))
-  (setq shell-pop-term-shell "/usr/local/bin/zsh")
+  (setq shell-pop-term-shell zsh-program)
   ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 
@@ -144,6 +145,13 @@
   :defer t
   :after (tree-sitter))
 
+(defun phye/goto-definition-at-point ()
+  "my mode-aware go to definition"
+  (interactive)
+  (if (string= major-mode "go-mode")
+      (lsp-find-definition)
+    (counsel-etags-find-tag-at-point)))
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
@@ -152,7 +160,7 @@
   (hs-minor-mode)
   (hl-todo-mode 1)
   (subword-mode)
-  (ws-butler-mode -1)    ; disable auto white space removal
+  (ws-butler-mode -1)                   ; disable auto white space removal
   ;; (phye/set-electric-pair-inhibit-predicate)
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)

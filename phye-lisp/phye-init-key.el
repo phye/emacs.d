@@ -32,13 +32,6 @@
  :keymaps 'image-mode-map
  "q" #'quit-window)
 
-(defun phye/goto-definition-at-point ()
-  "my mode-aware go to definition"
-  (interactive)
-  (if (string= major-mode "go-mode")
-      (lsp-find-definition)
-    (counsel-etags-find-tag-at-point)))
-
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
