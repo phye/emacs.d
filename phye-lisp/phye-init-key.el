@@ -1,36 +1,16 @@
 ;; {{ global keymaps
-(define-key global-map (kbd "C-x C-c") 'delete-frame)
-(define-key global-map (kbd "C-x M") 'manual-entry)
-(define-key global-map (kbd "M-`") 'other-frame)
-(define-key global-map (kbd "C-c c") 'org-capture)
-(define-key global-map (kbd "C-c l") 'org-store-link)
-(define-key global-map (kbd "C-c t") 'org-mark-ring-goto)
-(define-key global-map (kbd "M-v") 'paste-from-x-clipboard)
-(define-key global-map (kbd "C-c a") 'org-agenda)
-(define-key global-map (kbd "C-c l") 'org-store-link)
-(define-key global-map (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
-
-;; (evil-define-key 'normal 'magit-blame-mode-map "q" #'magit-blame-quit)
+;; (define-key global-map (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
 
 (general-define-key
- :states 'normal
- :keymaps 'magit-blame-mode-map
- "q" #'magit-blame-quit)
+ "M-`" 'other-frame
+ "M-v" 'paste-from-x-clipboard
 
-(general-define-key
- :states 'normal
- :keymaps 'go-mode-map
- :prefix ","
- "fb" 'gofmt)
+ "C-x C-c" 'delete-frame
+ "C-x m" 'manual-entry
 
-(general-define-key
- :states 'insert
- :prefix "C-;"
- ";" 'ace-pinyin-jump-char-2)
-
-(general-define-key
- :keymaps 'image-mode-map
- "q" #'quit-window)
+ "C-c a" 'org-agenda
+ "C-c c" 'org-capture
+ "C-c t" 'org-mark-ring-goto)
 
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
@@ -79,6 +59,28 @@
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   )
+;; }}
+
+;; {{ mode specific map
+(general-define-key
+ :states 'normal
+ :keymaps 'magit-blame-mode-map
+ "q" #'magit-blame-quit)
+
+(general-define-key
+ :states 'normal
+ :keymaps 'go-mode-map
+ :prefix ","
+ "fb" 'gofmt)
+
+(general-define-key
+ :states 'insert
+ :prefix "C-;"
+ ";" 'ace-pinyin-jump-char-2)
+
+(general-define-key
+ :keymaps 'image-mode-map
+ "q" #'quit-window)
 ;; }}
 
 ;; {{ mini buffer edit
