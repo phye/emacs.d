@@ -24,12 +24,13 @@
   "mk" 'compile
   "gr" 'lsp-find-references
   "gt" 'phye/goto-definition-at-point
-  "ha" 'show-ifdefs
-  "hb" 'hs-hide-block
-  "hd" 'hide-ifdef-block
+  "hs" 'hs-show-all
+  "hh" 'hs-hide-all
   "hl" 'hs-hide-level
-  "ho" 'hs-show-block
-  "hs" 'show-ifdef-block
+  "hbh" 'hs-hide-block
+  "hbs" 'hs-show-block
+  "hdh" 'hide-ifdef-block
+  "hds" 'show-ifdef-block
   "id" 'find-file-in-current-directory
   "il" 'org-insert-link
   "ls" 'highlight-symbol
