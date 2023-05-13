@@ -39,14 +39,6 @@
   "dg" 'deadgrep
   "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
-  "fd" 'delete-frame
-  "fn" 'phye/select-next-frame
-  "fp" 'phye/select-previous-frame
-  "fr" 'set-frame-name
-  "fs" 'select-frame-by-name
-  "fo" 'find-file-other-frame
-  "ff" 'phye/toggle-last-frame
-  "ft" 'my-toggle-full-window
   "mb" 'magit-blame
   "mk" 'compile
   "gr" 'lsp-find-references
@@ -60,13 +52,9 @@
   "id" 'find-file-in-current-directory
   "il" 'org-insert-link
   "ls" 'highlight-symbol
-  "nn" 'highlight-symbol-next
   "oc" 'cfw:open-org-calendar
   "ol" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
-  "pc" 'popper-cycle
-  "pl" 'popper-toggle-latest
-  "pp" 'highlight-symbol-prev
   "sl" 'org-store-link
   "tt" 'shell-pop
   "xb" 'ivy-switch-buffer
@@ -76,10 +64,21 @@
   "xg" 'magit-status)
 
 (my-space-leader-def
+  "fd" 'delete-frame
+  "fn" 'phye/select-next-frame
+  "fp" 'phye/select-previous-frame
+  "fr" 'set-frame-name
+  "fs" 'select-frame-by-name
+  "fo" 'find-file-other-frame
+  "ff" 'phye/toggle-last-frame
+  "ft" 'my-toggle-full-window
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev
   "rt" 'my-random-favorite-color-theme
-  "hh" 'my-random-healthy-color-theme)
+  "hh" 'my-random-healthy-color-theme
+  "pc" 'popper-cycle
+  "pl" 'popper-toggle-latest
+  )
 ;; }}
 
 ;; {{ mini buffer edit
