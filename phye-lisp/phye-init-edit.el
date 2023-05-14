@@ -96,6 +96,14 @@
   :ensure t
   :defer t)
 
+(defun phye/indent-after-newline (COUNT)
+  (indent-according-to-mode))
+
+(advice-add 'evil-open-below
+            :after #'phye/indent-after-newline)
+(advice-add 'evil-open-above
+            :after #'phye/indent-after-newline)
+
 (defun select-rg-window-advice (pattern files dir &optional literal confirm flags)
   "Select rg buffer"
   (select-window (get-buffer-window "*rg*")))
