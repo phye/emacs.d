@@ -1,6 +1,7 @@
 (setq phye-elpa-packages
       '(
         ;; lsp-treemacs
+        treemacs
         annotate-mode
         clipetty
         deadgrep
