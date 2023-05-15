@@ -162,5 +162,12 @@
   (with-eval-after-load 'evil-maps
     (define-key evil-motion-state-map (kbd "C-o") 'better-jumper-jump-backward)
     (define-key evil-motion-state-map (kbd "C-i") 'better-jumper-jump-forward)))
+(defun phye/deadgrep-visit-result-hook ()
+  (interactive)
+  (better-jumper-set-jump))
+(advice-add 'deadgrep-visit-result
+            :after #'phye/deadgrep-visit-result-hook)
+(advice-add 'deadgrep-visit-result-other-window
+            :after #'phye/deadgrep-visit-result-hook)
 
 (provide 'phye-init-edit)
