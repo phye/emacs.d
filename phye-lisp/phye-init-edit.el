@@ -96,7 +96,7 @@
   :ensure t
   :defer t)
 
-(defun phye/indent-after-newline (COUNT)
+(defun phye/indent-after-newline (count)
   (indent-according-to-mode))
 
 (advice-add 'evil-open-below
@@ -120,7 +120,7 @@
   :ensure t
   :defer t)
 
-(defun select-deadgrep-window-advice (SEARCH_TERM &optional DIRECTORY)
+(defun select-deadgrep-window-advice (search-term &optional directory)
   "Select deadgrep buffer"
   (select-window (get-buffer-window "*deadgrep\\.*")))
 (advice-add 'deadgrep
@@ -139,11 +139,35 @@
    "p" 'deadgrep-backward-filename
    "j" 'next-line
    "k" 'previous-line
+   "D" 'phye/deadgrep-directory
    "RET" 'deadgrep-visit-result-other-window
    "C-w h" 'evil-window-left
    "C-w l" 'evil-window-right
    "C-w j" 'evil-window-down
    "C-w k" 'evil-window-up))
+
+(defun phye/project-find-dir ()
+  "find directory fuzzily (copied from `'project-find-dir`'"
+  (interactive)
+  (let* ((project (project-current t))
+         (all-files (project-files project))
+         (completion-ignore-case read-file-name-completion-ignore-case)
+         (all-dirs (mapcar #'file-name-directory all-files))
+         (dir (funcall project-read-file-name-function
+                       "Dired"
+                       ;; Some completion UIs show duplicates.
+                       (delete-dups all-dirs)
+                       nil 'file-name-history)))
+    dir))
+
+(defun phye/deadgrep-directory ()
+  "Find directory with fuzzy support, then restart the search"
+  (interactive)
+  (setq default-directory (phye/project-find-dir))
+  (rename-buffer
+   (deadgrep--buffer-name deadgrep--search-term default-directory)
+   t)
+  (deadgrep-restart))
 
 ;; optional if you want which-key integration
 ;; (use-package which-key
