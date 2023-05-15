@@ -140,7 +140,10 @@
    "j" 'next-line
    "k" 'previous-line
    "RET" 'deadgrep-visit-result-other-window
-   ))
+   "C-w h" 'evil-window-left
+   "C-w l" 'evil-window-right
+   "C-w j" 'evil-window-down
+   "C-w k" 'evil-window-up))
 
 ;; optional if you want which-key integration
 ;; (use-package which-key
@@ -151,5 +154,13 @@
 (with-eval-after-load 'company-ispell
   (setq company-ispell-available nil)
   )
+
+(use-package better-jumper
+  :ensure t
+  :config
+  (better-jumper-mode +1)
+  (with-eval-after-load 'evil-maps
+    (define-key evil-motion-state-map (kbd "C-o") 'better-jumper-jump-backward)
+    (define-key evil-motion-state-map (kbd "C-i") 'better-jumper-jump-forward)))
 
 (provide 'phye-init-edit)

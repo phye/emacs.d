@@ -162,6 +162,7 @@
   (subword-mode)
   (ws-butler-mode -1)                   ; disable auto white space removal
   ;; (phye/set-electric-pair-inhibit-predicate)
+  (setq my-disable-lazyflymake t)
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 

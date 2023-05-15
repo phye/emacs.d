@@ -1,6 +1,7 @@
 (setq phye-elpa-packages
       '(
         ;; lsp-treemacs
+        better-jumper
         treemacs
         annotate-mode
         clipetty
