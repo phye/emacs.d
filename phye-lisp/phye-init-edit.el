@@ -110,12 +110,6 @@
 (advice-add 'rg-run
             :after-until #'select-rg-window-advice)
 
-(with-eval-after-load 'rg-mode
-  (define-key rg-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
-  (define-key rg-mode-map (kbd "j") 'next-line)
-  (define-key rg-mode-map (kbd "k") 'previous-line)
-  )
-
 (use-package deadgrep
   :ensure t
   :defer t)
@@ -133,18 +127,7 @@
    :keymaps 'deadgrep-mode-map
    :prefix ";"
    ";" 'ace-pinyin-jump-char-2)
-  (general-define-key
-   :keymaps 'deadgrep-mode-map
-   "n" 'deadgrep-forward-filename
-   "p" 'deadgrep-backward-filename
-   "j" 'next-line
-   "k" 'previous-line
-   "D" 'phye/deadgrep-directory
-   "RET" 'deadgrep-visit-result-other-window
-   "C-w h" 'evil-window-left
-   "C-w l" 'evil-window-right
-   "C-w j" 'evil-window-down
-   "C-w k" 'evil-window-up))
+  )
 
 (defun phye/project-find-dir ()
   "find directory fuzzily (copied from `'project-find-dir`'"

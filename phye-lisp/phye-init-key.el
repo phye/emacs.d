@@ -1,6 +1,4 @@
 ;; {{ global keymaps
-;; (define-key global-map (kbd "C-x C-g") 'aboabo/hydra-git-gutter/body)
-
 (general-define-key
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
@@ -12,6 +10,11 @@
  "C-c c" 'org-capture
  "C-c o" 'org-open-at-point
  "C-c t" 'org-mark-ring-goto)
+
+(general-define-key
+ :states 'insert
+ :prefix "C-;"
+ ";" 'ace-pinyin-jump-char-2)
 
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
@@ -76,13 +79,27 @@
  "fb" 'gofmt)
 
 (general-define-key
- :states 'insert
- :prefix "C-;"
- ";" 'ace-pinyin-jump-char-2)
-
-(general-define-key
  :keymaps 'image-mode-map
  "q" #'quit-window)
+
+(general-define-key
+ :keymaps 'deadgrep-mode-map
+ "n" 'deadgrep-forward-filename
+ "p" 'deadgrep-backward-filename
+ "j" 'next-line
+ "k" 'previous-line
+ "D" 'phye/deadgrep-directory
+ "RET" 'deadgrep-visit-result-other-window
+ "C-w h" 'evil-window-left
+ "C-w l" 'evil-window-right
+ "C-w j" 'evil-window-down
+ "C-w k" 'evil-window-up)
+
+(general-define-key
+ :keymaps 'rg-mode-map
+ ";" 'ace-pinyin-jump-char-2
+ "j" 'next-line
+ "k" 'previous-line)
 ;; }}
 
 ;; {{ mini buffer edit
