@@ -46,7 +46,7 @@
   "xg" 'magit-status)
 
 (my-space-leader-def
-  "fd" 'delete-frame
+  "fD" 'delete-frame
   "fn" 'phye/select-next-frame
   "fp" 'phye/select-previous-frame
   "fr" 'set-frame-name
