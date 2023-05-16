@@ -92,11 +92,8 @@
  "C-e" 'move-end-of-line
  "C-w" 'evil-delete-backward-word)
 
-(defun phye/ivy-mode-hook ()
-  (general-define-key
-   :keymaps 'ivy-minibuffer-map
-   "C-w" 'evil-delete-backward-word))
-(add-hook 'ivy-mode-hook 'phye/ivy-mode-hook)
-;; }}
+(general-define-key
+ :keymaps 'ivy-minibuffer-map
+ "C-w" 'evil-delete-backward-word)
 
 (provide 'phye-init-key)
