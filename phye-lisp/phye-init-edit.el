@@ -59,6 +59,12 @@
 ;;   :defer t
 ;;   :bind (:map evil-normal-state-map ("C-a" . evil-numbers/inc-at-pt)))
 
+;; evil-matchit
+(defun evilmi-customize-keybinding ()
+  (evil-define-key 'normal evil-matchit-mode-map
+    "%" 'evil-jump-item
+    "m" 'evilmi-jump-items))
+
 ;; gpg encrypt
 (require 'epa-file)
 (epa-file-enable)
