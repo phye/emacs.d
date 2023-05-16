@@ -74,6 +74,7 @@
                           (holiday-fixed 10 1 "国庆节")
                           ))
 (with-eval-after-load 'org-agenda
+  ;; must be defined here, as org-agenda-mode will reset keybindings
   (general-define-key
    :keymaps 'org-agenda-mode-map
    "W" 'org-agenda-week-view
