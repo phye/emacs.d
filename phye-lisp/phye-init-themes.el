@@ -1,17 +1,24 @@
 (load-theme 'cyberpunk t)
 (setq my-favorite-color-themes
-      '(srcery
+      '(
         atom-dark
         atom-one-dark
-        doom-dark+
+        cyberpunk
+        dakrone
         doom-Iosvkem
         doom-acario-dark
         doom-badger
         doom-challenger-deep
+        doom-city-lights
+        doom-dark+
         doom-dracula
         doom-feather-dark
         doom-gruvbox
+        doom-gruvbox
         doom-ir-black
+        doom-material
+        doom-material-dark
+        doom-material-dark
         doom-molokai
         doom-monokai-classic
         doom-monokai-machine
@@ -19,36 +26,33 @@
         doom-monokai-pro
         doom-monokai-ristretto
         doom-monokai-spectrum
-        doom-material-dark
-        doom-gruvbox
-        doom-xcode
-        doom-nova
         doom-nord
         doom-nord-aurora
-        doom-material-dark
+        doom-nova
         doom-oceanic-next
         doom-old-hope
         doom-opera
-        doom-zenburn
         doom-palenight
         doom-spacegrey
-        tango-dark
-        ;; solarized-dark-high-contrast
-        ;; sanityinc-solarized-dark
+        doom-vibrant
+        doom-xcode
+        doom-zenburn
+        kaolin-aurora
+        kaolin-bubblegum
+        kaolin-galaxy
+        kaolin-ocean
+        kaolin-temple
+        kaolin-valley-dark
+        madhat2r
+        modus-vivendi
+        planet
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
-        modus-vivendi
-        spacemacs-dark
         seti
-        planet
-        dakrone
-        doom-city-lights
-        doom-material
-        kaolin-galaxy
-        kaolin-bubblegum
-        kaolin-temple
-        cyberpunk
-        ;; vscode-dark-plus
+        solarized-dark-high-contrast
+        spacemacs-dark
+        srcery
+        tango-dark
         ))
 
 (use-package hl-todo
