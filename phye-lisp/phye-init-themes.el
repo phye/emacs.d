@@ -6,8 +6,10 @@
         doom-dark+
         doom-Iosvkem
         doom-acario-dark
+        doom-badger
         doom-challenger-deep
         doom-dracula
+        doom-feather-dark
         doom-gruvbox
         doom-ir-black
         doom-molokai
