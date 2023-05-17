@@ -38,7 +38,7 @@
   "il" 'org-insert-link
   "ls" 'highlight-symbol
   "oc" 'cfw:open-org-calendar
-  "ol" 'org-open-at-point
+  "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
   "sl" 'org-store-link
   "tt" 'shell-pop
