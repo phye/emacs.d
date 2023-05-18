@@ -80,7 +80,8 @@
 
 (general-define-key
  :keymaps 'image-mode-map
- "q" #'quit-window)
+ "q" #'quit-window
+ "f" #'my-toggle-full-window)
 
 (general-define-key
  :keymaps 'deadgrep-mode-map
