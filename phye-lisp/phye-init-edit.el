@@ -140,6 +140,11 @@
    ";" 'ace-pinyin-jump-char-2)
   )
 
+(defun phye/deadgrep-current-directory (search-term)
+  "deadgrep in current directory"
+  (interactive (list (deadgrep--read-search-term)))
+  (deadgrep search-term default-directory))
+
 (defun phye/project-find-dir ()
   "find directory fuzzily (copied from `'project-find-dir`'"
   (interactive)

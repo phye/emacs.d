@@ -19,13 +19,14 @@
 (my-comma-leader-def
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
-  "dc" 'godoc-at-point
   "dg" 'deadgrep
+  "dc" 'phye/deadgrep-current-directory
   "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
   "mb" 'magit-blame
   "mk" 'compile
   "gr" 'lsp-find-references
+  "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
   "hs" 'hs-show-all
   "hh" 'hs-hide-all
