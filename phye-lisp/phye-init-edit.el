@@ -1,11 +1,7 @@
 ;; diary
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
-
-(setq phye/evil-state-setup
-      '((image-mode . emacs)))
-(setq my-initial-evil-state-setup
-      (append my-initial-evil-state-setup phye/evil-state-setup nil))
+(evil-set-initial-state 'image-mode 'emacs)
 
 (setq my-disable-wucuo t)
 (set-fill-column 100)
@@ -13,7 +9,9 @@
 (use-package clipetty
   :ensure t
   :custom
-  (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY"))
+  (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY")
+  :config
+  (clipetty-mode))
 ;; }}
 
 ;; file and dirs
