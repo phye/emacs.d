@@ -49,6 +49,14 @@
   "xe" 'exit-recursive-edit
   "xg" 'magit-status)
 
+(defun phye/restore-keybindings ()
+  "Restore keybindings by evil-nerd-commenter."
+  (interactive)
+  (my-comma-leader-def
+    "cc" 'clipetty-kill-ring-save))
+;; NOTE(phye); this is ugly... but simple and working for the moment ...
+(my-run-with-idle-timer 5 'phye/restore-keybindings)
+
 (my-space-leader-def
   "fD" 'delete-frame
   "fn" 'phye/select-next-frame

@@ -9,9 +9,7 @@
 (use-package clipetty
   :ensure t
   :custom
-  (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY")
-  :config
-  (clipetty-mode))
+  (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY"))
 ;; }}
 
 ;; file and dirs
