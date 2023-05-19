@@ -256,6 +256,7 @@
         (plantuml . t)
         (dot . t)
         (emacs-lisp . t)
+        (gnuplot . t)
         ))
      (require 'graphviz-dot-mode)
      (require 'ox-md nil t)

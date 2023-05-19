@@ -28,4 +28,9 @@
 (add-hook 'artist-mode-hook #'artist-mode-toggle-emacs-state)
 ;; }}
 
+;; {{ gnuplot
+(use-package gnuplot
+  :ensure t
+  :defer t)
+;;}}
 (provide 'phye-init-draw)
