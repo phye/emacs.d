@@ -114,7 +114,8 @@
     (setq phye/frame-name-after-switch (phye/current-frame-name))
     (setq phye/last-frame-name phye/frame-name-before-switch)
     (setq phye/frame-name-before-switch phye/frame-name-after-switch)
-    (message "Switch frame from %s to %s" phye/last-frame-name phye/frame-name-after-switch)))
+    (unless (display-graphic-p)
+      (message "Switch frame from %s to %s" phye/last-frame-name phye/frame-name-after-switch))))
 (add-hook 'buffer-list-update-hook #'phye/buffer-list-update-hook)
 
 (defun phye/toggle-last-frame ()
