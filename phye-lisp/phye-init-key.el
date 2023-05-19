@@ -47,7 +47,8 @@
   "xc" 'suspend-frame
   "xd" 'find-file-in-cpp-module
   "xe" 'exit-recursive-edit
-  "xg" 'magit-status)
+  "xg" 'magit-status
+  "xp" 'project-switch-project)
 
 (defun phye/restore-keybindings ()
   "Restore keybindings by evil-nerd-commenter."

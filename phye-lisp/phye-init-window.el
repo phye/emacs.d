@@ -100,8 +100,11 @@
 
 (defun phye/current-frame-name ()
   "Return current frame name."
-  (substring-no-properties
-   (cdr (assoc 'name (frame-parameters)))))
+  (interactive)
+  (let ((name (substring-no-properties
+               (cdr (assoc 'name (frame-parameters))))))
+    (message "Frame Name: %s" name)
+    name))
 
 (defvar phye/last-frame-name (phye/current-frame-name))
 (defvar phye/frame-name-before-switch (phye/current-frame-name))
