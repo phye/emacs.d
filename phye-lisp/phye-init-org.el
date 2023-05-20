@@ -235,6 +235,13 @@
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 (add-hook 'org-mode-hook 'phye/prog-mode-hook 80)
 
+(defun phye/org-icalendar-after-save-hook (file)
+  "After ical FILE is generated, upload them to my personal website."
+  (shell-command (format "scp ~/ws/gtd/%s phye-cvm:/data/www/webdav/" file))
+  (message "%s uploaded to phye-cvm" file))
+
+(add-hook 'org-icalendar-after-save-hook #'phye/org-icalendar-after-save-hook)
+
 ;; }}
 
 ;; settings after org loaded
@@ -244,7 +251,8 @@
           (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
-  (my-run-with-idle-timer 1
+  (my-run-with-idle-timer
+   1
    (lambda ()
      ;; org babel
      (org-clock-persistence-insinuate)
