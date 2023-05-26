@@ -23,6 +23,9 @@
 (setq org-babel-default-header-args:plantuml
       '((:results . "replace")
         (:exports . "results")))
+(setq org-babel-default-header-args:icalendar
+        '((:exports . "none")))
+
 
 ;; gtd status related
 (setq org-log-into-drawer t)
