@@ -70,7 +70,7 @@
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev
   "rt" 'my-random-favorite-color-theme
-  "hh" 'my-random-healthy-color-theme
+  "hh" 'phye/random-all-themes
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   )

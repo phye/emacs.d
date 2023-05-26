@@ -55,6 +55,11 @@
         tango-dark
         ))
 
+(defun phye/random-all-themes ()
+  "Random all color themes"
+  (interactive)
+  (my-pickup-random-color-theme (custom-available-themes)))
+
 (use-package hl-todo
   :ensure t
   :defer t

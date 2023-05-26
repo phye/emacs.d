@@ -237,11 +237,10 @@
 
 (defun phye/org-icalendar-after-save-hook (file)
   "After ical FILE is generated, upload them to my personal website."
-  (shell-command (format "scp ~/ws/gtd/%s phye-cvm:/data/www/webdav/" file))
+  (shell-command (format "scp %s phye-cvm:/data/www/webdav/" file))
   (message "%s uploaded to phye-cvm" file))
 
 (add-hook 'org-icalendar-after-save-hook #'phye/org-icalendar-after-save-hook)
-
 ;; }}
 
 ;; settings after org loaded
