@@ -1,5 +1,6 @@
 ;; {{ buffer and window related
 (setq split-height-threshold nil)
+(setq frame-resize-pixelwise t)
 (fringe-mode 0)
 
 (use-package popper
