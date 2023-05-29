@@ -165,4 +165,10 @@
   :config
   (beacon-mode 1))
 
+(use-package hl-anything
+  :ensure t
+  :defer t
+  :config
+  (hl-global-highlight-on/off))
+
 (provide 'phye-init-themes)
