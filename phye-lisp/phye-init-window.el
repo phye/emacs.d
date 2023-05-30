@@ -87,11 +87,13 @@
   (interactive)
   (select-frame (previous-frame)))
 
-(defun phye/current-frame-name ()
-  "Return current frame name."
-  (interactive)
+(defun phye/current-frame-name (&optional num)
+  "Return current frame name"
+  (interactive "P")
   (let ((name (substring-no-properties
                (cdr (assoc 'name (frame-parameters))))))
+    (when num
+        (message name))
     name))
 
 (defvar phye/last-frame-name (phye/current-frame-name))
