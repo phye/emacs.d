@@ -17,6 +17,7 @@
  ";" 'ace-pinyin-jump-char-2)
 
 (my-comma-leader-def
+  "bb" 'phye/switch-to-previous-buffer-in-window
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
   "dg" 'deadgrep

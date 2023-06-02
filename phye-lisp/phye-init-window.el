@@ -1,7 +1,17 @@
 ;; {{ buffer and window related
 (setq split-height-threshold nil)
 (setq frame-resize-pixelwise t)
-(fringe-mode 0)
+(when (boundp 'fringe-mode)
+  (fringe-mode 0))
+
+(defun phye/switch-to-previous-buffer-in-window ()
+  "Switch to previous buffer in the same window."
+  (interactive)
+  (let* ((cur-buffer (current-buffer))
+        (alt-buffer (car (car (window-prev-buffers)))))
+    (if (eq cur-buffer alt-buffer)
+        (switch-to-buffer (car (car (cdr (window-prev-buffers)))))
+    (switch-to-buffer alt-buffer))))
 
 (use-package popper
   :ensure t
