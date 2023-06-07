@@ -175,7 +175,7 @@
 (setq org-roam-node-display-template "${title} ${tags}")
 ;; }}
 
-;; {{ org-noter
+;; {{ org-noter -- pdf annotation
 (use-package org-noter
   :ensure t
   :defer t
@@ -183,6 +183,23 @@
          ("C-x o" . other-window))
   :config
   (pdf-tools-install))
+;; }}
+
+;; {{ org-remark -- plain text annotation
+(defun phye/org-remark-notes-file-name ()
+  "Return notes file name as <project>-notes.org."
+  (let* ((root (ffip-project-root))
+         (prefix (file-name-nondirectory (directory-file-name (file-name-directory root)))))
+    (if (string-prefix-p "." prefix)
+        (format "%s%s-notes.org" root prefix)
+      (format "%s.%s-notes.org" root prefix))))
+(use-package org-remark
+  :ensure t
+  :defer t
+  :config
+  (org-remark-global-tracking-mode +1)
+  :custom
+  (org-remark-notes-file-name #'phye/org-remark-notes-file-name))
 ;; }}
 
 ;; {{ calfw
