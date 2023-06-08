@@ -15,6 +15,7 @@
         org-journal
         org-present
         org-roam
+        org-remark
         peep-dired
         popper
         rg
