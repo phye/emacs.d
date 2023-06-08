@@ -25,6 +25,7 @@
   "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
   "mb" 'magit-blame
+  "mg" 'evil-goto-mark
   "mk" 'compile
   "gr" 'lsp-find-references
   "gb" 'xref-pop-marker-stack
