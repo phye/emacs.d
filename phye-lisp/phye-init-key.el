@@ -118,6 +118,11 @@
  ";" 'ace-pinyin-jump-char-2
  "j" 'next-line
  "k" 'previous-line)
+
+(general-define-key
+ :keymaps 'org-remark-mode-map
+ :states 'normal
+ "q" 'delete-window)
 ;; }}
 
 ;; {{ mini buffer edit
