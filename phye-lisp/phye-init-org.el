@@ -202,7 +202,8 @@
   (org-remark-notes-display-buffer-action '((display-buffer-below-selected)
                                             (window-height 30)
                                             (preserve-size t))))
-(org-remark-global-tracking-mode 1)
+(with-eval-after-load 'org-remark
+  (org-remark-global-tracking-mode 1))
 (evil-set-initial-state 'org-remark-mode 'normal)
 ;; }}
 

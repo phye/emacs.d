@@ -74,12 +74,11 @@
   "rt" 'my-random-favorite-color-theme
   "rm" 'org-remark-mark
   "ro" 'org-remark-open
-  "rr" 'org-remark-remove
-  "rn" 'org-remark-next
-  "rp" 'org-remark-prev
   "hh" 'phye/random-all-themes
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
+  "<SPC>p" 'org-remark-prev
+  "<SPC>n" 'org-remark-next
   )
 ;; }}
 
