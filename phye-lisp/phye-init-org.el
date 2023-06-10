@@ -205,6 +205,11 @@
 (with-eval-after-load 'org-remark
   (org-remark-global-tracking-mode 1))
 (evil-set-initial-state 'org-remark-mode 'normal)
+(defun phye/mark-and-open (begin end &optional id mode)
+  "mark region and open notes"
+  (interactive (org-remark-region-or-word))
+  (org-remark-mark begin end id mode)
+  (org-remark-open (point)))
 ;; }}
 
 ;; {{ calfw

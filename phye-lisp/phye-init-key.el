@@ -72,13 +72,12 @@
   "nn" 'highlight-symbol-next
   "pp" 'highlight-symbol-prev
   "rt" 'my-random-favorite-color-theme
-  "rm" 'org-remark-mark
-  "ro" 'org-remark-open
   "hh" 'phye/random-all-themes
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
   "<SPC>p" 'org-remark-prev
   "<SPC>n" 'org-remark-next
+  "<SPC>m" 'phye/mark-and-open
   )
 ;; }}
 
