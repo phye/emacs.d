@@ -49,7 +49,7 @@
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         seti
-        solarized-dark-high-contrast
+        ;; solarized-dark-high-contrast
         spacemacs-dark
         srcery
         tango-dark
