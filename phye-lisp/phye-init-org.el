@@ -210,6 +210,11 @@
   (interactive (org-remark-region-or-word))
   (org-remark-mark begin end id mode)
   (org-remark-open (point)))
+(defun phye/remark-view-and-select ()
+  "review remark and select window"
+  (interactive)
+  (org-remark-view (point))
+  (select-window (get-buffer-window org-remark-notes-buffer-name)))
 ;; }}
 
 ;; {{ calfw

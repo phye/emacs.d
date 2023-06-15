@@ -78,7 +78,7 @@
   "<SPC>p" 'org-remark-prev
   "<SPC>n" 'org-remark-next
   "<SPC>m" 'phye/mark-and-open
-  )
+  "<SPC>o" 'phye/remark-view-and-select)
 ;; }}
 
 ;; {{ mode specific map
@@ -120,7 +120,8 @@
 (general-define-key
  :keymaps 'org-remark-mode-map
  :states 'normal
- "q" 'delete-window)
+ ",q" 'delete-window
+ "C-c '" 'delete-window)
 ;; }}
 
 ;; {{ mini buffer edit
