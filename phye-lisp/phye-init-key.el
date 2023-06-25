@@ -122,6 +122,10 @@
  :states 'normal
  ",q" 'delete-window
  "C-c '" 'delete-window)
+
+(general-define-key
+ :keymaps 'helpful-mode-map
+ "f" 'my-toggle-full-window)
 ;; }}
 
 ;; {{ mini buffer edit
