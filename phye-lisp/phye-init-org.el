@@ -7,7 +7,8 @@
       '((nil :maxlevel . 5)
         (org-agenda-files :maxlevel . 5)
         ("KnowledgeBase.org" :maxlevel . 5)
-        ("done.org" :maxlevel . 5)))
+        ("~/ws/gtd/work/draft.org" :maxlevel . 5)
+        ("~/ws/gtd/done.org" :maxlevel . 5)))
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline "~/ws/gtd/gtd.org" "Tasks")
          "* TODO %?\n %i\n %a")
@@ -282,7 +283,8 @@
 (with-eval-after-load 'org
   (setq org-todo-keywords
         '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
-          (sequence "ASSIGNED(a@/!)" "REPRODUCED(p@)" "RCFOUND(r@)" "|" "FIXED(x!)" "VERIFIED(v!)") ;; bug only
+          (sequence "DESIGNING(D@)" "CODING(C@)" "TESTING(T@)" "WAIT(W@)" "GRELEASE(G@)" "|"
+                    "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
   (my-run-with-idle-timer
