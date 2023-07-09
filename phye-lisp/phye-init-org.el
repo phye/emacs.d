@@ -282,9 +282,8 @@
 ;; settings after org loaded
 (with-eval-after-load 'org
   (setq org-todo-keywords
-        '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "BLOCKED(b@/@)" "|" "DONE(d)" "DEFERED(f@/@)" "CANCELLED(c@/!)") ;; general todo items
-          (sequence "DESIGNING(D@)" "CODING(C@)" "TESTING(T@)" "WAIT(W@)" "GRELEASE(G@)" "|"
-                    "RELEASED(R@)") ;; dev todo items
+        '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "|" "ONHOLD(h@/@)" "DONE(d)" "CANCELLED(c@/!)") ;; general todo items
+          (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
   (my-run-with-idle-timer
