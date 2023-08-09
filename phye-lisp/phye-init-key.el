@@ -27,7 +27,7 @@
   "mb" 'magit-blame
   "mg" 'evil-goto-mark
   "mk" 'compile
-  "gr" 'lsp-find-references
+  "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
   "hs" 'hs-show-all

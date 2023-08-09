@@ -88,39 +88,6 @@
 ;; python
 (setq elpy-rpc-python-command (string-trim (shell-command-to-string "which python3")))
 
-;; {{ lsp-mode
-(use-package lsp-mode
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "M-l")
-  :ensure t
-  :hook (
-         (go-mode . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
-  :custom
-  (lsp-idle-delay 0.500)
-  (lsp-enable-symbol-highlighting nil)
-  (lsp-go-directory-filters ["-vendor"])
-  (lsp-verify-signature nil)
-  :config
-  (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]vendor")
-  :commands lsp)
-
-;; optionally lsp dependencies
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode
-  :after (lsp-mode))
-(use-package lsp-ivy
-  :ensure t
-  :commands lsp-ivy-workspace-symbol
-  :after (lsp-mode))
-(use-package lsp-treemacs
-  :ensure t
-  :commands lsp-treemacs-errors-list
-  :after (lsp-mode))
-;; }}
-
 (with-eval-after-load 'find-file-in-project
   (add-to-list 'ffip-prune-patterns "*/build")
   (add-to-list 'ffip-prune-patterns "*/rpm_build")
@@ -149,7 +116,7 @@
   "my mode-aware go to definition"
   (interactive)
   (if (string= major-mode "go-mode")
-      (lsp-find-definition)
+      (xref-find-definitions (symbol-at-point))
     (counsel-etags-find-tag-at-point)))
 
 ;; general prog-mode-hook

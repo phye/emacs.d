@@ -16,7 +16,6 @@
 ;; }}
 
 ;; {{ cpp
-;; (add-hook 'c-mode-common-hook #'lsp-deferred)
 (my-ensure 'clang-format)
 (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
 (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))
@@ -40,13 +39,7 @@
   ; (annotate-mode)
   )
 (with-eval-after-load 'go-mode
-  (add-hook 'go-mode-hook #'lsp-deferred)
-  (add-hook 'go-mode-hook #'lsp-go-install-save-hook)
   (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
-(defun lsp-go-install-save-hook ()
-  (add-hook 'before-save-hook #'lsp-organize-imports t t)
-  ;;(add-hook 'before-save-hook 'gofmt-before-save)
-  )
 ;; }}
 
 (provide 'phye-init-cc)
