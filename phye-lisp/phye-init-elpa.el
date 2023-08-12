@@ -12,6 +12,7 @@
         org-present
         org-roam
         org-remark
+        org-noter
         peep-dired
         popper
         rg
