@@ -1,6 +1,7 @@
 (load-theme 'cyberpunk t)
 (setq my-favorite-color-themes
       '(
+        afternoon
         atom-dark
         atom-one-dark
         cyberpunk
@@ -16,8 +17,8 @@
         doom-gruvbox
         doom-gruvbox
         doom-ir-black
+        doom-laserwave
         doom-material
-        doom-material-dark
         doom-material-dark
         doom-molokai
         doom-monokai-classic
