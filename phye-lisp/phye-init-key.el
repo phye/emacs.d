@@ -65,6 +65,8 @@
 (my-run-with-idle-timer 5 'phye/restore-keybindings)
 
 (my-space-leader-def
+  "wd" 'dedicate-current-window
+  "wu" 'undedicate-current-window
   "fD" 'delete-frame
   "fn" 'phye/select-next-frame
   "fp" 'phye/select-previous-frame
@@ -124,8 +126,8 @@
 (general-define-key
  :keymaps 'org-remark-mode-map
  :states 'normal
- ",q" 'delete-window
- "C-c '" 'delete-window)
+ :prefix ","
+ "q" 'delete-window)
 
 (general-define-key
  :keymaps 'helpful-mode-map

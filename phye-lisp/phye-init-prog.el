@@ -37,7 +37,7 @@
     "data"
     "pack"
     "cache"
-    "model"
+    ;; "model"
     "lib"
     "third_path"
     "cc_tool"
