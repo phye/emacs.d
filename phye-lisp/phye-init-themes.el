@@ -4,6 +4,7 @@
         afternoon
         atom-dark
         atom-one-dark
+        clues
         cyberpunk
         dakrone
         doom-Iosvkem

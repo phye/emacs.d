@@ -119,6 +119,9 @@
       (xref-find-definitions (symbol-at-point))
     (counsel-etags-find-tag-at-point)))
 
+(with-eval-after-load 'eldoc-mode
+  (setq eldoc-idle-delay 5))
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
