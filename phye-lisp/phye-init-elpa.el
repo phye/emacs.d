@@ -20,6 +20,10 @@
         sync-recentf
         tiny
         vimish-fold
+        org-side-tree
+        pumpkin-spice-theme
+        halloweenie-theme
+        ;; book-mode ;; not in melpa yet
         ))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))

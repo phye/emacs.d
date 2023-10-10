@@ -12,6 +12,10 @@
  "C-c t" 'org-mark-ring-goto)
 
 (general-define-key
+ "s-q" 'delete-frame
+ "s-Q" 'server-shutdown)
+
+(general-define-key
  :states 'insert
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2)

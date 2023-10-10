@@ -99,7 +99,7 @@
   :ensure t
   :defer t)
 
-(use-package rg
+(use-package wgrep-deadgrep
   :ensure t
   :defer t)
 

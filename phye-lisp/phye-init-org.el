@@ -186,6 +186,17 @@
   (pdf-tools-install))
 ;; }}
 
+;; {{ org-side-tree
+(use-package org-side-tree
+  :ensure t
+  :defer t)
+;; }}
+
+;; not in melpa yet https://github.com/rougier/book-mode
+;; (use-package book-mode
+;;   :ensure t
+;;   :defer t)
+
 ;; {{ org-remark -- plain text annotation
 (defun phye/org-remark-notes-file-name ()
   "Return notes file name as <project>-notes.org."
@@ -264,7 +275,7 @@
   (interactive)
   (set-fill-column 90)
   ;; (linum-mode)
-  (pangu-spacing-mode 1)
+  ;; (pangu-spacing-mode 1)
   (set (make-local-variable 'pangu-spacing-real-insert-separtor) t)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
   )
