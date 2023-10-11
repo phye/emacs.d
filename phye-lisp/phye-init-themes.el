@@ -173,12 +173,4 @@
   :config
   (hl-global-highlight-on/off))
 
-(use-package pumpkin-spice-theme
-  :ensure t
-  :defer t)
-
-(use-package halloweenie-theme
-  :ensure t
-  :defer t)
-
 (provide 'phye-init-themes)
