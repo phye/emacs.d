@@ -3,12 +3,15 @@
 (defvar my-dict-buffer-name "*MYDICT*"
   "The buffer buffer of my dictionary lookup.")
 
+;; {{ Please provide directory and dictionary file base name
 ;; English => Chinese
 (defvar my-dict-simple
   '("~/.stardict/dic/stardict-langdao-ec-gb-2.4.2" "langdao-ec-gb"))
+
 ;; WordNet English => English
 (defvar my-dict-complete
   '("~/.stardict/dic/stardict-dictd_www.dict.org_wn-2.4.2" "dictd_www.dict.org_wn"))
+;; }}
 
 (defvar my-dict-simple-cache nil "Internal variable.")
 (defvar my-dict-complete-cache nil "Internal variable.")
@@ -29,20 +32,20 @@
   (interactive)
   (quit-window t))
 
-(defmacro my-dict-search-detail (dict cache)
-  "Return word's definition with DICT, CACHE."
-  `(let* ((word (my-dict-prompt-input)))
-     (when word
-       (unless (featurep 'stardict) (require 'stardict))
-       (unless ,cache
-         (setq ,cache
-               (stardict-open (nth 0 ,dict) (nth 1 ,dict) t)))
-       (stardict-lookup ,cache word))))
+(defmacro my-dict-search-detail (word dict cache)
+  "Return WORD's definition with DICT, CACHE."
+  `(when ,word
+     (unless (featurep 'stardict) (require 'stardict))
+     (unless ,cache
+       (setq ,cache
+             (stardict-open (nth 0 ,dict) (nth 1 ,dict) t)))
+     (stardict-lookup ,cache word)))
 
 (defun my-dict-complete-definition ()
   "Show dictionary lookup in buffer."
   (interactive)
-  (let* ((def (my-dict-search-detail my-dict-complete my-dict-complete-cache))
+  (let* ((word (my-dict-prompt-input))
+         (def (my-dict-search-detail word my-dict-complete my-dict-complete-cache))
          buf
          win)
     (when def
@@ -65,7 +68,8 @@
 (defun my-dict-simple-definition ()
   "Show dictionary lookup in popup."
   (interactive)
-  (let* ((def (my-dict-search-detail my-dict-simple my-dict-simple-cache)))
+  (let* ((word (my-dict-prompt-input))
+         (def (my-dict-search-detail word my-dict-simple my-dict-simple-cache)))
     (when def
       (unless (featurep 'popup) (require 'popup))
       (popup-tip def))))

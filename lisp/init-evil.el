@@ -325,7 +325,6 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
     (diff-mode . emacs)
     (ffip-diff-mode . normal)
     (neotree-mode . emacs)
-    (w3m-mode . emacs)
     (gud-mode . emacs)
     (help-mode . emacs)
     (eshell-mode . emacs)
@@ -609,6 +608,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "pp" 'paste-from-x-clipboard ; used frequently
   "sb" 'my-current-string-beginning
   "se" 'my-current-string-end
+  "su" 'vundo
   "vj" 'my-validate-json-or-js-expression
   "kc" 'kill-ring-to-clipboard
   "fn" 'cp-filename-of-current-buffer
@@ -628,8 +628,6 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "trm" 'get-term
   "tff" 'toggle-frame-fullscreen
   "tfm" 'toggle-frame-maximized
-  "ti" 'fastdef-insert
-  "th" 'fastdef-insert-from-history
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-quick-comment-or-uncomment-to-the-line
   "cc" 'evilnc-copy-and-comment-lines
@@ -826,10 +824,8 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "dt" 'my-dict-simple-definition ; summary
   "dd" 'my-lookup-dict-org
   "mm" 'my-lookup-doc-in-man
-  "gg" 'my-w3m-generic-search
-  "gd" 'my-w3m-search-financial-dictionary
-  "gh" 'my-w3m-hacker-search ; code search in all engines with firefox
-  "gq" 'my-w3m-stackoverflow-search)
+  "gh" 'my-browser-hacker-search ; code search in all engines with firefox
+  )
 ;; }}
 
 ;; {{ remember what we searched
@@ -1026,10 +1022,12 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
 ;; {{ my personal evil optimization which need be manually enabled.
 (defun my-evil-ex-command-completion-at-point ()
   "Completion function for ex command history."
-  (let* ((start (or (get-text-property 0 'ex-index evil-ex-cmd)
-                    (point)))
+  (let* ((start (minibuffer-prompt-end))
          (end (point)))
-    (list start end evil-ex-history :exclusive 'no)))
+    ;; ex cmd like "%s" might be regarded as string format option
+    (when (string= (buffer-substring-no-properties start (1+ start)) "%")
+      (setq start (1+ start)))
+    (list start end evil-ex-history)))
 
 (defun my-search-evil-ex-history ()
   "Search `evil-ex-history' to complete ex command."
@@ -1037,7 +1035,6 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   (let (after-change-functions
         (completion-styles '(substring))
         (completion-at-point-functions '(my-evil-ex-command-completion-at-point)))
-    (evil-ex-update)
     (completion-at-point)
     (remove-text-properties (minibuffer-prompt-end) (point-max) '(face nil evil))))
 
