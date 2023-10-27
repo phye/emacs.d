@@ -23,6 +23,7 @@
         org-side-tree
         pumpkin-spice-theme
         halloweenie-theme
+        el-themes
         ;; book-mode ;; not in melpa yet
         ))
 (setq melpa-include-packages

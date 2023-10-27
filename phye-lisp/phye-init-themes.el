@@ -7,6 +7,7 @@
         clues
         cyberpunk
         dakrone
+        darkmine
         doom-Iosvkem
         doom-acario-dark
         doom-badger
@@ -39,6 +40,8 @@
         doom-vibrant
         doom-xcode
         doom-zenburn
+        ef-dark
+        ef-autumn
         kaolin-aurora
         kaolin-bubblegum
         kaolin-galaxy
@@ -172,5 +175,9 @@
   :defer t
   :config
   (hl-global-highlight-on/off))
+
+(use-package ef-themes
+  :ensure t
+  :defer t)
 
 (provide 'phye-init-themes)

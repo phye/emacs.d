@@ -297,6 +297,8 @@
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
+;; workaround org-gpg hang issue
+  (fset 'epg-wait-for-status 'ignore)
   (my-run-with-idle-timer
    1
    (lambda ()
