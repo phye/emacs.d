@@ -122,6 +122,8 @@
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
 
+(add-hook 'go-mode-hook 'eglot-ensure)
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
