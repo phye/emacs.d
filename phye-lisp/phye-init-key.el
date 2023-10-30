@@ -145,4 +145,9 @@
  :keymaps 'ivy-minibuffer-map
  "C-w" 'evil-delete-backward-word)
 
+(general-define-key
+ :keymaps 'xref--xref-buffer-mode-map
+ "j" 'xref-next-line
+ "k" 'xref-prev-line)
+
 (provide 'phye-init-key)
