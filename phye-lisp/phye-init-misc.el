@@ -3,10 +3,6 @@
   :ensure t
   :defer t)
 
-(use-package pangu-spacing
-  :ensure t
-  :defer t)
-
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; {{ macOS

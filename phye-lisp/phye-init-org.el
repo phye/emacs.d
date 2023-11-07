@@ -131,9 +131,10 @@
   (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"INPROGRESS\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
-  (customize-set-variable 'org-journal-date-format "%A, %x")
   (org-journal-file-format "%Y%m.org")
-  (org-journal-file-type 'monthly))
+  (org-journal-file-type 'monthly)
+  :config
+  (customize-set-variable 'org-journal-date-format "%A, %x"))
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
@@ -269,16 +270,20 @@
                 (org-todo 'todo)))))))
 ;; }}
 
+(require 'separate-inline)
+(add-hook 'org-mode-hook 'separate-inline-mode)
+(add-hook 'org-mode-hook
+          '(lambda ()
+             (add-hook 'separate-inline-mode-hook
+                       'separate-inline-use-default-rules-for-org-local
+                       nil 'make-it-local)))
+
 ;; {{ hooks
 (defun phye/org-mode-hook ()
   "custom orgmode settings"
   (interactive)
-  (set-fill-column 90)
-  ;; (linum-mode)
-  ;; (pangu-spacing-mode 1)
-  (set (make-local-variable 'pangu-spacing-real-insert-separtor) t)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
-  )
+  (set-fill-column 100))
 (add-hook 'org-mode-hook 'phye/org-mode-hook 90)
 (add-hook 'org-mode-hook 'phye/prog-mode-hook 80)
 

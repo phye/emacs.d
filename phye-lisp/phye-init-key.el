@@ -76,6 +76,7 @@
   "ff" 'phye/toggle-last-frame
   "ft" 'my-toggle-full-window
   "nn" 'highlight-symbol-next
+  "os" 'org-side-tree
   "pp" 'highlight-symbol-prev
   "rt" 'my-random-favorite-color-theme
   "hh" 'phye/random-all-themes

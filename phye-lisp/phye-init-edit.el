@@ -99,10 +99,6 @@
   :ensure t
   :defer t)
 
-(use-package wgrep-deadgrep
-  :ensure t
-  :defer t)
-
 (defun phye/indent-after-newline (count)
   (indent-according-to-mode))
 
@@ -111,13 +107,21 @@
 (advice-add 'evil-open-above
             :after #'phye/indent-after-newline)
 
-(defun select-rg-window-advice (pattern files dir &optional literal confirm flags)
-  "Select rg buffer"
-  (select-window (get-buffer-window "*rg*")))
-(advice-add 'rg-run
-            :after-until #'select-rg-window-advice)
+;; pangu spacing
+(use-package pangu-spacing
+  :ensure t
+  :defer t
+  :config
+  :custom
+  (pangu-spacing-separator " "))
 
+
+;; deadgrep related
 (use-package deadgrep
+  :ensure t
+  :defer t)
+
+(use-package wgrep-deadgrep
   :ensure t
   :defer t)
 
@@ -163,12 +167,6 @@
    (deadgrep--buffer-name deadgrep--search-term default-directory)
    t)
   (deadgrep-restart))
-
-;; optional if you want which-key integration
-;; (use-package which-key
-;;     :config
-;;     (which-key-mode))
-;; }}
 
 (with-eval-after-load 'company-ispell
   (setq company-ispell-available nil)
