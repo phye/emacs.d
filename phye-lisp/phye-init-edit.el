@@ -66,6 +66,22 @@
     "%" 'evil-jump-item
     "m" 'evilmi-jump-items))
 
+;; evil undo
+(use-package evil
+  :init
+  (setq evil-undo-system 'undo-fu))
+
+(use-package undo-fu)
+
+(setq undo-limit 67108864) ; 64mb.
+(setq undo-strong-limit 100663296) ; 96mb.
+(setq undo-outer-limit 1006632960) ; 960mb.
+
+(use-package undo-fu-session
+  :ensure t
+  :config
+  (undo-fu-session-global-mode))
+
 ;; gpg encrypt
 (require 'epa-file)
 (epa-file-enable)

@@ -5,7 +5,7 @@
   (c-set-offset 'inlambda 0)
   (hide-ifdef-mode)
   (hs-minor-mode)
-  ;; (annotate-mode)
+  (annotate-mode)
   (tree-sitter-hl-mode)
   (rainbow-mode -1))
 (local-require 'google-c-style)

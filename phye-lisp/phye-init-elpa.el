@@ -24,6 +24,7 @@
         pumpkin-spice-theme
         halloweenie-theme
         el-themes
+        undo-fu-session
         ;; book-mode ;; not in melpa yet
         ))
 (setq melpa-include-packages
