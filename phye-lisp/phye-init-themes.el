@@ -40,6 +40,7 @@
         doom-vibrant
         doom-xcode
         doom-zenburn
+        ef-bio
         ef-dark
         ef-autumn
         kaolin-aurora
