@@ -203,4 +203,6 @@
 (advice-add 'deadgrep-visit-result-other-window
             :after #'phye/deadgrep-visit-result-hook)
 
+(advice-add #'project-find-regexp :override #'deadgrep)
+
 (provide 'phye-init-edit)
