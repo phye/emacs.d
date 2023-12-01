@@ -21,14 +21,17 @@
   (annotate-file "~/.data/annotations"))
 
 ;; company
-(use-package company
-  :custom
-  (company-echo-delay 0)                          ; remove annoying blinking
-  :config
-  (setq company-backends (delete 'company-semantic company-backends))
-  (setq company-backends (delete 'company-clang company-backends))
-  (setq company-backends (cl-remove-duplicates company-backends))
-  ) ; start autocompletion only after typin)
+;; (with-eval-after-load 'company-ispell
+;;   (setq company-ispell-available nil))
+;; (use-package company
+;;   :custom
+;;   (company-echo-delay 0)                          ; remove annoying blinking
+;;   :config
+;;   (setq company-backends (delete 'company-semantic company-backends))
+;;   (setq company-backends (delete 'company-clang company-backends))
+;;   (cons 'company-capf company-backends)
+;;   (setq company-backends (cl-remove-duplicates company-backends))) ; start autocompletion only after typin)
+
 
 (setq phye/general-ignore-directories
   '(

@@ -196,10 +196,6 @@
    t)
   (deadgrep-restart))
 
-(with-eval-after-load 'company-ispell
-  (setq company-ispell-available nil)
-  )
-
 (use-package better-jumper
   :ensure t
   :config
