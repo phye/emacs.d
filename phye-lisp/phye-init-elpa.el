@@ -26,6 +26,7 @@
         el-themes
         undo-fu-session
         ;; book-mode ;; not in melpa yet
+        evil-terminal-cursor-changer
         ))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))

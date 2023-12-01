@@ -69,7 +69,19 @@
 ;; evil undo
 (use-package evil
   :init
-  (setq evil-undo-system 'undo-fu))
+  (setq evil-undo-system 'undo-fu)
+  :custom
+  (evil-normal-state-cursor 'box)
+  (evil-insert-state-cursor 'bar)
+  (evil-emacs-state-cursor 'hbar))
+
+(use-package evil-terminal-cursor-changer
+  :ensure t
+  :defer t)
+(with-eval-after-load 'evil-terminal-cursor-changer
+  (unless (display-graphic-p)
+    (require 'evil-terminal-cursor-changer)
+    (etcc-on)))
 
 (use-package undo-fu)
 
