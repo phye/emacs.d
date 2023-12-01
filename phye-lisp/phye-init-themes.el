@@ -92,6 +92,7 @@
      ("HACK" . "#d0bf8f")
      ("TEMP" . "#d0bf8f")
      ("FIXME" . "#cc9393")
+     ("CANCELLED" . "#d0bf8f")
      ("XXX+" . "#cc9393"))))
 
 (customize-save-variable
