@@ -5,6 +5,7 @@
         atom-dark
         atom-one-dark
         clues
+        cherry-blossom
         cyberpunk
         dakrone
         darkmine

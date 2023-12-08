@@ -49,7 +49,8 @@
   "ov" 'jao-toggle-selective-display
   "sl" 'org-store-link
   "tt" 'shell-pop
-  "xb" 'ivy-switch-buffer
+  "xb" 'project-switch-to-buffer
+  "xB" 'ivy-switch-buffer
   "xc" 'suspend-frame
   "xd" 'find-file-in-cpp-module
   "xe" 'exit-recursive-edit
