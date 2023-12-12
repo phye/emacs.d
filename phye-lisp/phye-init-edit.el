@@ -20,13 +20,31 @@
   :bind (:map dired-mode-map
               ("P" . peep-dired)))
 
+;; open recent directory, requires ivy (part of swiper)
+;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
+(defun bjm/ivy-dired-recent-dirs ()
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+  (let ((recent-dirs
+         (delete-dups
+          (mapcar (lambda (file)
+                    (if (file-directory-p file) file (file-name-directory file)))
+                  recentf-list))))
+
+    (let ((dir (ivy-read "Directory: "
+                         recent-dirs
+                         :re-builder #'ivy--regex
+                         :sort nil
+                         :initial-input nil)))
+      (dired dir))))
+
 ;; recentf
 (use-package sync-recentf
-   :ensure t
-   :custom
-   (recentf-auto-cleanup 60)
-   :config
-   (recentf-mode 1))
+  :ensure t
+  :custom
+  (recentf-auto-cleanup 60)
+  :config
+  (recentf-mode 1))
 
 
 ;; Don't pair double quotes

@@ -47,6 +47,7 @@
   "oc" 'cfw:open-org-calendar
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
+  "rd" 'bjm/ivy-dired-recent-dirs
   "sl" 'org-store-link
   "tt" 'shell-pop
   "xb" 'project-switch-to-buffer
