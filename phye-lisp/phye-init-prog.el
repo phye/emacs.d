@@ -62,17 +62,10 @@
   (setq previous-theme (car custom-enabled-themes))
   (load-theme 'doom-gruvbox t))
 (defun phye/ediff-cleanup-hook ()
-  "ediff cleanup"
   (load-theme previous-theme t)
-  (winner-undo))
-(defun phye/ediff-quit-hook ()
-  "kill all ediff opened buffers"
-  (kill-buffer ediff-buffer-A)
-  (kill-buffer ediff-buffer-B)
-  (kill-buffer ediff-buffer-C))
+  (ediff-janitor nil nil))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
-(add-hook 'ediff-quit-hook #'phye/ediff-quit-hook)
 
 ;; projectile-mode, multiple projects
 ;; (use-package projectile
