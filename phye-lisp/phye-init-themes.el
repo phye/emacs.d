@@ -16,6 +16,7 @@
         doom-city-lights
         doom-dark+
         doom-dracula
+        doom-ephemeral
         doom-feather-dark
         doom-gruvbox
         doom-gruvbox
