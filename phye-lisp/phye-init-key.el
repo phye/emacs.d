@@ -84,10 +84,19 @@
   "hh" 'phye/random-all-themes
   "pc" 'popper-cycle
   "pl" 'popper-toggle-latest
-  "ms" 'bookmark-set
-  "mg" 'bookmark-jump
-  "mG" 'bookmark-jump-other-frame
-  "md" 'bookmark-delete
+  )
+;; }}
+
+;; {{ override map
+(general-define-key
+ :states '(emacs normal)
+ :keymaps 'override
+ :prefix "SPC"
+ "ms" 'bookmark-set
+ "mS" 'bookmark-save
+ "mg" 'bookmark-jump
+ "mG" 'bookmark-jump-other-frame
+ "md" 'bookmark-delete
   "<SPC>p" 'org-remark-prev
   "<SPC>n" 'org-remark-next
   "<SPC>m" 'phye/mark-and-open
@@ -156,14 +165,5 @@
  :keymaps 'xref--xref-buffer-mode-map
  "j" 'xref-next-line
  "k" 'xref-prev-line)
-
-(define-key dired-mode-map (kbd "SPC") nil)
-(general-define-key
- :keymaps 'dired-mode-map
- :prefix "SPC"
- "ms" 'bookmark-set
- "mg" 'bookmark-jump
- "mG" 'bookmark-jump-other-frame
- "md" 'bookmark-delete)
 
 (provide 'phye-init-key)
