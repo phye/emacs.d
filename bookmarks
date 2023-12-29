@@ -1,0 +1,47 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("ebook.misc"
+ (filename . "~/Documents/OneDrive/ebooks/misc/")
+ (front-context-string . "ansi.common.lisp")
+ (rear-context-string . "45 Oct 28 21:03 ")
+ (position . 208)
+ (last-modified 25998 13050 280445 0))
+("ebook.cpp"
+ (filename . "~/Documents/OneDrive/ebooks/c.and.cpp/")
+ (front-context-string . "c++.concurrency.")
+ (rear-context-string . "02 May  5  2021 ")
+ (position . 213)
+ (last-modified 25998 13057 242961 0))
+("ebook.math"
+ (filename . "~/Documents/OneDrive/ebooks/math/")
+ (front-context-string)
+ (rear-context-string . "Dec 28 15:55 ..\n")
+ (position . 144)
+ (last-modified 25998 13063 682095 0))
+("paper.ann"
+ (filename . "~/Documents/OneDrive/papers/ann/")
+ (front-context-string . "understanding.ls")
+ (rear-context-string . "11 Dec 27 19:50 ")
+ (position . 204)
+ (last-modified 25998 13070 240693 0))
+("papers"
+ (filename . "~/Documents/OneDrive/papers/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "48 Dec 28 11:16 ")
+ (position . 191)
+ (last-modified 25996 59565 513547 0))
+("org-refile-last-stored"
+ (filename . "~/ws/gtd/work/draft.org")
+ (front-context-string . "*** DONE [#A] 消息")
+ (rear-context-string . "y_sol_3.png]]\n\n\n")
+ (position . 25794)
+ (last-modified 25940 11249 231524 0))
+("org-capture-last-stored"
+ (filename . "~/ws/gtd/roam/20231214104624-qdaccounts.org")
+ (front-context-string)
+ (rear-context-string . "tle: qdaccounts\n")
+ (position . 88)
+ (last-modified 25978 27778 561486 0))
+)
