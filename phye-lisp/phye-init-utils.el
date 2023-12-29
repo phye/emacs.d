@@ -4,6 +4,7 @@
   (interactive)
   (save-some-buffers)
   (recentf-save-list)
+  (bookmark-save)
   (kill-emacs)
   )
 
