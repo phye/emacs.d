@@ -83,8 +83,7 @@
   "rt" 'my-random-favorite-color-theme
   "hh" 'phye/random-all-themes
   "pc" 'popper-cycle
-  "pl" 'popper-toggle-latest
-  )
+  "pl" 'popper-toggle-latest)
 ;; }}
 
 ;; {{ override map
@@ -101,6 +100,13 @@
   "<SPC>n" 'org-remark-next
   "<SPC>m" 'phye/mark-and-open
   "<SPC>o" 'phye/remark-view-and-select)
+
+(general-define-key
+ :states '(emacs normal)
+ :keymaps 'override
+ :prefix ","
+ "ip" 'find-file-in-project
+ "id" 'find-file-in-current-directory)
 ;; }}
 
 ;; {{ mode specific map
