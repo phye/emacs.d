@@ -2,7 +2,37 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("ebook.misc"
+(("qd.ivyproto"
+ (filename . "~/ws/qidian/ivy-proto/")
+ (front-context-string . "basic\n  drwxr-xr")
+ (rear-context-string . "96 Oct 13 16:07 ")
+ (position . 192)
+ (last-modified 25998 13876 303395 560000))
+("qd.globalpb"
+ (filename . "~/ws/qidian/global_pb/")
+ (front-context-string . ".git\n  -rw-r--r-")
+ (rear-context-string . "96 Dec 29 10:58 ")
+ (position . 189)
+ (last-modified 25998 13868 905097 118000))
+("qd.moss"
+ (filename . "~/ws/qidian/ivy/moss/")
+ (front-context-string . "bo\n  -rw-r--r-- ")
+ (rear-context-string . "96 Sep  7 12:29 ")
+ (position . 185)
+ (last-modified 25998 13852 315524 231000))
+("ivy.message"
+ (filename . "~/ws/qidian/ivy/message/")
+ (front-context-string . "canton_fair_svr\n")
+ (rear-context-string . "96 Jul  7 15:15 ")
+ (position . 185)
+ (last-modified 25998 14076 380501 678000))
+("qd.all"
+ (filename . "~/ws/qidian/")
+ (front-context-string . "comm_proj\n  drwx")
+ (rear-context-string . "96 Nov 23 12:10 ")
+ (position . 170)
+ (last-modified 25998 13832 695146 877000))
+("ebook.misc"
  (filename . "~/Documents/OneDrive/ebooks/misc/")
  (front-context-string . "ansi.common.lisp")
  (rear-context-string . "45 Oct 28 21:03 ")
