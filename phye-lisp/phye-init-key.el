@@ -2,10 +2,8 @@
 (general-define-key
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
-
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
-
  "C-c a" 'org-agenda
  "C-c c" 'org-capture
  "C-c o" 'org-open-at-point
@@ -20,7 +18,9 @@
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2)
 
-(my-comma-leader-def
+(general-define-key
+ :states '(normal visual)
+ :prefix ","
   "bb" 'phye/switch-to-previous-buffer-in-window
   "cc" 'clipetty-kill-ring-save
   "cd" 'copy-relative-path-in-project
@@ -34,14 +34,13 @@
   "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
-  "hs" 'hs-show-all
-  "hh" 'hs-hide-all
+  "hS" 'hs-show-all
+  "hH" 'hs-hide-all
   "hl" 'hs-hide-level
   "hbh" 'hs-hide-block
   "hbs" 'hs-show-block
   "hdh" 'hide-ifdef-block
   "hds" 'show-ifdef-block
-  "id" 'find-file-in-current-directory
   "il" 'org-insert-link
   "ls" 'highlight-symbol
   "oc" 'cfw:open-org-calendar
@@ -58,6 +57,46 @@
   "xg" 'magit-status
   "xp" 'project-switch-project)
 
+(general-define-key
+ :states '(normal visual)
+ :prefix "SPC"
+ "wd" 'dedicate-current-window
+ "wu" 'undedicate-current-window
+ "fD" 'delete-frame
+ "fn" 'phye/select-next-frame
+ "fp" 'phye/select-previous-frame
+ "fr" 'set-frame-name
+ "fs" 'select-frame-by-name
+ "fo" 'find-file-other-frame
+ "ff" 'phye/toggle-last-frame
+ "ft" 'my-toggle-full-window
+ "nn" 'highlight-symbol-next
+ "os" 'org-side-tree
+ "pp" 'highlight-symbol-prev
+ "rt" 'my-random-favorite-color-theme
+ "rp" 'org-remark-prev
+ "rn" 'org-remark-next
+ "rm" 'phye/mark-and-open
+ "ro" 'phye/remark-view-and-select
+ "hh" 'phye/random-all-themes
+ "pc" 'popper-cycle
+ "pl" 'popper-toggle-latest)
+;; }}
+
+;; {{ override map
+(general-define-key
+ :states '(emacs normal)
+ :keymaps 'override
+ :prefix ","
+ "ms" 'bookmark-set
+ "mS" 'bookmark-save
+ "mg" 'bookmark-jump
+ "mG" 'bookmark-jump-other-frame
+ "md" 'bookmark-delete
+ "ip" 'find-file-in-project
+ "id" 'find-file-in-current-directory)
+;; }}
+
 (defun phye/restore-keybindings ()
   "Restore keybindings by evil-nerd-commenter."
   (interactive)
@@ -65,49 +104,6 @@
     "cc" 'clipetty-kill-ring-save))
 ;; NOTE(phye); this is ugly... but simple and working for the moment ...
 (my-run-with-idle-timer 5 'phye/restore-keybindings)
-
-(my-space-leader-def
-  "wd" 'dedicate-current-window
-  "wu" 'undedicate-current-window
-  "fD" 'delete-frame
-  "fn" 'phye/select-next-frame
-  "fp" 'phye/select-previous-frame
-  "fr" 'set-frame-name
-  "fs" 'select-frame-by-name
-  "fo" 'find-file-other-frame
-  "ff" 'phye/toggle-last-frame
-  "ft" 'my-toggle-full-window
-  "nn" 'highlight-symbol-next
-  "os" 'org-side-tree
-  "pp" 'highlight-symbol-prev
-  "rt" 'my-random-favorite-color-theme
-  "hh" 'phye/random-all-themes
-  "pc" 'popper-cycle
-  "pl" 'popper-toggle-latest)
-;; }}
-
-;; {{ override map
-(general-define-key
- :states '(emacs normal)
- :keymaps 'override
- :prefix "SPC"
- "ms" 'bookmark-set
- "mS" 'bookmark-save
- "mg" 'bookmark-jump
- "mG" 'bookmark-jump-other-frame
- "md" 'bookmark-delete
-  "<SPC>p" 'org-remark-prev
-  "<SPC>n" 'org-remark-next
-  "<SPC>m" 'phye/mark-and-open
-  "<SPC>o" 'phye/remark-view-and-select)
-
-(general-define-key
- :states '(emacs normal)
- :keymaps 'override
- :prefix ","
- "ip" 'find-file-in-project
- "id" 'find-file-in-current-directory)
-;; }}
 
 ;; {{ mode specific map
 (general-define-key
