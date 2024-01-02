@@ -2,7 +2,19 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("qd.ivyproto"
+(("lisp.emacs"
+ (filename . "~/.emacs.d/")
+ (front-context-string . "amx-items\n  drwx")
+ (rear-context-string . "30 Jan  2 15:27 ")
+ (position . 181)
+ (last-modified 26003 48697 920341 352000))
+("lisp.phye"
+ (filename . "~/.emacs.d/phye-lisp/")
+ (front-context-string . "phye-init-bin.el")
+ (rear-context-string . "67 Apr 11  2023 ")
+ (position . 182)
+ (last-modified 26003 48688 626977 524000))
+("qd.ivyproto"
  (filename . "~/ws/qidian/ivy-proto/")
  (front-context-string . "basic\n  drwxr-xr")
  (rear-context-string . "96 Oct 13 16:07 ")
