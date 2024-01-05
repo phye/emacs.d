@@ -95,6 +95,12 @@
  "md" 'bookmark-delete
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory)
+
+(general-define-key
+ :states '(emacs normal)
+ :keymaps 'override
+ :prefix ";"
+ ";" 'ace-pinyin-jump-char-2)
 ;; }}
 
 (defun phye/restore-keybindings ()

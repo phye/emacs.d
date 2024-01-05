@@ -118,9 +118,10 @@
 (defun phye/goto-definition-at-point ()
   "my mode-aware go to definition"
   (interactive)
-  (if (string= major-mode "go-mode")
-      (xref-find-definitions (symbol-at-point))
-    (counsel-etags-find-tag-at-point)))
+  (cl-case major-mode
+      (go-mode (xref-find-definitions (symbol-at-point)))
+      (python-mode (elpy-goto-definition))
+      (t (counsel-etags-find-tag-at-point))))
 
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
