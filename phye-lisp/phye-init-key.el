@@ -47,7 +47,6 @@
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
   "rd" 'bjm/ivy-dired-recent-dirs
-  "sl" 'org-store-link
   "tt" 'shell-pop
   "xb" 'project-switch-to-buffer
   "xB" 'ivy-switch-buffer
@@ -94,7 +93,8 @@
  "mG" 'bookmark-jump-other-frame
  "md" 'bookmark-delete
  "ip" 'find-file-in-project
- "id" 'find-file-in-current-directory)
+ "id" 'find-file-in-current-directory
+ "sl" 'org-store-link)
 
 (general-define-key
  :states '(emacs normal)
