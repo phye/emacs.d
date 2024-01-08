@@ -1,3 +1,7 @@
+;;; phye-init-key -- phye's favorite keybindings
+;;; Commentary:
+;;; do not use space to override keybinds in Emacs mode
+
 ;; {{ global keymaps
 (general-define-key
  "M-`" 'other-frame
@@ -29,7 +33,6 @@
   "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
   "mb" 'magit-blame
-  "mg" 'evil-goto-mark
   "mk" 'compile
   "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
@@ -47,14 +50,9 @@
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
   "rd" 'bjm/ivy-dired-recent-dirs
-  "tt" 'shell-pop
-  "xb" 'project-switch-to-buffer
-  "xB" 'ivy-switch-buffer
   "xc" 'suspend-frame
   "xd" 'find-file-in-cpp-module
-  "xe" 'exit-recursive-edit
-  "xg" 'magit-status
-  "xp" 'project-switch-project)
+  "xe" 'exit-recursive-edit)
 
 (general-define-key
  :states '(normal visual)
@@ -94,7 +92,12 @@
  "md" 'bookmark-delete
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
- "sl" 'org-store-link)
+ "sl" 'org-store-link
+ "tt" 'shell-pop
+ "xb" 'project-switch-to-buffer
+ "xB" 'ivy-switch-buffer
+ "xg" 'magit-status
+ "xp" 'project-switch-project)
 
 (general-define-key
  :states '(emacs normal)
