@@ -26,31 +26,24 @@
  :states '(normal visual)
  :prefix ","
   "bb" 'phye/switch-to-previous-buffer-in-window
-  "cc" 'clipetty-kill-ring-save
-  "cd" 'copy-relative-path-in-project
-  "dg" 'deadgrep
-  "dc" 'phye/deadgrep-current-directory
-  "dk" 'deadgrep-kill-all-buffers
   "fb" 'clang-format-buffer
   "mb" 'magit-blame
-  "mk" 'compile
   "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
+  "hs" 'hs-hide-all
   "hS" 'hs-show-all
-  "hH" 'hs-hide-all
   "hl" 'hs-hide-level
-  "hbh" 'hs-hide-block
-  "hbs" 'hs-show-block
-  "hdh" 'hide-ifdef-block
-  "hds" 'show-ifdef-block
+  "hb" 'hs-hide-block
+  "hB" 'hs-show-block
+  "hi" 'hide-ifdef-block
+  "hI" 'show-ifdef-block
   "il" 'org-insert-link
   "ls" 'highlight-symbol
   "oc" 'cfw:open-org-calendar
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
   "rd" 'bjm/ivy-dired-recent-dirs
-  "xc" 'suspend-frame
   "xd" 'find-file-in-cpp-module
   "xe" 'exit-recursive-edit)
 
@@ -85,6 +78,12 @@
  :states '(emacs normal)
  :keymaps 'override
  :prefix ","
+ "cc" 'clipetty-kill-ring-save
+ "cd" 'copy-relative-path-in-project
+ "dg" 'deadgrep
+ "dc" 'phye/deadgrep-current-directory
+ "dk" 'deadgrep-kill-all-buffers
+ "mk" 'compile
  "ms" 'bookmark-set
  "mS" 'bookmark-save
  "mg" 'bookmark-jump
@@ -95,6 +94,7 @@
  "sl" 'org-store-link
  "tt" 'shell-pop
  "xb" 'project-switch-to-buffer
+ "xc" 'suspend-frame
  "xB" 'ivy-switch-buffer
  "xg" 'magit-status
  "xp" 'project-switch-project)
