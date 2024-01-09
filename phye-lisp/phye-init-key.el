@@ -79,7 +79,8 @@
  :keymaps 'override
  :prefix ","
  "cc" 'clipetty-kill-ring-save
- "cd" 'copy-relative-path-in-project
+ "cd" 'copy-relative-dir-in-project
+ "cf" 'copy-relative-path-in-project
  "dg" 'deadgrep
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers

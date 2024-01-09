@@ -54,12 +54,20 @@
     (clipetty-kill-ring-save))
   (message "copied: %s" val))
 
-(defun copy-relative-path-in-project ()
+(defun copy-relative-dir-in-project ()
   (interactive)
   (setq path (file-name-directory
               (file-relative-name
                (buffer-file-name)
                (ffip-project-root))))
+  (copy-variable-to-clipboard path)
+  (clipetty-kill-ring-save))
+
+(defun copy-relative-path-in-project ()
+  (interactive)
+  (setq path (file-relative-name
+              (buffer-file-name)
+              (ffip-project-root)))
   (copy-variable-to-clipboard path)
   (clipetty-kill-ring-save))
 
