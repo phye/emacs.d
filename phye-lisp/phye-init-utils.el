@@ -60,7 +60,8 @@
               (file-relative-name
                (buffer-file-name)
                (ffip-project-root))))
-  (copy-variable-to-clipboard path))
+  (copy-variable-to-clipboard path)
+  (clipetty-kill-ring-save))
 
 ;; My useless functions (can be achieved via much easier yasnippet)
 (defun insert-src-in-orgmode (lang)
