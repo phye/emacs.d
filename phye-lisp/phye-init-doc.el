@@ -18,6 +18,13 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode)))
 
+(use-package markdown-toc
+  :ensure t
+  :defer t
+  :custom
+  (markdown-toc-header-toc-title "")
+  (markdown-toc-indentation-space 2))
+
 ;; {{ info mode
 (defun phye/info-mode-hook ()
   "bind evil like windmov"
