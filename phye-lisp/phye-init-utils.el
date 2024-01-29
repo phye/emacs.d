@@ -84,4 +84,9 @@
   (org-edit-special)
   )
 
+(defun insert-zero-width-space ()
+  "Insert zero width space before and after OrgMode mark."
+  (interactive)
+  (insert-char (char-from-name "ZERO WIDTH SPACE")))
+
 (provide 'phye-init-utils)

@@ -20,14 +20,14 @@
 (general-define-key
  :states 'insert
  :prefix "C-;"
- ";" 'ace-pinyin-jump-char-2)
+ ";" 'ace-pinyin-jump-char-2
+ " " 'insert-zero-width-space)
 
 (general-define-key
  :states '(normal visual)
  :prefix ","
   "bb" 'phye/switch-to-previous-buffer-in-window
   "fb" 'clang-format-buffer
-  "mb" 'magit-blame
   "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
@@ -84,7 +84,9 @@
  "dg" 'deadgrep
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
+ "mb" 'magit-blame
  "mk" 'compile
+ "mp" 'magit-push
  "ms" 'bookmark-set
  "mS" 'bookmark-save
  "mg" 'bookmark-jump
@@ -123,11 +125,6 @@
 (my-run-with-idle-timer 5 'phye/restore-keybindings)
 
 ;; {{ mode specific map
-(general-define-key
- :states 'normal
- :keymaps 'magit-blame-mode-map
- "q" #'magit-blame-quit)
-
 (general-define-key
  :states 'normal
  :keymaps 'go-mode-map
