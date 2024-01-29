@@ -75,7 +75,7 @@
 
 ;; {{ override map
 (general-define-key
- :states '(emacs normal)
+ :states '(emacs normal visual)
  :keymaps 'override
  :prefix ","
  "cc" 'clipetty-kill-ring-save
