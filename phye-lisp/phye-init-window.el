@@ -21,7 +21,7 @@
   (popper-reference-buffers
    '(
      "Output\\*$"
-     "\\*godoc"
+     ;; "\\*godoc"
      ;; "\\*Compile-Log\\*$"
      "\\*Async Shell Command\\*"
      "\\*Messages\\*"

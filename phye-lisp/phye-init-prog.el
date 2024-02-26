@@ -63,7 +63,7 @@
   (load-theme 'doom-gruvbox t))
 (defun phye/ediff-cleanup-hook ()
   (load-theme previous-theme t)
-  (ediff-janitor nil nil))
+  (ediff-janitor nil t))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
 
@@ -96,6 +96,7 @@
   (add-to-list 'ffip-prune-patterns "*/rpm_build")
   (add-to-list 'ffip-prune-patterns "*/cc_tool")
   (add-to-list 'ffip-prune-patterns "*/qci_files")
+  (add-to-list 'ffip-prune-patterns "*/vendor")
   (add-to-list 'ffip-ignore-filenames "*.pb.cc")
   (add-to-list 'ffip-ignore-filenames "*.pb.h")
   (add-to-list 'ffip-ignore-filenames "*_pb2.py")
@@ -126,6 +127,7 @@
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
 
+(evil-set-initial-state 'godoc-mode 'normal)
 (add-hook 'go-mode-hook 'eglot-ensure)
 
 ;; general prog-mode-hook

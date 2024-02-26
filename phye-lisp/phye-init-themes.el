@@ -4,11 +4,15 @@
         afternoon
         atom-dark
         atom-one-dark
+        ample
+        ample-zen
         clues
         cherry-blossom
         cyberpunk
         dakrone
         darkmine
+        darkokai
+        doom-1337
         doom-Iosvkem
         doom-acario-dark
         doom-badger
@@ -19,7 +23,7 @@
         doom-ephemeral
         doom-feather-dark
         doom-gruvbox
-        doom-gruvbox
+        doom-homage-black
         doom-ir-black
         doom-laserwave
         doom-material
@@ -45,6 +49,11 @@
         ef-bio
         ef-dark
         ef-autumn
+        grandshell
+        gruvbox-dark-soft
+        gruvbox-dark-medium
+        hemisu-dark
+        jazz
         kaolin-aurora
         kaolin-bubblegum
         kaolin-galaxy
@@ -53,7 +62,9 @@
         kaolin-valley-dark
         madhat2r
         modus-vivendi
+        nord
         planet
+        professional
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         seti
@@ -61,6 +72,7 @@
         spacemacs-dark
         srcery
         tango-dark
+        wombat
         ))
 
 (defun phye/random-all-themes ()
