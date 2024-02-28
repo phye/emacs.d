@@ -26,6 +26,7 @@
         (:exports . "results")))
 (setq org-babel-default-header-args:icalendar
         '((:exports . "none")))
+(setq org-babel-python-command "python3")
 
 
 ;; gtd status related
@@ -268,6 +269,26 @@
                        (equal (match-string 2) (match-string 3)))
                   (org-todo 'done)
                 (org-todo 'todo)))))))
+
+(defun phye/insert-zws-for-org-markup ()
+  "Insert zero width whitespace between chinese and english characters in orgmode in region."
+  (interactive)
+  (setq match-regexp
+        (rx
+         (group-n 1
+           (not ?​))
+         (group-n 2
+           (any "*~+_")
+           (one-or-more
+            (or
+             (category chinese)))
+           (any "*~+_"))
+         (group-n 3
+          (not ?​))
+         ))
+  (replace-regexp-in-region match-regexp
+                            "\\1​\\2​\\3"
+                            (region-beginning) (region-end)))
 ;; }}
 
 

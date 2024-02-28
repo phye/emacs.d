@@ -124,4 +124,10 @@
   (interactive)
   (select-frame-by-name phye/last-frame-name))
 
+(defun phye/kill-buffer-and-frame ()
+  "Kill buffer and frame"
+  (interactive)
+  (kill-buffer)
+  (delete-frame))
+
 (provide 'phye-init-window)

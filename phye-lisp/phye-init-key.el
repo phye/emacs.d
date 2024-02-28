@@ -18,10 +18,10 @@
  "s-Q" 'server-shutdown)
 
 (general-define-key
- :states 'insert
+ :states '(insert normal)
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2
- " " 'insert-zero-width-space)
+ "<SPC>" 'insert-zero-width-space)
 
 (general-define-key
  :states '(normal visual)
@@ -94,11 +94,13 @@
  "md" 'bookmark-delete
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
+ "rr" 'my-counsel-recentf
  "sl" 'org-store-link
  "tt" 'shell-pop
  "xb" 'project-switch-to-buffer
  "xc" 'suspend-frame
  "xB" 'ivy-switch-buffer
+ "xK" 'phye/kill-buffer-and-frame
  "xg" 'magit-status
  "xp" 'project-switch-project)
 
@@ -181,5 +183,12 @@
  :keymaps 'xref--xref-buffer-mode-map
  "j" 'xref-next-line
  "k" 'xref-prev-line)
+
+(general-define-key
+ :keymaps 'dired-mode-map
+ "h" 'dired-up-directory
+ "l" 'dired-find-file
+ "j" 'dired-next-line
+ "k" 'dired-previous-line)
 
 (provide 'phye-init-key)
