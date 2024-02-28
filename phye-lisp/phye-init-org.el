@@ -273,22 +273,26 @@
 (defun phye/insert-zws-for-org-markup ()
   "Insert zero width whitespace between chinese and english characters in orgmode in region."
   (interactive)
-  (setq match-regexp
-        (rx
-         (group-n 1
-           (not ?​))
-         (group-n 2
-           (any "*~+_")
-           (one-or-more
-            (or
-             (category chinese)))
-           (any "*~+_"))
-         (group-n 3
-          (not ?​))
-         ))
-  (replace-regexp-in-region match-regexp
-                            "\\1​\\2​\\3"
-                            (region-beginning) (region-end)))
+  (let* ((org-markup-pattern "~+_/*")
+         (match-regexp
+          (rx-to-string
+           `(seq
+             (group-n 1
+               (not ?​))
+             (group-n 2
+               (any ,org-markup-pattern)
+               (one-or-more
+                (or
+                 (any alnum)
+                 (any "-_")
+                 (category chinese)))
+               (any ,org-markup-pattern))
+             (group-n 3
+               (not ?​))
+             ))))
+    (replace-regexp-in-region match-regexp
+                              "\\1​\\2​\\3"
+                              (region-beginning) (region-end))))
 ;; }}
 
 
