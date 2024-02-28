@@ -2,19 +2,15 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(#1=(#("aliases.sh" 0 10
+(#1=(#("github" 0 6
       (bmkp-full-record #1#))
-    (filename . "~/ws/posix-conf/scripts/aliases.sh")
-    (front-context-string . "\nfunction set_al")
-    (rear-context-string . "compute.yaml\"\n}\n")
-    (position . 1988)
-    (last-modified 26039 35380 305109 0))
-#1=(#("github" 0 6
-      (bmkp-full-record #1#))
+    (end-position . 178)
+    (time 26043 576 121916 0)
+    (visits . 0)
     (filename . "~/ws/github/")
     (front-context-string . ".DS_Store\n  drwx")
     (rear-context-string . "96 Oct 26  2022 ")
-    (position . 175)
+    (position . 178)
     (last-modified 26006 17369 241669 0))
 #1=(#("doc.qdtrans" 0 11
       (bmkp-full-record #1#))
@@ -81,10 +77,13 @@
     (last-modified 25998 13832 695146 877000))
 #1=(#("ebook.misc" 0 10
       (bmkp-full-record #1#))
+    (end-position . 270)
+    (time 26043 1324 237033 0)
+    (visits . 1)
     (filename . "~/Documents/OneDrive/ebooks/misc/")
     (front-context-string . "ansi.common.lisp")
     (rear-context-string . "45 Oct 28 21:03 ")
-    (position . 208)
+    (position . 270)
     (last-modified 25998 13050 280445 0))
 #1=(#("ebook.cpp" 0 9
       (bmkp-full-record #1#))
@@ -123,9 +122,9 @@
     (last-modified 25940 11249 231524 0))
 #1=(#("org-capture-last-stored" 0 23
       (bmkp-full-record #1#))
-    (filename . "~/ws/gtd/roam/20231214104624-qdaccounts.org")
+    (filename . "~/ws/gtd/roam/20240220105656-qcloud.org")
     (front-context-string)
-    (rear-context-string . "tle: qdaccounts\n")
-    (position . 88)
-    (last-modified 25978 27778 561486 0))
+    (rear-context-string . "#+title: qcloud\n")
+    (position . 84)
+    (last-modified 26068 5370 66729 0))
 )
