@@ -2,7 +2,19 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(#1=(#("github" 0 6
+(("k8s.total"
+ (filename . "~/ws/github/k8s.total/")
+ (front-context-string . "  /data/home/phy")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26080 20550 964593 176000))
+("client-go"
+ (filename . "~/ws/github/k8s.total/k8s.io/client-go/")
+ (front-context-string . "  /data/home/phy")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 26080 1769 401230 652000))
+#1=(#("github" 0 6
       (bmkp-full-record #1#))
     (end-position . 178)
     (time 26043 576 121916 0)
