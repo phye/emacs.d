@@ -95,6 +95,7 @@
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
  "rr" 'my-counsel-recentf
+ "rR" 'phye/open-recent-file-in-other-frame
  "sl" 'org-store-link
  "tt" 'shell-pop
  "xb" 'project-switch-to-buffer

@@ -130,4 +130,12 @@
   (kill-buffer)
   (delete-frame))
 
+(defun phye/open-recent-file-in-other-frame ()
+  "Open recent file in other frame."
+  (interactive)
+  (let* ((files (mapcar #'substring-no-properties recentf-list))
+         (hint "Recent files: ")
+         (f (ivy-read hint files)))
+    (find-file-other-frame f)))
+
 (provide 'phye-init-window)
