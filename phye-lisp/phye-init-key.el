@@ -43,7 +43,6 @@
   "oc" 'cfw:open-org-calendar
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
-  "rd" 'bjm/ivy-dired-recent-dirs
   "xd" 'find-file-in-cpp-module
   "xe" 'exit-recursive-edit)
 
@@ -94,6 +93,7 @@
  "md" 'bookmark-delete
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
+ "rd" 'bjm/ivy-dired-recent-dirs
  "rr" 'my-counsel-recentf
  "rR" 'phye/open-recent-file-in-other-frame
  "sl" 'org-store-link
