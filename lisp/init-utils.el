@@ -550,16 +550,21 @@ Copied from 3rd party package evil-textobj."
 
 (defun my-extended-regexp (str)
   "Build regex compatible with pinyin from STR."
-  (let* ((len (length str)))
+  (let* ((len (length str))
+         bn)
     (cond
      ;; do nothing
      ((<= (length str) 1))
 
      ;; If the first character of input in ivy is ":" or ";",
      ;; remaining input is converted into Chinese pinyin regex.
-     ((string-match "[:\|;]" (substring str 0 1))
+     ((or (and (string-match "[:\|;]" (substring str 0 1))
+               (setq str (substring str 1 len)))
+          (and (setq bn (buffer-name))
+               (or (member bn '("*Org Agenda*"))
+                   (string-match ".*EMMS Playlist\\|\\.org$" bn))))
       (my-ensure 'pinyinlib)
-      (setq str (pinyinlib-build-regexp-string (substring str 1 len))))
+      (setq str (pinyinlib-build-regexp-string str)))
 
      ;; If the first character of input in ivy is "/",
      ;; remaining input is converted to pattern to search camel case word
@@ -731,11 +736,22 @@ This function is written in pure Lisp and slow."
     "mpg"
     "ogm"
     "part"
+    "rm"
     "rmvb"
     "wav"
     "wmv"
     "webm")
   "File extensions of media files.")
+
+(defvar my-image-file-extensions
+  '("gif"
+    "jpg"
+    "jpeg"
+    "tif"
+    "png"
+    "svg"
+    "xpm")
+  "File extensions of image files.")
 
 (defun my-file-extensions-to-regexp (extensions)
   "Convert file EXTENSIONS to one regex."
@@ -744,7 +760,9 @@ This function is written in pure Lisp and slow."
 (defun my-binary-file-p (file)
   "Test if it's binary FILE."
   (let* ((other-exts '("pyim" "recentf"))
-         (exts (append my-media-file-extensions other-exts))
+         (exts (append my-media-file-extensions
+                       my-image-file-extensions
+                       other-exts))
          (regexp (my-file-extensions-to-regexp exts)))
     (string-match regexp file)))
 
