@@ -25,7 +25,7 @@
       '((:results . "replace")
         (:exports . "results")))
 (setq org-babel-default-header-args:icalendar
-        '((:exports . "none")))
+      '((:exports . "none")))
 (setq org-babel-python-command "python3")
 
 
@@ -183,7 +183,7 @@
   :ensure t
   :defer t
   :bind (:map org-noter-notes-mode-map
-         ("C-x o" . other-window))
+              ("C-x o" . other-window))
   :config
   (pdf-tools-install))
 ;; }}
@@ -260,35 +260,34 @@
       (setq end (point))
       (goto-char beg)
       (if (re-search-forward "\\[\\([0-9]*%\\)\\]\\|\\[\\([0-9]*\\)/\\([0-9]*\\)\\]" end t)
-            (if (match-end 1)
-                (if (equal (match-string 1) "100%")
-                    ;; all done - do the state change
-                    (org-todo 'done)
-                  (org-todo 'todo))
-              (if (and (> (match-end 2) (match-beginning 2))
-                       (equal (match-string 2) (match-string 3)))
+          (if (match-end 1)
+              (if (equal (match-string 1) "100%")
+                  ;; all done - do the state change
                   (org-todo 'done)
-                (org-todo 'todo)))))))
+                (org-todo 'todo))
+            (if (and (> (match-end 2) (match-beginning 2))
+                     (equal (match-string 2) (match-string 3)))
+                (org-todo 'done)
+              (org-todo 'todo)))))))
 
 (defun phye/insert-zws-for-org-markup ()
   "Insert zero width whitespace between chinese and english characters in orgmode in region."
   (interactive)
-  (let* ((org-markup-pattern "~+_*")
-         (match-regexp
+  (let* ((match-regexp
           (rx-to-string
            `(seq
              (group-n 1
                (not ?​))
              (group-n 2
-               (any ,org-markup-pattern)
+               (group-n 5 (any "~+_*/"))
                (one-or-more
                 (or
-                 ;; (any alnum)
+                 (any alnum)
                  (any "-_")
                  (category chinese)))
-               (any ,org-markup-pattern))
+               (backref 5))
              (group-n 3
-               (not ?​))))))
+               (not ?​))) t)))
     (replace-regexp-in-region match-regexp
                               "\\1​\\2​\\3"
                               (region-beginning) (region-end))))
@@ -319,7 +318,7 @@
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
-;; workaround org-gpg hang issue
+  ;; workaround org-gpg hang issue
   (fset 'epg-wait-for-status 'ignore)
   (my-run-with-idle-timer
    1
