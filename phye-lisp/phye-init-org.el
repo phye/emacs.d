@@ -270,9 +270,11 @@
                 (org-todo 'done)
               (org-todo 'todo)))))))
 
-(defun phye/insert-zws-for-org-markup ()
-  "Insert zero width whitespace between chinese and english characters in orgmode in region."
+(defun phye/insert-zws-in-region ()
+  "Insert zero width whitespace between chinese and english characters in orgmode in region BEGIN and END."
   (interactive)
+  (unless (use-region-p)
+    (user-error "Region Expected"))
   (let* ((match-regexp
           (rx-to-string
            `(seq
@@ -291,6 +293,13 @@
     (replace-regexp-in-region match-regexp
                               "\\1​\\2​\\3"
                               (region-beginning) (region-end))))
+
+(defun phye/insert-zws-in-buffer ()
+  "Insert zero width whitespace in whole buffer."
+  (interactive)
+  (save-excursion
+    (mark-whole-buffer)
+    (phye/insert-zws-in-region)))
 ;; }}
 
 

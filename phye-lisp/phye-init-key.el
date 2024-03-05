@@ -91,6 +91,8 @@
  "mg" 'bookmark-jump
  "mG" 'bookmark-jump-other-frame
  "md" 'bookmark-delete
+ "mx" 'counsel-M-x
+ "mX" 'execute-extended-command-for-buffer
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
  "rd" 'bjm/ivy-dired-recent-dirs
