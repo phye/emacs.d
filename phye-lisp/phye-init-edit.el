@@ -214,6 +214,9 @@
    t)
   (deadgrep-restart))
 
+(with-eval-after-load 'counsel
+  (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
+
 (use-package better-jumper
   :ensure t
   :config
@@ -221,6 +224,7 @@
   (with-eval-after-load 'evil-maps
     (define-key evil-motion-state-map (kbd "C-o") 'better-jumper-jump-backward)
     (define-key evil-motion-state-map (kbd "C-i") 'better-jumper-jump-forward)))
+
 (defun phye/deadgrep-visit-result-hook ()
   (interactive)
   (better-jumper-set-jump))
