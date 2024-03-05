@@ -116,13 +116,15 @@
   :defer t
   :after (tree-sitter))
 
+(setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
+
 (defun phye/goto-definition-at-point ()
   "my mode-aware go to definition"
   (interactive)
   (cl-case major-mode
-      (go-mode (xref-find-definitions (symbol-at-point)))
-      (python-mode (elpy-goto-definition))
-      (t (counsel-etags-find-tag-at-point))))
+    (go-mode (xref-find-definitions (symbol-at-point)))
+    (python-mode (elpy-goto-definition))
+    (t (counsel-etags-find-tag-at-point))))
 
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
