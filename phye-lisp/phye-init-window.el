@@ -134,7 +134,7 @@
   "Open recent file in other frame."
   (interactive)
   (let* ((files (mapcar #'substring-no-properties recentf-list))
-         (hint "Recent files: ")
+         (hint "Recent files In Other Frame: ")
          (f (ivy-read hint files)))
     (find-file-other-frame f)))
 

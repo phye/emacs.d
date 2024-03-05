@@ -2,7 +2,25 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("k8s.total"
+(("csi.NodePublishVolume"
+ (filename . "~/ws/github/k8s.total/kubernetes-csi/spec/spec.md")
+ (front-context-string . "NodePublishVolum")
+ (rear-context-string . "mantics.\n\n#### `")
+ (position . 123813)
+ (last-modified 26085 35939 389944 307000))
+("csi.NodeStageVolume"
+ (filename . "~/ws/github/k8s.total/kubernetes-csi/spec/spec.md")
+ (front-context-string . "NodeStageVolume`")
+ (rear-context-string . "vice RPC\n\n#### `")
+ (position . 115461)
+ (last-modified 26085 35889 564049 997000))
+("csi.ControllerPublishVolume"
+ (filename . "~/ws/github/k8s.total/kubernetes-csi/spec/spec.md")
+ (front-context-string . "ControllerPublis")
+ (rear-context-string . " off. |\n\n\n#### `")
+ (position . 62354)
+ (last-modified 26085 35873 306577 183000))
+("k8s.total"
  (filename . "~/ws/github/k8s.total/")
  (front-context-string . "  /data/home/phy")
  (rear-context-string)
