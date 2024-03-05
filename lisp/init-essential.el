@@ -297,6 +297,7 @@ If OTHER-SOURCE is 2, get keyword from `kill-ring'."
   (my-run-with-idle-timer 2
                           (lambda ()
                             (setq exec-path-from-shell-check-startup-files nil)
+                            (setq exec-path-from-shell-arguments nil)
                             ;; @see https://github.com/purcell/exec-path-from-shell/issues/75
                             (exec-path-from-shell-initialize)
                             ;; @see https://emacs.stackexchange.com/questions/17866/magit-how-to-use-systems-ssh-agent-and-dont-ask-for-password
