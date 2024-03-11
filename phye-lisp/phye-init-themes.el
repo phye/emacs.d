@@ -63,6 +63,7 @@
         madhat2r
         modus-vivendi
         nord
+        noctilux
         planet
         professional
         sanityinc-tomorrow-eighties

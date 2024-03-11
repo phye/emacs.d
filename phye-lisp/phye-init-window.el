@@ -138,4 +138,14 @@
          (f (ivy-read hint files)))
     (find-file-other-frame f)))
 
+(defun phye/resize-window-to-min ()
+  "Resize window to minimum viable width."
+  (interactive)
+  (evil-window-set-width 80))
+
+(defun phye/resize-window-to-max ()
+  "Resize window to maximum viable width."
+  (interactive)
+  (evil-window-set-width 160))
+
 (provide 'phye-init-window)

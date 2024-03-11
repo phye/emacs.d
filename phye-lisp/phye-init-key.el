@@ -105,7 +105,9 @@
  "xB" 'ivy-switch-buffer
  "xK" 'phye/kill-buffer-and-frame
  "xg" 'magit-status
- "xp" 'project-switch-project)
+ "xpp" 'project-switch-project
+ "xpf" 'project-find-file
+ "xp!" 'project-shell)
 
 (general-define-key
  :states '(visual)
