@@ -2,7 +2,31 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("csi.NodePublishVolume"
+(("ti.proto"
+ (filename . "~/ws/ti-cloud/ti-cloud-proto/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . "96 Mar  8 16:45 ")
+ (position . 139)
+ (last-modified 26090 53491 253912 693000))
+("ti.infra"
+ (filename . "~/ws/ti-cloud/infra/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . "96 Mar  8 16:45 ")
+ (position . 130)
+ (last-modified 26090 53477 931436 612000))
+("proto.ti"
+ (filename . "~/ws/ti-cloud/ti-cloud-proto/")
+ (front-context-string . "log-event-server")
+ (rear-context-string . "96 Mar  8 16:45 ")
+ (position . 187)
+ (last-modified 26090 53466 185907 109000))
+("ticloud"
+ (filename . "~/ws/ti-cloud/")
+ (front-context-string . "algo-server\n  dr")
+ (rear-context-string . "96 Jan  5 10:26 ")
+ (position . 172)
+ (last-modified 26090 53452 410693 429000))
+("csi.NodePublishVolume"
  (filename . "~/ws/github/k8s.total/kubernetes-csi/spec/spec.md")
  (front-context-string . "NodePublishVolum")
  (rear-context-string . "mantics.\n\n#### `")
@@ -42,20 +66,6 @@
     (rear-context-string . "96 Oct 26  2022 ")
     (position . 178)
     (last-modified 26006 17369 241669 0))
-#1=(#("doc.qdtrans" 0 11
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/qd_server_doc/离职交接/")
-    (front-context-string . "alexyccui交接\n  dr")
-    (rear-context-string . "52 Feb 16  2023 ")
-    (position . 194)
-    (last-modified 26004 51439 728964 0))
-#1=(#("doc.proxy" 0 9
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/qd_server_doc/企点服务/message_proxy重构/")
-    (front-context-string . ".DS_Store\n  drwx")
-    (rear-context-string . "96 Apr 26  2023 ")
-    (position . 213)
-    (last-modified 26004 51383 968599 0))
 #1=(#("lisp.emacs" 0 10
       (bmkp-full-record #1#))
     (filename . "~/.emacs.d/")
@@ -70,41 +80,6 @@
     (rear-context-string . "67 Apr 11  2023 ")
     (position . 182)
     (last-modified 26003 48688 626977 524000))
-#1=(#("qd.ivyproto" 0 11
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/ivy-proto/")
-    (front-context-string . "basic\n  drwxr-xr")
-    (rear-context-string . "96 Oct 13 16:07 ")
-    (position . 192)
-    (last-modified 25998 13876 303395 560000))
-#1=(#("qd.globalpb" 0 11
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/global_pb/")
-    (front-context-string . ".git\n  -rw-r--r-")
-    (rear-context-string . "96 Dec 29 10:58 ")
-    (position . 189)
-    (last-modified 25998 13868 905097 118000))
-#1=(#("qd.moss" 0 7
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/ivy/moss/")
-    (front-context-string . "bo\n  -rw-r--r-- ")
-    (rear-context-string . "96 Sep  7 12:29 ")
-    (position . 185)
-    (last-modified 25998 13852 315524 231000))
-#1=(#("ivy.message" 0 11
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/ivy/message/")
-    (front-context-string . "canton_fair_svr\n")
-    (rear-context-string . "96 Jul  7 15:15 ")
-    (position . 185)
-    (last-modified 25998 14076 380501 678000))
-#1=(#("qd.all" 0 6
-      (bmkp-full-record #1#))
-    (filename . "~/ws/qidian/")
-    (front-context-string . "comm_proj\n  drwx")
-    (rear-context-string . "96 Nov 23 12:10 ")
-    (position . 170)
-    (last-modified 25998 13832 695146 877000))
 #1=(#("ebook.misc" 0 10
       (bmkp-full-record #1#))
     (end-position . 270)
