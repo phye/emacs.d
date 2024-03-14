@@ -59,6 +59,7 @@
  "fo" 'find-file-other-frame
  "ff" 'phye/toggle-last-frame
  "ft" 'my-toggle-full-window
+ "mc" 'phye/maximize-center-window
  "nn" 'highlight-symbol-next
  "os" 'org-side-tree
  "pp" 'highlight-symbol-prev
@@ -83,6 +84,7 @@
  "dg" 'deadgrep
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
+ "ee" 'eval-expression
  "mb" 'magit-blame
  "mk" 'compile
  "mp" 'magit-push

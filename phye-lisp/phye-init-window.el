@@ -148,4 +148,27 @@
   (interactive)
   (evil-window-set-width 160))
 
+(customize-set-variable 'window-min-width 40)
+
+(defvar phye--center-window-maxmized nil "is center window maxmized")
+
+(defun phye/maximize-center-window (&optional width)
+  "Maximize center window by minimizing side window to WIDTH"
+  (interactive "p")
+  (if phye--center-window-maxmized
+      (progn
+        (message "Already maximized, restore...")
+        (balance-windows))
+    (when (< width window-min-width)
+      (setq width 60))
+    (message (format "Side window width: %s" width))
+    (let*
+        ((windows (window-list nil 0 (frame-first-window)))
+         (center-index (/ (cl-list-length windows) 2))
+         (center-window (nth center-index windows)))
+      (dolist (w windows)
+        (unless (eq w center-window)
+          (with-selected-window w
+            (evil-window-set-width width))))))
+  (setq phye--center-window-maxmized (not phye--center-window-maxmized)))
 (provide 'phye-init-window)

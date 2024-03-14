@@ -116,7 +116,7 @@
   :defer t
   :after (tree-sitter))
 
-(setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
+;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
 
 (defun phye/goto-definition-at-point ()
   "my mode-aware go to definition"
