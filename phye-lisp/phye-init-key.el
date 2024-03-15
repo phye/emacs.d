@@ -31,6 +31,7 @@
   "gr" 'xref-find-references
   "gb" 'xref-pop-marker-stack
   "gt" 'phye/goto-definition-at-point
+  "gi" 'eglot-find-implementation
   "hs" 'hs-hide-all
   "hS" 'hs-show-all
   "hl" 'hs-hide-level
