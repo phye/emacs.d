@@ -240,6 +240,18 @@
   :defer t)
 ;; }}
 
+;; {{ org-fancy-priorities
+(use-package org-fancy-priorities
+  :ensure t
+  :hook
+  (org-mode . org-fancy-priorities-mode)
+  :custom
+  (org-fancy-priorities-list
+   '((?A . "P0")
+     (?B . "P1")
+     (?C . "P2"))))
+;; }}
+
 ;; }} Org Mode Extensions
 
 ;; {{ Custom Org Mode Functions
@@ -323,7 +335,7 @@
 ;; settings after org loaded
 (with-eval-after-load 'org
   (setq org-todo-keywords
-        '((sequence "TODO(t!/!)" "SCHEDULED(S@/@)" "INPROGRESS(i!/!)" "|" "ONHOLD(h@/@)" "DONE(d)" "CANCELLED(c@/!)") ;; general todo items
+        '((sequence "TODO(t)" "SCHEDULED(S/@)" "INPROGRESS(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)

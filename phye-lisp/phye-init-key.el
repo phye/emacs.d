@@ -105,6 +105,7 @@
  "tt" 'shell-pop
  "xb" 'project-switch-to-buffer
  "xc" 'suspend-frame
+ "xf" 'find-file
  "xB" 'ivy-switch-buffer
  "xK" 'phye/kill-buffer-and-frame
  "xg" 'magit-status
@@ -142,9 +143,14 @@
  "fb" 'gofmt)
 
 (general-define-key
- :keymaps 'image-mode-map
+ :keymaps '(image-mode-map doc-view-mode-map)
+ "K" #'image-kill-buffer
  "q" #'quit-window
  "f" #'my-toggle-full-window)
+
+(general-unbind
+  :keymaps '(image-mode-map doc-view-mode-map)
+  "k")
 
 (general-define-key
  :keymaps 'deadgrep-mode-map

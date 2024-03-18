@@ -11,7 +11,7 @@
 ;; {{ pdf
 (use-package pdf-tools
   :ensure t
-  :defer t
+  :defer 5
   :bind (:map pdf-view-mode-map
          (";" . ace-pinyin-jump-char-2)
          ("C-x o" . other-window))

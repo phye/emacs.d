@@ -28,6 +28,7 @@
         ;; book-mode ;; not in melpa yet
         evil-terminal-cursor-changer
         markdown-toc
+        org-fancy-priorities
         ))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
