@@ -206,4 +206,8 @@
  "j" 'dired-next-line
  "k" 'dired-previous-line)
 
+(general-define-key
+ :keymaps 'project-prefix-map
+ "L" 'project-list-buffers)
+
 (provide 'phye-init-key)

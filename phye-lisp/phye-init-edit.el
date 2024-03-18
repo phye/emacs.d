@@ -216,6 +216,15 @@
    t)
   (deadgrep-restart))
 
+(use-package project
+  :config
+  (setq project-switch-commands
+        '((project-find-file "File")
+          (project-find-regexp "Regexp")
+          (project-find-dir "Dir")
+          (project-switch-to-buffer "Buffer")
+          (project-list-buffers "List buffers"))))
+
 (with-eval-after-load 'counsel
   (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
 
