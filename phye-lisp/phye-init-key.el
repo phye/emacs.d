@@ -103,6 +103,7 @@
  "rR" 'phye/open-recent-file-in-other-frame
  "sl" 'org-store-link
  "tt" 'shell-pop
+ "ut" 'counsel-etags-update-tags-force
  "xb" 'project-switch-to-buffer
  "xc" 'suspend-frame
  "xf" 'find-file

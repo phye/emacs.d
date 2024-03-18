@@ -91,7 +91,8 @@
   :custom
   (evil-normal-state-cursor 'box)
   (evil-insert-state-cursor 'bar)
-  (evil-emacs-state-cursor 'hbar))
+  (evil-emacs-state-cursor 'hbar)
+  (evil-want-fine-undo 'fine))
 
 (use-package evil-terminal-cursor-changer
   :ensure t
@@ -110,7 +111,8 @@
 (use-package undo-fu-session
   :ensure t
   :config
-  (undo-fu-session-global-mode))
+  (undo-fu-session-global-mode)
+  (undo-fu-session-recover))
 
 ;; gpg encrypt
 (require 'epa-file)
