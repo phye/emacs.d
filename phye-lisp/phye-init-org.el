@@ -129,7 +129,7 @@
   :ensure t
   :defer t
   :custom
-  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"INPROGRESS\"|TODO=\"BLOCKED\"|TODO=\"ASSIGNED\"|TODO=\"SCHEDULED\"")
+  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
   (org-journal-file-format "%Y%m.org")
@@ -335,7 +335,7 @@
 ;; settings after org loaded
 (with-eval-after-load 'org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "SCHEDULED(S/@)" "INPROGRESS(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
+        '((sequence "TODO(t)" "PLANNED(S/@)" "DOING(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
@@ -360,7 +360,6 @@
      (require 'ox-md nil t)
      (require 'ox-odt nil t)
      (require 'calfw-org)
-     (my-yas-reload-all)
-     )))
+     (my-yas-reload-all))))
 
 (provide 'phye-init-org)
