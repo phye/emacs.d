@@ -171,4 +171,10 @@
           (with-selected-window w
             (evil-window-set-width width))))))
   (setq phye--center-window-maxmized (not phye--center-window-maxmized)))
+
+(defun phye/kill-matching-buffers (regexp)
+  "Kill buffers matching REGEXP without asking."
+  (interactive "sKill buffers matching this regular expression: ")
+  (kill-matching-buffers regexp nil t))
+
 (provide 'phye-init-window)

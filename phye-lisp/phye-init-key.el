@@ -86,6 +86,9 @@
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
  "ee" 'eval-expression
+ "ip" 'find-file-in-project
+ "id" 'find-file-in-current-directory
+ "kmb" 'phye/kill-matching-buffers
  "mb" 'magit-blame
  "mk" 'compile
  "mp" 'magit-push
@@ -96,8 +99,6 @@
  "md" 'bookmark-delete
  "mx" 'counsel-M-x
  "mX" 'execute-extended-command-for-buffer
- "ip" 'find-file-in-project
- "id" 'find-file-in-current-directory
  "rd" 'bjm/ivy-dired-recent-dirs
  "rr" 'my-counsel-recentf
  "rR" 'phye/open-recent-file-in-other-frame
