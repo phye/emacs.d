@@ -116,13 +116,6 @@
  "xp!" 'project-shell)
 
 (general-define-key
- :states '(visual)
- :keymaps 'override
- :prefix ","
- "xn" 'narrow-to-region
- "xw" 'widen)
-
-(general-define-key
  :states '(emacs normal)
  :keymaps 'override
  :prefix ";"
