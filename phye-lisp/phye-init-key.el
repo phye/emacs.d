@@ -190,6 +190,8 @@
 
 (general-define-key
  :keymaps 'xref--xref-buffer-mode-map
+ "n" 'xref-next-group
+ "p" 'xref-prev-group
  "j" 'xref-next-line
  "k" 'xref-prev-line)
 
