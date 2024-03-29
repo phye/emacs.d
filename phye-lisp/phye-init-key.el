@@ -120,6 +120,14 @@
  :keymaps 'override
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
+
+(general-define-key
+ :states '(emacs normal)
+ :keymaps 'override
+ :prefix "SPC"
+ "dd" 'copy-current-dir-to-clipboard
+ "dp" 'copy-project-root-to-clipboard
+ "dD" 'pwd)
 ;; }}
 
 (defun phye/restore-keybindings ()

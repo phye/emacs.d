@@ -54,7 +54,7 @@
   (find-file-in-current-directory 1))
 
 (defun copy-variable-to-clipboard (val)
-  "Copy VAL to both emacs and system clipboard."
+  "Copy VAL to both Emacs and system clipboard."
   (interactive)
   (with-temp-buffer
     (insert val)
@@ -77,13 +77,13 @@
                (ffip-project-root))))
     (copy-variable-to-clipboard path)))
 
-(defun copy-absolute-project-to-clipboard ()
+(defun copy-project-root-to-clipboard ()
   (interactive)
   (copy-variable-to-clipboard (ffip-project-root)))
 
 (defun copy-current-dir-to-clipboard ()
   (interactive)
-  (copy-variable-to-clipboard (pwd)))
+  (copy-variable-to-clipboard default-directory))
 
 (defun insert-zero-width-space ()
   "Insert zero width space before and after OrgMode mark."
