@@ -82,9 +82,12 @@
  "cc" 'clipetty-kill-ring-save
  "cd" 'copy-relative-dir-in-project
  "cf" 'copy-relative-path-in-project
+ "dd" 'copy-current-dir-to-clipboard
  "dg" 'deadgrep
+ "dp" 'copy-project-root-to-clipboard
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
+ "DD" 'counsel-etags-grep-current-directory
  "ee" 'eval-expression
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
@@ -121,13 +124,6 @@
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
-(general-define-key
- :states '(emacs normal)
- :keymaps 'override
- :prefix "SPC"
- "dd" 'copy-current-dir-to-clipboard
- "dp" 'copy-project-root-to-clipboard
- "dD" 'pwd)
 ;; }}
 
 (defun phye/restore-keybindings ()
