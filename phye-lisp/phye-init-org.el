@@ -129,7 +129,7 @@
   :ensure t
   :defer t
   :custom
-  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"SCHEDULED\"")
+  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"PLANNED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
   (org-journal-file-format "%Y%m.org")
@@ -251,6 +251,18 @@
      (?B . "P1")
      (?C . "P2"))))
 ;; }}
+
+(use-package org-alert
+  :ensure t
+  :config
+  (setq org-alert-interval 60
+        org-alert-notify-cutoff 10
+        org-alert-notify-after-event-cutoff 10))
+
+(use-package alert
+  :config
+  (when *is-a-mac*
+    (setq alert-default-style 'osx-notifier)))
 
 ;; }} Org Mode Extensions
 

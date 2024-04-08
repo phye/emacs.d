@@ -46,26 +46,6 @@
   :config
   (recentf-mode 1))
 
-
-;; Don't pair double quotes
-;; https://emacs.stackexchange.com/questions/26225/dont-pair-quotes-in-electric-pair-mode
-(defun phye/set-electric-pair-inhibit-predicate()
-  "set electric-pair-inhibit-predicate "
-  (interactive)
-  (setq electric-pair-inhibit-predicate
-    (lambda (c)
-      (if (or
-           (char-equal c ?\{)
-           (char-equal c ?\[)
-           (char-equal c ?\()
-           (char-equal c ?\')
-           (char-equal c ?\"))
-          t
-        (electric-pair-default-inhibit c)))))
-(with-eval-after-load 'elec-pair
-  ;; (phye/set-electric-pair-inhibit-predicate)
-  )
-
 ;; evil customizations
 (use-package evil-escape
   :ensure t
