@@ -372,6 +372,7 @@
      (require 'ox-md nil t)
      (require 'ox-odt nil t)
      (require 'calfw-org)
+     (require 'yasnippet)
      (my-yas-reload-all))))
 
 (provide 'phye-init-org)
