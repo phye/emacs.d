@@ -2,6 +2,7 @@
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
 (evil-set-initial-state 'image-mode 'emacs)
+(evil-set-initial-state 'dired-mode 'normal)
 
 (setq my-disable-wucuo t)
 (set-fill-column 100)

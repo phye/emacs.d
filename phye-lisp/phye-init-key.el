@@ -44,6 +44,7 @@
   "oc" 'cfw:open-org-calendar
   "co" 'org-open-at-point
   "ov" 'jao-toggle-selective-display
+  "rc" 'recover-avy-lead-face
   "xd" 'find-file-in-cpp-module
   "xe" 'exit-recursive-edit)
 
@@ -76,7 +77,7 @@
 
 ;; {{ override map
 (general-define-key
- :states '(emacs normal visual)
+ :states '(normal visual)
  :keymaps 'override
  :prefix ","
  "cc" 'clipetty-kill-ring-save
@@ -92,6 +93,7 @@
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
  "kmb" 'phye/kill-matching-buffers
+ "le" 'flymake-show-buffer-diagnostics
  "mb" 'magit-blame
  "mk" 'compile
  "mp" 'magit-push
@@ -119,7 +121,7 @@
  "xp!" 'project-shell)
 
 (general-define-key
- :states '(emacs normal)
+ :states '(normal)
  :keymaps 'override
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)

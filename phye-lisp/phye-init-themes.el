@@ -26,8 +26,6 @@
         doom-homage-black
         doom-ir-black
         doom-laserwave
-        doom-material
-        doom-material-dark
         doom-molokai
         doom-monokai-classic
         doom-monokai-machine
