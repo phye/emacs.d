@@ -26,8 +26,6 @@
      "\\*Async Shell Command\\*"
      "\\*Messages\\*"
      "^\\*ansi-term.*\\*$"
-     "^\\*helpful.*\\*$"
-     help-mode
      compilation-mode))
   ;; (popper-group-function #'popper-group-by-directory)
   (popper-mode +1)
