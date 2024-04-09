@@ -107,6 +107,9 @@
 (evil-set-initial-state 'godoc-mode 'normal)
 (add-hook 'go-mode-hook 'eglot-ensure)
 
+;; use magit to edit commit message
+(require 'git-commit)
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
