@@ -227,8 +227,8 @@
 
 (advice-add #'project-find-regexp :override #'deadgrep)
 
+;; Do not use electric-pair-mode any more
 (electric-pair-mode 0)
-
 (use-package smartparens-mode
   :ensure smartparens  ;; install the package
   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
