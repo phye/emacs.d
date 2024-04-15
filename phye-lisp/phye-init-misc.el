@@ -8,6 +8,7 @@
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
+(setq help-window-select t)
 ;; }}
 
 (provide 'phye-init-misc)
