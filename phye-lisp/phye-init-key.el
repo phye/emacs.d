@@ -3,6 +3,7 @@
 ;;; do not use space to override keybinds in Emacs mode
 
 ;; {{ global keymaps
+(general-unbind "C-w")
 (general-define-key
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
@@ -11,7 +12,11 @@
  "C-c a" 'org-agenda
  "C-c c" 'org-capture
  "C-c o" 'org-open-at-point
- "C-c t" 'org-mark-ring-goto)
+ "C-c t" 'org-mark-ring-goto
+ "C-w h" 'evil-window-left
+ "C-w l" 'evil-window-right
+ "C-w j" 'evil-window-down
+ "C-w k" 'evil-window-up)
 
 (general-define-key
  "s-q" 'delete-frame
@@ -167,11 +172,7 @@
  "j" 'next-line
  "k" 'previous-line
  "D" 'phye/deadgrep-directory
- "RET" 'deadgrep-visit-result-other-window
- "C-w h" 'evil-window-left
- "C-w l" 'evil-window-right
- "C-w j" 'evil-window-down
- "C-w k" 'evil-window-up)
+ "RET" 'deadgrep-visit-result-other-window)
 
 (general-define-key
  :keymaps 'deadgrep-mode-map
