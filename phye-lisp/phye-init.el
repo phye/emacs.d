@@ -11,6 +11,7 @@
 (require 'phye-init-elpa)
 (require 'phye-init-misc)
 (require 'phye-init-edit)
+(require 'phye-init-evil)
 (require 'phye-init-themes)
 (require 'phye-init-window)
 (require 'phye-init-draw)

@@ -163,7 +163,7 @@
   "Filter symbol without leading $,@ characters"
   (let* ((symbol (or symbol
                      (symbol-at-point)
-                    (error "No symbol at point")))
+                     (error "No symbol at point")))
          (symbolstr (symbol-name symbol))
          (c (elt symbolstr 0)))
     (if (or (= c ?$)

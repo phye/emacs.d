@@ -35,6 +35,7 @@
   "hs" 'hs-hide-all
   "hS" 'hs-show-all
   "hl" 'hs-hide-level
+  "hL" 'hs-show-block
   "hb" 'hs-hide-block
   "hB" 'hs-show-block
   "hi" 'hide-ifdef-block
@@ -72,7 +73,13 @@
  "ro" 'phye/remark-view-and-select
  "hh" 'phye/random-all-themes
  "pc" 'popper-cycle
- "pl" 'popper-toggle-latest)
+ "pl" 'popper-toggle-latest
+ "vs" 'phye/vsplit-3-and-even)
+
+(general-define-key
+ :states 'motion
+ "C-o" 'better-jumper-jump-backward
+ "C-i" 'better-jumper-jump-forward)
 ;; }}
 
 ;; {{ override map
@@ -167,10 +174,9 @@
  "C-w k" 'evil-window-up)
 
 (general-define-key
- :keymaps 'rg-mode-map
- ";" 'ace-pinyin-jump-char-2
- "j" 'next-line
- "k" 'previous-line)
+ :keymaps 'deadgrep-mode-map
+ :prefix ";"
+ ";" 'ace-pinyin-jump-char-2)
 
 (general-define-key
  :keymaps 'org-remark-mode-map
@@ -211,5 +217,15 @@
 (general-define-key
  :keymaps 'project-prefix-map
  "L" 'project-list-buffers)
+
+(general-define-key
+ :keymaps 'ivy-minibuffer-map
+ "C-a" 'ivy-beginning-of-buffer
+ "C-e" 'ivy-end-of-buffer)
+
+(general-define-key
+ :keymaps 'evil-matchit-mode-map
+ "%" 'evil-jump-item
+ "m" 'evilmi-jump-items)
 
 (provide 'phye-init-key)

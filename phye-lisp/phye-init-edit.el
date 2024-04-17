@@ -1,8 +1,6 @@
 ;; diary
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
-(evil-set-initial-state 'image-mode 'emacs)
-(evil-set-initial-state 'dired-mode 'normal)
 
 (setq my-disable-wucuo t)
 (set-fill-column 100)
@@ -47,42 +45,6 @@
   :config
   (recentf-mode 1))
 
-;; evil customizations
-(use-package evil-escape
-  :ensure t
-  :custom
-  (evil-escape-delay 0.2)
-  (evil-escape-key-sequence "fd"))
-
-;; (use-package evil-numbers
-;;   :ensure t
-;;   :defer t
-;;   :bind (:map evil-normal-state-map ("C-a" . evil-numbers/inc-at-pt)))
-
-;; evil-matchit
-(defun evilmi-customize-keybinding ()
-  (evil-define-key 'normal evil-matchit-mode-map
-    "%" 'evil-jump-item
-    "m" 'evilmi-jump-items))
-
-;; evil undo
-(use-package evil
-  :init
-  (setq evil-undo-system 'undo-fu)
-  :custom
-  (evil-normal-state-cursor 'box)
-  (evil-insert-state-cursor 'bar)
-  (evil-emacs-state-cursor 'hbar)
-  (evil-want-fine-undo 'fine))
-
-(use-package evil-terminal-cursor-changer
-  :ensure t
-  :defer t)
-(with-eval-after-load 'evil-terminal-cursor-changer
-  (unless (display-graphic-p)
-    (require 'evil-terminal-cursor-changer)
-    (etcc-on)))
-
 (use-package undo-fu)
 
 (setq undo-limit 67108864) ; 64mb.
@@ -98,15 +60,6 @@
 ;; gpg encrypt
 (require 'epa-file)
 (epa-file-enable)
-
-;; camelCase, snake_case .etc
-(use-package string-inflection
-  :ensure t
-  :defer t
-  :config
-  (define-key global-map (kbd "C-c i") 'string-inflection-cycle)
-  (define-key global-map (kbd "C-c C") 'string-inflection-camelcase)
-  (define-key global-map (kbd "C-c L") 'string-inflection-lower-camelcase))
 
 (use-package linum-relative
   :ensure t
@@ -128,14 +81,6 @@
   :ensure t
   :defer t)
 
-(defun phye/indent-after-newline (count)
-  (indent-according-to-mode))
-
-(advice-add 'evil-open-below
-            :after #'phye/indent-after-newline)
-(advice-add 'evil-open-above
-            :after #'phye/indent-after-newline)
-
 ;; pangu spacing
 (use-package pangu-spacing
   :ensure t
@@ -147,8 +92,7 @@
 
 ;; deadgrep related
 (use-package deadgrep
-  :ensure t
-  :defer t)
+  :ensure t)
 
 (use-package wgrep-deadgrep
   :ensure t
@@ -159,15 +103,6 @@
   (select-window (get-buffer-window "*deadgrep\\.*")))
 (advice-add 'deadgrep
             :after-until #'select-deadgrep-window-advice)
-
-(with-eval-after-load 'deadgrep
-  ;; (define-key deadgrep-mode-map (kbd ";") 'ace-pinyin-jump-char-2)
-  (unbind-key (kbd ";")  'deadgrep-mode-map)
-  (general-define-key
-   :keymaps 'deadgrep-mode-map
-   :prefix ";"
-   ";" 'ace-pinyin-jump-char-2)
-  )
 
 (defun phye/deadgrep-current-directory (search-term)
   "deadgrep in current directory"
@@ -212,14 +147,12 @@
 (use-package better-jumper
   :ensure t
   :config
-  (better-jumper-mode +1)
-  (with-eval-after-load 'evil-maps
-    (define-key evil-motion-state-map (kbd "C-o") 'better-jumper-jump-backward)
-    (define-key evil-motion-state-map (kbd "C-i") 'better-jumper-jump-forward)))
+  (better-jumper-mode +1))
 
 (defun phye/deadgrep-visit-result-hook ()
   (interactive)
   (better-jumper-set-jump))
+
 (advice-add 'deadgrep-visit-result
             :after #'phye/deadgrep-visit-result-hook)
 (advice-add 'deadgrep-visit-result-other-window

@@ -175,4 +175,11 @@
   (interactive "sKill buffers matching this regular expression: ")
   (kill-matching-buffers regexp nil t))
 
+(defun phye/vsplit-3-and-even ()
+  "Vertically split windows into 3 part."
+  (interactive)
+  (evil-window-vsplit)
+  (evil-window-vsplit)
+  (balance-windows))
+
 (provide 'phye-init-window)
