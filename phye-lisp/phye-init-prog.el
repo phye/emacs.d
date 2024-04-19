@@ -126,7 +126,10 @@
 
 (defun phye/python-mode-hook ()
   "phye's python mode hook"
+  (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
+  (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
   (pyvenv-activate "~/ws/pyvenv"))
-(add-hook 'python-mode-hook 'phye/python-mode-hook 90)
+
+(add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 
 (provide 'phye-init-prog)
