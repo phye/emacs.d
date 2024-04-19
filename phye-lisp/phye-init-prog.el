@@ -124,4 +124,9 @@
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
+(defun phye/python-mode-hook ()
+  "phye's python mode hook"
+  (pyvenv-activate "~/ws/pyvenv"))
+(add-hook 'python-mode-hook 'phye/python-mode-hook 90)
+
 (provide 'phye-init-prog)
