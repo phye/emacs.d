@@ -40,7 +40,6 @@
 ;; recentf
 (use-package sync-recentf
   :ensure t
-  :defer t
   :custom
   (recentf-auto-cleanup 60)
   :config
