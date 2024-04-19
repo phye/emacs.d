@@ -3,10 +3,10 @@
 (setq diary-file "~/ws/gtd/diary.org")
 
 (setq my-disable-wucuo t)
-(set-fill-column 100)
 ;; clipboard
 (use-package clipetty
   :ensure t
+  :defer t
   :custom
   (clipetty-tmux-ssh-tty "tmux show-environment SSH_TTY"))
 ;; }}
@@ -40,12 +40,15 @@
 ;; recentf
 (use-package sync-recentf
   :ensure t
+  :defer t
   :custom
   (recentf-auto-cleanup 60)
   :config
   (recentf-mode 1))
 
-(use-package undo-fu)
+(use-package undo-fu
+  :ensure t
+  :defer t)
 
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.
@@ -53,17 +56,16 @@
 
 (use-package undo-fu-session
   :ensure t
+  :defer t
   :config
   (undo-fu-session-global-mode)
   (undo-fu-session-recover))
 
-;; gpg encrypt
-(require 'epa-file)
-(epa-file-enable)
-
-(use-package linum-relative
-  :ensure t
-  :defer t)
+(my-run-with-idle-timer
+ 2 ;; gpg encrypt
+ (lambda ()
+ (require 'epa-file)
+ (epa-file-enable)))
 
 (use-package crux
   :ensure t
@@ -81,18 +83,10 @@
   :ensure t
   :defer t)
 
-;; pangu spacing
-(use-package pangu-spacing
-  :ensure t
-  :defer t
-  :config
-  :custom
-  (pangu-spacing-separator " "))
-
-
 ;; deadgrep related
 (use-package deadgrep
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package wgrep-deadgrep
   :ensure t
@@ -146,6 +140,7 @@
 
 (use-package better-jumper
   :ensure t
+  :defer t
   :config
   (better-jumper-mode +1))
 
@@ -164,6 +159,7 @@
 (electric-pair-mode 0)
 (use-package smartparens
   :ensure t ;; install the package
+  :defer t
   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
   :config
   (require 'smartparens-config))

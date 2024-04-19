@@ -16,14 +16,20 @@
 ;; }}
 
 ;; {{ cpp
-(my-ensure 'clang-format)
-(add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
-(add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))
+(my-run-with-idle-timer
+ 5
+ (lambda ()
+   (my-ensure 'clang-format)
+   (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
+   (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
 ;; }}
 
 ;; {{ Golang
 ;; (with-eval-after-load 'go-mode
 ;;   (require 'go-guru))
+(evil-set-initial-state 'godoc-mode 'normal)
+(add-hook 'go-mode-hook 'eglot-ensure)
+
 (use-package go-mode
   :ensure t
   :defer t
@@ -32,7 +38,6 @@
 (defun phye/go-mode-hook ()
     "phye's golang hook"
   (interactive)
-  (set-fill-column 100)
   (auto-fill-mode -1)
   (tree-sitter-hl-mode)
   (setq compile-command "go test")

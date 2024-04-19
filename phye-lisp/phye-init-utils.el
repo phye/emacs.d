@@ -10,10 +10,17 @@
   )
 
 ;; remote-edit
-(defun remote-edit (host)
-  "Connect to remote server and eit there."
-  (interactive "sChoose your host: ")
-  (dired (concat "/sshx:" host ":~/ws")))
+(defun remote-edit (addr)
+  "Connect to remote server ADDR and eit there."
+  (interactive "sChoose your host and port, separated by: ")
+  (let* ((tokens (split-string addr ":"))
+         (host (nth 0 tokens))
+         (port (nth 1 tokens))
+         (path ""))
+    (when (not port)
+      (setq port 22))
+    (setq path (format "/sshx:%s#%s:~" host port))
+    (message path)))
 
 ;; timestamp
 (defun ts-to-human (ts)

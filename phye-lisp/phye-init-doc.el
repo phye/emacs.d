@@ -1,9 +1,8 @@
 (defun phye/markdown-hook ()
-    "diasable trunc lines"
+  "diasable trunc lines"
   (interactive)
-  (setq truncate-lines nil)
   ;;(linum-mode)
-  )
+  (setq truncate-lines nil))
 
 (use-package markdown-mode
   :ensure t
@@ -33,7 +32,7 @@
   (define-key Info-mode-map (kbd "C-w l") 'evil-window-right)
   (define-key Info-mode-map (kbd "C-w j") 'evil-window-down)
   (define-key Info-mode-map (kbd "C-w k") 'evil-window-up))
-(add-hook 'Info-mode-hook #'phye/info-mode-hook 90)
+;; (add-hook 'Info-mode-hook #'phye/info-mode-hook 90)
 ;; }}
 
 (provide 'phye-init-doc)

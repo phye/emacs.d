@@ -13,28 +13,6 @@
         (switch-to-buffer (car (car (cdr (window-prev-buffers)))))
     (switch-to-buffer alt-buffer))))
 
-(use-package popper
-  :ensure t
-  :defer t
-  :init
-  :custom
-  (popper-reference-buffers
-   '(
-     "Output\\*$"
-     ;; "\\*godoc"
-     ;; "\\*Compile-Log\\*$"
-     "\\*Async Shell Command\\*"
-     "\\*Messages\\*"
-     "^\\*ansi-term.*\\*$"
-     compilation-mode))
-  ;; (popper-group-function #'popper-group-by-directory)
-  (popper-mode +1)
-  (popper-echo-mode +1))
-
-(use-package hide-mode-line
-  :ensure t
-  :defer t)
-
 (defun dedicate-current-window ()
   "Dedicate current window"
   (interactive)

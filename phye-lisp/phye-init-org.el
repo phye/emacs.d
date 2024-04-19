@@ -68,6 +68,7 @@
         "~/ws/gtd/life/birthday.org"
         "~/ws/gtd/learn/plan_learning.org"
         "~/ws/gtd/work/plan_work.org.gpg")))
+
 (customize-set-variable 'holiday-local-holidays
                         '((holiday-fixed 1 1 "元旦")
                           (holiday-fixed 3 8 "妇女节")

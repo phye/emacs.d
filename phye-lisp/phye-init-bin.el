@@ -7,6 +7,7 @@
     (read-only-mode t))
 
 (use-package hexl
+  :defer t
   :config
   (add-to-list 'auto-mode-alist '("\\.bin\\'" . hexl-mode))
   (add-to-list 'auto-mode-alist '("\\.data\\'" . hexl-mode))

@@ -1,7 +1,3 @@
-(setq zsh-program (string-trim (shell-command-to-string "which zsh")))
-(setq my-term-program zsh-program)
-(set-language-environment "utf-8")
-
 ;; quick pop shell
 (use-package shell-pop
   :ensure t
@@ -79,9 +75,6 @@
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
-;; python
-(setq elpy-rpc-python-command (string-trim (shell-command-to-string "which python3")))
-
 (use-package tree-sitter
   :ensure t
   :defer t)
@@ -93,6 +86,17 @@
 
 ;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
 
+;; python
+(with-eval-after-load 'eldoc-mode
+  (setq eldoc-idle-delay 5))
+(defun phye/python-mode-hook ()
+  "phye's python mode hook"
+  (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
+  (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
+  (pyvenv-activate "~/ws/pyvenv"))
+
+(add-hook 'python-mode-hook 'phye/python-mode-hook 0)
+
 (defun phye/goto-definition-at-point ()
   "my mode-aware go to definition"
   (interactive)
@@ -101,14 +105,8 @@
     (python-mode (elpy-goto-definition))
     (t (counsel-etags-find-tag-at-point))))
 
-(with-eval-after-load 'eldoc-mode
-  (setq eldoc-idle-delay 5))
-
-(evil-set-initial-state 'godoc-mode 'normal)
-(add-hook 'go-mode-hook 'eglot-ensure)
-
 ;; use magit to edit commit message
-(require 'git-commit)
+;; (require 'git-commit)
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
@@ -123,13 +121,5 @@
   (setq my-disable-lazyflymake t)
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
-
-(defun phye/python-mode-hook ()
-  "phye's python mode hook"
-  (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
-  (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
-  (pyvenv-activate "~/ws/pyvenv"))
-
-(add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 
 (provide 'phye-init-prog)

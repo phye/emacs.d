@@ -72,8 +72,7 @@
         spacemacs-dark
         srcery
         tango-dark
-        wombat
-        ))
+        wombat))
 
 (defun phye/random-all-themes ()
   "Random all color themes"
@@ -158,20 +157,6 @@
 (advice-add 'my-random-healthy-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-color-themes :after #'recover-avy-lead-face)
 
-(defun phye/clean-symbol (&optional symbol)
-  (interactive)
-  "Filter symbol without leading $,@ characters"
-  (let* ((symbol (or symbol
-                     (symbol-at-point)
-                     (error "No symbol at point")))
-         (symbolstr (symbol-name symbol))
-         (c (elt symbolstr 0)))
-    (if (or (= c ?$)
-            (= c ?@))
-        (list (seq-subseq symbolstr 1)) ;; return symbol without first char
-      (list symbolstr))))
-;; (advice-add 'highlight-symbol :filter-args #'phye/clean-symbol)
-
 (unless (boundp 'font-lock-reference-face)
   (defface font-lock-reference-face
     '((t :inherit t
@@ -181,6 +166,7 @@
 
 (use-package beacon
   :ensure t
+  :defer t
   :custom
   (beacon-blink-duration 0.2)
   :config
