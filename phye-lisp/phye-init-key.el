@@ -31,7 +31,7 @@
  "s-Q" 'server-shutdown)
 
 (general-define-key
- :states '(insert normal)
+ :states '(insert normal emacs)
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2
  "<SPC>" 'insert-zero-width-space)

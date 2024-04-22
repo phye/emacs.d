@@ -105,9 +105,6 @@
     (python-mode (elpy-goto-definition))
     (t (counsel-etags-find-tag-at-point))))
 
-;; use magit to edit commit message
-(require 'git-commit)
-
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)
