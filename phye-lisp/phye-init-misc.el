@@ -13,6 +13,8 @@
 
 (set-language-environment "utf-8")
 
+(customize-set-variable 'native-comp-async-report-warnings-errors 'silent)
+
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
