@@ -15,6 +15,8 @@
 
 (customize-set-variable 'native-comp-async-report-warnings-errors 'silent)
 
+(setq dictionary-server "dict.org")
+
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
