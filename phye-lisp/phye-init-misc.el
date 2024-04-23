@@ -14,6 +14,7 @@
 (set-language-environment "utf-8")
 
 (customize-set-variable 'native-comp-async-report-warnings-errors 'silent)
+(customize-set-variable 'warning-minimum-level :error)
 
 (setq dictionary-server "dict.org")
 
