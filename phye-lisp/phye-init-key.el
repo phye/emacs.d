@@ -3,7 +3,6 @@
 ;;; do not use space to override keybinds in Emacs mode
 
 ;; unbind unwanted keys
-(general-unbind "C-w")
 (general-unbind
   :keymaps '(image-mode-map doc-view-mode-map)
   "k")
@@ -21,6 +20,7 @@
 
 (general-define-key
  :states 'emacs
+ :keymaps '(helpful-mode)
  "C-w h" 'evil-window-left
  "C-w l" 'evil-window-right
  "C-w j" 'evil-window-down
