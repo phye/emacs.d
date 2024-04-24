@@ -41,6 +41,7 @@
 (use-package sync-recentf
   :ensure t
   :custom
+  (recentf-save-list "~/.emacs.data.d/recentf")
   (recentf-auto-cleanup 60)
   :config
   (recentf-mode 1))
@@ -126,6 +127,8 @@
   (deadgrep-restart))
 
 (use-package project
+  :custom
+  (project-list-file "~/.emacs.data.d/projects")
   :config
   (setq project-switch-commands
         '((project-find-file "File")
