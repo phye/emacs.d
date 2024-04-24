@@ -127,9 +127,9 @@
     (last-modified 25940 11249 231524 0))
 #1=(#("org-capture-last-stored" 0 23
       (bmkp-full-record #1#))
-    (filename . "~/ws/gtd/roam/20240220105656-qcloud.org")
+    (filename . "~/ws/gtd/roam/20240422172102-math.org")
     (front-context-string)
-    (rear-context-string . "#+title: qcloud\n")
-    (position . 84)
-    (last-modified 26068 5370 66729 0))
+    (rear-context-string . ":\n#+title: math\n")
+    (position . 82)
+    (last-modified 26150 11264 404561 0))
 )
