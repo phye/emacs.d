@@ -182,4 +182,21 @@
   :ensure t
   :defer t)
 
+(defvar previous-dark-theme nil "Previous dark theme before toggle.")
+
+(defun phye/toggle-theme (&optional light)
+  "Toggle light theme if LIGHT is t, restore dark theme otherwise."
+  (interactive)
+  (let ((loc (getenv "LOCATION")))
+    (message "Toggle Theme at %s" loc)
+    (when (equal loc "office")
+      (if light
+          (progn
+            (setq previous-dark-theme (car custom-enabled-themes))
+            (load-theme 'kaolin-valley-light t))
+        (load-theme previous-dark-theme t)))))
+
+(run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
+(run-at-time "16:00" 86400 #'(lambda () (phye/toggle-theme nil)))
+
 (provide 'phye-init-themes)

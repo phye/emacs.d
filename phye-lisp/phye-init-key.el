@@ -34,6 +34,7 @@
  :states '(insert normal emacs)
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2
+ "ff" 'my-toggle-full-window
  "<SPC>" 'insert-zero-width-space)
 
 (general-define-key
@@ -74,7 +75,6 @@
  "fs" 'select-frame-by-name
  "fo" 'find-file-other-frame
  "ff" 'phye/toggle-last-frame
- "ft" 'my-toggle-full-window
  "mc" 'phye/maximize-center-window
  "nn" 'highlight-symbol-next
  "os" 'org-side-tree

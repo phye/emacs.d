@@ -4,14 +4,18 @@
 (when (boundp 'fringe-mode)
   (fringe-mode 0))
 
+(with-eval-after-load 'ace-window
+  (customize-set-variable 'aw-scope 'frame)
+  (customize-set-variable 'aw-background t))
+
 (defun phye/switch-to-previous-buffer-in-window ()
   "Switch to previous buffer in the same window."
   (interactive)
   (let* ((cur-buffer (current-buffer))
-        (alt-buffer (car (car (window-prev-buffers)))))
+         (alt-buffer (car (car (window-prev-buffers)))))
     (if (eq cur-buffer alt-buffer)
         (switch-to-buffer (car (car (cdr (window-prev-buffers)))))
-    (switch-to-buffer alt-buffer))))
+      (switch-to-buffer alt-buffer))))
 
 (defun dedicate-current-window ()
   "Dedicate current window"
