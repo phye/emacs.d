@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("ti.proto"
+(("posix-conf"
+ (filename . "~/ws/posix-conf/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . "96 Apr 19 17:15 ")
+ (position . 126)
+ (last-modified 26152 30842 978728 593000))
+("ti.proto"
  (filename . "~/ws/ti-cloud/ti-cloud-proto/")
  (front-context-string . "..\n  drwxr-xr-x ")
  (rear-context-string . "96 Mar  8 16:45 ")
