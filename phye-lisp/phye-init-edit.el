@@ -41,10 +41,10 @@
 (use-package sync-recentf
   :ensure t
   :custom
-  (recentf-save-list "~/.emacs.data.d/recentf")
   (recentf-auto-cleanup 60)
   :config
   (recentf-mode 1))
+(setq recentf-save-file "~/.emacs.data.d/recentf")
 
 (use-package undo-fu
   :ensure t
