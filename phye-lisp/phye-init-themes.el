@@ -75,7 +75,7 @@
         wombat))
 
 (defun phye/random-all-themes ()
-  "Random all color themes"
+  "Random all color themes."
   (interactive)
   (my-pickup-random-color-theme (custom-available-themes)))
 
@@ -182,7 +182,12 @@
   :ensure t
   :defer t)
 
-(defvar previous-dark-theme nil "Previous dark theme before toggle.")
+(defvar previous-dark-theme 'cyberpunk "Previous dark theme before toggle.")
+
+(defun phye/load-theme (theme)
+  "Load THEME after disable custom themes."
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme theme t))
 
 (defun phye/toggle-theme (&optional light)
   "Toggle light theme if LIGHT is t, restore dark theme otherwise."
@@ -193,8 +198,8 @@
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
-            (load-theme 'kaolin-valley-light t))
-        (load-theme previous-dark-theme t)))))
+            (phye/load-theme 'kaolin-valley-light))
+        (phye/load-theme previous-dark-theme)))))
 
 (run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
 (run-at-time "16:00" 86400 #'(lambda () (phye/toggle-theme nil)))
