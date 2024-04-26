@@ -8,7 +8,6 @@
 (my-run-with-idle-timer
  2
  (lambda ()
-   (recentf-load-list)
    (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
    (setq my-term-program zsh-program)
    (exec-path-from-shell-copy-env "LOCATION")))

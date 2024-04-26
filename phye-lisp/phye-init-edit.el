@@ -64,8 +64,9 @@
 (my-run-with-idle-timer
  2 ;; gpg encrypt
  (lambda ()
- (require 'epa-file)
- (epa-file-enable)))
+   (require 'epa-file)
+   (epa-file-enable)
+   (recentf-load-list)))
 
 (use-package crux
   :ensure t
