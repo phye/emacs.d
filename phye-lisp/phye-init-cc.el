@@ -7,7 +7,8 @@
   (hs-minor-mode)
   (annotate-mode)
   (tree-sitter-hl-mode)
-  (rainbow-mode -1))
+  (rainbow-mode -1)
+  (my-ensure 'clang-format))
 (local-require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
@@ -19,7 +20,6 @@
 (my-run-with-idle-timer
  5
  (lambda ()
-   (my-ensure 'clang-format)
    (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
    (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
 ;; }}
