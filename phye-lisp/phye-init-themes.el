@@ -147,10 +147,7 @@
   "Recovy avy leader face."
   (interactive)
   (require 'avy)
-  (set-face-attribute 'avy-lead-face nil :foreground "red")
-  (set-face-attribute 'avy-lead-face nil :background "navy")
-  (set-face-attribute 'avy-lead-face-0 nil :foreground "magenta")
-  (set-face-attribute 'avy-lead-face-0 nil :background "green"))
+  (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-negation-char-face))
 (with-eval-after-load 'avy
   (recover-avy-lead-face))
 
