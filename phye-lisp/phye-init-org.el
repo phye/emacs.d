@@ -130,7 +130,7 @@
   :ensure t
   :defer t
   :custom
-  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"PLANNED\"")
+  (org-journal-carryover-items "TODO=\"TODO\"|TODO=\"DOING\"|TODO=\"SCHEDULED\"")
   (org-journal-enable-agenda-integration t)
   (org-journal-dir "~/ws/gtd/journals/")
   (org-journal-file-format "%Y%m.org")
@@ -345,7 +345,7 @@
 ;; settings after org loaded
 (with-eval-after-load 'org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "PLANNED(S/@)" "DOING(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
+        '((sequence "TODO(t)" "SCHEDULED(s/@)" "DOING(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)

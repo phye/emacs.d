@@ -144,6 +144,7 @@
 
 ;; customize avy jump colors
 (defun recover-avy-lead-face ()
+  "Recovy avy leader face."
   (interactive)
   (require 'avy)
   (set-face-attribute 'avy-lead-face nil :foreground "red")
@@ -198,7 +199,7 @@
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
-            (phye/load-theme 'kaolin-valley-light))
+            (my-random-healthy-color-theme))
         (phye/load-theme previous-dark-theme)))))
 
 (run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
