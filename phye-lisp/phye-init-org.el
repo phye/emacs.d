@@ -22,7 +22,7 @@
 (setq org-src-window-setup 'split-window-below)
 (setq org-confirm-babel-evaluate nil)
 (setq org-babel-default-header-args:plantuml
-      '((:results . "replace")
+      '((:results . "file")
         (:exports . "results")))
 (setq org-babel-default-header-args:icalendar
       '((:exports . "none")))
