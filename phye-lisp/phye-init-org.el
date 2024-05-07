@@ -307,6 +307,15 @@
                               "\\1​\\2​\\3"
                               (region-beginning) (region-end))))
 
+(defun phye/replace-priority ()
+  "Replace #[A|B|C] priority with P[0|1|2]."
+  (interactive)
+  (save-excursion
+    (mark-whole-buffer)
+    (replace-regexp-in-region "#A" "P0" (region-beginning) (region-end))
+    (replace-regexp-in-region "#B" "P1" (region-beginning) (region-end))
+    (replace-regexp-in-region "#C" "P2" (region-beginning) (region-end))))
+
 (defun phye/insert-zws-in-buffer ()
   "Insert zero width whitespace in whole buffer."
   (interactive)

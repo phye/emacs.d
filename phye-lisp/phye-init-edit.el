@@ -167,4 +167,15 @@
   :config
   (require 'smartparens-config))
 
+(defun phye/cleanup-white-spaces ()
+  "Delete white spaces between two Chinese characters."
+  (interactive)
+  (save-excursion
+    (mark-whole-buffer)
+    (replace-regexp-in-region
+     "\\(\\cc\\) \\(\\cc\\)"
+     "\\1\\2"
+     (region-beginning)
+     (region-end))))
+
 (provide 'phye-init-edit)
