@@ -147,7 +147,7 @@
   "Recovy avy leader face."
   (interactive)
   (require 'avy)
-  (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-negation-char-face))
+  (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-warning-face))
 (with-eval-after-load 'avy
   (recover-avy-lead-face))
 

@@ -39,29 +39,33 @@
 
 (general-define-key
  :states '(normal visual)
+ "C-b" 'evil-scroll-up)
+
+(general-define-key
+ :states '(normal visual)
  :prefix ","
-  "bb" 'phye/switch-to-previous-buffer-in-window
-  "fb" 'clang-format-buffer
-  "gr" 'xref-find-references
-  "gb" 'xref-pop-marker-stack
-  "gt" 'phye/goto-definition-at-point
-  "gi" 'eglot-find-implementation
-  "hs" 'hs-hide-all
-  "hS" 'hs-show-all
-  "hl" 'hs-hide-level
-  "hL" 'hs-show-block
-  "hb" 'hs-hide-block
-  "hB" 'hs-show-block
-  "hi" 'hide-ifdef-block
-  "hI" 'show-ifdef-block
-  "il" 'org-insert-link
-  "ls" 'highlight-symbol
-  "oc" 'cfw:open-org-calendar
-  "co" 'org-open-at-point
-  "ov" 'jao-toggle-selective-display
-  "rc" 'recover-avy-lead-face
-  "xd" 'find-file-in-cpp-module
-  "xe" 'exit-recursive-edit)
+ "bb" 'phye/switch-to-previous-buffer-in-window
+ "fb" 'clang-format-buffer
+ "gr" 'xref-find-references
+ "gb" 'xref-pop-marker-stack
+ "gt" 'phye/goto-definition-at-point
+ "gi" 'eglot-find-implementation
+ "hs" 'hs-hide-all
+ "hS" 'hs-show-all
+ "hl" 'hs-hide-level
+ "hL" 'hs-show-block
+ "hb" 'hs-hide-block
+ "hB" 'hs-show-block
+ "hi" 'hide-ifdef-block
+ "hI" 'show-ifdef-block
+ "il" 'org-insert-link
+ "ls" 'highlight-symbol
+ "oc" 'cfw:open-org-calendar
+ "co" 'org-open-at-point
+ "ov" 'jao-toggle-selective-display
+ "rc" 'recover-avy-lead-face
+ "xd" 'find-file-in-cpp-module
+ "xe" 'exit-recursive-edit)
 
 (general-define-key
  :states '(normal visual)
@@ -226,8 +230,8 @@
 
 (general-define-key
  :keymaps 'ivy-minibuffer-map
- "C-a" 'ivy-beginning-of-buffer
- "C-e" 'ivy-end-of-buffer)
+ "M-a" 'ivy-beginning-of-buffer
+ "M-e" 'ivy-end-of-buffer)
 
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()
