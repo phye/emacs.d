@@ -2,7 +2,16 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("posix-conf"
+(("math.partial.derivatives"
+ (filename . "~/Documents/OneDrive/ebooks/math/stewart.calculus.pdf")
+ (position . 1)
+ (last-modified 26155 30977 564060 0)
+ (page . 950)
+ (slice)
+ (size . fit-page)
+ (origin 0.0 . 0.0)
+ (handler . pdf-view-bookmark-jump-handler))
+("posix-conf"
  (filename . "~/ws/posix-conf/")
  (front-context-string . "..\n  drwxr-xr-x ")
  (rear-context-string . "96 Apr 19 17:15 ")
