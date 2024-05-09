@@ -222,7 +222,8 @@
  "h" 'dired-up-directory
  "l" 'dired-find-file
  "j" 'dired-next-line
- "k" 'dired-previous-line)
+ "k" 'dired-previous-line
+ "<RET>" 'phye/dired-open-file)
 
 (general-define-key
  :keymaps 'project-prefix-map

@@ -37,6 +37,16 @@
                          :initial-input nil)))
       (dired dir))))
 
+(defun phye/dired-open-file (&optional reuse)
+  "Open file in other window, unless prefix is set"
+  (interactive "P")
+  (if (file-directory-p (dired-get-file-for-visit))
+      ;; follow dir in current window
+      (dired-find-file)
+    (if reuse
+        (dired-find-file)
+      (dired-find-file-other-window))))
+
 ;; recentf
 (use-package sync-recentf
   :ensure t
