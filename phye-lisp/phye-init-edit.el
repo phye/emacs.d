@@ -47,6 +47,10 @@
         (dired-find-file)
       (dired-find-file-other-window))))
 
+(use-package casual-dired
+  :ensure t
+  :defer t)
+
 ;; recentf
 (use-package sync-recentf
   :ensure t

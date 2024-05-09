@@ -208,7 +208,7 @@
 
 (general-define-key
  :keymaps 'ivy-minibuffer-map
- "C-w" 'evil-delete-backward-word)
+ "C-w" 'ivy-backward-kill-word)
 
 (general-define-key
  :keymaps 'xref--xref-buffer-mode-map
@@ -223,7 +223,8 @@
  "l" 'dired-find-file
  "j" 'dired-next-line
  "k" 'dired-previous-line
- "<RET>" 'phye/dired-open-file)
+ "<RET>" 'phye/dired-open-file
+ "C-o" 'casual-dired-tmenu)
 
 (general-define-key
  :keymaps 'project-prefix-map
