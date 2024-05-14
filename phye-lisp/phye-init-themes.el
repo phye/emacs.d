@@ -198,10 +198,10 @@
             (setq previous-dark-theme (car custom-enabled-themes))
             (my-random-healthy-color-theme))
         (phye/load-theme previous-dark-theme))
-      (if (display-graphic-p)
+      (when (display-graphic-p)
           (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
 
 (run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
-(run-at-time "16:00" 86400 #'(lambda () (phye/toggle-theme nil)))
+(run-at-time "16:30" 86400 #'(lambda () (phye/toggle-theme nil)))
 
 (provide 'phye-init-themes)
