@@ -44,6 +44,7 @@
         doom-vibrant
         doom-xcode
         doom-zenburn
+        dorsey
         ef-bio
         ef-dark
         ef-autumn
@@ -58,13 +59,16 @@
         kaolin-ocean
         kaolin-temple
         kaolin-valley-dark
+        manoj-dark
         madhat2r
         modus-vivendi
         nord
         noctilux
         occidental
+        omtose-darker
         planet
         professional
+        purple-haze
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         seti
