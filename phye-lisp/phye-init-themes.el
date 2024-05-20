@@ -200,8 +200,12 @@
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
-            (my-random-healthy-color-theme))
-        (phye/load-theme previous-dark-theme))
+            (my-random-healthy-color-theme)
+            (custom-set-faces
+             '(ivy-current-match ((t (:extend t :background "color-48"))))))
+        (phye/load-theme previous-dark-theme)
+        (custom-set-faces
+         '(ivy-current-match ((t (:extend t :background "color-27"))))))
       (when (display-graphic-p)
           (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
 
