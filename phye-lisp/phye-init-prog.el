@@ -103,7 +103,15 @@
   (cl-case major-mode
     (go-mode (xref-find-definitions (symbol-at-point)))
     (python-mode (elpy-goto-definition))
+    (org-mode (org-open-at-point))
     (t (counsel-etags-find-tag-at-point))))
+
+(defun phye/go-back-to-caller ()
+  "My mode-aware go back to caller."
+  (interactive)
+  (cl-case major-mode
+    (org-mode (org-mark-ring-goto))
+    (t (xref-pop-marker-stack))))
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()

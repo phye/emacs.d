@@ -24,6 +24,7 @@
         doom-feather-dark
         doom-gruvbox
         doom-homage-black
+        doom-horizon
         doom-ir-black
         doom-laserwave
         doom-molokai
@@ -32,7 +33,6 @@
         doom-monokai-octagon
         doom-monokai-pro
         doom-monokai-ristretto
-        doom-monokai-spectrum
         doom-nord
         doom-nord-aurora
         doom-nova
@@ -46,6 +46,7 @@
         doom-zenburn
         dorsey
         ef-bio
+        ef-elea-dark
         ef-dark
         ef-autumn
         grandshell
@@ -54,7 +55,9 @@
         hemisu-dark
         jazz
         kaolin-aurora
+        kaolin-eclipse
         kaolin-bubblegum
+        kaolin-dark
         kaolin-galaxy
         kaolin-ocean
         kaolin-temple

@@ -47,7 +47,7 @@
  "bb" 'phye/switch-to-previous-buffer-in-window
  "fb" 'clang-format-buffer
  "gr" 'xref-find-references
- "gb" 'xref-pop-marker-stack
+ "gb" 'phye/go-back-to-caller
  "gt" 'phye/goto-definition-at-point
  "gi" 'eglot-find-implementation
  "hs" 'hs-hide-all
