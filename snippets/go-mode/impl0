@@ -1,5 +1,5 @@
 # -*- mode: snippet -*-
-# name: impl
-# key: impl
+# name: impl0
+# key: impl0
 # --
-// TODO(phye): Add Impl
+// TODO(phye): P0: Add Impl
