@@ -10,7 +10,8 @@
  (lambda ()
    (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
    (setq my-term-program zsh-program)
-   (exec-path-from-shell-copy-env "LOCATION")))
+   (exec-path-from-shell-copy-env "LOCATION")
+   (lazyflymake-start)))
 
 (set-language-environment "utf-8")
 
