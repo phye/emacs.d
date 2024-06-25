@@ -199,12 +199,8 @@
   (interactive)
   (let ((bg-color ""))
     (if light
-        (if (display-graphic-p)
-            (setq bg-color "green")   ;; gui + light: green
-          (setq bg-color "color-27")) ;; term + light: color-27
-      (if (display-graphic-p)
-          (setq bg-color "blue1")    ;; gui + dark: sky blue
-        (setq bg-color "color-48"))) ;; term + dark: color-48
+        (setq bg-color "#00FF86")
+      (setq bg-color "#0065FF"))
     (custom-set-faces
      `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
 
