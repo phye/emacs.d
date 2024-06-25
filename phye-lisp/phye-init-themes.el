@@ -194,31 +194,34 @@
   (mapc #'disable-theme custom-enabled-themes)
   (load-theme theme t))
 
-(defun phye/toggle-theme (&optional light)
-  "Toggle light theme if LIGHT is t, restore dark theme otherwise."
+(defun phye/set-bg-color (&optional light)
+  "Set ivy-current-match color based on LIGHT."
   (interactive)
-  (let ((loc (getenv "LOCATION"))
-        (bg-color ""))        ;; term + dark (default): color-48
+  (let ((bg-color ""))
     (if light
         (if (display-graphic-p)
             (setq bg-color "green")   ;; gui + light: green
           (setq bg-color "color-27")) ;; term + light: color-27
       (if (display-graphic-p)
-          (setq bg-color "blue1")     ;; gui + dark: sky blue
-        (setq bg-color "color-48")))  ;; term + dark: color-48
-    (message "Toggle Theme at %s, bg color: %s" loc bg-color)
+          (setq bg-color "blue1")    ;; gui + dark: sky blue
+        (setq bg-color "color-48"))) ;; term + dark: color-48
+    (custom-set-faces
+     `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
+
+(defun phye/toggle-theme (&optional light)
+  "Toggle light theme if LIGHT is t, restore dark theme otherwise."
+  (interactive)
+  (let ((loc (getenv "LOCATION")))
+    (message "Toggle Theme at %s" loc)
     (when (equal loc "office")
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
-            (my-random-healthy-color-theme)
-            (custom-set-faces
-             `(ivy-current-match ((t (:extend t :background ,bg-color))))))
-        (phye/load-theme previous-dark-theme)
-        (custom-set-faces
-         `(ivy-current-match ((t (:extend t :background ,bg-color))))))
+            (my-random-healthy-color-theme))
+        (phye/load-theme previous-dark-theme))
+      (phye/set-bg-color light)
       (when (display-graphic-p)
-          (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
+        (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
 
 (run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
 (run-at-time "16:30" 86400 #'(lambda () (phye/toggle-theme nil)))
