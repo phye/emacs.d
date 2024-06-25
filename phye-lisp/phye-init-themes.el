@@ -72,6 +72,7 @@
         planet
         professional
         purple-haze
+        rebecca
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         seti
