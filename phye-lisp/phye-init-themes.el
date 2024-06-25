@@ -197,18 +197,26 @@
 (defun phye/toggle-theme (&optional light)
   "Toggle light theme if LIGHT is t, restore dark theme otherwise."
   (interactive)
-  (let ((loc (getenv "LOCATION")))
-    (message "Toggle Theme at %s" loc)
+  (let ((loc (getenv "LOCATION"))
+        (bg-color ""))        ;; term + dark (default): color-48
+    (if light
+        (if (display-graphic-p)
+            (setq bg-color "green")   ;; gui + light: green
+          (setq bg-color "color-27")) ;; term + light: color-27
+      (if (display-graphic-p)
+          (setq bg-color "blue1")     ;; gui + dark: sky blue
+        (setq bg-color "color-48")))  ;; term + dark: color-48
+    (message "Toggle Theme at %s, bg color: %s" loc bg-color)
     (when (equal loc "office")
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
             (my-random-healthy-color-theme)
             (custom-set-faces
-             '(ivy-current-match ((t (:extend t :background "color-48"))))))
+             `(ivy-current-match ((t (:extend t :background ,bg-color))))))
         (phye/load-theme previous-dark-theme)
         (custom-set-faces
-         '(ivy-current-match ((t (:extend t :background "color-27"))))))
+         `(ivy-current-match ((t (:extend t :background ,bg-color))))))
       (when (display-graphic-p)
           (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
 

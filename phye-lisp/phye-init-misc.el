@@ -24,6 +24,9 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
 (setq help-window-select t)
+
+(customize-set-variable 'calendar-latitude +31.2)
+(customize-set-variable 'calendar-longitude +121.5)
 ;; }}
 
 (provide 'phye-init-misc)
