@@ -122,7 +122,7 @@
   (hl-todo-mode 1)
   (subword-mode)
   (ws-butler-mode -1)                   ; disable auto white space removal
-  (setq my-disable-lazyflymake t)
+  (setq my-disable-wucuo t)
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
