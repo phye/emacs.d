@@ -155,6 +155,12 @@
 (with-eval-after-load 'counsel
   (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
 
+(use-package ivy-prescient
+  :ensure t
+  :after counsel
+  :config
+  (ivy-prescient-mode))
+
 (use-package better-jumper
   :ensure t
   :defer t
