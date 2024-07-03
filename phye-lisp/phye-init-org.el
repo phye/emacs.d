@@ -283,11 +283,9 @@
                 (org-todo 'done)
               (org-todo 'todo)))))))
 
-(defun phye/insert-zws-in-region ()
-  "Insert zero width whitespace between chinese and english characters in orgmode in region BEGIN and END."
+(defun phye/insert-zws-in-region (begin end)
+  "Insert zero width whitespace between chinese and english characters region BEGIN and END."
   (interactive)
-  (unless (use-region-p)
-    (user-error "Region Expected"))
   (let* ((match-regexp
           (rx-to-string
            `(seq
@@ -305,23 +303,28 @@
                (not ?​))) t)))
     (replace-regexp-in-region match-regexp
                               "\\1​\\2​\\3"
-                              (region-beginning) (region-end))))
+                              begin end)))
 
 (defun phye/replace-priority ()
   "Replace #[A|B|C] priority with P[0|1|2]."
   (interactive)
-  (save-excursion
-    (mark-whole-buffer)
-    (replace-regexp-in-region "#A" "P0" (region-beginning) (region-end))
-    (replace-regexp-in-region "#B" "P1" (region-beginning) (region-end))
-    (replace-regexp-in-region "#C" "P2" (region-beginning) (region-end))))
+  (replace-regexp-in-region "#A" "P0" (point-min) (point-max))
+  (replace-regexp-in-region "#B" "P1" (point-min) (point-max))
+  (replace-regexp-in-region "#C" "P2" (point-min) (point-max)))
 
 (defun phye/insert-zws-in-buffer ()
   "Insert zero width whitespace in whole buffer."
   (interactive)
-  (save-excursion
-    (mark-whole-buffer)
-    (phye/insert-zws-in-region)))
+  (phye/insert-zws-in-region (point-min) (point-max)))
+
+(defun phye/cleanup-white-spaces ()
+  "Delete white spaces between two Chinese characters."
+  (interactive)
+  (replace-regexp-in-region
+   "\\(\\cc\\) +\\(\\cc\\)"
+   "\\1\\2"
+   (point-min)
+   (point-max)))
 ;; }}
 
 
@@ -372,5 +375,11 @@
      ;; (require 'calfw-org)
      (require 'yasnippet)
      (my-yas-reload-all))))
+
+(defun phye/org-before-save-hook ()
+  "phye's orgmode before save hook."
+  (when (eq major-mode 'org-mode)
+    (phye/cleanup-white-spaces)))
+(add-hook 'before-save-hook #'phye/org-before-save-hook)
 
 (provide 'phye-init-org)

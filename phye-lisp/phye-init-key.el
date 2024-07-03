@@ -134,10 +134,10 @@
  "sl" 'org-store-link
  "tt" 'shell-pop
  "ut" 'counsel-etags-update-tags-force
- "xb" 'project-switch-to-buffer
+ "xb" 'ivy-switch-buffer
  "xc" 'suspend-frame
  "xf" 'find-file
- "xB" 'ivy-switch-buffer
+ "xB" 'project-switch-to-buffer
  "xK" 'phye/kill-buffer-and-frame
  "xg" 'magit-status
  "xpp" 'project-switch-project

@@ -155,12 +155,6 @@
 (with-eval-after-load 'counsel
   (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
 
-(use-package ivy-prescient
-  :ensure t
-  :after counsel
-  :config
-  (ivy-prescient-mode))
-
 (use-package better-jumper
   :ensure t
   :defer t
@@ -186,16 +180,5 @@
 ;;   :hook (prog-mode text-mode markdown-mode) ;; add `smartparens-mode` to these hooks
 ;;   :config
 ;;   (require 'smartparens-config))
-
-(defun phye/cleanup-white-spaces ()
-  "Delete white spaces between two Chinese characters."
-  (interactive)
-  (save-excursion
-    (mark-whole-buffer)
-    (replace-regexp-in-region
-     "\\(\\cc\\) \\(\\cc\\)"
-     "\\1\\2"
-     (region-beginning)
-     (region-end))))
 
 (provide 'phye-init-edit)
