@@ -305,26 +305,33 @@
                               "\\1​\\2​\\3"
                               begin end)))
 
-(defun phye/replace-priority ()
-  "Replace #[A|B|C] priority with P[0|1|2]."
-  (interactive)
-  (replace-regexp-in-region "#A" "P0" (point-min) (point-max))
-  (replace-regexp-in-region "#B" "P1" (point-min) (point-max))
-  (replace-regexp-in-region "#C" "P2" (point-min) (point-max)))
-
 (defun phye/insert-zws-in-buffer ()
   "Insert zero width whitespace in whole buffer."
   (interactive)
   (phye/insert-zws-in-region (point-min) (point-max)))
 
-(defun phye/cleanup-white-spaces ()
-  "Delete white spaces between two Chinese characters."
+(defvar phye/in-word-white-spaces-regex "\\(\\cc\\) +\\(\\cc\\)" "Regexp for in word white spaces.")
+
+(defun phye/cleanup-white-spaces (begin end)
+  "Delete white spaces between two Chinese characters in region BEGIN and END."
   (interactive)
   (replace-regexp-in-region
-   "\\(\\cc\\) +\\(\\cc\\)"
+   phye/in-word-white-spaces-regex
    "\\1\\2"
-   (point-min)
-   (point-max)))
+   begin
+   end))
+
+(defun phye/cleanup-white-spaces-in-string (str)
+  "Cleanup white spaces in STR."
+  (replace-regexp-in-string
+   phye/in-word-white-spaces-regex
+   "\\1\\2"
+   str))
+
+(defun phye/cleanup-white-spaces-in-buffer ()
+  "Delete white spaces in buffer."
+  (interactive)
+  (phye/cleanup-white-spaces (point-min) (point-max)))
 ;; }}
 
 
@@ -378,8 +385,22 @@
 
 (defun phye/org-before-save-hook ()
   "phye's orgmode before save hook."
-  (when (eq major-mode 'org-mode)
-    (phye/cleanup-white-spaces)))
+  (when (member major-mode '(org-mode markdown-mode gfm-mode))
+    (phye/cleanup-white-spaces-in-buffer)))
 (add-hook 'before-save-hook #'phye/org-before-save-hook)
+
+;; TODO(phye): move this priority logic to md-after-export-hook
+(defun phye/replace-priority ()
+  "Replace #[A|B|C] priority with P[0|1|2]."
+  (interactive)
+  (replace-regexp-in-region "#A" "P0" (point-min) (point-max))
+  (replace-regexp-in-region "#B" "P1" (point-min) (point-max))
+  (replace-regexp-in-region "#C" "P2" (point-min) (point-max)))
+
+(defun phye/md-after-export-hook (text backend info)
+  "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
+  (when (org-export-derived-backend-p backend 'md)
+    (phye/cleanup-white-spaces-in-string text)))
+(add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
 (provide 'phye-init-org)
