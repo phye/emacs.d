@@ -283,27 +283,43 @@
                 (org-todo 'done)
               (org-todo 'todo)))))))
 
+(defvar cn-mark-en-rxp
+  (rx-to-string
+   `(seq
+     (group-n 1
+       (category chinese))
+     (group-n 2
+       (any "~+_*"))
+     (group-n 3
+       (or
+        (any alnum)
+        (any "-/{}")))))
+  "Regexp for match chinese-mark-english.")
+
+(defvar en-mark-cn-rxp
+  (rx-to-string
+   `(seq
+     (group-n 1
+       (or
+        (any alnum)
+        (any "-/{}")))
+     (group-n 2
+       (any "~+_*"))
+     (group-n 3
+       (category chinese))))
+  "Regexp for matching english-mark-chinese.")
+
+(defun phye/remove-zws-in-region (begin end)
+  "Insert zero width whitespace between cn and en characters in BEGIN and END."
+  (interactive "r")
+  (replace-regexp-in-region "​" "" begin end))
+
 (defun phye/insert-zws-in-region (begin end)
-  "Insert zero width whitespace between chinese and english characters region BEGIN and END."
-  (interactive)
-  (let* ((match-regexp
-          (rx-to-string
-           `(seq
-             (group-n 1
-               (not ?​))
-             (group-n 2
-               (group-n 5 (any "~+_*/"))
-               (one-or-more
-                (or
-                 (any alnum)
-                 (any "-_")
-                 (category chinese)))
-               (backref 5))
-             (group-n 3
-               (not ?​))) t)))
-    (replace-regexp-in-region match-regexp
-                              "\\1​\\2​\\3"
-                              begin end)))
+  "Insert zero width whitespace between cn and en characters in BEGIN and END."
+  (interactive "r")
+  (replace-regexp-in-region "​" "" begin end)
+  (replace-regexp-in-region cn-mark-en-rxp "\\1​\\2\\3" begin end)
+  (replace-regexp-in-region en-mark-cn-rxp "\\1\\2​\\3" begin end))
 
 (defun phye/insert-zws-in-buffer ()
   "Insert zero width whitespace in whole buffer."
