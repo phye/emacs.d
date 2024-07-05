@@ -317,7 +317,6 @@
 (defun phye/insert-zws-in-region (begin end)
   "Insert zero width whitespace between cn and en characters in BEGIN and END."
   (interactive "r")
-  (replace-regexp-in-region "​" "" begin end)
   (replace-regexp-in-region cn-mark-en-rxp "\\1​\\2\\3" begin end)
   (replace-regexp-in-region en-mark-cn-rxp "\\1\\2​\\3" begin end))
 
