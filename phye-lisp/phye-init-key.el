@@ -116,6 +116,7 @@
  "ee" 'eval-expression
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
+ "im" 'counsel-imenu
  "kmb" 'phye/kill-matching-buffers
  "le" 'flymake-show-buffer-diagnostics
  "mb" 'magit-blame

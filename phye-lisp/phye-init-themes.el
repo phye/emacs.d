@@ -76,7 +76,9 @@
         sanityinc-tomorrow-eighties
         sanityinc-tomorrow-night
         seti
-        ;; solarized-dark-high-contrast
+        solarized-selenized-black
+        solarized-gruvbox-dark
+        solarized-wombat-dark
         spacemacs-dark
         srcery
         tango-dark
