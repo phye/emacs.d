@@ -50,6 +50,9 @@
  "gb" 'phye/go-back-to-caller
  "gt" 'phye/goto-definition-at-point
  "gi" 'eglot-find-implementation
+ "hf" 'counsel-describe-function
+ "hv" 'counsel-describe-variable
+ "hF" 'counsel-describe-face
  "hs" 'hs-hide-all
  "hS" 'hs-show-all
  "hl" 'hs-hide-level
@@ -235,6 +238,12 @@
  :keymaps 'ivy-minibuffer-map
  "M-a" 'ivy-beginning-of-buffer
  "M-e" 'ivy-end-of-buffer)
+
+(general-define-key
+ :keymaps 'magit-blame-mode-map
+ :states 'emacs
+ :prefix ","
+ "mq" 'magit-blame-quit)
 
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()

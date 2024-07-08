@@ -29,7 +29,7 @@
         evil-terminal-cursor-changer
         markdown-toc
         org-fancy-priorities
-        smartparens))
+        puni))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
 
