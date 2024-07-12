@@ -9,6 +9,8 @@
   ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
 
+(customize-set-variable 'sh-basic-offset 2)
+
 ;; code annotation
 (use-package annotate
   :ensure t
