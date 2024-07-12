@@ -63,6 +63,7 @@
  "hI" 'show-ifdef-block
  "il" 'org-insert-link
  "ls" 'highlight-symbol
+ "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
  "co" 'org-open-at-point
  "ov" 'jao-toggle-selective-display
@@ -241,7 +242,6 @@
 
 (general-define-key
  :keymaps 'magit-blame-mode-map
- :states 'emacs
  :prefix ","
  "mq" 'magit-blame-quit)
 
