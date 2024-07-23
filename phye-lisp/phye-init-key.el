@@ -82,7 +82,6 @@
  "fr" 'set-frame-name
  "fs" 'select-frame-by-name
  "fo" 'find-file-other-frame
- "ff" 'phye/toggle-last-frame
  "mc" 'phye/maximize-center-window
  "nn" 'highlight-symbol-next
  "os" 'org-side-tree
