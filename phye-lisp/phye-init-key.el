@@ -45,6 +45,8 @@
  :states '(normal visual)
  :prefix ","
  "bb" 'phye/switch-to-previous-buffer-in-window
+ "bp" 'previous-buffer
+ "bn" 'next-buffer
  "fb" 'clang-format-buffer
  "gr" 'xref-find-references
  "gb" 'phye/go-back-to-caller
@@ -236,8 +238,9 @@
 
 (general-define-key
  :keymaps 'ivy-minibuffer-map
- "M-a" 'ivy-beginning-of-buffer
- "M-e" 'ivy-end-of-buffer)
+ :prefix ","
+ "gg" 'ivy-beginning-of-buffer
+ "G" 'ivy-end-of-buffer)
 
 (general-define-key
  :keymaps 'magit-blame-mode-map
