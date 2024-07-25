@@ -27,6 +27,7 @@
    doom-horizon
    doom-ir-black
    doom-laserwave
+   doom-miramare
    doom-molokai
    doom-monokai-classic
    doom-monokai-machine
@@ -52,6 +53,7 @@
    grandshell
    gruvbox-dark-soft
    gruvbox-dark-medium
+   hc-zenburn
    hemisu-dark
    jazz
    kaolin-aurora

@@ -18,6 +18,7 @@
   :mode (".yaml$")
   :hook
   (yaml-mode . yaml-mode-outline-hook)
+  (yaml-mode . display-line-numbers-mode)
 
   :init
   (defun yaml-outline-level ()
