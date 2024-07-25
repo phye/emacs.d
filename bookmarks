@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("math.partial.derivatives"
+(("k8s.api"
+ (filename . "~/ws/github/k8s.total/kubernetes/staging/src/k8s.io/api/apps/v1/types.go")
+ (front-context-string . "type DaemonSet s")
+ (rear-context-string . "f a daemon set.\n")
+ (position . 34128)
+ (last-modified 26274 4018 17645 712000))
+("math.partial.derivatives"
  (filename . "~/Documents/OneDrive/ebooks/math/stewart.calculus.pdf")
  (position . 1)
  (last-modified 26155 30977 564060 0)
@@ -20,9 +26,9 @@
 ("ti.proto"
  (filename . "~/ws/ti-cloud/ti-cloud-proto/")
  (front-context-string . "..\n  drwxr-xr-x ")
- (rear-context-string . "96 Mar  8 16:45 ")
+ (rear-context-string . "96 Jun 13 10:45 ")
  (position . 139)
- (last-modified 26090 53491 253912 693000))
+ (last-modified 26218 23946 734424 246000))
 ("ti.infra"
  (filename . "~/ws/ti-cloud/infra/")
  (front-context-string . "..\n  drwxr-xr-x ")
