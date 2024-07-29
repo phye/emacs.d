@@ -3,6 +3,9 @@
 (setq frame-resize-pixelwise t)
 (when (boundp 'fringe-mode)
   (fringe-mode 0))
+(setq switch-to-buffer-in-dedicated-window 'pop)
+(setq switch-to-buffer-obey-display-actions t)
+(setq window-sides-slots '(1 1 1 1))
 
 (with-eval-after-load 'ace-window
   (customize-set-variable 'aw-scope 'frame)
@@ -18,15 +21,12 @@
       (switch-to-buffer alt-buffer))))
 
 (defun dedicate-current-window ()
-  "Dedicate current window."
+  "Toggles window dedication in the selected window."
   (interactive)
-  (set-window-dedicated-p (selected-window) t)
-  (message "window dedicated"))
-(defun undedicate-current-window ()
-  "Undedicate current window"
-  (interactive)
-  (set-window-dedicated-p (selected-window) nil)
-  (message "window undedicated"))
+  (set-window-dedicated-p
+   (selected-window)
+   (not (window-dedicated-p (selected-window))))
+  (message "window dedicated: %s" (window-dedicated-p (selected-window))))
 
 (setq xref-history-storage 'xref-window-local-history)
 ;; }}

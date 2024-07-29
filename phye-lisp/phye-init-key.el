@@ -77,7 +77,6 @@
  :states '(normal visual)
  :prefix "SPC"
  "wd" 'dedicate-current-window
- "wu" 'undedicate-current-window
  "fD" 'delete-frame
  "fn" 'phye/select-next-frame
  "fp" 'phye/select-previous-frame
