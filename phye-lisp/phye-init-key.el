@@ -51,6 +51,7 @@
  "gr" 'xref-find-references
  "gb" 'phye/go-back-to-caller
  "gt" 'phye/goto-definition-at-point
+ "gC" 'phye/xref-clear-marker-stack
  "gi" 'eglot-find-implementation
  "hf" 'counsel-describe-function
  "hv" 'counsel-describe-variable
@@ -223,6 +224,11 @@
  "k" 'xref-prev-line)
 
 (general-define-key
+ :keymaps 'xref--xref-buffer-mode-map
+ :prefix ";"
+ ";" 'ace-pinyin-jump-char-2)
+
+(general-define-key
  :keymaps 'dired-mode-map
  "h" 'dired-up-directory
  "l" 'dired-find-file
@@ -245,6 +251,10 @@
  :keymaps 'magit-blame-mode-map
  :prefix ","
  "mq" 'magit-blame-quit)
+
+(general-define-key
+ :keymaps 'bookmark-minibuffer-read-name-map
+ "C-w" 'evil-delete-backward-word)
 
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()

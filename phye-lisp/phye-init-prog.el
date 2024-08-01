@@ -49,7 +49,8 @@
         (append phye/general-ignore-directories counsel-etags-ignore-directories))
   (add-to-list 'counsel-etags-ignore-filenames "*_pb2.py")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.h")
-  (add-to-list 'counsel-etags-ignore-filenames "*.pb.cc"))
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb.cc")
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb.go"))
 
 (with-eval-after-load 'find-file-in-project
   (add-to-list 'ffip-prune-patterns "*/build")
@@ -59,7 +60,8 @@
   (add-to-list 'ffip-prune-patterns "*/vendor")
   (add-to-list 'ffip-ignore-filenames "*.pb.cc")
   (add-to-list 'ffip-ignore-filenames "*.pb.h")
-  (add-to-list 'ffip-ignore-filenames "*_pb2.py"))
+  (add-to-list 'ffip-ignore-filenames "*_pb2.py")
+  (add-to-list 'ffip-ignore-filenames "*.pb.go"))
 
 ;; ediff
 (defvar previous-theme nil "previous theme before ediff for backup")
@@ -114,6 +116,12 @@
   (cl-case major-mode
     (org-mode (org-mark-ring-goto))
     (t (xref-pop-marker-stack))))
+
+(defun phye/xref-clear-marker-stack ()
+  "Interactively clear marker stack"
+  (interactive)
+  (xref-clear-marker-stack)
+  (message "xref stack cleared"))
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
