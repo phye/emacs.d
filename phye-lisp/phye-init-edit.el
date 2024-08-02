@@ -107,6 +107,12 @@
   :ensure t
   :defer t)
 
+(defun phye/wgrep-change-to-wgrep-mode ()
+  "Change to wgrep then toggle readonly mode."
+  (interactive)
+  (wgrep-change-to-wgrep-mode)
+  (wgrep-toggle-readonly-area))
+
 (defun select-deadgrep-window-advice (search-term &optional directory)
   "Select deadgrep buffer"
   (select-window (get-buffer-window "*deadgrep\\.*")))

@@ -187,7 +187,8 @@
  "k" 'previous-line
  "D" 'phye/deadgrep-directory
  "RET" 'deadgrep-visit-result-other-window
- "C-x C-q" 'wgrep-change-to-wgrep-mode)
+ "C-x C-q" 'phye/wgrep-change-to-wgrep-mode
+ "w" 'phye/wgrep-change-to-wgrep-mode)
 
 (general-define-key
  :keymaps 'deadgrep-mode-map
