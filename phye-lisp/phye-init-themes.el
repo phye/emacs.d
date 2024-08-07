@@ -6,6 +6,7 @@
    atom-one-dark
    ample
    ample-zen
+   bubbleberry
    clues
    cherry-blossom
    cyberpunk
@@ -41,6 +42,7 @@
    doom-old-hope
    doom-opera
    doom-palenight
+   doom-sourcerer
    doom-spacegrey
    doom-vibrant
    doom-xcode
@@ -50,6 +52,7 @@
    ef-elea-dark
    ef-dark
    ef-autumn
+   gotham
    grandshell
    gruvbox-dark-soft
    gruvbox-dark-medium

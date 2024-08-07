@@ -119,6 +119,7 @@
  "dk" 'deadgrep-kill-all-buffers
  "DD" 'counsel-etags-grep-current-directory
  "ee" 'eval-expression
+ "fn" 'copy-current-filename-to-clipboard
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
  "im" 'counsel-imenu

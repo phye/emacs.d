@@ -92,6 +92,11 @@
   (interactive)
   (copy-variable-to-clipboard default-directory))
 
+(defun copy-current-filename-to-clipboard ()
+  (interactive)
+  (copy-variable-to-clipboard
+   (file-name-nondirectory buffer-file-name)))
+
 (defun insert-zero-width-space ()
   "Insert zero width space before and after OrgMode mark."
   (interactive)
