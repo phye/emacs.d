@@ -111,7 +111,8 @@
   "Change to wgrep then toggle readonly mode."
   (interactive)
   (wgrep-change-to-wgrep-mode)
-  (wgrep-toggle-readonly-area))
+  (wgrep-toggle-readonly-area)
+  (evil-escape))
 
 (defun select-deadgrep-window-advice (search-term &optional directory)
   "Select deadgrep buffer"
