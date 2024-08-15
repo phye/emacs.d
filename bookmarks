@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("kubelet.mainLoop"
+(("vk8s.mainentry"
+ (filename . "~/ws/ti-cloud/infra/vk8s/cmd/virtual-kubelet/main.go")
+ (front-context-string . "Command(ctx, \"se")
+ (rear-context-string . "d(s), server.New")
+ (position . 2488)
+ (last-modified 26284 18665 790255 124000))
+("kubelet.mainLoop"
  (filename . "~/ws/github/k8s.total/kubernetes/pkg/kubelet/kubelet.go")
  (front-context-string . "LoopIteration(co")
  (rear-context-string . "l *Kubelet) sync")
