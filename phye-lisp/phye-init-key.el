@@ -89,6 +89,7 @@
  "os" 'org-side-tree
  "pp" 'highlight-symbol-prev
  "rt" 'my-random-favorite-color-theme
+ "rl" 'phye/random-favorite-light-themes
  "rp" 'org-remark-prev
  "rn" 'org-remark-next
  "rm" 'phye/mark-and-open

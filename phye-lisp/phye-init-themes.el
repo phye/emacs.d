@@ -89,10 +89,32 @@
    tango-dark
    wombat))
 
+(customize-set-variable
+ 'my-favorite-light-color-themes
+ '(apropospriate-light
+   doom-acario-light
+   doom-bluloco-light
+   doom-feather-light
+   doom-homage-white
+   doom-nord-light
+   doom-oksolar-light
+   doom-one-light
+   doom-opera-light
+   ef-deuteranopia-light
+   ef-elea-light
+   ef-melissa-light
+   ef-trio-light
+   whiteboard))
+
 (defun phye/random-all-themes ()
   "Random all color themes."
   (interactive)
   (my-pickup-random-color-theme (custom-available-themes)))
+
+(defun phye/random-favorite-light-themes ()
+  "Random my favorite light themes."
+  (interactive)
+  (my-pickup-random-color-theme my-favorite-light-color-themes))
 
 (use-package hl-todo
   :ensure t
