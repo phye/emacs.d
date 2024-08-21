@@ -92,18 +92,19 @@
 (customize-set-variable
  'my-favorite-light-color-themes
  '(apropospriate-light
-   doom-acario-light
-   doom-bluloco-light
    doom-feather-light
    doom-homage-white
    doom-nord-light
    doom-oksolar-light
    doom-one-light
    doom-opera-light
+   kaolin-valley-light
    ef-deuteranopia-light
    ef-elea-light
    ef-melissa-light
    ef-trio-light
+   ef-tritanopia-light
+   farmhouse-light
    whiteboard))
 
 (defun phye/random-all-themes ()
