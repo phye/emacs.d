@@ -1,4 +1,12 @@
-(load-theme 'cyberpunk t)
+(defun phye/load-theme (theme)
+  "Load THEME after disable custom themes."
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme theme t))
+
+(if (display-graphic-p)
+  (phye/load-theme 'doom-monokai-classic)
+  (phye/load-theme 'kaolin-galaxy))
+
 (customize-set-variable
  'my-favorite-color-themes
  '(afternoon
@@ -219,11 +227,6 @@
   :defer t)
 
 (defvar previous-dark-theme 'cyberpunk "Previous dark theme before toggle.")
-
-(defun phye/load-theme (theme)
-  "Load THEME after disable custom themes."
-  (mapc #'disable-theme custom-enabled-themes)
-  (load-theme theme t))
 
 (defun phye/set-bg-color (&optional light)
   "Set ivy-current-match color based on LIGHT."
