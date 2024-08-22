@@ -113,14 +113,15 @@
  "cc" 'clipetty-kill-ring-save
  "cd" 'copy-relative-dir-in-project
  "cf" 'copy-relative-path-in-project
- "dd" 'copy-current-dir-to-clipboard
+ "cD" 'copy-full-dir-to-clipboard
+ "cF" 'copy-full-path-to-clipboard
+ "cp" 'copy-project-root-to-clipboard
+ "cn" 'copy-file-name-to-clipboard
  "dg" 'deadgrep
- "dp" 'copy-project-root-to-clipboard
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
  "DD" 'counsel-etags-grep-current-directory
  "ee" 'eval-expression
- "fn" 'copy-current-filename-to-clipboard
  "ip" 'find-file-in-project
  "id" 'find-file-in-current-directory
  "im" 'counsel-imenu

@@ -88,11 +88,16 @@
   (interactive)
   (copy-variable-to-clipboard (ffip-project-root)))
 
-(defun copy-current-dir-to-clipboard ()
+(defun copy-full-dir-to-clipboard ()
   (interactive)
   (copy-variable-to-clipboard default-directory))
 
-(defun copy-current-filename-to-clipboard ()
+(defun copy-full-path-to-clipboard ()
+  (interactive)
+  (copy-variable-to-clipboard
+   (file-truename buffer-file-name)))
+
+(defun copy-file-name-to-clipboard ()
   (interactive)
   (copy-variable-to-clipboard
    (file-name-nondirectory buffer-file-name)))
