@@ -208,18 +208,20 @@
     (if (string-prefix-p "." prefix)
         (format "%s%s-notes.org" root prefix)
       (format "%s.%s-notes.org" root prefix))))
+
 (use-package org-remark
   :ensure t
   :defer t
+  :init
+  (org-remark-global-tracking-mode 1)
   :config
+  (evil-set-initial-state 'org-remark-mode 'normal)
   :custom
   (org-remark-notes-file-name #'phye/org-remark-notes-file-name)
   (org-remark-notes-display-buffer-action '((display-buffer-below-selected)
                                             (window-height 30)
                                             (preserve-size t))))
-(with-eval-after-load 'org-remark
-  (org-remark-global-tracking-mode 1))
-(evil-set-initial-state 'org-remark-mode 'normal)
+
 (defun phye/mark-and-open (begin end &optional id mode)
   "mark region and open notes"
   (interactive (org-remark-region-or-word))

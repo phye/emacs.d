@@ -71,6 +71,10 @@
  "co" 'org-open-at-point
  "ov" 'jao-toggle-selective-display
  "rc" 'recover-avy-lead-face
+ "rm" 'phye/mark-and-open
+ "rp" 'org-remark-prev
+ "rn" 'org-remark-next
+ "ro" 'phye/remark-view-and-select
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit)
 
@@ -90,10 +94,6 @@
  "pp" 'highlight-symbol-prev
  "rt" 'my-random-favorite-color-theme
  "rl" 'phye/random-favorite-light-themes
- "rp" 'org-remark-prev
- "rn" 'org-remark-next
- "rm" 'phye/mark-and-open
- "ro" 'phye/remark-view-and-select
  "hh" 'phye/random-all-themes
  "pc" 'popper-cycle
  "pl" 'popper-toggle-latest
