@@ -259,6 +259,10 @@
  :keymaps 'bookmark-minibuffer-read-name-map
  "C-w" 'evil-delete-backward-word)
 
+(general-define-key
+ :keymaps 'sh-mode-map
+ "<RET>" 'newline)
+
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()
   (evil-define-key 'normal evil-matchit-mode-map
