@@ -270,4 +270,9 @@
     "%" 'evil-jump-item
     "m" 'evilmi-jump-items))
 
+(general-define-key
+ :keymaps 'pdf-view-mode-map
+ "j" 'pdf-view-scroll-up-or-next-page
+ "k" 'pdf-view-scroll-down-or-previous-page)
+
 (provide 'phye-init-key)
