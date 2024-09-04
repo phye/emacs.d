@@ -136,4 +136,30 @@
   (set-fill-column 100))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
+(defun phye/get-project-name-of-active-window ()
+  "Return project name of active window."
+  (let* ((project-root (ffip-project-root))
+         (project-name
+          (directory-file-name
+           (file-relative-name
+            project-root
+            (file-name-parent-directory project-root))))
+         (len (length project-name))
+         (shortname
+          (if (>= len 10)
+              (substring project-name 0 10)
+            project-name)))
+    shortname))
+
+(defun phye/set-tmux-window-based-on-project (&optional window)
+  "Set tmux window name to current active project, WINDOW is not used yet."
+  (interactive)
+  (when (and (not (display-graphic-p))
+             (not (string-empty-p (getenv "TMUX"))))
+    (let ((name (phye/get-project-name-of-active-window)))
+      (shell-command (format "tmux rename-window %s" name) t))))
+
+(advice-add 'project-switch-project :after #'phye/set-tmux-window-based-on-project)
+(add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
+
 (provide 'phye-init-prog)
