@@ -107,11 +107,16 @@
    doom-one-light
    doom-opera-light
    kaolin-valley-light
+   kaolin-mono-light
    ef-deuteranopia-light
+   ef-duo-light
    ef-elea-light
+   ef-frost
+   ef-maris-light
    ef-melissa-light
    ef-trio-light
    ef-tritanopia-light
+   twilight-bright
    farmhouse-light
    whiteboard))
 
