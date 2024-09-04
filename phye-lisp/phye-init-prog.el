@@ -159,7 +159,6 @@
     (let ((name (phye/get-project-name-of-active-window)))
       (shell-command (format "tmux rename-window %s" name) t))))
 
-(advice-add 'project-switch-project :after #'phye/set-tmux-window-based-on-project)
 (add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
 
 (provide 'phye-init-prog)
