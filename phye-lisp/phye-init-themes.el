@@ -83,7 +83,6 @@
    occidental
    omtose-darker
    planet
-   professional
    purple-haze
    rebecca
    sanityinc-tomorrow-eighties
@@ -116,8 +115,9 @@
    ef-melissa-light
    ef-trio-light
    ef-tritanopia-light
-   twilight-bright
    farmhouse-light
+   professional
+   twilight-bright
    whiteboard))
 
 (defun phye/random-all-themes ()

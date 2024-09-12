@@ -12,44 +12,20 @@
 
 ;; {{ YAML
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
+(defun phye/yaml-mode-hook ()
+  "My yaml mode hook."
+  (setq-local outline-indent-default-offset 2)
+  (setq-local outline-indent-shift-width 2))
 (use-package yaml-mode
   :ensure t
+  :after outline-indent
   :defer t
   :mode (".yaml$")
   :hook
-  (yaml-mode . yaml-mode-outline-hook)
+  ;; (yaml-mode . yaml-mode-outline-hook)
+  (yaml-mode . outline-indent-minor-mode)
   (yaml-mode . display-line-numbers-mode)
-
-  :init
-  (defun yaml-outline-level ()
-    "Return the outline level based on the indentation, hardcoded at 2 spaces."
-    (s-count-matches "[ ]\\{2\\}" (match-string 0)))
-
-  (defun yaml-mode-outline-hook ()
-    (outline-minor-mode t)
-    (setq outline-regexp
-          (rx
-           (seq
-            bol
-            (group (zero-or-more "  ")
-                   (or (group
-                        (seq (or (seq "\"" (*? (not (in "\"" "\n"))) "\"")
-                                 (seq "'" (*? (not (in "'" "\n"))) "'")
-                                 (*? (not (in ":" "\n"))))
-                             ":"
-                             (?? (seq
-                                  (*? " ")
-                                  (or (seq "&" (one-or-more nonl))
-                                      (seq ">-")
-                                      (seq "|"))
-                                  eol))))
-                       (group (seq
-                               "- "
-                               (+ (not (in ":" "\n")))
-                               ":"
-                               (+ nonl)
-                               eol)))))))
-    (setq outline-level 'yaml-outline-level)))
+  (yaml-mode . phye/yaml-mode-hook))
 ;; }}
 
 ;; {{ protobuf

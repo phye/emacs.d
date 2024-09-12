@@ -29,6 +29,7 @@
         evil-terminal-cursor-changer
         markdown-toc
         org-fancy-priorities
+        symbol-overlay
         puni))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))

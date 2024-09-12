@@ -90,14 +90,23 @@
 
 ;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
 
+(use-package outline-indent
+  :ensure t)
+
+(use-package symbol-overlay
+  :ensure t)
+
 ;; python
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
 (defun phye/python-mode-hook ()
   "phye's python mode hook"
+  (setq-local outline-indent-default-offset 4)
+  (setq-local outline-indent-shift-width 4)
   (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
   (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
-  (pyvenv-activate "~/ws/pyvenv"))
+  (pyvenv-activate "~/ws/pyvenv")
+  (outline-indent-minor-mode))
 
 (add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 
@@ -133,7 +142,8 @@
   (subword-mode)
   (ws-butler-mode -1)                   ; disable auto white space removal
   (setq my-disable-wucuo t)
-  (set-fill-column 100))
+  (set-fill-column 100)
+  (symbol-overlay-mode))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
 
 (defun phye/get-project-name-of-active-window ()

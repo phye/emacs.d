@@ -65,7 +65,7 @@
  "hi" 'hide-ifdef-block
  "hI" 'show-ifdef-block
  "il" 'org-insert-link
- "ls" 'highlight-symbol
+ "ls" 'symbol-overlay-put
  "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
  "co" 'org-open-at-point
@@ -89,9 +89,9 @@
  "fs" 'select-frame-by-name
  "fo" 'find-file-other-frame
  "mc" 'phye/maximize-center-window
- "nn" 'highlight-symbol-next
+ "nn" 'symbol-overlay-jump-next
  "os" 'org-side-tree
- "pp" 'highlight-symbol-prev
+ "pp" 'symbol-overlay-jump-prev
  "rt" 'my-random-favorite-color-theme
  "rl" 'phye/random-favorite-light-themes
  "hh" 'phye/random-all-themes
