@@ -194,7 +194,7 @@
  "w" 'phye/wgrep-change-to-wgrep-mode)
 
 (general-define-key
- :keymaps 'deadgrep-mode-map
+ :keymaps '(deadgrep-mode-map pdf-outline-buffer-mode-map)
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
@@ -261,7 +261,7 @@
  "C-w" 'evil-delete-backward-word)
 
 (general-define-key
- :keymaps 'sh-mode-map
+ :keymaps '(sh-mode-map plantuml-mode-map)
  "<RET>" 'newline)
 
 ;; evil-matchit
@@ -274,5 +274,9 @@
  :keymaps 'pdf-view-mode-map
  "j" 'pdf-view-scroll-up-or-next-page
  "k" 'pdf-view-scroll-down-or-previous-page)
+
+(general-define-key
+ :keymaps 'Info-mode-map
+ "C-o" 'evil-execute-in-normal-state)
 
 (provide 'phye-init-key)
