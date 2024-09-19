@@ -94,7 +94,9 @@
   :ensure t)
 
 (use-package symbol-overlay
-  :ensure t)
+  :ensure t
+  :config
+  (setq symbol-overlay-inhibit-map t))
 
 ;; python
 (with-eval-after-load 'eldoc-mode

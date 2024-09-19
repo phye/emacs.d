@@ -30,7 +30,8 @@
         markdown-toc
         org-fancy-priorities
         symbol-overlay
-        puni))
+        puni
+        bpftrace-mode))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
 
