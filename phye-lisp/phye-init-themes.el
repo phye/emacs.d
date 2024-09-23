@@ -256,8 +256,8 @@
         (phye/load-theme previous-dark-theme))
       (phye/set-bg-color light)
       (when (display-graphic-p)
-        (shell-command "~/bin/scripts/toggle_dark_theme.sh")))))
-
+        (when (eq (selected-frame) (car (frame-list)))
+          (shell-command "~/bin/scripts/toggle_dark_theme.sh"))))))
 (run-at-time "14:00" 86400 #'(lambda () (phye/toggle-theme t)))
 (run-at-time "16:30" 86400 #'(lambda () (phye/toggle-theme nil)))
 

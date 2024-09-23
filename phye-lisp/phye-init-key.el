@@ -194,7 +194,12 @@
  "w" 'phye/wgrep-change-to-wgrep-mode)
 
 (general-define-key
- :keymaps '(deadgrep-mode-map pdf-outline-buffer-mode-map)
+ :keymaps '(
+            deadgrep-mode-map
+            pdf-outline-buffer-mode-map
+            xref--xref-buffer-mode-map
+            pdf-view-mode-map
+            pdf-occur-buffer-mode-map)
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
@@ -226,11 +231,6 @@
  "p" 'xref-prev-group
  "j" 'xref-next-line
  "k" 'xref-prev-line)
-
-(general-define-key
- :keymaps 'xref--xref-buffer-mode-map
- :prefix ";"
- ";" 'ace-pinyin-jump-char-2)
 
 (general-define-key
  :keymaps 'dired-mode-map
@@ -271,12 +271,13 @@
     "m" 'evilmi-jump-items))
 
 (general-define-key
- :keymaps 'pdf-view-mode-map
- "j" 'pdf-view-scroll-up-or-next-page
- "k" 'pdf-view-scroll-down-or-previous-page)
-
-(general-define-key
  :keymaps 'Info-mode-map
  "C-o" 'evil-execute-in-normal-state)
+
+(general-define-key
+ :keymaps 'pdf-view-mode-map
+ "C-s" 'pdf-occur
+ "C-x o" 'ace-window
+ ",xo" 'ace-window)
 
 (provide 'phye-init-key)
