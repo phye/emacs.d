@@ -278,6 +278,9 @@
  :keymaps 'pdf-view-mode-map
  "C-s" 'pdf-occur
  "C-x o" 'ace-window
- ",xo" 'ace-window)
+ ",xo" 'ace-window
+ ",rR" 'phye/open-recent-file-in-other-frame
+ "n" 'phye/pdf-goto-next-title-page
+ "p" 'phye/pdf-goto-prev-title-page)
 
 (provide 'phye-init-key)
