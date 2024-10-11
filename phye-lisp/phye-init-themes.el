@@ -231,7 +231,7 @@
   :ensure t
   :defer t)
 
-(defvar previous-dark-theme 'cyberpunk "Previous dark theme before toggle.")
+(defvar previous-dark-theme 'kaolin-galaxy "Previous dark theme before toggle.")
 
 (defun phye/set-bg-color (&optional light)
   "Set ivy-current-match color based on LIGHT."
@@ -262,8 +262,5 @@
                    (if light "false" "true"))))))))
 (run-at-time "09:30" 86400 #'(lambda () (phye/toggle-theme t)))
 (run-at-time "12:00" 86400 #'(lambda () (phye/toggle-theme nil)))
-
-(let ((light t))
-  (shell-command "~/bin/scripts/toggle_dark_theme.sh" (if light "false" "true")))
 
 (provide 'phye-init-themes)
