@@ -20,7 +20,8 @@
   (pdf-view-use-scaling t)
   (pdf-annot-activate-created-annotations t)
   (pdf-view-display-size 'fit-page)
-  (pdf-view-resize-factor 1.1))
+  (pdf-view-resize-factor 1.1)
+  (pdf-view-midnight-colors '("White" . "DarkSlateGray")))
 ;; }}
 
 (defun phye/pdf--goto-page-by-cond (condfunc)

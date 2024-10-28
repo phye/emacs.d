@@ -247,7 +247,7 @@
   "Toggle light theme if LIGHT is t, restore dark theme otherwise."
   (interactive)
   (let ((loc (getenv "LOCATION")))
-    (message "Toggle Theme at %s" loc)
+    (message "Toggle Theme to light=%s at %s" light loc)
     (when (equal loc "office")
       (if light
           (progn
@@ -256,11 +256,11 @@
         (phye/load-theme previous-dark-theme))
       (phye/set-bg-color light)
       (when (display-graphic-p)
-        (when (eq (selected-frame) (car (frame-list)))
-          (shell-command
-           (format "~/bin/scripts/toggle_dark_theme.sh %s"
-                   (if light "false" "true"))))))))
-(run-at-time "09:30" 86400 #'(lambda () (phye/toggle-theme t)))
-(run-at-time "12:00" 86400 #'(lambda () (phye/toggle-theme nil)))
+        (shell-command
+         (format "~/bin/scripts/toggle_dark_theme.sh %s"
+                 (if light "false" "true")))))))
+
+(run-at-time "09:30" 86400 #'phye/toggle-theme t)
+(run-at-time "12:00" 86400 #'phye/toggle-theme nil)
 
 (provide 'phye-init-themes)
