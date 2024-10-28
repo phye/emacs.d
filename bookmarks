@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("vk8s.mainentry"
+(("ebooks.gpu"
+ (filename . "~/Documents/OneDrive/ebooks/gpu/")
+ (front-context-string . "cuda.programming")
+ (rear-context-string . "01 Oct 21 11:05 ")
+ (position . 207)
+ (last-modified 26389 50484 253740 0))
+("vk8s.mainentry"
  (filename . "~/ws/ti-cloud/infra/vk8s/cmd/virtual-kubelet/main.go")
  (front-context-string . "Command(ctx, \"se")
  (rear-context-string . "d(s), server.New")
@@ -280,9 +286,9 @@
     (last-modified 25940 11249 231524 0))
 #1=(#("org-capture-last-stored" 0 23
       (bmkp-full-record #1#))
-    (filename . "~/ws/gtd/roam/20240801103651-kubelet_runtime.org")
-    (front-context-string)
-    (rear-context-string . "kubelet.runtime\n")
-    (position . 93)
-    (last-modified 26282 62661 336990 811000))
+    (filename . "~/ws/gtd/roam/20241023132750-snippets.org")
+    (front-context-string . "\n\n* bpftrace \n#+")
+    (rear-context-string . "+title: snippets")
+    (position . 85)
+    (last-modified 26392 35185 571 0))
 )
