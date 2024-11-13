@@ -103,6 +103,7 @@
 ;; output related
 (setq org-export-with-sub-superscripts nil)
 (setq org-export-with-properties t)
+(setq org-export-with-priority t)
 
 ;; output/latex
 (with-eval-after-load 'ox-latex
@@ -410,17 +411,20 @@
 (add-hook 'before-save-hook #'phye/org-before-save-hook)
 
 ;; TODO(phye): move this priority logic to md-after-export-hook
-(defun phye/replace-priority ()
-  "Replace #[A|B|C] priority with P[0|1|2]."
-  (interactive)
-  (replace-regexp-in-region "#A" "P0" (point-min) (point-max))
-  (replace-regexp-in-region "#B" "P1" (point-min) (point-max))
-  (replace-regexp-in-region "#C" "P2" (point-min) (point-max)))
+(defun phye/replace-priority-in-string (str)
+  "Replace #[A|B|C] priority with P[0|1|2] in STR."
+  (replace-regexp-in-string
+   "#A" "P0"
+   (replace-regexp-in-string
+    "#B" "P1"
+    (replace-regexp-in-string
+     "#C" "P2" str))))
 
 (defun phye/md-after-export-hook (text backend info)
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
   (when (org-export-derived-backend-p backend 'md)
-    (phye/cleanup-white-spaces-in-string text)))
+    (phye/replace-priority-in-string
+     (phye/cleanup-white-spaces-in-string text))))
 (add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
 (provide 'phye-init-org)
