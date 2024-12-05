@@ -407,7 +407,7 @@ If NO-REFRESH is nil, `package-refresh-contents' is called."
     atom-dark-theme
     atom-one-dark-theme
     badwolf-theme
-    base16-theme
+    ;; base16-theme
     birds-of-paradise-plus-theme
     bubbleberry-theme
     busybee-theme
