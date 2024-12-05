@@ -60,6 +60,7 @@
    ef-elea-dark
    ef-dark
    ef-autumn
+   ef-owl
    gotham
    grandshell
    gruvbox-dark-soft
@@ -78,6 +79,7 @@
    manoj-dark
    madhat2r
    modus-vivendi
+   modus-vivendi-tritanopia
    nord
    noctilux
    occidental
@@ -93,12 +95,15 @@
    solarized-wombat-dark
    spacemacs-dark
    srcery
+   smyx
    tango-dark
-   wombat))
+   wombat
+   zerodark))
 
 (customize-set-variable
  'my-favorite-light-color-themes
  '(apropospriate-light
+   doom-bluloco-light
    doom-feather-light
    doom-homage-white
    doom-nord-light
@@ -107,6 +112,7 @@
    doom-opera-light
    kaolin-valley-light
    kaolin-mono-light
+   ef-arbutus
    ef-deuteranopia-light
    ef-duo-light
    ef-elea-light
