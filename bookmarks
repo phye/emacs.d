@@ -1,8 +1,14 @@
-;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8; mode: lisp-data -*-
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: no-conversion; mode: lisp-data -*-
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("ebooks.gpu"
+(("dl"
+ (filename . "~/Downloads/")
+ (front-context-string . "$RECYCLE.BIN\n  d")
+ (rear-context-string . "96 Jul 14  2023 ")
+ (position . 79)
+ (last-modified 26417 44877 869574 0))
+("ebooks.gpu"
  (filename . "~/Documents/OneDrive/ebooks/gpu/")
  (front-context-string . "cuda.programming")
  (rear-context-string . "01 Oct 21 11:05 ")
