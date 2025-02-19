@@ -22,7 +22,18 @@
   :defer t
   :custom
   (markdown-toc-header-toc-title "")
-  (markdown-toc-indentation-space 2))
+  (markdown-toc-indentation-space 2)
+  (markdown-toc-user-toc-structure-manipulation-fn #'cdr))
+
+(defun cc/markdown-to-org-region (start end)
+  "Convert Markdown formatted text in region (START, END) to Org.
+
+This command requires that pandoc (man page `pandoc(1)') be
+installed."
+  (interactive "r")
+  (shell-command-on-region
+   start end
+   "pandoc -f markdown -t org --wrap=preserve" t t))
 
 ;; {{ info mode
 (defun phye/info-mode-hook ()
