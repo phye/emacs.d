@@ -14,19 +14,28 @@
 
 (setq auto-save-visited-interval 2)
 
+(defun my-auto-save-visited-predicate ()
+  "Predicate to control which buffers are auto-saved."
+  (and (buffer-file-name)
+       (not (file-remote-p (buffer-file-name)))
+       (not (my-file-too-big-p (buffer-file-name)))
+       (file-writable-p (buffer-file-name))
+       (not (memq major-mode my-auto-save-exclude-major-mode-list))))
+
 (defun my-auto-save-visited-mode-setup ()
   "Auto save setup."
   ;; turn off `auto-save-visited-mode' in certain scenarios
-  (message "my-auto-save-visited-mode-setup called")
-  (when (or (not (buffer-file-name))
-            (file-remote-p (buffer-file-name))
-            (my-file-too-big-p (buffer-file-name))
-            (memq major-mode my-auto-save-exclude-major-mode-list))
+  (when (my-auto-save-visited-predicate)
     (setq-local auto-save-visited-mode nil)))
+
+(cond
+ (*emacs29*
+  (setq auto-save-visited-predicate #'my-auto-save-visited-predicate))
+ (t
+  (defvar auto-save-visited-predicate)
+  (add-hook 'auto-save-visited-mode-hook #'my-auto-save-visited-mode-setup)))
+
 (my-run-with-idle-timer 2 #'auto-save-visited-mode)
-(add-hook 'auto-save-visited-mode-hook #'my-auto-save-visited-mode-setup)
-;; (add-hook 'text-mode-hook #'my-auto-save-visited-mode-setup)
-;; (add-hook 'prog-mode-hook #'my-auto-save-visited-mode-setup)
 ;; }}
 
 ;; {{ auto-yasnippet
@@ -1126,7 +1135,8 @@ It's also controlled by `my-lazy-before-save-timer'."
 
 (with-eval-after-load 'yaml-mode
   (setq yaml-imenu-generic-expression
-        '((nil  "^\\(:?[0-9a-zA-Z_-]+\\):" 1))))
+        '((nil  "^\\(:?[0-9a-zA-Z_-]+\\):" 1)
+          (nil  "^ *\\([A-Z][0-9A-Z_-]+\\):" 1))))
 
 ;; {{ calendar setup
 (with-eval-after-load 'calendar
@@ -1255,6 +1265,18 @@ MATCH is optional tag match."
       (kill-new selected)
       (message "\"%s\" => kill-ring" selected))))
 
+(defun my-ssh-agent-setup ()
+  "Help emacsclient to find ssh-agent setup."
+  (when (and (not (getenv "SSH_AGENT_PID"))
+             (file-exists-p "~/.ssh/environment"))
+    (let* ((str (with-temp-buffer
+                  (insert-file-contents "~/.ssh/environment")
+                  (buffer-string))))
+      (when (string-match "SSH_AGENT_PID=\\([^ ;]+\\);" str)
+        (setenv "SSH_AGENT_PID" (match-string 1 str)))
+      (when (string-match "SSH_AUTH_SOCK=\\([^ ;]+\\);" str)
+        (setenv "SSH_AUTH_SOCK" (match-string 1 str))))))
+
 (defun my-generic-prog-mode-hook-setup ()
   "Generic programming mode set up."
   (when (buffer-too-big-p)
@@ -1316,6 +1338,15 @@ MATCH is optional tag match."
     ;; show trailing spaces in a programming mod
     (setq show-trailing-whitespace t)))
 (add-hook 'prog-mode-hook 'my-generic-prog-mode-hook-setup)
+
+(with-eval-after-load 'ellama
+  ;; (setq ellama-language "Chinese") ; for translation
+  (require 'llm-ollama)
+  (setq ellama-provider
+        (make-llm-ollama
+         :chat-model "deepseek-r1:8b" :embedding-model "deepseek-r1:8b"))
+  (setq ellama-instant-display-action-function #'display-buffer-at-bottom))
+(add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message)
 
 (provide 'init-misc)
 ;;; init-misc.el ends here
