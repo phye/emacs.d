@@ -88,10 +88,18 @@
   :defer t
   :after (tree-sitter))
 
-;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
+(use-package ts-fold
+  :load-path "~/.emacs.d/site-lisp/ts-fold"
+  :custom
+  (ts-fold-line-count-show t))
 
-(use-package outline-indent
-  :ensure t)
+(with-eval-after-load 'ts-fold
+  (push '(block_sequence_item . ts-fold-range-seq) (alist-get 'yaml-mode ts-fold-range-alist)))
+
+(use-package ts-fold-indicators
+  :load-path "~/.emacs.d/site-lisp/ts-fold/")
+
+;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
 
 (use-package symbol-overlay
   :ensure t
@@ -101,6 +109,7 @@
 ;; python
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
+
 (defun phye/python-mode-hook ()
   "phye's python mode hook"
   (setq-local outline-indent-default-offset 4)
@@ -108,7 +117,7 @@
   (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
   (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
   (pyvenv-activate "~/ws/pyvenv")
-  (outline-indent-minor-mode))
+  (ts-fold-mode t))
 
 (add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 

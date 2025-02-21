@@ -14,16 +14,13 @@
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
 (defun phye/yaml-mode-hook ()
   "My yaml mode hook."
-  (setq-local outline-indent-default-offset 2)
-  (setq-local outline-indent-shift-width 2))
+  (ts-fold-mode t))
+
 (use-package yaml-mode
   :ensure t
-  :after outline-indent
   :defer t
   :mode (".yaml$")
   :hook
-  ;; (yaml-mode . yaml-mode-outline-hook)
-  (yaml-mode . outline-indent-minor-mode)
   (yaml-mode . display-line-numbers-mode)
   (yaml-mode . phye/yaml-mode-hook))
 ;; }}
