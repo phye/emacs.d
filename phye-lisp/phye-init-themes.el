@@ -112,6 +112,7 @@
    doom-opera-light
    kaolin-valley-light
    kaolin-mono-light
+   kaolin-breeze
    ef-arbutus
    ef-deuteranopia-light
    ef-duo-light
@@ -123,6 +124,7 @@
    ef-tritanopia-light
    farmhouse-light
    professional
+   spacemacs-light
    twilight-bright
    whiteboard))
 

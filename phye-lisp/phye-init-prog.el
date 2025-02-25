@@ -81,7 +81,9 @@
 
 (use-package tree-sitter
   :ensure t
-  :defer t)
+  :defer t
+  :config
+  (setq treesit-font-lock-level 4))
 
 (use-package tree-sitter-langs
   :ensure t
