@@ -198,6 +198,7 @@
  "p" 'deadgrep-backward-filename
  "j" 'next-line
  "k" 'previous-line
+ "d" 'deadgrep-directory
  "D" 'phye/deadgrep-directory
  "RET" 'deadgrep-visit-result-other-window
  "C-x C-q" 'phye/wgrep-change-to-wgrep-mode
