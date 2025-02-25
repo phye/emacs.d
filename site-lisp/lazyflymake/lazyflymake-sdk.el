@@ -7,6 +7,7 @@
 
 (require 'cl-lib)
 (require 'flymake)
+(require 'flymake-proc nil 'noerror)
 
 (defcustom lazyflymake-debug nil
   "Output debug information when it's t."
