@@ -428,4 +428,10 @@
      (phye/cleanup-white-spaces-in-string text))))
 (add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
+;; Persistent notes (like persistent-scratch, but built-in)
+(customize-set-variable 'remember-data-file "~/ws/gtd/remember.org")
+(customize-set-variable 'remember-notes-initial-major-mode 'org-mode)
+(customize-set-variable 'remember-notes-auto-save-visited-file-name t)
+(customize-set-variable 'remember-in-new-frame t)
+
 (provide 'phye-init-org)
