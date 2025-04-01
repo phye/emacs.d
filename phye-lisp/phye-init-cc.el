@@ -1,12 +1,13 @@
 ;; {{ c
 (defun phye/cc-mode-hook ()
-  (setq c-basic-offset 4)
+  (setq c-basic-offset 2)
   (set-fill-column 80)
   (c-set-offset 'inlambda 0)
   (hide-ifdef-mode)
   (hs-minor-mode)
   (annotate-mode)
-  (tree-sitter-hl-mode)
+  (unless (eq major-mode 'protobuf-mode)
+    (tree-sitter-hl-mode))
   (rainbow-mode -1)
   (my-ensure 'clang-format))
 (local-require 'google-c-style)
@@ -20,6 +21,7 @@
 (my-run-with-idle-timer
  5
  (lambda ()
+   (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
    (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
    (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
 ;; }}
@@ -35,14 +37,14 @@
   :defer t
   :custom
   (gofmt-command "goimports"))
+
 (defun phye/go-mode-hook ()
-    "phye's golang hook"
+  "phye's golang hook"
   (interactive)
   (auto-fill-mode -1)
   (tree-sitter-hl-mode)
   (setq compile-command "go test")
-  ; (annotate-mode)
-  )
+  (ts-fold-mode))
 (with-eval-after-load 'go-mode
   (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
 ;; }}

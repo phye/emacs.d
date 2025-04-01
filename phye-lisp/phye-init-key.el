@@ -187,6 +187,13 @@
  "fb" 'gofmt)
 
 (general-define-key
+ :states 'normal
+ :keymaps 'completion-preview-active-mode-map
+ "M-n" 'completion-preview-next-candidate
+ "M-p" 'completion-preview-prev-candidate
+ "M-j" 'completion-preview-complete)
+
+(general-define-key
  :keymaps '(image-mode-map doc-view-mode-map)
  "K" #'image-kill-buffer
  "q" #'quit-window

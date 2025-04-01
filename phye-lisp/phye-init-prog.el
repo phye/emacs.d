@@ -96,7 +96,9 @@
   (ts-fold-line-count-show t))
 
 (with-eval-after-load 'ts-fold
-  (push '(block_sequence_item . ts-fold-range-seq) (alist-get 'yaml-mode ts-fold-range-alist)))
+  (push '(block_sequence_item . ts-fold-range-seq) (alist-get 'yaml-mode ts-fold-range-alist))
+  (push '(try_statement . ts-fold-range-seq) (alist-get 'python-mode ts-fold-range-alist))
+  (push '(if_statement . ts-fold-range-seq) (alist-get 'python-mode ts-fold-range-alist)))
 
 (use-package ts-fold-indicators
   :load-path "~/.emacs.d/site-lisp/ts-fold/")
