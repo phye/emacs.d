@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("dl"
+(("ng.script"
+ (filename . "~/ws/ti-cloud/infra/cluster-autoscaler/pkg/tencentcloud/controllers/util.go")
+ (front-context-string . "MountLocalDisk =")
+ (rear-context-string . "Status\n}\n\nconst ")
+ (position . 2370)
+ (last-modified 26556 10798 312090 998000))
+("dl"
  (filename . "~/Downloads/")
  (front-context-string . "$RECYCLE.BIN\n  d")
  (rear-context-string . "96 Jul 14  2023 ")
@@ -286,7 +292,7 @@
 #1=(#("org-refile-last-stored" 0 22
       (bmkp-full-record #1#))
     (filename . "~/ws/gtd/work/draft.org")
-    (front-context-string . "*** DONE [#A] 消息")
+    (front-context-string . "*** DONE [#A] \346\266\210\346\201\257")
     (rear-context-string . "y_sol_3.png]]\n\n\n")
     (position . 25794)
     (last-modified 25940 11249 231524 0))
