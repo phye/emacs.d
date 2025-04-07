@@ -121,7 +121,8 @@
   (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
   (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
   (pyvenv-activate "~/ws/pyvenv")
-  (ts-fold-mode t))
+  (ts-fold-mode t)
+  (eglot-ensure))
 
 (add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 
@@ -130,7 +131,7 @@
   (interactive)
   (cl-case major-mode
     (go-mode (xref-find-definitions (symbol-at-point)))
-    (python-mode (elpy-goto-definition))
+    (python-mode (xref-find-definitions (symbol-at-point)))
     (org-mode (org-open-at-point))
     (t (counsel-etags-find-tag-at-point))))
 

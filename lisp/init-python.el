@@ -8,7 +8,7 @@
               ;; embed python code in org file
               (string= (file-name-extension buffer-file-name) "org"))
     (setq elpy-shell-command-prefix-key "C-c C-f")
-    (elpy-enable)
+    ;; (elpy-enable)
     ;; If you don't like any hint or error report from elpy,
     ;; set `elpy-disable-backend-error-display' to t.
     (setq elpy-disable-backend-error-display nil))
@@ -46,7 +46,8 @@
       (my-activate-python-venv venv-dir)
       (elpy-disable)
       (elpy-shell-kill-all)
-      (elpy-enable))))
+      ;; (elpy-enable)
+      )))
 
 (provide 'init-python)
 ;;; init-python.el ends here
