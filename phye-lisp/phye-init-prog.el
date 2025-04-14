@@ -118,9 +118,9 @@
   "phye's python mode hook"
   (setq-local outline-indent-default-offset 4)
   (setq-local outline-indent-shift-width 4)
-  (customize-set-variable 'elpy-rpc-python-command "~/ws/pyvenv/bin/python")
-  (customize-set-variable 'python-interpreter "~/ws/pyvenv/bin/python")
-  (pyvenv-activate "~/ws/pyvenv")
+  ;; pip install python-lsp-server
+  (customize-set-variable 'python-interpreter "~/.pyvenv/bin/python")
+  (pyvenv-activate "~/.pyvenv")
   (ts-fold-mode t)
   (eglot-ensure))
 
