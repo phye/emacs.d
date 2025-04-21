@@ -110,17 +110,25 @@
   :config
   (setq symbol-overlay-inhibit-map t))
 
+(setq-default eglot-workspace-configuration
+              '(:pylsp
+                (;; :configurationSources ["flake8"]
+                 :plugins (
+                           :pycodestyle (:ignore ["W503" "E203"] :maxLineLength 100)
+                           :autopep8 (:enabled :json-false)    ;; replaced by black
+                           :black (:enabled t :cache-config t)
+                           :isort (:enabled t)))))
+
 ;; python
 (with-eval-after-load 'eldoc-mode
   (setq eldoc-idle-delay 5))
 
 (defun phye/python-mode-hook ()
   "phye's python mode hook"
-  (setq-local outline-indent-default-offset 4)
-  (setq-local outline-indent-shift-width 4)
   ;; pip install python-lsp-server
   (customize-set-variable 'python-interpreter "~/.pyvenv/bin/python")
   (pyvenv-activate "~/.pyvenv")
+  (setq tab-width 4)
   (ts-fold-mode t)
   (eglot-ensure))
 
@@ -134,6 +142,14 @@
     (python-mode (xref-find-definitions (symbol-at-point)))
     (org-mode (org-open-at-point))
     (t (counsel-etags-find-tag-at-point))))
+
+(defun phye/format-buffer ()
+  "My format buffer wrapper."
+  (interactive)
+  (cl-case major-mode
+    (go-mode (gofmt))
+    (python-mode (eglot-format-buffer))
+    (t (message "not supported yet"))))
 
 (defun phye/go-back-to-caller ()
   "My mode-aware go back to caller."

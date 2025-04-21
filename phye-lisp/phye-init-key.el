@@ -47,7 +47,7 @@
  "bb" 'phye/switch-to-previous-buffer-in-window
  "bp" 'previous-buffer
  "bn" 'next-buffer
- "fb" 'clang-format-buffer
+ "fb" 'phye/format-buffer
  "gr" 'xref-find-references
  "gb" 'phye/go-back-to-caller
  "gt" 'phye/goto-definition-at-point
@@ -180,12 +180,6 @@
 (my-run-with-idle-timer 5 'phye/restore-keybindings)
 
 ;; {{ mode specific map
-(general-define-key
- :states 'normal
- :keymaps 'go-mode-map
- :prefix ","
- "fb" 'gofmt)
-
 (general-define-key
  :states 'normal
  :keymaps 'completion-preview-active-mode-map
