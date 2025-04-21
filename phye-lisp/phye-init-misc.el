@@ -26,6 +26,8 @@
 
 (customize-set-variable 'calendar-latitude +31.2)
 (customize-set-variable 'calendar-longitude +121.5)
+(customize-set-variable 'ring-bell-function #'ignore)
+
 ;; }}
 
 (provide 'phye-init-misc)

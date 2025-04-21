@@ -381,6 +381,7 @@
   ;; workaround org-gpg hang issue
   (fset 'epg-wait-for-status 'ignore)
   (setq org-list-allow-alphabetical t)
+  (setq-default tab-width 8)
   (my-run-with-idle-timer
    1
    (lambda ()
