@@ -112,10 +112,8 @@
 
 (setq-default eglot-workspace-configuration
               '(:pylsp
-                (;; :configurationSources ["flake8"]
-                 :plugins (
-                           :pycodestyle (:ignore ["W503" "E203"] :maxLineLength 100)
-                           :autopep8 (:enabled :json-false)    ;; replaced by black
+                (:plugins (
+                           :pycodestyle (:enabled t :ignore ["W503" "E203"] :maxLineLength 100)
                            :black (:enabled t :cache-config t)
                            :isort (:enabled t)))))
 
