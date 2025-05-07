@@ -35,7 +35,8 @@
  :prefix "C-;"
  ";" 'ace-pinyin-jump-char-2
  "ff" 'my-toggle-full-window
- "<SPC>" 'insert-zero-width-space)
+ "<SPC>" 'insert-zero-width-space
+ "<TAB>" 'insert-tab)
 
 (general-define-key
  :states '(normal visual)

@@ -63,6 +63,7 @@
 (setq org-agenda-files
       (quote
        ("~/ws/gtd/gtd.org"
+        "~/ws/gtd/Journelly.org"
         "~/ws/gtd/quick_notes.org"
         "~/ws/gtd/life/plan_life.org"
         "~/ws/gtd/life/birthday.org"

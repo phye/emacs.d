@@ -152,6 +152,7 @@
      ("DEBUG" . "blue")
      ("HOLD" . "#d0bf8f")
      ("TODO" . "#cc9393")
+     ("TBD" . "#cc9494")
      ("NEXT" . "#dca3a3")
      ("THEM" . "#dc8cc3")
      ("PROG" . "#7cb8bb")

@@ -103,8 +103,13 @@
    (file-name-nondirectory buffer-file-name)))
 
 (defun insert-zero-width-space ()
-  "Insert zero width space before and after OrgMode mark."
+  "Insert zero width space."
   (interactive)
   (insert-char (char-from-name "ZERO WIDTH SPACE")))
+
+(defun insert-tab ()
+  "Insert tab."
+  (interactive)
+  (insert-char ?\t))
 
 (provide 'phye-init-utils)
