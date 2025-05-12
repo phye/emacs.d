@@ -374,7 +374,7 @@
 ;; settings after org loaded
 (with-eval-after-load 'org
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "SCHEDULED(s/@)" "DOING(i)" "|" "ONHOLD(h@)" "DONE(d)" "CANCELLED(c@)") ;; general todo items
+        '((sequence "TODO(t)" "SCHEDULED(s/@)" "DOING(i)" "|" "DONE(d)" "ONHOLD(h@)" "CANCELLED(c@)") ;; general todo items
           (sequence "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|" "RELEASED(R@)") ;; dev todo items
           (type "APPT(p)" "REMINDER(m!)" "|" "DONE(d)"))) ;; misc daily items
   (setq org-tags-column -80)
@@ -383,6 +383,13 @@
   (fset 'epg-wait-for-status 'ignore)
   (setq org-list-allow-alphabetical t)
   (setq-default tab-width 8)
+  (setq org-icalendar-include-todo t)
+  (setq org-icalendar-use-scheduled
+        '(event-if-todo event-if-not-todo todo-start))
+  (setq org-icalendar-use-deadline
+        '(event-if-todo event-if-not-todo todo-due))
+  (setq org-icalendar-alarm-time 60)
+  (setq org-icalendar-ttl "PT1H")
   (my-run-with-idle-timer
    1
    (lambda ()
