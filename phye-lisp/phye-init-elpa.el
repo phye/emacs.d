@@ -30,6 +30,7 @@
         markdown-toc
         org-fancy-priorities
         symbol-overlay
+        doric-themes
         puni
         bpftrace-mode))
 (setq melpa-include-packages

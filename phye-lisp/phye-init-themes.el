@@ -55,6 +55,8 @@
    doom-vibrant
    doom-xcode
    doom-zenburn
+   doric-dark
+   doric-fire
    dorsey
    ef-bio
    ef-elea-dark
@@ -110,6 +112,11 @@
    doom-oksolar-light
    doom-one-light
    doom-opera-light
+   doric-cherry
+   doric-earth
+   doric-light
+   doric-wind
+   doric-marble
    kaolin-valley-light
    kaolin-mono-light
    kaolin-breeze
@@ -237,6 +244,10 @@
   (hl-global-highlight-on/off))
 
 (use-package ef-themes
+  :ensure t
+  :defer t)
+
+(use-package doric-themes
   :ensure t
   :defer t)
 

@@ -86,7 +86,8 @@
   (setq treesit-font-lock-level 4))
 
 (use-package tree-sitter-langs
-  :ensure t
+  :vc (:url "https://github.com/emacs-tree-sitter/tree-sitter-langs.git"
+            :branch "0.12.279")
   :defer t
   :after (tree-sitter))
 
