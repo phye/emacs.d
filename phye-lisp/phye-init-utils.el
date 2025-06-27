@@ -102,6 +102,17 @@
   (copy-variable-to-clipboard
    (file-name-nondirectory buffer-file-name)))
 
+(defun get-last-dirname (path)
+  "Get the last directory name from the given PATH."
+  (file-name-nondirectory
+   (directory-file-name
+    (file-name-directory path))))
+
+(defun copy-project-name-to-clipboard ()
+  (interactive)
+  (copy-variable-to-clipboard
+   (get-last-dirname (ffip-project-root))))
+
 (defun insert-zero-width-space ()
   "Insert zero width space."
   (interactive)

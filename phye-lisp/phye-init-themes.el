@@ -36,6 +36,7 @@
    doom-horizon
    doom-ir-black
    doom-laserwave
+   doom-lantern
    doom-miramare
    doom-molokai
    doom-monokai-classic

@@ -126,7 +126,8 @@
  "cf" 'copy-relative-path-in-project
  "cD" 'copy-full-dir-to-clipboard
  "cF" 'copy-full-path-to-clipboard
- "cp" 'copy-project-root-to-clipboard
+ "cp" 'copy-project-name-to-clipboard
+ "cP" 'copy-project-root-to-clipboard
  "cn" 'copy-file-name-to-clipboard
  "dg" 'deadgrep
  "dc" 'phye/deadgrep-current-directory
@@ -170,6 +171,11 @@
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
+(general-define-key
+ :states '(normal)
+ :keymaps 'override
+ "tt" 'ace-pinyin-jump-char-2)
+
 ;; }}
 
 (defun phye/restore-keybindings ()
@@ -208,6 +214,7 @@
 
 (general-define-key
  :keymaps '(
+            neotree-mode-map
             deadgrep-mode-map
             pdf-outline-buffer-mode-map
             xref--xref-buffer-mode-map

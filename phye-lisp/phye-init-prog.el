@@ -149,7 +149,8 @@
   (cl-case major-mode
     (go-mode (gofmt))
     (python-mode (eglot-format-buffer))
-    (t (message "not supported yet"))))
+    (t (save-excursion
+        (evil-indent (point-min) (point-max))))))
 
 (defun phye/go-back-to-caller ()
   "My mode-aware go back to caller."
