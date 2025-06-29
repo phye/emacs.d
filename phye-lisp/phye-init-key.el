@@ -49,6 +49,9 @@
  "bp" 'previous-buffer
  "bm" 'phye/ace-move-buffer-to-window
  "bn" 'next-buffer
+ "ca" 'annotate-annotate
+ "c[" 'annotate-goto-previous-annotation
+ "c]" 'annotate-goto-next-annotation
  "fb" 'phye/format-buffer
  "gr" 'xref-find-references
  "gb" 'phye/go-back-to-caller
