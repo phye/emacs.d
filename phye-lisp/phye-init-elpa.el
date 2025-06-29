@@ -8,6 +8,7 @@
         dockerfile-mode
         emacsql
         helpful
+        nerd-icons
         org-journal
         org-present
         org-roam

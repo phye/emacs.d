@@ -94,6 +94,10 @@
  :states '(normal visual)
  :prefix "SPC"
  "wd" 'dedicate-current-window
+ "jj" 'evil-scroll-down
+ "kk" 'evil-scroll-up
+ "jh" 'phye/scroll-window-left
+ "jl" 'phye/scroll-window-right
  "fD" 'delete-frame
  "fn" 'phye/select-next-frame
  "fp" 'phye/select-previous-frame
@@ -209,7 +213,7 @@
  "k" 'previous-line
  "d" 'deadgrep-directory
  "D" 'phye/deadgrep-directory
- "RET" 'deadgrep-visit-result-other-window
+ "RET" 'deadgrep-visit-result
  "C-x C-q" 'phye/wgrep-change-to-wgrep-mode
  "w" 'phye/wgrep-change-to-wgrep-mode)
 
@@ -251,7 +255,8 @@
  "n" 'xref-next-group
  "p" 'xref-prev-group
  "j" 'xref-next-line
- "k" 'xref-prev-line)
+ "k" 'xref-prev-line
+ "RET" 'phye/xref-got-xref-and-quit)
 
 (general-define-key
  :keymaps 'dired-mode-map

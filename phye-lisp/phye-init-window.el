@@ -100,11 +100,11 @@
   (interactive)
   (cl-dolist (buf (buffer-list (selected-frame)))
     (when (and
-         (not (eq buf (current-buffer)))
-         (not (minibufferp buf)))
-        (message "Kill buffer %s" (buffer-name buf))
-        (kill-buffer buf)
-        (cl-return buf))))
+           (not (eq buf (current-buffer)))
+           (not (minibufferp buf)))
+      (message "Kill buffer %s" (buffer-name buf))
+      (kill-buffer buf)
+      (cl-return buf))))
 
 (defun phye/vsplit-3-and-even ()
   "Vertically split windows into 3 part."
@@ -112,6 +112,26 @@
   (evil-window-vsplit)
   (evil-window-vsplit)
   (balance-windows))
+
+(defun phye/scroll-window-left (&optional lines)
+  "Scroll window left"
+  (interactive "P")
+  (with-selected-window (window-left (selected-window))
+    (funcall (or (command-remapping #'scroll-up-command)
+                 #'scroll-up-command)
+             lines)))
+
+(defun phye/scroll-window-right (&optional lines)
+  "Scroll window left"
+  (interactive "P")
+  (with-selected-window (window-right (selected-window))
+    (funcall (or (command-remapping #'scroll-up-command)
+                 #'scroll-up-command)
+             lines)))
+
+(defun phye/xref-got-xref-and-quit ()
+  (interactive)
+  (xref-goto-xref t))
 
 (defun phye/ace-move-buffer-to-window ()
   "Move buffer to another window."
