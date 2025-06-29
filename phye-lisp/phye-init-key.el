@@ -47,6 +47,7 @@
  :prefix ","
  "bb" 'phye/switch-to-previous-buffer-in-window
  "bp" 'previous-buffer
+ "bm" 'phye/ace-move-buffer-to-window
  "bn" 'next-buffer
  "fb" 'phye/format-buffer
  "gr" 'xref-find-references

@@ -113,4 +113,18 @@
   (evil-window-vsplit)
   (balance-windows))
 
+(defun phye/ace-move-buffer-to-window ()
+  "Move buffer to another window."
+  (interactive)
+  (aw-select " Ace - Move buffer to window"
+             #'phye/mv-current-buffer-to-window))
+
+(defun phye/mv-current-buffer-to-window (window)
+  "Move current buffer to WINDOW."
+  (let* ((cur-buffer (current-buffer))
+         (cur-window (get-buffer-window cur-buffer)))
+    (with-selected-window cur-window
+      (switch-to-prev-buffer cur-window))
+    (set-window-buffer window cur-buffer)))
+
 (provide 'phye-init-window)
