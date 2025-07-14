@@ -165,6 +165,18 @@
   (xref-clear-marker-stack)
   (message "xref stack cleared"))
 
+(defun phye/xref-jump-to-only-reference (IDENTIFIER)
+  "Automatically jump to IDENTIFIER if there's only one ref."
+  (let ((xref-buffer (get-buffer "*xref*")))
+    (with-current-buffer xref-buffer
+      ;; if there're only one reference (file followed by reference)
+      ;; automatically goto it
+      (when (eq (count-lines (point-min) (point-max)) 2)
+        (xref-next-line)
+        (xref-goto-xref)
+        (kill-buffer xref-buffer)))))
+(advice-add 'xref-find-references :after #'phye/xref-jump-to-only-reference)
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   (interactive)

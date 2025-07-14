@@ -37,15 +37,15 @@
                          :initial-input nil)))
       (dired dir))))
 
-(defun phye/dired-open-file (&optional reuse)
+(defun phye/dired-open-file (&optional not-reuse)
   "Open file in other window, unless prefix is set"
   (interactive "P")
   (if (file-directory-p (dired-get-file-for-visit))
       ;; follow dir in current window
       (dired-find-file)
-    (if reuse
-        (dired-find-file)
-      (dired-find-file-other-window))))
+    (if not-reuse
+        (dired-find-file-other-window)
+      (dired-find-file))))
 
 (use-package casual-dired
   :ensure t
@@ -101,7 +101,11 @@
 ;; deadgrep related
 (use-package deadgrep
   :ensure t
-  :defer t)
+  :defer t
+  :custom
+  (deadgrep-display-buffer-function
+   #'(lambda (buffer)
+       (display-buffer-same-window buffer nil))))
 
 (use-package wgrep-deadgrep
   :ensure t

@@ -6,6 +6,10 @@
 (general-unbind
   :keymaps '(image-mode-map doc-view-mode-map)
   "k")
+(general-unbind
+  :keymaps '(xref--xref-buffer-mode-map)
+  ","
+  ".")
 
 ;; {{ global keymaps
 (general-define-key
@@ -230,6 +234,12 @@
             pdf-occur-buffer-mode-map)
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
+
+(general-define-key
+ :keymaps '(xref--xref-buffer-mode-map)
+ :prefix ","
+ "gg" 'evil-goto-first-line
+ "G" 'evil-goto-line)
 
 (general-define-key
  :keymaps 'org-remark-mode-map
