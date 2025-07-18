@@ -68,12 +68,12 @@
 (setq undo-strong-limit 100663296) ; 96mb.
 (setq undo-outer-limit 1006632960) ; 960mb.
 
-(use-package undo-fu-session
-  :ensure t
-  :defer t
-  :config
-  (undo-fu-session-global-mode)
-  (undo-fu-session-recover))
+;; (use-package undo-fu-session
+;;   :ensure t
+;;   :defer t
+;;   :config
+;;   (undo-fu-session-global-mode)
+;;   (undo-fu-session-recover))
 
 (my-run-with-idle-timer
  2 ;; gpg encrypt

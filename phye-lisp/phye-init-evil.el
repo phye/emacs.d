@@ -21,7 +21,9 @@
   (evil-normal-state-cursor 'box)
   (evil-insert-state-cursor 'bar)
   (evil-emacs-state-cursor 'hbar)
-  (evil-want-fine-undo 'fine))
+  (evil-want-fine-undo t)
+  (undo-fu-allow-undo-in-region t)
+  (undo-fu-ignore-keyboard-quit t))
 
 (use-package evil-terminal-cursor-changer
   :ensure t
