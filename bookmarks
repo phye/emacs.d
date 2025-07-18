@@ -2,7 +2,43 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("ng.script"
+(("trpc.server.from.reqbuf.to.rsp"
+ (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
+ (front-context-string . "e(ctx, msg, reqB")
+ (rear-context-string . ", err := s.handl")
+ (position . 12057)
+ (last-modified 26735 41783 814263 898000))
+("trpc.service.Options"
+ (filename . "~/ws/git.code/trpc/trpc-go/trpc.go")
+ (front-context-string . "r.Option{\n		serv")
+ (rear-context-string . "	opts := []serve")
+ (position . 7725)
+ (last-modified 26735 41162 707375 595000))
+("trpc.service.Handle"
+ (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
+ (front-context-string . "(ctx context.Con")
+ (rear-context-string . "*service) Handle")
+ (position . 10245)
+ (last-modified 26735 34301 530502 858000))
+("trpc.tcp.conn.Handler"
+ (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
+ (front-context-string . "	s.opts.ServeOpt")
+ (rear-context-string . "ansport plugin.\n")
+ (position . 5249)
+ (last-modified 26735 34138 546978 490000))
+("service.Serve.entry"
+ (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
+ (front-context-string . "s.opts.ServeOpti")
+ (rear-context-string . "AndServe(s.ctx, ")
+ (position . 6386)
+ (last-modified 26735 33578 979179 694000))
+("trpc.ctx.new"
+ (filename . "~/ws/git.code/trpc/trpc-go/transport/server_transport_tcp.go")
+ (front-context-string . "cWithErrAndConte")
+ (rear-context-string . "pconn) handleSyn")
+ (position . 13617)
+ (last-modified 26735 32812 201288 773000))
+("ng.script"
  (filename . "~/ws/ti-cloud/infra/cluster-autoscaler/pkg/tencentcloud/controllers/util.go")
  (front-context-string . "MountLocalDisk =")
  (rear-context-string . "Status\n}\n\nconst ")
