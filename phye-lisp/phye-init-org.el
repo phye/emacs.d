@@ -399,6 +399,7 @@
      (org-babel-do-load-languages
       'org-babel-load-languages
       '(
+        (mermaid .t)
         (ditaa . t)
         (plantuml . t)
         (dot . t)
