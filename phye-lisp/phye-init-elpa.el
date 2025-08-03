@@ -30,6 +30,7 @@
         evil-terminal-cursor-changer
         markdown-toc
         org-fancy-priorities
+        mermaid-mode
         ob-mermaid
         symbol-overlay
         doric-themes

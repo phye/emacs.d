@@ -75,6 +75,7 @@
  "hI" 'show-ifdef-block
  "il" 'org-insert-link
  "ls" 'symbol-overlay-put
+ "m." 'org-noter-sync-current-note
  "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
  "co" 'org-open-at-point
@@ -86,6 +87,7 @@
  "ro" 'phye/remark-view-and-select
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit
+ "xu" 'upcase-region
  "*" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?*))
  "~" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?~))
  "_" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?_))

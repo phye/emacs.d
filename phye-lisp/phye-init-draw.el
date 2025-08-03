@@ -33,4 +33,8 @@
   :ensure t
   :defer t)
 ;;}}
+
+;; {{
+(add-to-list 'imagemagick-types-inhibit 'SVG)
+;; }}
 (provide 'phye-init-draw)
