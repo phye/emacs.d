@@ -103,7 +103,7 @@
 
 ;; output related
 (setq org-export-with-sub-superscripts nil)
-(setq org-export-with-properties t)
+(setq org-export-with-properties nil)
 (setq org-export-with-priority t)
 
 ;; output/latex
