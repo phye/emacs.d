@@ -257,6 +257,12 @@
      (?C . "P2"))))
 ;; }}
 
+;; {{ more org babel backends
+(use-package ob-mermaid
+  :ensure t
+  :defer t)
+;; }}
+
 ;; }} Org Mode Extensions
 
 ;; {{ Custom Org Mode Functions
