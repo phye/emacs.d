@@ -105,6 +105,7 @@
 (setq org-export-with-sub-superscripts nil)
 (setq org-export-with-properties nil)
 (setq org-export-with-priority t)
+(setq org-export-with-toc nil)
 
 ;; output/latex
 (with-eval-after-load 'ox-latex

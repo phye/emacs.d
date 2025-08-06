@@ -282,6 +282,6 @@
                  (if light "false" "true")))))))
 
 (run-at-time "09:30" 86400 #'phye/toggle-theme t)
-(run-at-time "12:00" 86400 #'phye/toggle-theme nil)
+(run-at-time "17:00" 86400 #'phye/toggle-theme nil)
 
 (provide 'phye-init-themes)
