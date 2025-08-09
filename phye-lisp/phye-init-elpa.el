@@ -7,8 +7,10 @@
         deadgrep
         dockerfile-mode
         emacsql
+        hcl-mode
         helpful
         nerd-icons
+        key-chord
         org-journal
         org-present
         org-roam

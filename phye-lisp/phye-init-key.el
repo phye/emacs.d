@@ -269,8 +269,8 @@
  :keymaps 'xref--xref-buffer-mode-map
  "n" 'xref-next-group
  "p" 'xref-prev-group
- "j" 'xref-next-line
- "k" 'xref-prev-line
+ "j" 'xref-next-line-no-show
+ "k" 'xref-prev-line-no-show
  "RET" 'phye/xref-got-xref-and-quit)
 
 (general-define-key
@@ -323,5 +323,8 @@
  ",rR" 'phye/open-recent-file-in-other-frame
  "n" 'phye/pdf-goto-next-title-page
  "p" 'phye/pdf-goto-prev-title-page)
+
+(key-chord-define-global ",," 'evil-escape)
+(key-chord-define-global "jk" 'evil-escape)
 
 (provide 'phye-init-key)

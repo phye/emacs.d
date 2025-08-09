@@ -198,4 +198,9 @@
 ;;   :config
 ;;   (require 'smartparens-config))
 
+(use-package key-chord
+  :ensure t
+  :config
+  (key-chord-mode 1))
+
 (provide 'phye-init-edit)

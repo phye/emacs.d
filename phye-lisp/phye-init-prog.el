@@ -53,7 +53,7 @@
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.go"))
 
 (with-eval-after-load 'find-file-in-project
-  (add-to-list 'ffip-prune-patterns "*/build")
+  ;; (add-to-list 'ffip-prune-patterns "*/build")
   (add-to-list 'ffip-prune-patterns "*/rpm_build")
   (add-to-list 'ffip-prune-patterns "*/cc_tool")
   (add-to-list 'ffip-prune-patterns "*/qci_files")
