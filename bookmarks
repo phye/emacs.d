@@ -2,7 +2,79 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("trpc.server.from.reqbuf.to.rsp"
+(("trpc.trpc.transinfo.set"
+ (filename . "~/ws/git.code/trpc/trpc-go/codec.go")
+ (front-context-string . "ClientTransInfo(")
+ (rear-context-string . ".TransInfo = set")
+ (position . 20877)
+ (last-modified 26768 10381 539478 444000))
+("trpc.trpc.servermeta.set"
+ (filename . "~/ws/git.code/trpc/trpc-go/codec.go")
+ (front-context-string . "MetaData(req.Get")
+ (rear-context-string . "		msg.WithServer")
+ (position . 14030)
+ (last-modified 26768 10113 517395 887000))
+("trpc.clientmeta.set"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "msg.WithClientMe")
+ (rear-context-string . "taData) > 0 {\n		")
+ (position . 10050)
+ (last-modified 26768 8808 766043 887000))
+("trpc.client.serialize-compress-encode"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "reqBodyBuf, err ")
+ (rear-context-string . "byte, error) {\n	")
+ (position . 14668)
+ (last-modified 26760 53061 512394 221000))
+("trpc.client.callFunc"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "callFunc(ctx con")
+ (rear-context-string . "t filters.\nfunc ")
+ (position . 11745)
+ (last-modified 26760 52785 522747 525000))
+("trpc.client.selectOptions"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "getServiceInfoOp")
+ (rear-context-string . "electOptions, c.")
+ (position . 8097)
+ (last-modified 26760 52461 554808 656000))
+("trpc.client.getOptions"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "getOptions(msg c")
+ (rear-context-string . "unc (c *client) ")
+ (position . 7708)
+ (last-modified 26760 52444 130644 440000))
+("trpc.client.Invoke"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "(ctx context.Con")
+ (rear-context-string . " *client) Invoke")
+ (position . 2686)
+ (last-modified 26760 52432 947606 486000))
+("trpc.server.meta.init"
+ (filename . "~/ws/git.code/trpc/trpc-go/codec.go")
+ (front-context-string . "ServerMetaData(r")
+ (rear-context-string . "> 0 {\n		msg.With")
+ (position . 13358)
+ (last-modified 26760 51732 452643 530000))
+("trpc.server.decode"
+ (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
+ (front-context-string . "decode(ctx, msg,")
+ (rear-context-string . "odyBuf, err = s.")
+ (position . 11234)
+ (last-modified 26760 50725 477366 821000))
+("trpc.client.Select.Options"
+ (filename . "~/ws/git.code/trpc/trpc-go/client/client.go")
+ (front-context-string . "ctOptions = appe")
+ (rear-context-string . "ions.\n	opts.Sele")
+ (position . 8056)
+ (last-modified 26747 36197 773001 292000))
+("trpc.stub.Invoke"
+ (filename . "~/ws/git.code/trpc/trpc-go/testdata/helloworld.trpc.go")
+ (front-context-string . "yImpl) SayHello(")
+ (rear-context-string . "reeterClientProx")
+ (position . 3783)
+ (last-modified 26747 36138 101629 581000))
+("trpc.server.from.reqbuf.to.rsp"
  (filename . "~/ws/git.code/trpc/trpc-go/server/service.go")
  (front-context-string . "e(ctx, msg, reqB")
  (rear-context-string . ", err := s.handl")
