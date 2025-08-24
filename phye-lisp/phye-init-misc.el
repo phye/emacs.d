@@ -3,6 +3,10 @@
   :ensure t
   :defer t)
 
+(use-package emacs-everywhere
+  :ensure t
+  :defer t)
+
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 (my-run-with-idle-timer

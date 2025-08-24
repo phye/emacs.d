@@ -2,7 +2,13 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("trpc.trpc.transinfo.set"
+(("docs"
+ (filename . "~/ws/docs/")
+ (front-context-string . "..\n  -rw-r--r--@")
+ (rear-context-string . "88 Aug 12 15:55 ")
+ (position . 124)
+ (last-modified 26781 56358 926136 0))
+("trpc.trpc.transinfo.set"
  (filename . "~/ws/git.code/trpc/trpc-go/codec.go")
  (front-context-string . "ClientTransInfo(")
  (rear-context-string . ".TransInfo = set")

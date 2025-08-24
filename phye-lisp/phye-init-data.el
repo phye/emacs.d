@@ -44,7 +44,6 @@
   :ensure t
   :defer t
   :config
-  (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode))
-  )
+  (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode)))
 
 (provide 'phye-init-data)

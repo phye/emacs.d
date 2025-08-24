@@ -203,4 +203,7 @@
   :config
   (key-chord-mode 1))
 
+(use-package outline-indent
+  :ensure t)
+
 (provide 'phye-init-edit)

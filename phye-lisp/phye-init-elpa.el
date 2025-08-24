@@ -7,6 +7,7 @@
         deadgrep
         dockerfile-mode
         emacsql
+        emacs-everywhere
         hcl-mode
         helpful
         nerd-icons
@@ -29,15 +30,18 @@
         el-themes
         undo-fu-session
         ;; book-mode ;; not in melpa yet
+        evil-collection
         evil-terminal-cursor-changer
         markdown-toc
         org-fancy-priorities
+        outline-indent
         mermaid-mode
         ob-mermaid
         symbol-overlay
         doric-themes
         puni
-        bpftrace-mode))
+        bpftrace-mode
+        ))
 (setq melpa-include-packages
       (append melpa-include-packages phye-elpa-packages nil))
 

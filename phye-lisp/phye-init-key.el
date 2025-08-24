@@ -88,6 +88,10 @@
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit
  "xu" 'upcase-region
+ "zc" 'outline-indent-close-fold
+ "zC" 'outline-indent-close-folds
+ "zo" 'outline-indent-open-fold
+ "zO" 'outline-indent-open-folds
  "*" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?*))
  "~" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?~))
  "_" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?_))
