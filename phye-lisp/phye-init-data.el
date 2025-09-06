@@ -13,7 +13,9 @@
 
 ;; {{ YAML
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
-(defun phye/yaml-mode-hook () "My yaml mode hook." (ts-fold-mode t))
+(defun phye/yaml-mode-hook ()
+  "My yaml mode hook."
+  (ts-fold-mode t))
 
 (use-package
  yaml-mode

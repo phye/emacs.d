@@ -1,16 +1,15 @@
 ;; {{ c
-(defun
- phye/cc-mode-hook
- ()
- (setq c-basic-offset 2)
- (set-fill-column 80)
- (c-set-offset 'inlambda 0)
- (hide-ifdef-mode)
- (hs-minor-mode)
- (annotate-mode)
- (unless (eq major-mode 'protobuf-mode) (tree-sitter-hl-mode))
- (rainbow-mode -1)
- (my-ensure 'clang-format))
+(defun phye/cc-mode-hook ()
+  (setq c-basic-offset 2)
+  (set-fill-column 80)
+  (c-set-offset 'inlambda 0)
+  (hide-ifdef-mode)
+  (hs-minor-mode)
+  (annotate-mode)
+  (unless (eq major-mode 'protobuf-mode)
+    (tree-sitter-hl-mode))
+  (rainbow-mode -1)
+  (my-ensure 'clang-format))
 (local-require 'google-c-style)
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
@@ -21,11 +20,10 @@
 ;; {{ cpp
 (my-run-with-idle-timer
  5
- (lambda
-  ()
-  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
-  (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
-  (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
+ (lambda ()
+   (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
+   (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
+   (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
 ;; }}
 
 ;; {{ Golang
@@ -44,23 +42,27 @@
   (unless (eglot--server-capable :codeActionProvider)
     (eglot--error "Server can't execute code actions!"))
   (let* ((server (eglot--current-server-or-lose))
-         (actions (jsonrpc-request
-                   server
-                   :textDocument/codeAction
-                   (list :textDocument (eglot--TextDocumentIdentifier))))
-         (action (cl-find-if
-                  (jsonrpc-lambda (&key kind &allow-other-keys)
-                    (string-equal kind "source.organizeImports" ))
-                  actions)))
+         (actions
+          (jsonrpc-request
+           server
+           :textDocument/codeAction (list :textDocument (eglot--TextDocumentIdentifier))))
+         (action
+          (cl-find-if
+           (jsonrpc-lambda
+            (&key kind &allow-other-keys) (string-equal kind "source.organizeImports"))
+           actions)))
     (when action
-      (eglot--dcase action
-        (((Command) command arguments)
-          (eglot-execute-command server (intern command) arguments))
-        (((CodeAction) edit command)
-          (when edit (eglot--apply-workspace-edit edit))
-          (when command
-            (eglot--dbind ((Command) command arguments) command
-              (eglot-execute-command server (intern command) arguments))))))))
+      (eglot--dcase
+       action
+       (((Command) command arguments) (eglot-execute-command server (intern command) arguments))
+       (((CodeAction) edit command)
+        (when edit
+          (eglot--apply-workspace-edit edit))
+        (when command
+          (eglot--dbind
+           ((Command) command arguments)
+           command
+           (eglot-execute-command server (intern command) arguments))))))))
 
 (defun phye/go-mode-hook ()
   "phye's golang hook"

@@ -21,36 +21,36 @@
 
 ;; open recent directory, requires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
-(defun
- bjm/ivy-dired-recent-dirs
- ()
- "Present a list of recently used directories and open the selected one in dired"
- (interactive)
- (let ((recent-dirs
-        (delete-dups
-         (mapcar
-          (lambda
-           (file) (if (file-directory-p file) file (file-name-directory file)))
-          recentf-list))))
+(defun bjm/ivy-dired-recent-dirs ()
+  "Present a list of recently used directories and open the selected one in dired"
+  (interactive)
+  (let ((recent-dirs
+         (delete-dups
+          (mapcar
+           (lambda (file)
+             (if (file-directory-p file)
+                 file
+               (file-name-directory file)))
+           recentf-list))))
 
-   (let ((dir
-          (ivy-read
-           "Directory: "
-           recent-dirs
-           :re-builder #'ivy--regex
-           :sort nil
-           :initial-input nil)))
-     (dired dir))))
+    (let ((dir
+           (ivy-read
+            "Directory: "
+            recent-dirs
+            :re-builder #'ivy--regex
+            :sort nil
+            :initial-input nil)))
+      (dired dir))))
 
-(defun
- phye/dired-open-file
- (&optional not-reuse)
- "Open file in other window, unless prefix is set"
- (interactive "P")
- (if
-  (file-directory-p (dired-get-file-for-visit))
-  ;; follow dir in current window
-  (dired-find-file) (if not-reuse (dired-find-file-other-window) (dired-find-file))))
+(defun phye/dired-open-file (&optional not-reuse)
+  "Open file in other window, unless prefix is set"
+  (interactive "P")
+  (if (file-directory-p (dired-get-file-for-visit))
+      ;; follow dir in current window
+      (dired-find-file)
+    (if not-reuse
+        (dired-find-file-other-window)
+      (dired-find-file))))
 
 (use-package casual-dired :ensure t :defer t)
 
@@ -73,7 +73,10 @@
 
 (my-run-with-idle-timer
  2 ;; gpg encrypt
- (lambda () (require 'epa-file) (epa-file-enable) (recentf-load-list)))
+ (lambda ()
+   (require 'epa-file)
+   (epa-file-enable)
+   (recentf-load-list)))
 
 (use-package crux :ensure t :defer t)
 
@@ -93,68 +96,63 @@
 
 (use-package wgrep-deadgrep :ensure t :defer t)
 
-(defun
- phye/wgrep-change-to-wgrep-mode
- ()
- "Change to wgrep then toggle readonly mode."
- (interactive)
- (wgrep-change-to-wgrep-mode)
- (wgrep-toggle-readonly-area)
- (evil-escape))
+(defun phye/wgrep-change-to-wgrep-mode ()
+  "Change to wgrep then toggle readonly mode."
+  (interactive)
+  (wgrep-change-to-wgrep-mode)
+  (wgrep-toggle-readonly-area)
+  (evil-escape))
 
-(defun
- select-deadgrep-window-advice
- (search-term &optional directory)
- "Select deadgrep buffer"
- (select-window (get-buffer-window "*deadgrep\\.*")))
+(defun select-deadgrep-window-advice (search-term &optional directory)
+  "Select deadgrep buffer"
+  (select-window (get-buffer-window "*deadgrep\\.*")))
 (advice-add 'deadgrep :after-until #'select-deadgrep-window-advice)
 
-(defun
- phye/deadgrep-current-directory
- (search-term)
- "deadgrep in current directory"
- (interactive (list (deadgrep--read-search-term)))
- (deadgrep search-term default-directory))
+(defun phye/deadgrep-current-directory (search-term)
+  "deadgrep in current directory"
+  (interactive (list (deadgrep--read-search-term)))
+  (deadgrep search-term default-directory))
 
-(defun
- phye/project-find-dir () "find directory fuzzily (copied from `'project-find-dir`'" (interactive)
- (let* ((project (project-current t))
-        (all-files (project-files project))
-        (completion-ignore-case read-file-name-completion-ignore-case)
-        (all-dirs (mapcar #'file-name-directory all-files))
-        (dir
-         (funcall
-          project-read-file-name-function "Dired"
-          ;; Some completion UIs show duplicates.
-          (delete-dups all-dirs) nil 'file-name-history)))
-   dir))
+(defun phye/project-find-dir ()
+  "find directory fuzzily (copied from `'project-find-dir`'"
+  (interactive)
+  (let* ((project (project-current t))
+         (all-files (project-files project))
+         (completion-ignore-case read-file-name-completion-ignore-case)
+         (all-dirs (mapcar #'file-name-directory all-files))
+         (dir
+          (funcall project-read-file-name-function
+                   "Dired"
+                   ;; Some completion UIs show duplicates.
+                   (delete-dups all-dirs) nil 'file-name-history)))
+    dir))
 
-(defun
- phye/deadgrep-directory
- ()
- "Find directory with fuzzy support, then restart the search"
- (interactive)
- (setq default-directory (phye/project-find-dir))
- (rename-buffer (deadgrep--buffer-name deadgrep--search-term default-directory) t)
- (deadgrep-restart))
+(defun phye/deadgrep-directory ()
+  "Find directory with fuzzy support, then restart the search"
+  (interactive)
+  (setq default-directory (phye/project-find-dir))
+  (rename-buffer (deadgrep--buffer-name deadgrep--search-term default-directory) t)
+  (deadgrep-restart))
 
 (use-package
  project
  :custom (project-list-file "~/.emacs.data.d/projects")
  :config
- (setq
-  project-switch-commands
-  '((project-find-file "File")
-    (project-find-regexp "Regexp")
-    (project-find-dir "Dir")
-    (project-switch-to-buffer "Buffer")
-    (project-list-buffers "List buffers"))))
+ (setq project-switch-commands
+       '((project-find-file "File")
+         (project-find-regexp "Regexp")
+         (project-find-dir "Dir")
+         (project-switch-to-buffer "Buffer")
+         (project-list-buffers "List buffers"))))
 
-(with-eval-after-load 'counsel (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
+(with-eval-after-load 'counsel
+  (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))
 
 (use-package better-jumper :ensure t :defer t :config (better-jumper-mode +1))
 
-(defun phye/deadgrep-visit-result-hook () (interactive) (better-jumper-set-jump))
+(defun phye/deadgrep-visit-result-hook ()
+  (interactive)
+  (better-jumper-set-jump))
 
 (advice-add 'deadgrep-visit-result :after #'phye/deadgrep-visit-result-hook)
 (advice-add 'deadgrep-visit-result-other-window :after #'phye/deadgrep-visit-result-hook)

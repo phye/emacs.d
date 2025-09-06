@@ -1,7 +1,10 @@
 ;; {{ binary
 (evil-set-initial-state 'hexl-mode 'emacs)
 
-(defun phye/hexl-mode-hook () "phye's hexl mode hook" (interactive) (read-only-mode t))
+(defun phye/hexl-mode-hook ()
+  "phye's hexl mode hook"
+  (interactive)
+  (read-only-mode t))
 
 (use-package
  hexl

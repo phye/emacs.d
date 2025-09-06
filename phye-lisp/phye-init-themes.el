@@ -1,11 +1,11 @@
-(defun
- phye/load-theme
- (theme)
- "Load THEME after disable custom themes."
- (mapc #'disable-theme custom-enabled-themes)
- (load-theme theme t))
+(defun phye/load-theme (theme)
+  "Load THEME after disable custom themes."
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme theme t))
 
-(if (display-graphic-p) (phye/load-theme 'doom-monokai-classic) (phye/load-theme 'kaolin-galaxy))
+(if (display-graphic-p)
+    (phye/load-theme 'doom-monokai-classic)
+  (phye/load-theme 'kaolin-galaxy))
 
 (customize-set-variable
  'my-favorite-color-themes
@@ -136,19 +136,15 @@
    twilight-bright
    whiteboard))
 
-(defun
- phye/random-all-themes
- ()
- "Random all color themes."
- (interactive)
- (my-pickup-random-color-theme (custom-available-themes)))
+(defun phye/random-all-themes ()
+  "Random all color themes."
+  (interactive)
+  (my-pickup-random-color-theme (custom-available-themes)))
 
-(defun
- phye/random-favorite-light-themes
- ()
- "Random my favorite light themes."
- (interactive)
- (my-pickup-random-color-theme my-favorite-light-color-themes))
+(defun phye/random-favorite-light-themes ()
+  "Random my favorite light themes."
+  (interactive)
+  (my-pickup-random-color-theme my-favorite-light-color-themes))
 
 (use-package
  hl-todo
@@ -216,24 +212,22 @@
    ))
 
 ;; customize avy jump colors
-(defun
- recover-avy-lead-face
- ()
- "Recovy avy leader face."
- (interactive)
- (require 'avy)
- (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-warning-face))
-(with-eval-after-load 'avy (recover-avy-lead-face))
+(defun recover-avy-lead-face ()
+  "Recovy avy leader face."
+  (interactive)
+  (require 'avy)
+  (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-warning-face))
+(with-eval-after-load 'avy
+  (recover-avy-lead-face))
 
 (advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-healthy-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-color-themes :after #'recover-avy-lead-face)
 
-(unless
- (boundp 'font-lock-reference-face)
- (defface
-  font-lock-reference-face '((t :inherit t :weight bold)) "add missing font-lock-reference-face")
- (defvar font-lock-reference-face 'font-lock-reference-face))
+(unless (boundp 'font-lock-reference-face)
+  (defface font-lock-reference-face '((t :inherit t :weight bold))
+    "add missing font-lock-reference-face")
+  (defvar font-lock-reference-face 'font-lock-reference-face))
 
 (use-package beacon :ensure t :defer t :custom (beacon-blink-duration 0.2) :config (beacon-mode 1))
 
@@ -243,32 +237,36 @@
 
 (use-package doric-themes :ensure t :defer t)
 
-(defvar previous-dark-theme 'kaolin-galaxy "Previous dark theme before toggle.")
+(defvar previous-dark-theme 'kaolin-galaxy
+  "Previous dark theme before toggle.")
 
-(defun
- phye/set-bg-color (&optional light) "Set ivy-current-match color based on LIGHT." (interactive)
- (let ((bg-color ""))
-   (if light (setq bg-color "#00FF86") (setq bg-color "#0065FF"))
-   (custom-set-faces `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
+(defun phye/set-bg-color (&optional light)
+  "Set ivy-current-match color based on LIGHT."
+  (interactive)
+  (let ((bg-color ""))
+    (if light
+        (setq bg-color "#00FF86")
+      (setq bg-color "#0065FF"))
+    (custom-set-faces `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
 
-(defun
- phye/toggle-theme
- (&optional light)
- "Toggle light theme if LIGHT is t, restore dark theme otherwise."
- (interactive)
- (let ((loc (getenv "LOCATION")))
-   (message "Toggle Theme to light=%s at %s" light loc)
-   (when
-    (equal loc "office")
-    (if
-     light
-     (progn
-      (setq previous-dark-theme (car custom-enabled-themes)) (my-random-healthy-color-theme))
-     (phye/load-theme previous-dark-theme))
-    (phye/set-bg-color light)
-    (when
-     (display-graphic-p)
-     (shell-command (format "~/bin/scripts/toggle_dark_theme.sh %s" (if light "false" "true")))))))
+(defun phye/toggle-theme (&optional light)
+  "Toggle light theme if LIGHT is t, restore dark theme otherwise."
+  (interactive)
+  (let ((loc (getenv "LOCATION")))
+    (message "Toggle Theme to light=%s at %s" light loc)
+    (when (equal loc "office")
+      (if light
+          (progn
+            (setq previous-dark-theme (car custom-enabled-themes))
+            (my-random-healthy-color-theme))
+        (phye/load-theme previous-dark-theme))
+      (phye/set-bg-color light)
+      (when (display-graphic-p)
+        (shell-command
+         (format "~/bin/scripts/toggle_dark_theme.sh %s"
+                 (if light
+                     "false"
+                   "true")))))))
 
 (run-at-time "09:30" 86400 #'phye/toggle-theme t)
 (run-at-time "17:00" 86400 #'phye/toggle-theme nil)

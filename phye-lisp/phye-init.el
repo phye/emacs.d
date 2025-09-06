@@ -2,7 +2,8 @@
 ;; ;; General Edit Configs ;; ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defconst phye-lisp-dir (concat my-emacs-d "phye-lisp") "Directory of phye-lisp.")
+(defconst phye-lisp-dir (concat my-emacs-d "phye-lisp")
+  "Directory of phye-lisp.")
 (setq load-path (append (list phye-lisp-dir) load-path))
 
 (require-package 'use-package)

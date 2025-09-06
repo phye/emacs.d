@@ -7,11 +7,10 @@
 
 (my-run-with-idle-timer
  2
- (lambda
-  ()
-  (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
-  (setq my-term-program zsh-program)
-  (exec-path-from-shell-copy-env "LOCATION")))
+ (lambda ()
+   (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
+   (setq my-term-program zsh-program)
+   (exec-path-from-shell-copy-env "LOCATION")))
 
 (set-language-environment "utf-8")
 

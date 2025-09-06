@@ -22,11 +22,13 @@
  (undo-fu-ignore-keyboard-quit t))
 
 (use-package evil-terminal-cursor-changer :ensure t :defer t)
-(with-eval-after-load
- 'evil-terminal-cursor-changer
- (unless (display-graphic-p) (require 'evil-terminal-cursor-changer) (etcc-on)))
+(with-eval-after-load 'evil-terminal-cursor-changer
+  (unless (display-graphic-p)
+    (require 'evil-terminal-cursor-changer)
+    (etcc-on)))
 
-(defun phye/indent-after-newline (count) (indent-according-to-mode))
+(defun phye/indent-after-newline (count)
+  (indent-according-to-mode))
 
 (advice-add 'evil-open-below :after #'phye/indent-after-newline)
 (advice-add 'evil-open-above :after #'phye/indent-after-newline)
