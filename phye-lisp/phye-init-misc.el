@@ -1,20 +1,17 @@
 ;; chinese font
-(use-package cnfonts
-  :ensure t
-  :defer t)
+(use-package cnfonts :ensure t :defer t)
 
-(use-package emacs-everywhere
-  :ensure t
-  :defer t)
+(use-package emacs-everywhere :ensure t :defer t)
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 (my-run-with-idle-timer
  2
- (lambda ()
-   (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
-   (setq my-term-program zsh-program)
-   (exec-path-from-shell-copy-env "LOCATION")))
+ (lambda
+  ()
+  (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
+  (setq my-term-program zsh-program)
+  (exec-path-from-shell-copy-env "LOCATION")))
 
 (set-language-environment "utf-8")
 
