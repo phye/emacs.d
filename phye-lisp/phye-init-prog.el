@@ -79,6 +79,7 @@
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
+;; tree-sitter
 (use-package tree-sitter
   :ensure t
   :defer t
@@ -117,6 +118,15 @@
                            :pycodestyle (:enabled t :ignore ["W503" "E203"] :maxLineLength 100)
                            :black (:enabled t :cache-config t)
                            :isort (:enabled t)))))
+
+;; elisp-autofmt
+(use-package elisp-autofmt
+  :ensure t
+  :defer t
+  :custom
+  (elisp-autofmt-python-bin "/usr/bin/python3")
+  :commands (elisp-autofmt-mode elisp-autofmt-buffer)
+  :hook (emacs-lisp-mode . elisp-autofmt-mode))
 
 ;; python
 (with-eval-after-load 'eldoc-mode

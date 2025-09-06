@@ -1,11 +1,11 @@
 (setq phye-elpa-packages
-      '(
-        better-jumper
+      '(better-jumper
         treemacs
         annotate-mode
         clipetty
         deadgrep
         dockerfile-mode
+        elisp-autofmt
         emacsql
         emacs-everywhere
         hcl-mode
@@ -40,9 +40,9 @@
         symbol-overlay
         doric-themes
         puni
-        bpftrace-mode
-        ))
-(setq melpa-include-packages
-      (append melpa-include-packages phye-elpa-packages nil))
+        bpftrace-mode))
+
+(setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
+
 
 (provide 'phye-init-elpa)
