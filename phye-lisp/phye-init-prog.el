@@ -148,7 +148,7 @@
    major-mode
    (go-mode (gofmt))
    (python-mode (eglot-format-buffer))
-   (elisp-mode (elisp-autofmt-buffer))
+   (emacs-lisp-mode (elisp-autofmt-buffer))
    (t (save-excursion (evil-indent (point-min) (point-max))))))
 
 (defun phye/go-back-to-caller ()

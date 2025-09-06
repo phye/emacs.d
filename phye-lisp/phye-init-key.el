@@ -3,15 +3,19 @@
 ;;; do not use space to override keybinds in Emacs mode
 
 ;; unbind unwanted keys
+;; format: off
 (general-unbind
-  :keymaps '(image-mode-map doc-view-mode-map)
-  "k")
+ :keymaps '(image-mode-map doc-view-mode-map)
+ "k")
+
+;; format: off
 (general-unbind
-  :keymaps '(xref--xref-buffer-mode-map)
-  ","
-  ".")
+ :keymaps '(xref--xref-buffer-mode-map)
+ ","
+ ".")
 
 ;; {{ global keymaps
+;; format: off
 (general-define-key
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
@@ -22,6 +26,7 @@
  "C-c o" 'org-open-at-point
  "C-c t" 'org-mark-ring-goto)
 
+;; format: off
 (general-define-key
  :states 'emacs
  :keymaps '(helpful-mode)
@@ -30,10 +35,12 @@
  "C-w j" 'evil-window-down
  "C-w k" 'evil-window-up)
 
+;; format: off
 (general-define-key
  "s-q" 'delete-frame
  "s-Q" 'server-shutdown)
 
+;; format: off
 (general-define-key
  :states '(insert normal emacs)
  :prefix "C-;"
@@ -42,10 +49,12 @@
  "<SPC>" 'insert-zero-width-space
  "<TAB>" 'insert-tab)
 
+;; format: off
 (general-define-key
  :states '(normal visual)
  "C-b" 'evil-scroll-up)
 
+;; format: off
 (general-define-key
  :states '(normal visual)
  :prefix ","
@@ -92,17 +101,35 @@
  "zC" 'outline-indent-close-folds
  "zo" 'outline-indent-open-fold
  "zO" 'outline-indent-open-folds
- "*" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?*))
- "~" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?~))
- "_" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?_))
- "+" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?+))
- "/" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?/))
- "(" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?\)))
- ")" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?\)))
- "[" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?\]))
- "]" (lambda () (interactive) (evil-Surround-region (region-beginning) (region-end) 'block ?\]))
- )
+ "*" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?*))
+ "~" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?~))
+ "_" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?_))
+ "+" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?+))
+ "/" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?/))
+ "(" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?\)))
+ ")" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?\)))
+ "[" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?\]))
+ "]" (lambda ()
+             (interactive)
+             (evil-Surround-region (region-beginning) (region-end) 'block ?\])))
 
+;; format: off
 (general-define-key
  :states '(normal visual)
  :prefix "SPC"
@@ -128,6 +155,7 @@
  "pl" 'popper-toggle-latest
  "vs" 'phye/vsplit-3-and-even)
 
+;; format: off
 (general-define-key
  :states 'motion
  "C-o" 'better-jumper-jump-backward
@@ -135,6 +163,7 @@
 ;; }}
 
 ;; {{ override map
+;; format: off
 (general-define-key
  :states '(normal visual)
  :keymaps 'override
@@ -183,12 +212,14 @@
  "xpf" 'project-find-file
  "xp!" 'project-shell)
 
+;; format: off
 (general-define-key
  :states '(normal)
  :keymaps 'override
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
+;; format: off
 (general-define-key
  :states '(normal)
  :keymaps 'override
@@ -196,15 +227,17 @@
 
 ;; }}
 
+;; format: off
 (defun phye/restore-keybindings ()
-  "Restore keybindings by evil-nerd-commenter."
-  (interactive)
-  (my-comma-leader-def
-    "cc" 'clipetty-kill-ring-save))
+       "Restore keybindings by evil-nerd-commenter."
+       (interactive)
+       (my-comma-leader-def
+        "cc" 'clipetty-kill-ring-save))
 ;; NOTE(phye); this is ugly... but simple and working for the moment ...
 (my-run-with-idle-timer 5 'phye/restore-keybindings)
 
 ;; {{ mode specific map
+;; format: off
 (general-define-key
  :states 'normal
  :keymaps 'completion-preview-active-mode-map
@@ -212,12 +245,14 @@
  "M-p" 'completion-preview-prev-candidate
  "M-j" 'completion-preview-complete)
 
+;; format: off
 (general-define-key
  :keymaps '(image-mode-map doc-view-mode-map)
  "K" #'image-kill-buffer
  "q" #'quit-window
  "f" #'my-toggle-full-window)
 
+;; format: off
 (general-define-key
  :keymaps 'deadgrep-mode-map
  "n" 'deadgrep-forward-filename
@@ -230,6 +265,7 @@
  "C-x C-q" 'phye/wgrep-change-to-wgrep-mode
  "w" 'phye/wgrep-change-to-wgrep-mode)
 
+;; format: off
 (general-define-key
  :keymaps '(
             neotree-mode-map
@@ -241,34 +277,40 @@
  :prefix ";"
  ";" 'ace-pinyin-jump-char-2)
 
+;; format: off
 (general-define-key
  :keymaps '(xref--xref-buffer-mode-map)
  :prefix ","
  "gg" 'evil-goto-first-line
  "G" 'evil-goto-line)
 
+;; format: off
 (general-define-key
  :keymaps 'org-remark-mode-map
  :states 'normal
  :prefix ","
  "q" 'delete-window)
 
+;; format: off
 (general-define-key
  :keymaps 'helpful-mode-map
  "f" 'my-toggle-full-window)
 ;; }}
 
 ;; {{ mini buffer edit
+;; format: off
 (general-define-key
  :keymaps 'minibuffer-mode-map
  "C-a" 'move-beginning-of-line
  "C-e" 'move-end-of-line
  "C-w" 'evil-delete-backward-word)
 
+;; format: off
 (general-define-key
  :keymaps 'ivy-minibuffer-map
  "C-w" 'ivy-backward-kill-word)
 
+;; format: off
 (general-define-key
  :keymaps 'xref--xref-buffer-mode-map
  "n" 'xref-next-group
@@ -277,6 +319,7 @@
  "k" 'xref-prev-line-no-show
  "RET" 'phye/xref-got-xref-and-quit)
 
+;; format: off
 (general-define-key
  :keymaps 'dired-mode-map
  "h" 'dired-up-directory
@@ -286,39 +329,46 @@
  "<RET>" 'phye/dired-open-file
  "C-o" 'casual-dired-tmenu)
 
+;; format: off
 (general-define-key
  :keymaps 'project-prefix-map
  "L" 'project-list-buffers)
 
+;; format: off
 (general-define-key
  :keymaps 'ivy-minibuffer-map
  :prefix ","
  "gg" 'ivy-beginning-of-buffer
  "G" 'ivy-end-of-buffer)
 
+;; format: off
 (general-define-key
  :keymaps 'magit-blame-mode-map
  :prefix ","
  "mq" 'magit-blame-quit)
 
+;; format: off
 (general-define-key
  :keymaps 'bookmark-minibuffer-read-name-map
  "C-w" 'evil-delete-backward-word)
 
+;; format: off
 (general-define-key
  :keymaps '(sh-mode-map plantuml-mode-map)
  "<RET>" 'newline)
 
 ;; evil-matchit
-(defun evilmi-customize-keybinding ()
-  (evil-define-key 'normal evil-matchit-mode-map
-    "%" 'evil-jump-item
-    "m" 'evilmi-jump-items))
+;; (defun evilmi-customize-keybinding ()
+;;        (evil-define-key 'normal evil-matchit-mode-map
+;;                         "%" 'evil-jump-item
+;;                         "m" 'evilmi-jump-items))
 
+;; format: off
 (general-define-key
  :keymaps 'Info-mode-map
  "C-o" 'evil-execute-in-normal-state)
 
+;; format: off
 (general-define-key
  :keymaps 'pdf-view-mode-map
  "C-s" 'pdf-occur
@@ -328,7 +378,8 @@
  "n" 'phye/pdf-goto-next-title-page
  "p" 'phye/pdf-goto-prev-title-page)
 
-(key-chord-define-global ",," 'evil-escape)
-(key-chord-define-global "jk" 'evil-escape)
+(key-chord-define evil-insert-state-map ",," 'evil-escape)
+(key-chord-define evil-insert-state-map "jk" 'evil-escape)
+
 
 (provide 'phye-init-key)
