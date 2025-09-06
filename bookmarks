@@ -2,12 +2,42 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("docs"
- (filename . "~/ws/docs/")
- (front-context-string . "..\n  -rw-r--r--@")
- (rear-context-string . "88 Aug 12 15:55 ")
- (position . 124)
- (last-modified 26781 56358 926136 0))
+(("chat.dialogevent.Process"
+ (filename . "~/ws/adp/bot-chat-server/internal/eventbus/dialog.go")
+ (front-context-string . "Process(ctx cont")
+ (rear-context-string . "ogEventHandler) ")
+ (position . 2322)
+ (last-modified 26780 34857 610092 884000))
+("chat.eventbus.Push"
+ (filename . "~/ws/adp/bot-chat-server/internal/eventbus/base.go")
+ (front-context-string . "func Push(ctx co")
+ (rear-context-string . " Push \345\220\221\344\272\213\344\273\266\346\200\273\347\272\277\346\216\250\351\200\201\344\272\213\344\273\266\n")
+ (position . 3182)
+ (last-modified 26780 34651 861634 26000))
+("chat.eventbus.process"
+ (filename . "~/ws/adp/bot-chat-server/internal/eventbus/base.go")
+ (front-context-string . "ev.handler.Proce")
+ (rear-context-string . "	}()\n	if err := ")
+ (position . 1686)
+ (last-modified 26780 34595 418328 110000))
+("newchat.SSEHandle"
+ (filename . "~/ws/adp/bot-chat-server/internal/core/core.go")
+ (front-context-string . "func (i *SSEHand")
+ (rear-context-string . "eam \345\220\257\345\212\250SSE\346\265\201\345\271\266\345\244\204\347\220\206\346\266\210\346\201\257\n")
+ (position . 5715)
+ (last-modified 26780 33911 988122 965000))
+("chat.Intents"
+ (filename . "~/ws/adp/bot-chat-server/internal/eventbus/dialog.go")
+ (front-context-string . "eIntents(ctx con")
+ (rear-context-string . "ler) GetCandidat")
+ (position . 25262)
+ (last-modified 26780 32324 495894 985000))
+("chat.coreProcess"
+ (filename . "~/ws/adp/bot-chat-server/internal/eventbus/dialog.go")
+ (front-context-string . "Handler) corePro")
+ (rear-context-string . " (d *DialogEvent")
+ (position . 23016)
+ (last-modified 26780 32253 976080 540000))
 ("trpc.trpc.transinfo.set"
  (filename . "~/ws/git.code/trpc/trpc-go/codec.go")
  (front-context-string . "ClientTransInfo(")

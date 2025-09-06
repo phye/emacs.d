@@ -36,16 +36,42 @@
 
 (use-package go-mode :ensure t :defer t :custom (gofmt-command "goimports"))
 
-(defun
- phye/go-mode-hook
- ()
- "phye's golang hook"
- (interactive)
- (auto-fill-mode -1)
- (tree-sitter-hl-mode)
- (setq compile-command "go test")
- (ts-fold-mode))
-(with-eval-after-load 'go-mode (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
+;; eglot-organize-imports is hopefully a temporary stopgap until
+;; https://github.com/joaotavora/eglot/issues/574 is addressed.
+(defun eglot-organize-imports ()
+  "Offer to execute the source.organizeImports code action."
+  (interactive)
+  (unless (eglot--server-capable :codeActionProvider)
+    (eglot--error "Server can't execute code actions!"))
+  (let* ((server (eglot--current-server-or-lose))
+         (actions (jsonrpc-request
+                   server
+                   :textDocument/codeAction
+                   (list :textDocument (eglot--TextDocumentIdentifier))))
+         (action (cl-find-if
+                  (jsonrpc-lambda (&key kind &allow-other-keys)
+                    (string-equal kind "source.organizeImports" ))
+                  actions)))
+    (when action
+      (eglot--dcase action
+        (((Command) command arguments)
+          (eglot-execute-command server (intern command) arguments))
+        (((CodeAction) edit command)
+          (when edit (eglot--apply-workspace-edit edit))
+          (when command
+            (eglot--dbind ((Command) command arguments) command
+              (eglot-execute-command server (intern command) arguments))))))))
+
+(defun phye/go-mode-hook ()
+  "phye's golang hook"
+  (interactive)
+  (auto-fill-mode -1)
+  (tree-sitter-hl-mode)
+  (setq compile-command "go test")
+  ;; (annotate-mode)
+  (ts-fold-mode))
+(with-eval-after-load 'go-mode
+  (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
 ;; }}
 
 (provide 'phye-init-cc)
