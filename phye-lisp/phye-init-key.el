@@ -358,10 +358,10 @@
  "<RET>" 'newline)
 
 ;; evil-matchit
-;; (defun evilmi-customize-keybinding ()
-;;        (evil-define-key 'normal evil-matchit-mode-map
-;;                         "%" 'evil-jump-item
-;;                         "m" 'evilmi-jump-items))
+(defun evilmi-customize-keybinding ()
+       (evil-define-key 'normal evil-matchit-mode-map
+                        "%" 'evil-jump-item
+                        "m" 'evilmi-jump-items))
 
 ;; format: off
 (general-define-key
