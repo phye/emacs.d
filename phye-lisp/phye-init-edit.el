@@ -52,7 +52,7 @@
         (dired-find-file-other-window)
       (dired-find-file))))
 
-(use-package casual-dired :ensure t :defer t)
+(use-package casual-suite :ensure t :defer t)
 
 ;; recentf
 (use-package sync-recentf :ensure t :custom (recentf-auto-cleanup 60) :config (recentf-mode 1))
