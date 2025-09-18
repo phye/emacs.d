@@ -1,48 +1,47 @@
 (setq phye-elpa-packages
-      '(better-jumper
-        treemacs
+      '(activities
         annotate-mode
+        better-jumper
+        bpftrace-mode
+        bufler
         clipetty
         deadgrep
         dockerfile-mode
-        elisp-autofmt
-        emacsql
-        emacs-everywhere
-        hcl-mode
-        helpful
-        nerd-icons
-        key-chord
-        org-journal
-        org-present
-        org-roam
-        org-remark
-        org-noter
-        peep-dired
-        popper
-        rg
-        tiny
-        sync-recentf
-        tiny
-        vimish-fold
-        org-side-tree
-        pumpkin-spice-theme
-        halloweenie-theme
+        doric-themes
         el-themes
-        undo-fu-session
-        ;; book-mode ;; not in melpa yet
+        elisp-autofmt
+        emacs-everywhere
+        emacsql
         evil-collection
         evil-terminal-cursor-changer
+        halloweenie-theme
+        hcl-mode
+        helpful
+        key-chord
         markdown-toc
-        org-fancy-priorities
-        outline-indent
         mermaid-mode
+        nerd-icons
         ob-mermaid
-        symbol-overlay
-        doric-themes
+        org-fancy-priorities
+        org-journal
+        org-noter
+        org-present
+        org-remark
+        org-roam
+        org-side-tree
+        outline-indent
+        peep-dired
+        popper
+        pumpkin-spice-theme
         puni
-        bpftrace-mode))
+        rg
+        symbol-overlay
+        sync-recentf
+        tiny
+        treemacs
+        undo-fu-session
+        vimish-fold))
 
 (setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
-
 
 (provide 'phye-init-elpa)
