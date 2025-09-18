@@ -215,111 +215,111 @@
   "Faces for my overlay faces."
   :group 'faces)
 
-(defface phye-overlay-base '((t :weight bold :background "navajo white"))
+(defface phye-overlay-base '((t :weight bold :foreground "light green"))
   "my base face for symbol overlay highlight.")
-(defface phye-highlight-face-0 '((t :inherit phye-overlay-base :foreground "salmon"))
+(defface phye-highlight-face-0 '((t :inherit phye-overlay-base :background "salmon"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-1 '((t :inherit phye-overlay-base :foreground "slate gray"))
+(defface phye-highlight-face-1 '((t :inherit phye-overlay-base :background "slate gray"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-2 '((t :inherit phye-overlay-base :foreground "green"))
+(defface phye-highlight-face-2 '((t :inherit phye-overlay-base :background "green"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-3 '((t :inherit phye-overlay-base :foreground "gray"))
+(defface phye-highlight-face-3 '((t :inherit phye-overlay-base :background "gray"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-4 '((t :inherit phye-overlay-base :foreground "blue"))
+(defface phye-highlight-face-4 '((t :inherit phye-overlay-base :background "blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-5 '((t :inherit phye-overlay-base :foreground "yellow"))
+(defface phye-highlight-face-5 '((t :inherit phye-overlay-base :background "yellow"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-6 '((t :inherit phye-overlay-base :foreground "magenta"))
+(defface phye-highlight-face-6 '((t :inherit phye-overlay-base :background "magenta"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-7 '((t :inherit phye-overlay-base :foreground "ivory"))
+(defface phye-highlight-face-7 '((t :inherit phye-overlay-base :background "ivory"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-8 '((t :inherit phye-overlay-base :foreground "cyan"))
+(defface phye-highlight-face-8 '((t :inherit phye-overlay-base :background "cyan"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-9 '((t :inherit phye-overlay-base :foreground "thistle"))
+(defface phye-highlight-face-9 '((t :inherit phye-overlay-base :background "thistle"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-10 '((t :inherit phye-overlay-base :foreground "navy"))
+(defface phye-highlight-face-10 '((t :inherit phye-overlay-base :background "navy"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-11 '((t :inherit phye-overlay-base :foreground "gold"))
+(defface phye-highlight-face-11 '((t :inherit phye-overlay-base :background "gold"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-12 '((t :inherit phye-overlay-base :foreground "maroon"))
+(defface phye-highlight-face-12 '((t :inherit phye-overlay-base :background "maroon"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-13 '((t :inherit phye-overlay-base :foreground "turquoise"))
+(defface phye-highlight-face-13 '((t :inherit phye-overlay-base :background "turquoise"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-14 '((t :inherit phye-overlay-base :foreground "violet red"))
+(defface phye-highlight-face-14 '((t :inherit phye-overlay-base :background "violet red"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-15 '((t :inherit phye-overlay-base :foreground "chartreuse"))
+(defface phye-highlight-face-15 '((t :inherit phye-overlay-base :background "chartreuse"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-16 '((t :inherit phye-overlay-base :foreground "light coral"))
+(defface phye-highlight-face-16 '((t :inherit phye-overlay-base :background "light coral"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-17 '((t :inherit phye-overlay-base :foreground "honeydew"))
+(defface phye-highlight-face-17 '((t :inherit phye-overlay-base :background "honeydew"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-18 '((t :inherit phye-overlay-base :foreground "light sea green"))
+(defface phye-highlight-face-18 '((t :inherit phye-overlay-base :background "light sea green"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
-(defface phye-highlight-face-19 '((t :inherit phye-overlay-base :foreground "light sea blue"))
+(defface phye-highlight-face-19 '((t :inherit phye-overlay-base :background "light sea blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 
-(customize-set-variable 'symbol-overlay-faces
-                        '(
-                          phye-highlight-face-0
-                          phye-highlight-face-1
-                          phye-highlight-face-2
-                          phye-highlight-face-3
-                          phye-highlight-face-4
-                          phye-highlight-face-5
-                          phye-highlight-face-6
-                          phye-highlight-face-7
-                          phye-highlight-face-8
-                          phye-highlight-face-9
-                          phye-highlight-face-10
-                          phye-highlight-face-11
-                          phye-highlight-face-12
-                          phye-highlight-face-13
-                          phye-highlight-face-14
-                          phye-highlight-face-15
-                          phye-highlight-face-16
-                          phye-highlight-face-17
-                          phye-highlight-face-18
-                          phye-highlight-face-19
-                          phye-highlight-face-0
-                          phye-highlight-face-1
-                          phye-highlight-face-2
-                          phye-highlight-face-3
-                          phye-highlight-face-4
-                          phye-highlight-face-5
-                          phye-highlight-face-6
-                          phye-highlight-face-7
-                          phye-highlight-face-8
-                          phye-highlight-face-9
-                          phye-highlight-face-10
-                          phye-highlight-face-11
-                          phye-highlight-face-12
-                          phye-highlight-face-13
-                          phye-highlight-face-14
-                          phye-highlight-face-15
-                          phye-highlight-face-16
-                          phye-highlight-face-17
-                          phye-highlight-face-18
-                          phye-highlight-face-19))
+(customize-set-variable
+ 'symbol-overlay-faces
+ '(phye-highlight-face-0
+   phye-highlight-face-1
+   phye-highlight-face-2
+   phye-highlight-face-3
+   phye-highlight-face-4
+   phye-highlight-face-5
+   phye-highlight-face-6
+   phye-highlight-face-7
+   phye-highlight-face-8
+   phye-highlight-face-9
+   phye-highlight-face-10
+   phye-highlight-face-11
+   phye-highlight-face-12
+   phye-highlight-face-13
+   phye-highlight-face-14
+   phye-highlight-face-15
+   phye-highlight-face-16
+   phye-highlight-face-17
+   phye-highlight-face-18
+   phye-highlight-face-19
+   phye-highlight-face-0
+   phye-highlight-face-1
+   phye-highlight-face-2
+   phye-highlight-face-3
+   phye-highlight-face-4
+   phye-highlight-face-5
+   phye-highlight-face-6
+   phye-highlight-face-7
+   phye-highlight-face-8
+   phye-highlight-face-9
+   phye-highlight-face-10
+   phye-highlight-face-11
+   phye-highlight-face-12
+   phye-highlight-face-13
+   phye-highlight-face-14
+   phye-highlight-face-15
+   phye-highlight-face-16
+   phye-highlight-face-17
+   phye-highlight-face-18
+   phye-highlight-face-19))
 
 
 ;; customize avy jump colors
