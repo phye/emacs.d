@@ -139,4 +139,7 @@
       (switch-to-prev-buffer cur-window))
     (set-window-buffer window cur-buffer)))
 
+(use-package activities :ensure t :defer t :init (activities-mode))
+(use-package bufler :ensure t :init (bufler-mode))
+
 (provide 'phye-init-window)
