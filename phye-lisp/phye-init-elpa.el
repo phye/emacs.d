@@ -4,6 +4,7 @@
         better-jumper
         bpftrace-mode
         bufler
+        burly
         clipetty
         deadgrep
         dockerfile-mode

@@ -21,7 +21,7 @@
       (switch-to-buffer alt-buffer))))
 
 (defun dedicate-current-window ()
-  "Toggles window dedication in the selected window."
+  "Toggle window dedication in the selected window."
   (interactive)
   (set-window-dedicated-p (selected-window) (not (window-dedicated-p (selected-window))))
   (message "window dedicated: %s" (window-dedicated-p (selected-window))))
@@ -66,10 +66,10 @@
 (customize-set-variable 'window-min-width 40)
 
 (defvar phye--center-window-maxmized nil
-  "is center window maxmized")
+  "Is center window maxmized.")
 
 (defun phye/maximize-center-window (&optional width)
-  "Maximize center window by minimizing side window to WIDTH"
+  "Maximize center window by minimizing side window to WIDTH."
   (interactive "p")
   (if phye--center-window-maxmized
       (progn
@@ -111,13 +111,13 @@
   (balance-windows))
 
 (defun phye/scroll-window-left (&optional lines)
-  "Scroll window left"
+  "Scroll window left LINES."
   (interactive "P")
   (with-selected-window (window-left (selected-window))
     (funcall (or (command-remapping #'scroll-up-command) #'scroll-up-command) lines)))
 
 (defun phye/scroll-window-right (&optional lines)
-  "Scroll window left"
+  "Scroll window left LINES."
   (interactive "P")
   (with-selected-window (window-right (selected-window))
     (funcall (or (command-remapping #'scroll-up-command) #'scroll-up-command) lines)))

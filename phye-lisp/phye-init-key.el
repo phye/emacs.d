@@ -202,10 +202,10 @@
  "sl" 'org-store-link
  "tt" 'shell-pop
  "ut" 'counsel-etags-update-tags-force
- "xb" 'ivy-switch-buffer
+ "xb" 'bufler-switch-buffer
+ "xB" 'ivy-switch-buffer
  "xc" 'suspend-frame
  "xf" 'find-file
- "xB" 'project-switch-to-buffer
  "xK" 'phye/kill-buffer-and-frame
  "xg" 'magit-status
  "xpp" 'project-switch-project
