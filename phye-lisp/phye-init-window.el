@@ -142,4 +142,9 @@
 (use-package activities :ensure t :defer t :init (activities-mode))
 (use-package bufler :ensure t :init (bufler-mode))
 
+(defun phye/remember-list-in-new-frame ()
+  (interactive)
+  (select-frame (make-frame))
+  (remember-notes t))
+
 (provide 'phye-init-window)
