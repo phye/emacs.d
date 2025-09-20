@@ -147,6 +147,8 @@
   (cl-case
    major-mode
    (go-mode (gofmt))
+   (mermaid-mode t)
+   (org-mode t)
    (python-mode (eglot-format-buffer))
    (emacs-lisp-mode (elisp-autofmt-buffer))
    (t (save-excursion (evil-indent (point-min) (point-max))))))

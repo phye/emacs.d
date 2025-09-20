@@ -36,6 +36,7 @@
         pumpkin-spice-theme
         puni
         rg
+        show-font
         symbol-overlay
         sync-recentf
         tiny
