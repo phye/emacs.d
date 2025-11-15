@@ -164,7 +164,7 @@
  puni
  :defer t
  :ensure t
- :hook ((prog-mode nxml-mode tex-mode eval-expression-minibuffer-setup) . puni-mode))
+ :hook ((prog-mode nxml-mode tex-mode) . puni-mode))
 
 ;; Do not use electric-pair-mode any more
 ;; (electric-pair-mode 0)
