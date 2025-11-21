@@ -181,7 +181,7 @@
  "dk" 'deadgrep-kill-all-buffers
  "DD" 'counsel-etags-grep-current-directory
  "ee" 'eval-expression
- "ip" 'find-file-in-project
+ "ip" 'counsel-git
  "id" 'find-file-in-current-directory
  "im" 'counsel-imenu
  "kmb" 'phye/kill-matching-buffers
