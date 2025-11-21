@@ -121,7 +121,7 @@
   (interactive)
   (man (concat "-k " (my-use-selected-string-or-ask))))
 
-;; @see http://blog.binchen.org/posts/effective-code-navigation-for-web-development.html
+;; @see http://redguardtoo.github.io/posts/effective-code-navigation-for-web-development.html
 ;; don't let the cursor go into minibuffer prompt
 (setq minibuffer-prompt-properties
       (quote (read-only t point-entered minibuffer-avoid-prompt face minibuffer-prompt)))
@@ -827,6 +827,8 @@ might be bad."
     ;; "apt-get install pinentry-tty" if using emacs-nox
     ;; Create `~/.gnupg/gpg-agent.conf' which has one line
     ;; "pinentry-program /usr/bin/pinentry-curses"
+    ;; OR "pinentry-program /usr/bin/pinentry-tty"
+    ;; OR "pinentry-program /usr/bin/pinentry-w32"
     (setq epa-pinentry-mode 'loopback)))
 ;; }}
 
@@ -1338,15 +1340,6 @@ MATCH is optional tag match."
     ;; show trailing spaces in a programming mod
     (setq show-trailing-whitespace t)))
 (add-hook 'prog-mode-hook 'my-generic-prog-mode-hook-setup)
-
-(with-eval-after-load 'ellama
-  ;; (setq ellama-language "Chinese") ; for translation
-  (require 'llm-ollama)
-  (setq ellama-provider
-        (make-llm-ollama
-         :chat-model "deepseek-r1:8b" :embedding-model "deepseek-r1:8b"))
-  (setq ellama-instant-display-action-function #'display-buffer-at-bottom))
-(add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message)
 
 (provide 'init-misc)
 ;;; init-misc.el ends here

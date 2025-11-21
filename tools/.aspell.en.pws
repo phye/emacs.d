@@ -1,6 +1,7 @@
-personal_ws-1.1 en 343
+personal_ws-1.1 en 345
 acodec
 adoc
+aider
 alist
 alsa
 ansi
@@ -62,6 +63,7 @@ dir
 dired
 diredext
 dirname
+divsvgm
 djhtml
 djview
 djvu
@@ -119,6 +121,7 @@ globals
 gmail
 goto
 gpath
+gptel
 gradle
 greatdict
 grtags

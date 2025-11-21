@@ -4,6 +4,19 @@
 
 (with-eval-after-load 'counsel
   (setq counsel-async-command-delay 0.3)
+
+  (defun my-counsel-git-grep-cmd-function-default (str)
+    (let* ((patterns (split-string str " *!"))
+           (pos-re (counsel-etags-positive-regex patterns))
+           (neg-re (counsel-etags-exclusion-regex patterns))
+           rlt)
+      (setq rlt (format counsel-git-grep-cmd pos-re))
+      (when neg-re
+        (setq rlt (format "%s --and --not -e \"%s\"" rlt neg-re)))
+     rlt))
+
+  (setq counsel-git-grep-cmd-function #'my-counsel-git-grep-cmd-function-default)
+
   ;; automatically pick up cygwin cli tools for counsel
   (cond
    ((executable-find "rg")
@@ -44,7 +57,7 @@
 
 (global-set-key (kbd "C-x b") 'ivy-switch-buffer)
 
-(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+(define-key read-expression-map (kbd "C-r") 'counsel-minibuffer-history)
 
 (defvar my-git-recent-files-extra-options ""
   "Extra options for git recent files.
@@ -92,7 +105,7 @@ If N is 2, list files in my recent 20 commits."
     (cond
      ((and (eq n 1) root-dir)
       (setq hint (format "Recent files in %s: " root-dir))
-      (setq files (delq nil (delete-dups (mapcar (lambda (f) (path-in-directory-p f root-dir)) files)))))
+      (setq files (delq nil (delete-dups (mapcar (lambda (f) (my-path-in-directory-p f root-dir)) files)))))
      ((eq n 2)
       (setq hint (format "Files in recent Git commits: "))
       (setq files (my-git-recent-files))))
@@ -281,3 +294,4 @@ If N is 2, list files in my recent 20 commits."
     (counsel-company)))
 
 (provide 'init-ivy)
+;;; init-ivy.el ends here

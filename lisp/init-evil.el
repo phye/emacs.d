@@ -298,6 +298,7 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
 ;; with upper cased character or 'g' or special character except "=" and "-"
 (evil-declare-key 'normal org-mode-map
   "gh" 'outline-up-heading
+  "gl" 'org-latex-preview
   "$" 'org-end-of-line ; smarter behavior on headlines etc.
   "^" 'org-beginning-of-line ; ditto
   "<" (lambda () (interactive) (org-demote-or-promote 1)) ; out-dent
@@ -310,7 +311,7 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
 
 ;; {{ specify major mode uses Evil (vim) NORMAL state or EMACS original state.
 ;; You may delete this setup to use Evil NORMAL state always.
-(defvar my-initial-evil-state-setup
+(defvar my-initial-evil-state-per-major-mode
   '((minibuffer-inactive-mode . emacs)
     (calendar-mode . emacs)
     (special-mode . emacs)
@@ -347,8 +348,12 @@ COUNT, BEG, END, TYPE is used.  If INCLUSIVE is t, the text object is inclusive.
     (ivy-occur-grep-mode . normal)
     (messages-buffer-mode . normal)
     (js2-error-buffer-mode . emacs))
-  "Default evil state per major mode.")
+  "Initial evil state per major mode.")
 ;; }}
+
+(defvar my-initial-evil-state-per-buffer-name
+  '(("\\*AI " . emacs))
+  "Default evil state per buffer name.")
 
 ;; I prefer Emacs way after pressing ":" in evil-mode
 (define-key evil-ex-completion-map (kbd "C-a") 'move-beginning-of-line)
@@ -610,10 +615,6 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
    ((derived-mode-p 'js-mode)
     (my-js-beautify indent-offset))
 
-   ((derived-mode-p 'python-mode)
-    (when (and (boundp 'elpy-enabled-p) elpy-enabled-p))
-    (elpy-format-code))
-
    (t
     (message "Can only beautify code written in python/javascript"))))
 
@@ -764,7 +765,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "7" 'winum-select-window-7
   "8" 'winum-select-window-8
   "9" 'winum-select-window-9
-  "xm" 'counsel-M-x
+  "xm" 'execute-extended-command
   "xx" 'er/expand-region
   ;; `counsel-find-file' has more actions (press "M-o" to trigger more actions)
   "xf" (if (functionp 'counsel-find-file) 'counsel-find-file 'find-file)
@@ -818,7 +819,7 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   "jj" 'scroll-other-window
   "kk" 'scroll-other-window-up
   "hh" 'my-random-favorite-color-theme
-  "hr" 'my-random-healthy-color-theme
+  "lt" 'counsel-load-theme
   "yy" 'my-hydra-zoom/body
   "ii" 'my-toggle-indentation
   "g" 'my-hydra-git/body
@@ -989,8 +990,11 @@ If N > 0 and in js, only occurrences in current N lines are renamed."
   (define-key evil-normal-state-map "U" 'undo-fu-only-redo)
 
   ;; initial evil state per major mode
-  (dolist (p my-initial-evil-state-setup)
+  (dolist (p my-initial-evil-state-per-major-mode)
     (evil-set-initial-state (car p) (cdr p)))
+
+  (dolist (p my-initial-evil-state-per-buffer-name)
+    (push p evil-buffer-regexps))
 
   ;; evil re-assign "M-." to `evil-repeat-pop-next' which I don't use actually.
   ;; Restore "M-." to original binding command

@@ -5,7 +5,7 @@
 - Fast
 - Robust. Packages could be installed without network
 - Support Windows. Find&Grep needs only minimum setup on Windows
-- Tested with Emacs 27.2, 28.1 on Linux/Windows10/Cygwin/macOS/WSL(Windows Subsystem for Linux)
+- Tested with Emacs 28.2 on Linux/Windows10/macOS/MSYS2/Cygwin
 - Vanilla key bindings and directory layout is respected
 - Works in [[https://packages.debian.org/emacs-nox][emacs-nox]] and [[http://www.putty.org/][PuTTY]]
 
@@ -28,6 +28,7 @@
   - [[#better-runtime-performance][Better runtime performance]]
   - [[#key-bindings][Key bindings]]
 - [[#faq][FAQ]]
+  - [[#set-up-emacs-service][Set up Emacs service]]
   - [[#computers-with-smaller-memory][Computers with smaller memory]]
   - [[#vim-vs-emacs][Vim vs Emacs]]
   - [[#backup-packages][Backup packages]]
@@ -78,6 +79,7 @@
   - [[#enable-typewriter-sounds-when-typing][Enable typewriter sounds when typing]]
   - [[#pdf-tools][pdf-tools]]
 - [[#support-legacy-emacs-versions][Support legacy Emacs versions]]
+  - [[#emacs-27][Emacs 27]]
   - [[#emacs-26][Emacs 26]]
   - [[#emacs-25][Emacs 25]]
   - [[#emacs-244-and-245][Emacs 24.4 and 24.5]]
@@ -88,10 +90,10 @@
 - [[#license][License]]
 
 * Checklist
-- Emacs 27 or higher version is required
+- Emacs 28 or higher version is required
 - Please read FAQ to disable [[http://www.vim.org][Vim]] key bindings
 - Please read section "Key bindings" to learn key bindings
-- Windows users had better download the version with dependencies bundled. For example, download "emacs-27.2-x86_64.zip" instead of "emacs-27.2-x86_64-no-deps.zip"
+- Windows users had better download the version with dependencies bundled. For example, download "emacs-28.2-x86_64.zip" instead of "emacs-28.2-x86_64-no-deps.zip"
 - Unstable packages from [[http://melpa.org][MELPA]] are *invisible* but stable packages from [[https://stable.melpa.org][MELPA Stable]] are visible. Please modify variable =melpa-include-packages= in =lisp/init-elpa.el= to install unstable packages
 - Other issues are covered in FAQ
 * Installation
@@ -158,8 +160,14 @@ But there is a simple workaround:
 - Required by =flyspell=
 **** xmlstarlet or xml
 - Required by =lazyflymake= for HTML syntax check.
+**** divsvgm
+- Required by =M-x org-latex-preview=
+**** latex
+- Required by =M-x org-latex-preview=
+- Run =brew install --cask mactex= on macOS
+- Run =apt install texlive-full= or =apt install texlive-latex-base texlive-fonts-recommended texlive-latex-extra texlive-science cm-super= on Debian/Ubuntu Linux
 **** identify from [[http://www.imagemagick.org/][ImageMagick]]
-- Required by =org-mode= to export org file to odt contain images
+- Required by =org-mode= to export org file to odt containing images
 **** zip and unzip
 - Required by =org-mode= to export org file to odt file
 **** xsel or xclip
@@ -176,7 +184,7 @@ But there is a simple workaround:
 **** [[https://ctags.io/][Universal Ctags (recommended)]] or [[http://ctags.sourceforge.net][Exuberant CTags]]
 - It creates tags file for code navigation and code completion
 - Required by many tags related packages (=xref=, =counsel-etags=, =company-ctags= from =company-mode=, etc)
-- See [[http://blog.binchen.org/?p=1057][How to use ctags in Emacs effectively]]
+- See [[http://redguardtoo.github.io/?p=1057][How to use ctags in Emacs effectively]]
 **** [[http://www.gnu.org/software/global][GNU Global]]
 - Required by [[https://github.com/syohex/emacs-counsel-gtags][counsel-gtags]] and =company-gtags= from =company-mode=
 - It creates index files for code navigation and auto-completion
@@ -188,6 +196,10 @@ But there is a simple workaround:
 **** js-beautify
 - Beautify javascript code
 - Install [[http://pip.readthedocs.org/en/stable/installing/][pip]] through OS package manager, then =pip install jsbeautifier=
+**** aider
+- AI pair programming in your terminal. It's required by [[https://github.com/tninja/aider.el][aider.el]]
+- Install [[http://pip.readthedocs.org/en/stable/installing/][pip]] through OS package manager, then =pip install aider-install && aider-install=
+- See [[https://aider.chat/docs/llms/ollama.html]] on how to set it up on ollama
 **** StarDict dictionaries
 - Cli program is not needed
 - Required by =stardict.el=
@@ -281,10 +293,62 @@ Press =C-c C-y= anywhere to bring up default hydra menu.
 
 The tutorials I recommended have enough information about commands.
 
-Besides, "[[http://blog.binchen.org/posts/how-to-be-extremely-efficient-in-emacs.html][How to be extremely efficient in Emacs]]" lists my frequently used commands.
+Besides, "[[http://redguardtoo.github.io/posts/how-to-be-extremely-efficient-in-emacs.html][How to be extremely efficient in Emacs]]" lists my frequently used commands.
 
 Press =kj= to escape from =evil-insert-state= and everything else in Emacs. It's much more efficient than =ESC= in Vim or =C-g= in Emacs. Search =evil-escape= in =init-evil.el= for details.
 * FAQ
+** Set up Emacs service
+Use [[file:tools/start-emacs-daemon.sh]] to set up emacs service.
+*** macOS
+Create "~/Library/LaunchAgents/org.gnu.emacs.daemon.plist",
+#+begin_src xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>org.gnu.emacs.daemon</string>
+
+    <key>ProgramArguments</key>
+    <array>
+      <string>/path/to/start-emacs-daemon.sh</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/emacs-daemon.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/emacs-daemon.err</string>
+  </dict>
+</plist>
+#+end_src
+Run =launchctl load ~/Library/LaunchAgents/org.gnu.emacs.daemon.plist && launchctl start org.gnu.emacs.daemon= to enable&start emacs daemon on macOS.
+*** Linux
+create "~/.config/systemd/user/emacs.service",
+#+begin_src confg
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+[Service]
+Type=forking
+ExecStart=/path/to/start-emacs-daemon.sh
+ExecStop=/path/to/start-emacs-daemon.sh stop
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+#+end_src
+Run =systemctl --user enable emacs.service && systemctl --user start emacs.service= to enable&start emacs daemon on Linux.
+
 ** Computers with smaller memory
 Make sure you have this line in =early-init.el= or at the beginning of =init.el=,
 #+begin_src elisp
@@ -324,7 +388,7 @@ If you prefer your own spell check solution, insert below code to disable wucuo 
 (setq my-disable-wucuo t)
 #+end_src
 
-For further knowledge on spell checking, you could read [[http://blog.binchen.org/posts/what-s-the-best-spell-check-set-up-in-emacs.html][my article]] and code in =init-spelling.el=.
+For further knowledge on spell checking, you could read [[http://redguardtoo.github.io/posts/what-s-the-best-spell-check-set-up-in-emacs.html][my article]] and code in =init-spelling.el=.
 ** Lock packages
 Some packages are so important to my workflow that they are locked.
 
@@ -414,7 +478,7 @@ Here is sample setup:
 
 In "friendly" Visual C++, [[http://www.codeproject.com/Tips/588022/Using-Additional-Include-Directories][similar setup]] is required.
 
-You can use other backends instead of =clang=. For example, you can use =company-gtags= and [[https://www.gnu.org/software/global/][GNU Global]] instead. See [[http://blog.binchen.org/posts/emacs-as-c-ide-easy-way.html][Emacs as C++ IDE, easy way]] for details.
+You can use other backends instead of =clang=. For example, you can use =company-gtags= and [[https://www.gnu.org/software/global/][GNU Global]] instead. See [[http://redguardtoo.github.io/posts/emacs-as-c-ide-easy-way.html][Emacs as C++ IDE, easy way]] for details.
 
 *** Auto-completion for other languages
 It's similar to C++ setup. Since GNU Global supports many popular languages, you can use =company-gtags=.
@@ -514,7 +578,7 @@ git revert commit-2014-12-01
 git revert commit-2014-11-01
 #+end_src
 ** Indentation
-Learn [[http://www.emacswiki.org/emacs/IndentationBasics][basics]]. Then use [[http://blog.binchen.org/posts/easy-indentation-setup-in-emacs-for-web-development.html][my solution]].
+Learn [[http://www.emacswiki.org/emacs/IndentationBasics][basics]]. Then use [[http://redguardtoo.github.io/posts/easy-indentation-setup-in-emacs-for-web-development.html][my solution]].
 ** Editing Lisp
 Please note [[http://emacswiki.org/emacs/ParEdit][paredit-mode]] is enabled when editing Lisp. Search "paredit cheat sheet" to learn its key bindings.
 ** Use [[https://github.com/Malabarba/smart-mode-line][smart-mode-line]] or [[https://github.com/milkypostman/powerline][powerline]]?
@@ -601,12 +665,12 @@ It's defined in =lisp/init-evil.el=. Press =C-z= to switch between Emacs and Vim
 
 You could visit [[https://github.com/emacs-evil/evil/][its website]] to download its free ebook there.
 
-You can set =my-initial-evil-state-setup= to customize the initial evil state per major mode,
+You can set =my-initial-evil-state-per-major-mode= to customize the initial evil state per major mode,
 #+begin_src elisp
 ;; `diff-mode' uses Emacs original key bindings
-(push '(diff-mode . emacs) my-initial-evil-state-setup)
+(push '(diff-mode . emacs) my-initial-evil-state-per-major-mode)
 ;; `ivy-occur-grep-mode' initial state is evil normal state. Vim key bindings are used.
-(push '(ivy-occur-grep-mode . normal) my-initial-evil-state-setup)
+(push '(ivy-occur-grep-mode . normal) my-initial-evil-state-per-major-mode)
 #+end_src
 ** Chinese Input Method Editor
 Please note pyim is already built into this setup. You need not install it through ELPA.
@@ -670,36 +734,28 @@ On macOS/Linux/Cygwin, run =make githooks= to install hooks into =.git/hooks=.
 
 Then unit test is run automatically before =git commit=.
 ** Python environment
-[[https://github.com/jorgenschaefer/elpy][Elpy (Emacs Python Development Environment)]] is used.
-
-The flag =elpy-disable-backend-error-display= is set to =nil= so you can easily report any error to its developers.
-
-If you don't use Elpy, comment out the line =(elpy-enable)= in =init-python.el=.
-
 Please make sure python and its package `virtualenv` is installed first.
 
-To enable the virtual environment created by Elpy, add below code into =~/.custom.el=,
+To enable the virtual environment, add below code into =~/.custom.el=,
 #+begin_src elisp
-(with-eval-after-load 'elpy
-  (let* ((venv-dir "~/.emacs.d/elpy/rpc-venv"))
-    (when (and (file-exists-p venv-dir)
-               (executable-find pyvenv-virtualenvwrapper-python))
-      (pyvenv-activate venv-dir))))
+(let* ((venv-dir "/path/to/my-venv"))
+  (when (and (file-exists-p venv-dir)
+             (executable-find pyvenv-virtualenvwrapper-python))
+    (pyvenv-activate venv-dir)))
 #+end_src
 
-After activating the virtual environment created by Elpy, you could backup its required packages,
+After activating the virtual environment, you could backup its required packages,
 #+begin_src sh
-source ~/.emacs.d/elpy/rpc-venv/bin/activate && pip freeze > elpy-requirements.txt && deactivate
+source /path/to/my-venv/bin/activate && pip freeze > venv-requirements.txt && deactivate
 #+end_src
 
 Restore the packages,
 #+begin_src sh
-source ~/.emacs.d/elpy/rpc-venv/bin/activate && pip install -r elpy-requirements.txt && deactivate
+source /path/to/my-venv/bin/activate && pip install -r venv-requirements.txt && deactivate
 #+end_src
 
-Then run =M-x elpy-config= to double check elpy status and install any missing python package.
+You might want to modify =include-system-site-packages= in =/path/to/my-venv/pyvenv.cfg=
 
-You might want to modify =include-system-site-packages= in =~/.emacs.d/elpy/rpc-venv/pyvenv.cfg=
 ** Set up [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
 You could insert below code into =~/.custom.el=,
 #+begin_src elisp
@@ -750,6 +806,10 @@ Here is my setup in =~/.custom.el=,
      (pdf-loader-install))))
 #+end_src
 * Support legacy Emacs versions
+** Emacs 27
+Version 4.0 is the last version to support =Emacs 27=
+Please use [[https://github.com/redguardtoo/emacs.d/archive/4.1.zip]] and [[https://github.com/redguardtoo/myelpa/archive/4.1.zip]].
+
 ** Emacs 26
 Version 4.0 is the last version to support =Emacs 26=
 Please use [[https://github.com/redguardtoo/emacs.d/archive/4.0.zip]] and [[https://github.com/redguardtoo/myelpa/archive/4.0.zip]].
@@ -776,7 +836,6 @@ Here are the steps to use that setup:
 * Tips
 - Never turn off any bundled mode if it's on by default. Future version of Emacs may assume it's on. Tweak its flag in mode hook instead!
 - Git skills are *extremely useful*. Please read the chapters "Git Basics", "Git Branching", "Git Tools" from [[https://git-scm.com/book/en/][Pro Git]]
-- You can run =optimize-emacs-startup= to compile "*.el" under =lisp/=
 - Many advanced features in this configuration is only enabled in my personal =~/.custom.el=. Grep =defvar my-.*= in =~/.emacs.d/lisp/= to find them.  You can start from =init-company.el= and =init-spelling.el=.
 * Report bug
 Please check [[http://www.emacswiki.org/emacs/][EmacsWiki]] and my FAQ first.
