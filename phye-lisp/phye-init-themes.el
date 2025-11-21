@@ -3,9 +3,18 @@
   (mapc #'disable-theme custom-enabled-themes)
   (load-theme theme t))
 
-(if (display-graphic-p)
-    (phye/load-theme 'doom-monokai-classic)
-  (phye/load-theme 'kaolin-galaxy))
+(defun phye/auto-default-theme ()
+  "Return default theme."
+  (let* ((hour (string-to-number (format-time-string "%H" (current-time)))))
+    (if (< hour 17)
+        (if (display-graphic-p)
+            'doric-wind
+          'doom-feather-light)
+      (if (display-graphic-p)
+          'doom-monokai-classic
+        'kaolin-galaxy))))
+
+(phye/load-theme (phye/auto-default-theme))
 
 (customize-set-variable
  'my-favorite-color-themes
