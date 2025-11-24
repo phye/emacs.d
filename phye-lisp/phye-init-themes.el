@@ -401,4 +401,9 @@
 (run-at-time "09:30" 86400 #'phye/toggle-theme)
 (run-at-time "17:00" 86400 #'phye/toggle-theme)
 
+(my-run-with-idle-timer
+ 2
+ (lambda ()
+   (phye/toggle-theme)))
+
 (provide 'phye-init-themes)
