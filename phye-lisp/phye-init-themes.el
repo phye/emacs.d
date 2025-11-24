@@ -3,19 +3,6 @@
   (mapc #'disable-theme custom-enabled-themes)
   (load-theme theme t))
 
-(defun phye/auto-default-theme ()
-  "Return default theme."
-  (let* ((hour (string-to-number (format-time-string "%H" (current-time)))))
-    (if (< hour 17)
-        (if (display-graphic-p)
-            'doric-wind
-          'doom-feather-light)
-      (if (display-graphic-p)
-          'doom-monokai-classic
-        'kaolin-galaxy))))
-
-(phye/load-theme (phye/auto-default-theme))
-
 (customize-set-variable
  'my-favorite-color-themes
  '(afternoon
@@ -156,35 +143,35 @@
   (my-pickup-random-color-theme my-favorite-light-color-themes))
 
 (use-package
- hl-todo
- :ensure t
- :defer t
- :custom
- (hl-todo-keyword-faces
-  '(("STUB" . "#1E90FF")
-    ("Deprecated" . "white")
-    ("PITFALL" . "#FF4500")
-    ("LOGIC" . "yellow")
-    ("PURPOSE" . "lavender")
-    ("THOUGHT" . "orange")
-    ("DEBUG" . "blue")
-    ("HOLD" . "#d0bf8f")
-    ("TODO" . "#cc9393")
-    ("TBD" . "#cc9494")
-    ("NEXT" . "#dca3a3")
-    ("THEM" . "#dc8cc3")
-    ("PROG" . "#7cb8bb")
-    ("OKAY" . "#7cb8bb")
-    ("DONT" . "#5f7f5f")
-    ("FAIL" . "#8c5353")
-    ("DONE" . "#afd8af")
-    ("NOTE" . "#d0bf8f")
-    ("KLUDGE" . "#d0bf8f")
-    ("HACK" . "#d0bf8f")
-    ("TEMP" . "#d0bf8f")
-    ("FIXME" . "#cc9393")
-    ("CANCELLED" . "#d0bf8f")
-    ("XXX+" . "#cc9393"))))
+  hl-todo
+  :ensure t
+  :defer t
+  :custom
+  (hl-todo-keyword-faces
+   '(("STUB" . "#1E90FF")
+     ("Deprecated" . "white")
+     ("PITFALL" . "#FF4500")
+     ("LOGIC" . "yellow")
+     ("PURPOSE" . "lavender")
+     ("THOUGHT" . "orange")
+     ("DEBUG" . "blue")
+     ("HOLD" . "#d0bf8f")
+     ("TODO" . "#cc9393")
+     ("TBD" . "#cc9494")
+     ("NEXT" . "#dca3a3")
+     ("THEM" . "#dc8cc3")
+     ("PROG" . "#7cb8bb")
+     ("OKAY" . "#7cb8bb")
+     ("DONT" . "#5f7f5f")
+     ("FAIL" . "#8c5353")
+     ("DONE" . "#afd8af")
+     ("NOTE" . "#d0bf8f")
+     ("KLUDGE" . "#d0bf8f")
+     ("HACK" . "#d0bf8f")
+     ("TEMP" . "#d0bf8f")
+     ("FIXME" . "#cc9393")
+     ("CANCELLED" . "#d0bf8f")
+     ("XXX+" . "#cc9393"))))
 
 (customize-save-variable
  'highlight-symbol-colors
@@ -340,10 +327,6 @@
 (with-eval-after-load 'avy
   (recover-avy-lead-face))
 
-(advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
-(advice-add 'my-random-healthy-color-theme :after #'recover-avy-lead-face)
-(advice-add 'my-random-color-themes :after #'recover-avy-lead-face)
-
 (unless (boundp 'font-lock-reference-face)
   (defface font-lock-reference-face '((t :inherit t :weight bold))
     "add missing font-lock-reference-face")
@@ -357,30 +340,50 @@
 
 (use-package doric-themes :ensure t :defer t)
 
-(defvar previous-dark-theme 'kaolin-galaxy
-  "Previous dark theme before toggle.")
+(defun phye/current-hour ()
+  "Return current hour."
+  (let ((hour (string-to-number (format-time-string "%H" (current-time)))))
+    hour))
 
-(defun phye/set-bg-color (&optional light)
-  "Set ivy-current-match color based on LIGHT."
+(defvar dark-hour 17 "Dark hour.")
+
+(defun phye/auto-default-theme ()
+  "Return default theme."
+  (if (< (phye/current-hour) dark-hour)
+      (if (display-graphic-p)
+          'doric-wind
+        'doom-feather-light)
+    (if (display-graphic-p)
+        'doom-monokai-classic
+      'kaolin-galaxy)))
+
+(defun phye/set-ivy-match-bg-color (unused)
+  "Set ivy-current-match color based on current hour, UNUSED is unused."
   (interactive)
-  (let ((bg-color ""))
-    (if light
+  (let ((bg-color "")
+        (hour (string-to-number (format-time-string "%H" (current-time)))))
+    (if (< (phye/current-hour) dark-hour)
         (setq bg-color "#00FF86")
       (setq bg-color "#0065FF"))
     (custom-set-faces `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
 
-(defun phye/toggle-theme (&optional light)
-  "Toggle light theme if LIGHT is t, restore dark theme otherwise."
+(defvar previous-dark-theme (phye/auto-default-theme)
+  "Previous dark theme before toggle.")
+
+(defun phye/toggle-theme ()
+  "Toggle theme based on current time."
   (interactive)
-  (let ((loc (getenv "LOCATION")))
-    (message "Toggle Theme to light=%s at %s" light loc)
+  (let* ((loc (getenv "LOCATION"))
+         (default-theme (phye/auto-default-theme))
+         (hour (phye/current-hour))
+         (light (if (< hour dark-hour) t nil)))
     (when (equal loc "office")
+      (message "Toggle Theme at %s" loc)
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
-            (my-random-healthy-color-theme))
+            (phye/load-theme default-theme))
         (phye/load-theme previous-dark-theme))
-      (phye/set-bg-color light)
       (when (display-graphic-p)
         (shell-command
          (format "~/bin/scripts/toggle_dark_theme.sh %s"
@@ -388,7 +391,10 @@
                      "false"
                    "true")))))))
 
-(run-at-time "09:30" 86400 #'phye/toggle-theme t)
-(run-at-time "17:00" 86400 #'phye/toggle-theme nil)
+(advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
+(advice-add 'phye/load-theme :after #'phye/set-ivy-match-bg-color)
+
+(run-at-time "09:30" 86400 #'phye/toggle-theme)
+(run-at-time "17:00" 86400 #'phye/toggle-theme)
 
 (provide 'phye-init-themes)
