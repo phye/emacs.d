@@ -143,35 +143,35 @@
   (my-pickup-random-color-theme my-favorite-light-color-themes))
 
 (use-package
-  hl-todo
-  :ensure t
-  :defer t
-  :custom
-  (hl-todo-keyword-faces
-   '(("STUB" . "#1E90FF")
-     ("Deprecated" . "white")
-     ("PITFALL" . "#FF4500")
-     ("LOGIC" . "yellow")
-     ("PURPOSE" . "lavender")
-     ("THOUGHT" . "orange")
-     ("DEBUG" . "blue")
-     ("HOLD" . "#d0bf8f")
-     ("TODO" . "#cc9393")
-     ("TBD" . "#cc9494")
-     ("NEXT" . "#dca3a3")
-     ("THEM" . "#dc8cc3")
-     ("PROG" . "#7cb8bb")
-     ("OKAY" . "#7cb8bb")
-     ("DONT" . "#5f7f5f")
-     ("FAIL" . "#8c5353")
-     ("DONE" . "#afd8af")
-     ("NOTE" . "#d0bf8f")
-     ("KLUDGE" . "#d0bf8f")
-     ("HACK" . "#d0bf8f")
-     ("TEMP" . "#d0bf8f")
-     ("FIXME" . "#cc9393")
-     ("CANCELLED" . "#d0bf8f")
-     ("XXX+" . "#cc9393"))))
+ hl-todo
+ :ensure t
+ :defer t
+ :custom
+ (hl-todo-keyword-faces
+  '(("STUB" . "#1E90FF")
+    ("Deprecated" . "white")
+    ("PITFALL" . "#FF4500")
+    ("LOGIC" . "yellow")
+    ("PURPOSE" . "lavender")
+    ("THOUGHT" . "orange")
+    ("DEBUG" . "blue")
+    ("HOLD" . "#d0bf8f")
+    ("TODO" . "#cc9393")
+    ("TBD" . "#cc9494")
+    ("NEXT" . "#dca3a3")
+    ("THEM" . "#dc8cc3")
+    ("PROG" . "#7cb8bb")
+    ("OKAY" . "#7cb8bb")
+    ("DONT" . "#5f7f5f")
+    ("FAIL" . "#8c5353")
+    ("DONE" . "#afd8af")
+    ("NOTE" . "#d0bf8f")
+    ("KLUDGE" . "#d0bf8f")
+    ("HACK" . "#d0bf8f")
+    ("TEMP" . "#d0bf8f")
+    ("FIXME" . "#cc9393")
+    ("CANCELLED" . "#d0bf8f")
+    ("XXX+" . "#cc9393"))))
 
 (customize-save-variable
  'highlight-symbol-colors
@@ -345,7 +345,8 @@
   (let ((hour (string-to-number (format-time-string "%H" (current-time)))))
     hour))
 
-(defvar dark-hour 17 "Dark hour.")
+(defvar dark-hour 17
+  "Dark hour.")
 
 (defun phye/auto-default-theme ()
   "Return default theme."
@@ -376,7 +377,10 @@
   (let* ((loc (getenv "LOCATION"))
          (default-theme (phye/auto-default-theme))
          (hour (phye/current-hour))
-         (light (if (< hour dark-hour) t nil)))
+         (light
+          (if (< hour dark-hour)
+              t
+            nil)))
     (when (equal loc "office")
       (message "Toggle Theme at %s" loc)
       (if light
