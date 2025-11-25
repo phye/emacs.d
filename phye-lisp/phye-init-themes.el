@@ -348,9 +348,9 @@
 (defvar dark-hour 17
   "Dark hour.")
 
-(defun phye/auto-default-theme ()
-  "Return default theme."
-  (if (< (phye/current-hour) dark-hour)
+(defun phye/default-theme (light)
+  "Return different default theme based on frame type and whether LIGHT or not."
+  (if light
       (if (display-graphic-p)
           'doric-wind
         'doom-feather-light)
@@ -358,31 +358,34 @@
         'doom-monokai-classic
       'kaolin-galaxy)))
 
+(defun phye/time-based-default-theme ()
+  "Return default theme."
+  (if (< (phye/current-hour) dark-hour)
+      (phye/default-theme t)
+    (phye/default-theme nil)))
+
 (defun phye/set-ivy-match-bg-color (unused)
   "Set ivy-current-match color based on current hour, UNUSED is unused."
   (interactive)
   (let ((bg-color "")
-        (hour (string-to-number (format-time-string "%H" (current-time)))))
+        (hour (phye/current-hour)))
     (if (< (phye/current-hour) dark-hour)
         (setq bg-color "#00FF86")
       (setq bg-color "#0065FF"))
     (custom-set-faces `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
 
-(defvar previous-dark-theme (phye/auto-default-theme)
+(defvar previous-dark-theme (phye/default-theme nil)
   "Previous dark theme before toggle.")
 
 (defun phye/toggle-theme ()
   "Toggle theme based on current time."
   (interactive)
   (let* ((loc (getenv "LOCATION"))
-         (default-theme (phye/auto-default-theme))
+         (default-theme (phye/time-based-default-theme))
          (hour (phye/current-hour))
-         (light
-          (if (< hour dark-hour)
-              t
-            nil)))
+         (light (< hour dark-hour)))
+    (message "Toggle Theme at %s" loc)
     (when (equal loc "office")
-      (message "Toggle Theme at %s" loc)
       (if light
           (progn
             (setq previous-dark-theme (car custom-enabled-themes))
@@ -402,8 +405,10 @@
 (run-at-time "17:00" 86400 #'phye/toggle-theme)
 
 (my-run-with-idle-timer
- 2
+ 3
+ ;; enable default theme
  (lambda ()
+   (message "Load default theme...")
    (phye/toggle-theme)))
 
 (provide 'phye-init-themes)

@@ -208,7 +208,7 @@
   (interactive)
   (when (and (not (display-graphic-p)) (not (string-empty-p (getenv "TMUX"))))
     (let ((name (phye/get-project-name-of-active-window)))
-      (shell-command (format "tmux rename-window %s" name) t t))))
+      (shell-command (format "tmux rename-window %s" name)))))
 
 (add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
 
