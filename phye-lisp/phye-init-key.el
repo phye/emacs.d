@@ -85,10 +85,12 @@
  "il" 'org-insert-link
  "ls" 'symbol-overlay-put
  "m." 'org-noter-sync-current-note
+ "ne" 'flymake-goto-next-error
  "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
  "co" 'org-open-at-point
  "ov" 'jao-toggle-selective-display
+ "pe" 'flymake-goto-prev-error
  "rc" 'recover-avy-lead-face
  "rm" 'phye/mark-and-open
  "rp" 'org-remark-prev

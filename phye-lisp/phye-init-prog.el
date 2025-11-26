@@ -186,6 +186,7 @@
   (subword-mode)
   (ws-butler-mode -1) ; disable auto white space removal
   (setq my-disable-wucuo t)
+  (setq my-disable-lazyflymake t)
   (set-fill-column 100)
   (symbol-overlay-mode))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
@@ -210,6 +211,6 @@
     (let ((name (phye/get-project-name-of-active-window)))
       (shell-command (format "tmux rename-window %s" name)))))
 
-(add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
+;; (add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
 
 (provide 'phye-init-prog)

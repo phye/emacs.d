@@ -70,6 +70,7 @@
   (auto-fill-mode -1)
   (tree-sitter-hl-mode)
   (setq compile-command "go test")
+  (setq eglot-code-action-indications nil)
   ;; (annotate-mode)
   (ts-fold-mode))
 (with-eval-after-load 'go-mode
