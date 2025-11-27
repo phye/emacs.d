@@ -151,7 +151,7 @@
  "os" 'org-side-tree
  "pp" 'symbol-overlay-jump-prev
  "rt" 'my-random-favorite-color-theme
- "rl" 'phye/random-favorite-light-themes
+ "hr" 'phye/random-favorite-light-themes
  "hh" 'phye/random-all-themes
  "pc" 'popper-cycle
  "pl" 'popper-toggle-latest
