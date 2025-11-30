@@ -14,6 +14,10 @@
  ","
  ".")
 
+(general-unbind
+  :keymaps '(helpful-mode-map)
+  "C-w")
+
 ;; {{ global keymaps
 ;; format: off
 (general-define-key
@@ -25,15 +29,6 @@
  "C-c c" 'org-capture
  "C-c o" 'org-open-at-point
  "C-c t" 'org-mark-ring-goto)
-
-;; format: off
-(general-define-key
- :states 'emacs
- :keymaps '(helpful-mode)
- "C-w h" 'evil-window-left
- "C-w l" 'evil-window-right
- "C-w j" 'evil-window-down
- "C-w k" 'evil-window-up)
 
 ;; format: off
 (general-define-key
@@ -292,6 +287,15 @@
  :states 'normal
  :prefix ","
  "q" 'delete-window)
+
+;; format: off
+(general-define-key
+ :states 'emacs
+ :keymaps '(helpful-mode-map)
+ "C-w h" 'evil-window-left
+ "C-w l" 'evil-window-right
+ "C-w j" 'evil-window-down
+ "C-w k" 'evil-window-up)
 
 ;; format: off
 (general-define-key

@@ -1,6 +1,4 @@
 ;; {{ binary
-(evil-set-initial-state 'hexl-mode 'emacs)
-
 (defun phye/hexl-mode-hook ()
   "phye's hexl mode hook"
   (interactive)

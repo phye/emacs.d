@@ -29,7 +29,6 @@
 ;; {{ Golang
 ;; (with-eval-after-load 'go-mode
 ;;   (require 'go-guru))
-(evil-set-initial-state 'godoc-mode 'normal)
 (add-hook 'go-mode-hook 'eglot-ensure)
 
 (use-package go-mode :ensure t :defer t :custom (gofmt-command "goimports"))

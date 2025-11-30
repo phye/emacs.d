@@ -1,5 +1,8 @@
 (evil-set-initial-state 'image-mode 'emacs)
+(evil-set-initial-state 'hexl-mode 'emacs)
+(evil-set-initial-state 'helpful-mode 'emacs)
 (evil-set-initial-state 'dired-mode 'normal)
+(evil-set-initial-state 'godoc-mode 'normal)
 
 ;; evil customizations
 (use-package evil-escape :ensure t :custom (evil-escape-delay 0.2) (evil-escape-key-sequence "fd"))
