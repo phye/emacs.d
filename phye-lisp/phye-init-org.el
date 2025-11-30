@@ -361,12 +361,7 @@
 (with-eval-after-load 'org
   (setq org-todo-keywords
         '((sequence
-           "TODO(t)"
-           "SCHEDULED(s/@)"
-           "DOING(i)"
-           "|"
-           "DONE(d)"
-           "ONHOLD(h@)"
+           "TODO(t)" "SCHEDULED(s/@)" "DOING(i)" "|" "DONE(d)" "ONHOLD(h@)"
            "CANCELLED(c@)") ;; general todo items
           (sequence
            "DESIGNING(D!)" "CODING(C!)" "TESTING(T!)" "WAITING(W@/!)" "RELEASING(G!)" "|"
@@ -417,7 +412,8 @@
 (defun phye/md-after-export-hook (text backend info)
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
   (when (org-export-derived-backend-p backend 'md)
-    (phye/replace-priority-in-string (phye/cleanup-white-spaces-in-string text))))
+    (concat
+     "[TOC]" (phye/replace-priority-in-string (phye/cleanup-white-spaces-in-string text)))))
 (add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
 ;; Persistent notes (like persistent-scratch, but built-in)
