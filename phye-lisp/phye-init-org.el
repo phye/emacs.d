@@ -413,7 +413,7 @@
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
   (when (org-export-derived-backend-p backend 'md)
     (concat
-     "[TOC]" (phye/replace-priority-in-string (phye/cleanup-white-spaces-in-string text)))))
+     "[TOC]\n\n" (phye/replace-priority-in-string (phye/cleanup-white-spaces-in-string text)))))
 (add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
 ;; Persistent notes (like persistent-scratch, but built-in)

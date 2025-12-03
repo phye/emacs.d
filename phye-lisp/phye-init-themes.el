@@ -55,11 +55,16 @@
    doric-dark
    doric-fire
    dorsey
+   ef-autumn
    ef-bio
+   ef-cherie
    ef-elea-dark
    ef-dark
-   ef-autumn
+   ef-duo-dark
+   ef-night
    ef-owl
+   ef-rosa
+   ef-winter
    gotham
    grandshell
    gruvbox-dark-soft
@@ -120,10 +125,14 @@
    ef-arbutus
    ef-deuteranopia-light
    ef-duo-light
+   ef-eagle
    ef-elea-light
    ef-frost
+   ef-kassio
    ef-maris-light
    ef-melissa-light
+   ef-spring
+   ef-summer
    ef-trio-light
    ef-tritanopia-light
    farmhouse-light

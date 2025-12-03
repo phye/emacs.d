@@ -60,13 +60,13 @@
   (add-to-list 'ffip-ignore-filenames "*.pb.go"))
 
 ;; ediff
-(defvar previous-theme nil
+(defvar ediff-previous-theme nil
   "previous theme before ediff for backup")
 (defun phye/ediff-startup-hook ()
-  (setq previous-theme (car custom-enabled-themes))
+  (setq ediff-previous-theme (car custom-enabled-themes))
   (load-theme 'doom-gruvbox t))
 (defun phye/ediff-cleanup-hook ()
-  (load-theme previous-theme t)
+  (load-theme ediff-previous-theme t)
   (ediff-janitor nil t))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
