@@ -17,4 +17,9 @@
             (repo-path (match-string 2)))
         (replace-match (format "git@%s:%s" domain repo-path) t t)))))
 
+(defun phye/convert-https-to-ssh-in-git-config ()
+  "Convert HTTPS git URLs to SSH in git-config."
+  (interactive)
+  (convert-https-to-ssh-in-region (point-min) (point-max)))
+
 (provide 'phye-init-git)
