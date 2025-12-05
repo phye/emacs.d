@@ -111,9 +111,12 @@
  elisp-autofmt
  :ensure t
  :defer t
- :custom (elisp-autofmt-python-bin "/opt/homebrew/bin/python3")
  :commands (elisp-autofmt-mode elisp-autofmt-buffer)
- :hook (emacs-lisp-mode . elisp-autofmt-mode))
+ :hook (emacs-lisp-mode . elisp-autofmt-mode)
+ :config
+ (if *is-a-mac*
+     (customize-set-variable 'elisp-autofmt-python-bin "/opt/homebrew/bin/python3")
+   (customize-set-variable 'elisp-autofmt-python-bin "/usr/bin/python3")))
 
 ;; python
 (with-eval-after-load 'eldoc-mode
