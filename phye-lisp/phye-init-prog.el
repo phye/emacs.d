@@ -141,7 +141,7 @@
    (go-mode (xref-find-definitions (symbol-at-point)))
    (python-mode (xref-find-definitions (symbol-at-point)))
    (org-mode (org-open-at-point))
-   (emacs-lisp-mode (evil-goto-definition))
+   (emacs-lisp-mode (my-evil-goto-definition))
    (t (counsel-etags-find-tag-at-point))))
 
 (defun phye/format-buffer ()

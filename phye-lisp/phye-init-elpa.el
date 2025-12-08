@@ -1,6 +1,8 @@
 (setq phye-elpa-packages
       '(activities
+        agent-shell
         annotate-mode
+        bazel
         better-jumper
         bpftrace-mode
         bufler
