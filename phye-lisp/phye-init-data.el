@@ -15,7 +15,8 @@
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
 (defun phye/yaml-mode-hook ()
   "My yaml mode hook."
-  (ts-fold-mode t))
+  ;; (ts-fold-mode t)
+  (outline-indent-minor-mode))
 
 (use-package
  yaml-mode

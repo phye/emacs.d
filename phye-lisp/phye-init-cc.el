@@ -6,7 +6,7 @@
   (hide-ifdef-mode)
   (hs-minor-mode)
   (annotate-mode)
-  (unless (eq major-mode 'protobuf-mode)
+  (unless (member major-mode '(protobuf-mode bpftrace-mode))
     (tree-sitter-hl-mode))
   (rainbow-mode -1)
   (my-ensure 'clang-format))
