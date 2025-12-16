@@ -34,6 +34,7 @@
         org-side-tree
         outline-indent
         peep-dired
+        pikchr-mode
         popper
         pumpkin-spice-theme
         puni
