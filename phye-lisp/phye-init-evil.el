@@ -3,6 +3,7 @@
 (evil-set-initial-state 'helpful-mode 'emacs)
 (evil-set-initial-state 'dired-mode 'normal)
 (evil-set-initial-state 'godoc-mode 'normal)
+(evil-set-initial-state 'agent-shell-mode 'emacs)
 
 ;; evil customizations
 (use-package evil-escape :ensure t :custom (evil-escape-delay 0.2) (evil-escape-key-sequence "fd"))

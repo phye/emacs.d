@@ -14,6 +14,11 @@
  ","
  ".")
 
+;; format: off
+(general-define-key
+ :keymaps 'emacs
+ "C-w" 'backward-kill-word)
+
 (general-unbind
   :keymaps '(helpful-mode-map)
   "C-w")
@@ -289,13 +294,13 @@
  "q" 'delete-window)
 
 ;; format: off
-(general-define-key
- :states 'emacs
- :keymaps '(helpful-mode-map)
- "C-w h" 'evil-window-left
- "C-w l" 'evil-window-right
- "C-w j" 'evil-window-down
- "C-w k" 'evil-window-up)
+;; (general-define-key
+;;  :states 'emacs
+;;  :keymaps '(helpful-mode-map)
+;;  "C-w h" 'evil-window-left
+;;  "C-w l" 'evil-window-right
+;;  "C-w j" 'evil-window-down
+;;  "C-w k" 'evil-window-up)
 
 ;; format: off
 (general-define-key

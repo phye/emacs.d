@@ -24,6 +24,7 @@
 (require 'phye-init-edit)
 (require 'phye-init-prog)
 (require 'phye-init-cc)
+(require 'phye-init-ai)
 (require 'phye-init-key)
 
 (cd "~/ws")

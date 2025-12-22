@@ -1,5 +1,6 @@
 (setq phye-elpa-packages
       '(activities
+        acp
         agent-shell
         annotate-mode
         bazel

@@ -160,11 +160,11 @@
 (advice-add #'project-find-regexp :override #'deadgrep)
 
 ;; Use puni-mode globally and disable it for term-mode.
-(use-package
- puni
- :defer t
- :ensure t
- :hook ((prog-mode nxml-mode tex-mode) . puni-mode))
+;; (use-package
+;;  puni
+;;  :defer t
+;;  :ensure t
+;;  :hook ((prog-mode nxml-mode tex-mode) . puni-mode))
 
 ;; Do not use electric-pair-mode any more
 ;; (electric-pair-mode 0)
