@@ -315,7 +315,9 @@
  :keymaps 'minibuffer-mode-map
  "C-a" 'move-beginning-of-line
  "C-e" 'move-end-of-line
- "C-w" 'evil-delete-backward-word)
+ "C-w" 'evil-delete-backward-word
+ "C-p" 'previous-line-or-history-element
+ "C-n" 'next-line-or-history-element)
 
 ;; format: off
 (general-define-key
