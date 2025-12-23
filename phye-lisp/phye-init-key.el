@@ -89,6 +89,7 @@
  "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
  "co" 'org-open-at-point
+ "cb" 'org-mark-ring-goto
  "ov" 'jao-toggle-selective-display
  "pe" 'flymake-goto-prev-error
  "rc" 'recover-avy-lead-face
@@ -136,8 +137,8 @@
  :states '(normal visual)
  :prefix "SPC"
  "wd" 'dedicate-current-window
- "jj" 'evil-scroll-down
- "kk" 'evil-scroll-up
+ ;; "jj" 'evil-scroll-down
+ ;; "kk" 'evil-scroll-up
  "jh" 'phye/scroll-window-left
  "jl" 'phye/scroll-window-right
  "fD" 'delete-frame

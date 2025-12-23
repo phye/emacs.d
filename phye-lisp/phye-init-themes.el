@@ -86,7 +86,6 @@
    modus-vivendi-tritanopia
    nord
    noctilux
-   occidental
    omtose-darker
    planet
    purple-haze
@@ -136,6 +135,7 @@
    ef-trio-light
    ef-tritanopia-light
    farmhouse-light
+   occidental
    professional
    spacemacs-light
    twilight-bright
@@ -381,7 +381,7 @@
     (if (< (phye/current-hour) dark-hour)
         (setq bg-color "#00FF86")
       (setq bg-color "#0065FF"))
-    (custom-set-faces `(ivy-current-match ((t (:extend t :background ,bg-color)))))))
+    (set-face-background 'ivy-current-match bg-color nil)))
 
 (defvar previous-dark-theme (phye/default-theme nil)
   "Previous dark theme before toggle.")
