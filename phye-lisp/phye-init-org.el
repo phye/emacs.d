@@ -231,7 +231,7 @@
 
 (defun phye/mark-and-open (begin end &optional id mode)
   "mark region and open notes"
-  (interactive (org-remark-region-or-word))
+  (interactive (org-remark-beg-end nil))
   (org-remark-mark begin end id mode)
   (org-remark-open (point)))
 (defun phye/remark-view-and-select ()

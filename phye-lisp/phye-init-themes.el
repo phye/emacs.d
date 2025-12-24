@@ -373,7 +373,7 @@
       (phye/default-theme t)
     (phye/default-theme nil)))
 
-(defun phye/set-ivy-match-bg-color (unused)
+(defun phye/set-ivy-match-bg-color (&optional unused)
   "Set ivy-current-match color based on current hour, UNUSED is unused."
   (interactive)
   (let ((bg-color "")
@@ -408,6 +408,7 @@
                    "true")))))))
 
 (advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
+(advice-add 'my-random-favorite-color-theme :after #'phye/set-ivy-match-bg-color)
 (advice-add 'phye/load-theme :after #'phye/set-ivy-match-bg-color)
 
 (run-at-time "09:30" 86400 #'phye/toggle-theme)

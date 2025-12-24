@@ -43,7 +43,7 @@
 ;; format: off
 (general-define-key
  :states '(insert normal emacs)
- :prefix "C-;"
+ :prefix "M-;"
  ";" 'ace-pinyin-jump-char-2
  "ff" 'my-toggle-full-window
  "<SPC>" 'insert-zero-width-space
@@ -97,6 +97,7 @@
  "rp" 'org-remark-prev
  "rn" 'org-remark-next
  "ro" 'phye/remark-view-and-select
+ "sc" 'agent-shell-send-region
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit
  "xu" 'upcase-region
@@ -371,11 +372,18 @@
  :keymaps '(sh-mode-map plantuml-mode-map)
  "<RET>" 'newline)
 
+;; format: off
+(general-define-key
+ :keymaps 'agent-shell-mode-map
+ "C-p" 'comint-previous-input
+ "C-n" 'comint-next-input
+ )
+
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()
-       (evil-define-key 'normal evil-matchit-mode-map
-                        "%" 'evil-jump-item
-                        "m" 'evilmi-jump-items))
+  (evil-define-key 'normal evil-matchit-mode-map
+    "%" 'evil-jump-item
+    "m" 'evilmi-jump-items))
 
 ;; format: off
 (general-define-key
