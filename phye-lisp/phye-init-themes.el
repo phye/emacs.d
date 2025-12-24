@@ -419,6 +419,14 @@
  ;; enable default theme
  (lambda ()
    (message "Load default theme...")
-   (phye/toggle-theme)))
+   (phye/toggle-theme)
+   (when (display-graphic-p)
+     (set-face-attribute 'default nil
+                         :family "MonaspiceKr Nerd Font Mono"
+                         :foundry "nil"
+                         :slant 'normal
+                         :weight 'regular
+                         :height 130
+                         :width 'normal))))
 
 (provide 'phye-init-themes)
