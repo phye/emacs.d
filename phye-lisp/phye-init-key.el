@@ -138,8 +138,8 @@
  :states '(normal visual)
  :prefix "SPC"
  "wd" 'dedicate-current-window
- ;; "jj" 'evil-scroll-down
- ;; "kk" 'evil-scroll-up
+ "jj" 'evil-scroll-down
+ "kk" 'evil-scroll-up
  "jh" 'phye/scroll-window-left
  "jl" 'phye/scroll-window-right
  "fD" 'delete-frame
@@ -174,17 +174,17 @@
  :prefix ","
  "cc" 'clipetty-kill-ring-save
  "cd" 'copy-relative-dir-in-project
- "cf" 'copy-relative-path-in-project
  "cD" 'copy-full-dir-to-clipboard
+ "cf" 'cp-filename-of-current-buffer
  "cF" 'copy-full-path-to-clipboard
  "cp" 'copy-project-name-to-clipboard
  "cP" 'copy-project-root-to-clipboard
- "cn" 'copy-file-name-to-clipboard
  "dg" 'deadgrep
  "dc" 'phye/deadgrep-current-directory
  "dk" 'deadgrep-kill-all-buffers
  "DD" 'counsel-etags-grep-current-directory
  "ee" 'eval-expression
+ "fn" 'copy-file-name-to-clipboard
  "ip" 'counsel-git
  "id" 'find-file-in-current-directory
  "im" 'counsel-imenu
@@ -221,7 +221,9 @@
  :states '(normal)
  :keymaps 'override
  :prefix ";"
- ";" 'ace-pinyin-jump-char-2)
+ ";" 'ace-pinyin-jump-char-2
+ "jj" 'scroll-other-window-down
+ "kk" 'scroll-other-window-up)
 
 ;; format: off
 (general-define-key
@@ -337,8 +339,9 @@
 ;; format: off
 (general-define-key
  :keymaps 'dired-mode-map
+ "e" 'evil-forward-word-end
+ "b" 'evil-backward-word-begin
  "h" 'dired-up-directory
- "l" 'dired-find-file
  "j" 'dired-next-line
  "k" 'dired-previous-line
  "<RET>" 'phye/dired-open-file
