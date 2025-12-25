@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; do not use space to override keybinds in Emacs mode
 
-;; unbind unwanted keys
+;; {{ unbind unwanted keys
 ;; format: off
 (general-unbind
  :keymaps '(image-mode-map doc-view-mode-map)
@@ -14,18 +14,18 @@
  ","
  ".")
 
-;; format: off
-(general-define-key
- :keymaps 'emacs
- "C-w" 'backward-kill-word)
-
+;; format off
 (general-unbind
-  :keymaps '(helpful-mode-map)
-  "C-w")
+ :keymaps '(helpful-mode-map)
+ "C-w")
+;; }}
 
 ;; {{ global keymaps
+
 ;; format: off
+;; state independent global keys
 (general-define-key
+ :keymaps 'override
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
  "C-x C-c" 'delete-frame
@@ -36,75 +36,125 @@
  "C-c t" 'org-mark-ring-goto)
 
 ;; format: off
+;; state independent global keys with M-; prefix
 (general-define-key
- "s-q" 'delete-frame
- "s-Q" 'server-shutdown)
-
-;; format: off
-(general-define-key
- :states '(insert normal emacs)
+ :keymaps 'override
  :prefix "M-;"
  ";" 'ace-pinyin-jump-char-2
  "ff" 'my-toggle-full-window
+ "jj" 'scroll-other-window-down
+ "kk" 'scroll-other-window-up
  "<SPC>" 'insert-zero-width-space
  "<TAB>" 'insert-tab)
 
 ;; format: off
+;; state dependent global keys
+(general-define-key
+ :states '(emacs)
+ "C-w" 'backward-kill-word)
+
+;; format: off
+;; normal visual state without prefix
 (general-define-key
  :states '(normal visual)
  "C-b" 'evil-scroll-up)
 
 ;; format: off
+;; normal visual state with comma prefix
 (general-define-key
  :states '(normal visual)
+ :keymaps 'override
  :prefix ","
+ "DD" 'counsel-etags-grep-current-directory
  "bb" 'phye/switch-to-previous-buffer-in-window
- "bp" 'previous-buffer
  "bm" 'phye/ace-move-buffer-to-window
  "bn" 'next-buffer
- "ca" 'annotate-annotate
+ "bp" 'previous-buffer
+ "cD" 'copy-full-dir-to-clipboard
+ "cF" 'copy-full-path-to-clipboard
+ "cP" 'copy-project-root-to-clipboard
  "c[" 'annotate-goto-previous-annotation
  "c]" 'annotate-goto-next-annotation
+ "ca" 'annotate-annotate
+ "cb" 'org-mark-ring-goto
+ "cc" 'clipetty-kill-ring-save
+ "cd" 'copy-relative-dir-in-project
+ "cf" 'cp-filename-of-current-buffer
+ "co" 'org-open-at-point
+ "cp" 'copy-project-name-to-clipboard
+ "dc" 'phye/deadgrep-current-directory
+ "dg" 'deadgrep
+ "dk" 'deadgrep-kill-all-buffers
+ "ee" 'eval-expression
  "fb" 'phye/format-buffer
- "gr" 'xref-find-references
- "gb" 'phye/go-back-to-caller
- "gt" 'phye/goto-definition-at-point
+ "fn" 'copy-file-name-to-clipboard
  "gC" 'phye/xref-clear-marker-stack
+ "gb" 'phye/go-back-to-caller
  "gi" 'eglot-find-implementation
- "hf" 'counsel-describe-function
- "hv" 'counsel-describe-variable
- "hF" 'counsel-describe-face
- "hs" 'hs-hide-all
- "hS" 'hs-show-all
- "hl" 'hs-hide-level
- "hL" 'hs-show-block
- "hb" 'hs-hide-block
+ "gr" 'xref-find-references
+ "gt" 'phye/goto-definition-at-point
  "hB" 'hs-show-block
- "hi" 'hide-ifdef-block
+ "hF" 'counsel-describe-face
  "hI" 'show-ifdef-block
+ "hL" 'hs-show-block
+ "hS" 'hs-show-all
+ "hb" 'hs-hide-block
+ "hf" 'counsel-describe-function
+ "hi" 'hide-ifdef-block
+ "hl" 'hs-hide-level
+ "hs" 'hs-hide-all
+ "hv" 'counsel-describe-variable
+ "id" 'find-file-in-current-directory
  "il" 'org-insert-link
+ "im" 'counsel-imenu
+ "ip" 'counsel-git
+ "kmb" 'phye/kill-matching-buffers
+ "le" 'flymake-show-buffer-diagnostics
  "ls" 'symbol-overlay-put
  "m." 'org-noter-sync-current-note
+ "mG" 'bookmark-jump-other-frame
+ "mS" 'bookmark-save
+ "mX" 'execute-extended-command-for-buffer
+ "mb" 'magit-blame
+ "md" 'bookmark-delete
+ "mg" 'bookmark-jump
+ "mk" 'compile
+ "mp" 'magit-push
+ "ms" 'bookmark-set
+ "mx" 'counsel-M-x
  "ne" 'flymake-goto-next-error
  "nn" 'narrow-to-region
  "oc" 'cfw:open-org-calendar
- "co" 'org-open-at-point
- "cb" 'org-mark-ring-goto
  "ov" 'jao-toggle-selective-display
  "pe" 'flymake-goto-prev-error
+ "rR" 'phye/open-recent-file-in-other-frame
  "rc" 'recover-avy-lead-face
+ "rd" 'bjm/ivy-dired-recent-dirs
  "rm" 'phye/mark-and-open
- "rp" 'org-remark-prev
  "rn" 'org-remark-next
  "ro" 'phye/remark-view-and-select
+ "rp" 'org-remark-prev
+ "rr" 'my-counsel-recentf
  "sc" 'agent-shell-send-region
+ "sl" 'org-store-link
+ "tt" 'shell-pop
+ "ut" 'counsel-etags-update-tags-force
+ "xB" 'ivy-switch-buffer
+ "xK" 'phye/kill-buffer-and-frame
+ "xb" 'bufler-switch-buffer
+ "xc" 'suspend-frame
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit
+ "xf" 'find-file
+ "xg" 'magit-status
+ "xp!" 'project-shell
+ "xpf" 'project-find-file
+ "xpp" 'project-switch-project
  "xu" 'upcase-region
- "zc" 'outline-indent-close-fold
  "zC" 'outline-indent-close-folds
- "zo" 'outline-indent-open-fold
  "zO" 'outline-indent-open-folds
+ "zc" 'outline-indent-close-fold
+ "zo" 'outline-indent-open-fold
  "*" (lambda ()
              (interactive)
              (evil-Surround-region (region-beginning) (region-end) 'block ?*))
@@ -134,6 +184,7 @@
              (evil-Surround-region (region-beginning) (region-end) 'block ?\])))
 
 ;; format: off
+;; normal visual state with space prefix
 (general-define-key
  :states '(normal visual)
  :prefix "SPC"
@@ -160,92 +211,16 @@
  "vs" 'phye/vsplit-3-and-even)
 
 ;; format: off
+;; motion state without prefix
 (general-define-key
  :states 'motion
  "C-o" 'better-jumper-jump-backward
  "C-i" 'better-jumper-jump-forward)
 ;; }}
 
-;; {{ override map
-;; format: off
-(general-define-key
- :states '(normal visual)
- :keymaps 'override
- :prefix ","
- "cc" 'clipetty-kill-ring-save
- "cd" 'copy-relative-dir-in-project
- "cD" 'copy-full-dir-to-clipboard
- "cf" 'cp-filename-of-current-buffer
- "cF" 'copy-full-path-to-clipboard
- "cp" 'copy-project-name-to-clipboard
- "cP" 'copy-project-root-to-clipboard
- "dg" 'deadgrep
- "dc" 'phye/deadgrep-current-directory
- "dk" 'deadgrep-kill-all-buffers
- "DD" 'counsel-etags-grep-current-directory
- "ee" 'eval-expression
- "fn" 'copy-file-name-to-clipboard
- "ip" 'counsel-git
- "id" 'find-file-in-current-directory
- "im" 'counsel-imenu
- "kmb" 'phye/kill-matching-buffers
- "le" 'flymake-show-buffer-diagnostics
- "mb" 'magit-blame
- "mk" 'compile
- "mp" 'magit-push
- "ms" 'bookmark-set
- "mS" 'bookmark-save
- "mg" 'bookmark-jump
- "mG" 'bookmark-jump-other-frame
- "md" 'bookmark-delete
- "mx" 'counsel-M-x
- "mX" 'execute-extended-command-for-buffer
- "rd" 'bjm/ivy-dired-recent-dirs
- "rr" 'my-counsel-recentf
- "rR" 'phye/open-recent-file-in-other-frame
- "sl" 'org-store-link
- "tt" 'shell-pop
- "ut" 'counsel-etags-update-tags-force
- "xb" 'bufler-switch-buffer
- "xB" 'ivy-switch-buffer
- "xc" 'suspend-frame
- "xf" 'find-file
- "xK" 'phye/kill-buffer-and-frame
- "xg" 'magit-status
- "xpp" 'project-switch-project
- "xpf" 'project-find-file
- "xp!" 'project-shell)
-
-;; format: off
-(general-define-key
- :states '(normal)
- :keymaps 'override
- :prefix ";"
- ";" 'ace-pinyin-jump-char-2
- "jj" 'scroll-other-window-down
- "kk" 'scroll-other-window-up)
-
-;; format: off
-(general-define-key
- :states '(normal)
- :keymaps 'override
- "tt" 'ace-pinyin-jump-char-2)
-
-;; }}
-
-;; format: off
-(defun phye/restore-keybindings ()
-       "Restore keybindings by evil-nerd-commenter."
-       (interactive)
-       (my-comma-leader-def
-        "cc" 'clipetty-kill-ring-save))
-;; NOTE(phye); this is ugly... but simple and working for the moment ...
-(my-run-with-idle-timer 5 'phye/restore-keybindings)
-
 ;; {{ mode specific map
 ;; format: off
 (general-define-key
- :states 'normal
  :keymaps 'completion-preview-active-mode-map
  "M-n" 'completion-preview-next-candidate
  "M-p" 'completion-preview-prev-candidate
@@ -270,6 +245,15 @@
  "RET" 'deadgrep-visit-result
  "C-x C-q" 'phye/wgrep-change-to-wgrep-mode
  "w" 'phye/wgrep-change-to-wgrep-mode)
+
+;; format: off
+(general-define-key
+ :keymaps 'xref--xref-buffer-mode-map
+ "n" 'xref-next-group
+ "p" 'xref-prev-group
+ "j" 'xref-next-line-no-show
+ "k" 'xref-prev-line-no-show
+ "RET" 'phye/xref-got-xref-and-quit)
 
 ;; format: off
 (general-define-key
@@ -298,43 +282,9 @@
  "q" 'delete-window)
 
 ;; format: off
-;; (general-define-key
-;;  :states 'emacs
-;;  :keymaps '(helpful-mode-map)
-;;  "C-w h" 'evil-window-left
-;;  "C-w l" 'evil-window-right
-;;  "C-w j" 'evil-window-down
-;;  "C-w k" 'evil-window-up)
-
-;; format: off
 (general-define-key
- :keymaps 'helpful-mode-map
- "f" 'my-toggle-full-window)
-;; }}
-
-;; {{ mini buffer edit
-;; format: off
-(general-define-key
- :keymaps 'minibuffer-mode-map
- "C-a" 'move-beginning-of-line
- "C-e" 'move-end-of-line
- "C-w" 'evil-delete-backward-word
- "C-p" 'previous-line-or-history-element
- "C-n" 'next-line-or-history-element)
-
-;; format: off
-(general-define-key
- :keymaps 'ivy-minibuffer-map
- "C-w" 'ivy-backward-kill-word)
-
-;; format: off
-(general-define-key
- :keymaps 'xref--xref-buffer-mode-map
- "n" 'xref-next-group
- "p" 'xref-prev-group
- "j" 'xref-next-line-no-show
- "k" 'xref-prev-line-no-show
- "RET" 'phye/xref-got-xref-and-quit)
+ :keymaps 'bookmark-minibuffer-read-name-map
+ "C-w" 'evil-delete-backward-word)
 
 ;; format: off
 (general-define-key
@@ -354,21 +304,9 @@
 
 ;; format: off
 (general-define-key
- :keymaps 'ivy-minibuffer-map
- :prefix ","
- "gg" 'ivy-beginning-of-buffer
- "G" 'ivy-end-of-buffer)
-
-;; format: off
-(general-define-key
  :keymaps 'magit-blame-mode-map
  :prefix ","
  "mq" 'magit-blame-quit)
-
-;; format: off
-(general-define-key
- :keymaps 'bookmark-minibuffer-read-name-map
- "C-w" 'evil-delete-backward-word)
 
 ;; format: off
 (general-define-key
@@ -379,14 +317,7 @@
 (general-define-key
  :keymaps 'agent-shell-mode-map
  "C-p" 'comint-previous-input
- "C-n" 'comint-next-input
- )
-
-;; evil-matchit
-(defun evilmi-customize-keybinding ()
-  (evil-define-key 'normal evil-matchit-mode-map
-    "%" 'evil-jump-item
-    "m" 'evilmi-jump-items))
+ "C-n" 'comint-next-input)
 
 ;; format: off
 (general-define-key
@@ -402,9 +333,48 @@
  ",rR" 'phye/open-recent-file-in-other-frame
  "n" 'phye/pdf-goto-next-title-page
  "p" 'phye/pdf-goto-prev-title-page)
+;; }}
+
+;; {{ mini buffer edit
+;; format: off
+(general-define-key
+ :keymaps 'minibuffer-mode-map
+ "C-a" 'move-beginning-of-line
+ "C-e" 'move-end-of-line
+ "C-w" 'evil-delete-backward-word
+ "C-p" 'previous-line-or-history-element
+ "C-n" 'next-line-or-history-element)
+
+;; format: off
+(general-define-key
+ :keymaps 'ivy-minibuffer-map
+ "C-w" 'ivy-backward-kill-word)
+
+;; format: off
+(general-define-key
+ :keymaps 'ivy-minibuffer-map
+ :prefix ","
+ "gg" 'ivy-beginning-of-buffer
+ "G" 'ivy-end-of-buffer)
+;; }}
+
 
 (key-chord-define evil-insert-state-map ",," 'evil-escape)
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
 
+;; evil-matchit
+(defun evilmi-customize-keybinding ()
+       (evil-define-key 'normal evil-matchit-mode-map
+                        "%" 'evil-jump-item
+                        "m" 'evilmi-jump-items))
+
+;; format: off
+(defun phye/restore-keybindings ()
+       "Restore keybindings by evil-nerd-commenter."
+       (interactive)
+       (my-comma-leader-def
+        "cc" 'clipetty-kill-ring-save))
+;; NOTE(phye); this is ugly... but simple and working for the moment ...
+(my-run-with-idle-timer 5 'phye/restore-keybindings)
 
 (provide 'phye-init-key)
