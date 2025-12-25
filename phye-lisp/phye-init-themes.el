@@ -397,7 +397,8 @@
     (when (equal loc "office")
       (if light
           (progn
-            (setq previous-dark-theme (car custom-enabled-themes))
+            (when (car custom-enabled-themes)
+              (setq previous-dark-theme (car custom-enabled-themes)))
             (phye/load-theme default-theme))
         (phye/load-theme previous-dark-theme))
       (when (display-graphic-p)
