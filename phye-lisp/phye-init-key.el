@@ -61,7 +61,14 @@
 ;; normal visual state without prefix
 (general-define-key
  :states '(normal visual)
- "C-b" 'evil-scroll-up)
+ "C-b" 'evil-scroll-up
+ "C-n" 'next-line
+ "C-p" 'previous-line)
+
+(general-define-key
+ :states 'insert
+ "C-n" 'next-line
+ "C-p" 'previous-line)
 
 ;; format: off
 ;; normal visual state with comma prefix
