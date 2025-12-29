@@ -122,7 +122,7 @@
   (with-selected-window (window-right (selected-window))
     (funcall (or (command-remapping #'scroll-up-command) #'scroll-up-command) lines)))
 
-(defun phye/xref-got-xref-and-quit ()
+(defun phye/xref-goto-xref-and-quit ()
   (interactive)
   (xref-goto-xref t))
 

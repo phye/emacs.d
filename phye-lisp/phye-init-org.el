@@ -234,6 +234,7 @@
   (interactive (org-remark-beg-end nil))
   (org-remark-mark begin end id mode)
   (org-remark-open (point)))
+
 (defun phye/remark-view-and-select ()
   "review remark and select window"
   (interactive)

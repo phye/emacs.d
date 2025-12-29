@@ -3,6 +3,8 @@
         acp
         agent-shell
         annotate-mode
+        atom-dark
+        atom-one-dark
         bazel
         better-jumper
         bpftrace-mode
@@ -10,8 +12,10 @@
         burly
         clipetty
         deadgrep
+        dakrone
         dockerfile-mode
         doric-themes
+        dorsey
         el-themes
         elisp-autofmt
         emacs-everywhere
@@ -19,9 +23,11 @@
         evil-collection
         evil-terminal-cursor-changer
         halloweenie-theme
+        hemisu-theme
         hcl-mode
         helpful
         key-chord
+        manoj-dark
         markdown-toc
         mermaid-mode
         nerd-icons
@@ -40,13 +46,16 @@
         pumpkin-spice-theme
         puni
         rg
+        seti-theme
         show-font
         symbol-overlay
         sync-recentf
         tiny
         treemacs
         undo-fu-session
-        vimish-fold))
+        wombat
+        vimish-fold
+        zerodark))
 
 (setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
 

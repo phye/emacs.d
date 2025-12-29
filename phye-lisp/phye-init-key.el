@@ -130,10 +130,11 @@
  "rR" 'phye/open-recent-file-in-other-frame
  "rc" 'recover-avy-lead-face
  "rd" 'bjm/ivy-dired-recent-dirs
- "rm" 'phye/mark-and-open
+ "rm" 'org-remark-mark
  "rn" 'org-remark-next
  "ro" 'phye/remark-view-and-select
  "rp" 'org-remark-prev
+ "rD" 'org-remark-delete
  "rr" 'my-counsel-recentf
  "sc" 'agent-shell-send-region
  "sl" 'org-store-link
@@ -253,7 +254,8 @@
  "p" 'xref-prev-group
  "j" 'xref-next-line-no-show
  "k" 'xref-prev-line-no-show
- "RET" 'phye/xref-got-xref-and-quit)
+ "o" 'xref-goto-xref
+ "RET" 'phye/xref-goto-xref-and-quit)
 
 ;; format: off
 (general-define-key
