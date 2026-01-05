@@ -11,6 +11,25 @@
  (add-hook 'json-mode-hook #'hs-minor-mode))
 ;; }}
 
+(defun cb/pretty-print-yaml-json (beg end)
+  "Parse the region as a double-quoted string (handling YAML/Lisp style escapes),parse the result as JSON, and pretty-print it to a new buffer."
+  (interactive "r")
+  (let* ((input-str (buffer-substring-no-properties beg end))
+         (quoted-str
+          (if (eq (aref input-str 0) ?\")
+              input-str
+            (format "\"%s\"" input-str)))
+         (unescaped-json (car (read-from-string quoted-str)))
+         (json-object (json-read-from-string unescaped-json))
+         (json-encoding-pretty-print t)
+         (pretty-json (json-encode json-object)))
+    ;; Output the result
+    (with-current-buffer (get-buffer-create "*JSON Pretty Print*")
+      (erase-buffer)
+      (insert pretty-json)
+      (json-mode) ;; Use json-mode if available for syntax highlighting
+      (pop-to-buffer (current-buffer)))))
+
 ;; {{ YAML
 ;; from: https://github.com/yoshiki/yaml-mode/issues/25
 (defun phye/yaml-mode-hook ()

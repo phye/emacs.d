@@ -50,7 +50,8 @@
         (tool-bar-lines . 0)
         (undecorated-round . t)
         (horizontal-scroll-bars)
-        (vertical-scroll-bars)))
+        (vertical-scroll-bars)
+        (font . "MonaspiceKr Nerd Font Mono-13")))
 
 (provide 'early-init)
 ;;; early-init.el ends here

@@ -416,18 +416,10 @@
 (run-at-time "17:00" 86400 #'phye/toggle-theme)
 
 (my-run-with-idle-timer
- 3
+ 5
  ;; enable default theme
  (lambda ()
    (message "Load default theme...")
-   (phye/toggle-theme)
-   (when (display-graphic-p)
-     (set-face-attribute 'default nil
-                         :family "MonaspiceKr Nerd Font Mono"
-                         :foundry "nil"
-                         :slant 'normal
-                         :weight 'regular
-                         :height 130
-                         :width 'normal))))
+   (phye/toggle-theme)))
 
 (provide 'phye-init-themes)
