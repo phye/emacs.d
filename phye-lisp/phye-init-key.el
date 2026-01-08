@@ -28,6 +28,10 @@
  :keymaps 'override
  "M-`" 'other-frame
  "M-v" 'paste-from-x-clipboard
+ "C-a" 'move-beginning-of-line
+ "C-e" 'move-end-of-line
+ "C-p" 'previous-line
+ "C-n" 'next-line
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
  "C-c a" 'org-agenda
@@ -117,6 +121,7 @@
  "mX" 'execute-extended-command-for-buffer
  "mb" 'magit-blame
  "md" 'bookmark-delete
+ "mf" 'iconify-frame
  "mg" 'bookmark-jump
  "mk" 'compile
  "mp" 'magit-push
