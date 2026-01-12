@@ -19,7 +19,7 @@
  :defer t
  :custom
  (annotate-summary-ask-query t)
- (annotate-file "~/.data/annotations"))
+ (annotate-file "~/.emacs.data.d/annotations"))
 
 ;; company
 ;; (with-eval-after-load 'company-ispell

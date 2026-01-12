@@ -63,7 +63,9 @@
  :states '(normal visual)
  "C-b" 'evil-scroll-up
  "C-n" 'next-line
- "C-p" 'previous-line)
+ "C-p" 'previous-line
+ "zp" 'outline-backward-same-level
+ "zn" 'outline-forward-same-level)
 
 (general-define-key
  :states 'insert
@@ -142,7 +144,7 @@
  "rR" 'phye/open-recent-file-in-other-frame
  "rc" 'recover-avy-lead-face
  "rd" 'bjm/ivy-dired-recent-dirs
- "rm" 'org-remark-mark
+ "rm" 'phye/mark-and-open
  "rn" 'org-remark-next
  "ro" 'phye/remark-view-and-select
  "rp" 'org-remark-prev
@@ -150,6 +152,8 @@
  "rr" 'my-counsel-recentf
  "sc" 'agent-shell-send-region
  "sl" 'org-store-link
+ "sp" 'outline-backward-same-level
+ "sn" 'outline-forward-same-level
  "tt" 'shell-pop
  "ut" 'counsel-etags-update-tags-force
  "xB" 'ivy-switch-buffer
@@ -164,10 +168,6 @@
  "xpf" 'project-find-file
  "xpp" 'project-switch-project
  "xu" 'upcase-region
- "zC" 'outline-indent-close-folds
- "zO" 'outline-indent-open-folds
- "zc" 'outline-indent-close-fold
- "zo" 'outline-indent-open-fold
  "*" (lambda ()
              (interactive)
              (evil-Surround-region (region-beginning) (region-end) 'block ?*))
