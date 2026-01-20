@@ -30,8 +30,6 @@
  "M-v" 'paste-from-x-clipboard
  "C-a" 'move-beginning-of-line
  "C-e" 'move-end-of-line
- "C-p" 'previous-line
- "C-n" 'next-line
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
  "C-c a" 'org-agenda
@@ -65,7 +63,10 @@
  "C-n" 'next-line
  "C-p" 'previous-line
  "zp" 'outline-backward-same-level
- "zn" 'outline-forward-same-level)
+ "zP" 'outline-previous-heading
+ "zn" 'outline-forward-same-level
+ "zN" 'outline-next-heading
+ "zu" 'outline-up-heading)
 
 (general-define-key
  :states 'insert
@@ -144,7 +145,7 @@
  "rR" 'phye/open-recent-file-in-other-frame
  "rc" 'recover-avy-lead-face
  "rd" 'bjm/ivy-dired-recent-dirs
- "rm" 'phye/mark-and-open
+ "rm" 'org-remark-mark
  "rn" 'org-remark-next
  "ro" 'phye/remark-view-and-select
  "rp" 'org-remark-prev
@@ -330,8 +331,8 @@
 ;; format: off
 (general-define-key
  :keymaps 'agent-shell-mode-map
- "C-p" 'comint-previous-input
- "C-n" 'comint-next-input)
+ "M-p" 'comint-previous-input
+ "M-n" 'comint-next-input)
 
 ;; format: off
 (general-define-key
