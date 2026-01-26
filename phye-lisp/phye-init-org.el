@@ -397,7 +397,7 @@
 
 (defun phye/org-before-save-hook ()
   "phye's orgmode before save hook."
-  (when (member major-mode '(org-mode markdown-mode gfm-mode))
+  (when (member major-mode '(org-mode gfm-mode))
     (when (eq major-mode 'org-mode)
       (phye/insert-zws-in-buffer))
     (phye/cleanup-white-spaces-in-buffer)))
