@@ -124,4 +124,9 @@
   (interactive)
   (insert-char ?\t))
 
+(defun capi/count-apis ()
+  "Count APIs by greping lines starting with '  /'."
+  (interactive)
+  (message "APIs: %d" (how-many "^  /" (point-min) (point-max))))
+
 (provide 'phye-init-utils)

@@ -410,6 +410,7 @@
 
 (advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-random-favorite-color-theme :after #'phye/set-ivy-match-bg-color)
+(advice-add 'counsel-load-theme :after #'phye/set-ivy-match-bg-color)
 (advice-add 'phye/load-theme :after #'phye/set-ivy-match-bg-color)
 
 (run-at-time "09:30" 86400 #'phye/toggle-theme)
