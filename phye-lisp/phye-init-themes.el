@@ -364,7 +364,7 @@
           'doric-wind
         'doom-feather-light)
     (if (display-graphic-p)
-        'doom-monokai-classic
+        'ef-bio
       'kaolin-galaxy)))
 
 (defun phye/time-based-default-theme ()
