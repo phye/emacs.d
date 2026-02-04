@@ -122,6 +122,7 @@
  "il" 'org-insert-link
  "im" 'counsel-imenu
  "ip" 'counsel-git
+ "iP" 'find-file-in-project
  "kmb" 'phye/kill-matching-buffers
  "le" 'flymake-show-buffer-diagnostics
  "ls" 'symbol-overlay-put
