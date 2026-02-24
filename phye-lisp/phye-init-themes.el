@@ -328,7 +328,7 @@
 
 
 ;; customize avy jump colors
-(defun recover-avy-lead-face ()
+(defun recover-avy-lead-face (&optional unused)
   "Recovy avy leader face."
   (interactive)
   (require 'avy)
@@ -408,8 +408,8 @@
                      "false"
                    "true")))))))
 
-(advice-add 'my-random-favorite-color-theme :after #'recover-avy-lead-face)
-(advice-add 'my-random-favorite-color-theme :after #'phye/set-ivy-match-bg-color)
+(advice-add 'my-pickup-random-color-theme :after #'recover-avy-lead-face)
+(advice-add 'my-pickup-random-color-theme :after #'phye/set-ivy-match-bg-color)
 (advice-add 'counsel-load-theme :after #'phye/set-ivy-match-bg-color)
 (advice-add 'phye/load-theme :after #'phye/set-ivy-match-bg-color)
 
