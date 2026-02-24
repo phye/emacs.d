@@ -158,7 +158,8 @@
  :custom
  (hl-todo-keyword-faces
   '(("STUB" . "#1E90FF")
-    ("Deprecated" . "white")
+    ("Deprecated" . "orange")
+    ("DEPRECATED" . "orange")
     ("PITFALL" . "#FF4500")
     ("LOGIC" . "yellow")
     ("PURPOSE" . "lavender")
