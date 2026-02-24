@@ -129,4 +129,27 @@
   (interactive)
   (message "APIs: %d" (how-many "^  /" (point-min) (point-max))))
 
+(defun proto/count-rpcs ()
+  "Count number of RPCs in the wrapping service or in the whole buffer."
+  (interactive)
+  (let ((p (point))
+        (beg (point-min))
+        (end (point-max))
+        (scope "buffer"))
+    (save-excursion
+      (when (re-search-backward "^\\s-*service\\s-+\\(\\w+\\)" nil t)
+        (let ((name (match-string 1))
+              (start (point)))
+          (when (search-forward "{" nil t)
+            (backward-char)
+            (condition-case nil
+                (progn
+                  (forward-list)
+                  (when (> (point) p)
+                    (setq beg start
+                          end (point)
+                          scope (format "service %s" name))))
+              (error nil))))))
+    (message "RPCs in %s: %d" scope (how-many "^\\s-*rpc\\b" beg end))))
+
 (provide 'phye-init-utils)

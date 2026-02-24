@@ -94,7 +94,7 @@
  "cb" 'org-mark-ring-goto
  "cc" 'clipetty-kill-ring-save
  "cd" 'copy-relative-dir-in-project
- "cf" 'cp-filename-of-current-buffer
+ "cf" 'copy-relative-path-in-project
  "co" 'org-open-at-point
  "cp" 'copy-project-name-to-clipboard
  "dc" 'phye/deadgrep-current-directory
