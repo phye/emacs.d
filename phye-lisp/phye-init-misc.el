@@ -23,10 +23,11 @@
 
 (setq dictionary-server "dict.org")
 
+(setq help-window-select t)
+
 ;; {{ macOS
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'meta)
-(setq help-window-select t)
 
 (customize-set-variable 'calendar-latitude +31.2)
 (customize-set-variable 'calendar-longitude +121.5)

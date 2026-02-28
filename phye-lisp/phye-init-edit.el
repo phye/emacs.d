@@ -175,8 +175,12 @@
 ;;   :config
 ;;   (require 'smartparens-config))
 
-(use-package key-chord :ensure t :config (key-chord-mode 1))
+(use-package key-chord
+  :ensure t
+  :config (key-chord-mode 1))
 
-(use-package outline-indent :ensure t)
+(use-package outline-indent
+  :ensure t
+  :defer t)
 
 (provide 'phye-init-edit)

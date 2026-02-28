@@ -92,17 +92,6 @@
   (interactive "sKill buffers matching this regular expression: ")
   (kill-matching-buffers regexp nil t))
 
-(require 'cl-lib)
-(defun phye/kill-last-opened-buffer ()
-  "Kill last opened buffer except current."
-  (interactive)
-  (cl-dolist
-   (buf (buffer-list (selected-frame)))
-   (when (and (not (eq buf (current-buffer))) (not (minibufferp buf)))
-     (message "Kill buffer %s" (buffer-name buf))
-     (kill-buffer buf)
-     (cl-return buf))))
-
 (defun phye/vsplit-3-and-even ()
   "Vertically split windows into 3 part."
   (interactive)
@@ -140,7 +129,7 @@
     (set-window-buffer window cur-buffer)))
 
 ;; (use-package activities :ensure t :defer t :init (activities-mode))
-(use-package bufler :ensure t :init (bufler-mode))
+;; (use-package bufler :ensure t :defer t :init (bufler-mode))
 
 (defun phye/remember-list-in-new-frame ()
   (interactive)
