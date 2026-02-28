@@ -6,7 +6,10 @@
 (use-package
  agent-shell
  ;; use the modified version for codebuddy
- :vc (:url "git@git.woa.com:phye/agent-shell.git" :rev :newest)
+ :vc (:url "git@git.woa.com:phye/agent-shell.git" :rev "merge_upstream")
+ :config
+ (setq agent-shell-google-gemini-acp-command
+       (cons "gemini-internal" (cdr agent-shell-google-gemini-acp-command)))
 
  ;; :ensure t
  ;; to use codebuddy, normally you should only login once and then relies on

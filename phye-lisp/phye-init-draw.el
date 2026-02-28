@@ -33,6 +33,6 @@
 ;;}}
 
 ;; {{
-(add-to-list 'imagemagick-types-inhibit 'SVG)
+;; (add-to-list 'imagemagick-types-inhibit 'SVG)
 ;; }}
 (provide 'phye-init-draw)
