@@ -81,7 +81,7 @@
 
 (use-package
  tree-sitter-langs
- :vc (:url "https://github.com/emacs-tree-sitter/tree-sitter-langs.git" :branch "0.12.279")
+ :vc (:url "https://github.com/emacs-tree-sitter/tree-sitter-langs.git" :branch "0.13.27")
  :defer t
  :after (tree-sitter))
 
@@ -94,7 +94,7 @@
 
 (use-package ts-fold-indicators :load-path "~/.emacs.d/site-lisp/ts-fold/")
 
-;; (setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.12.150/bin" user-emacs-directory)))
+(setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.13.27/bin" user-emacs-directory)))
 
 (use-package symbol-overlay :ensure t :config (setq symbol-overlay-inhibit-map t))
 
