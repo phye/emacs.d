@@ -380,6 +380,10 @@
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
 (key-chord-define ivy-minibuffer-map "jj" 'ivy-next-line)
 (key-chord-define ivy-minibuffer-map "kk" 'ivy-previous-line)
+(key-chord-define ivy-minibuffer-map "gg" 'ivy-beginning-of-buffer)
+(key-chord-define ivy-minibuffer-map "dd" 'ivy-end-of-buffer)
+(key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
+(key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit)
 
 ;; evil-matchit
 (defun evilmi-customize-keybinding ()
