@@ -63,10 +63,10 @@
  "C-b" 'evil-scroll-up
  "C-n" 'next-line
  "C-p" 'previous-line
- "zp" 'outline-backward-same-level
- "zP" 'outline-previous-heading
- "zn" 'outline-forward-same-level
- "zN" 'outline-next-heading
+ "zP" 'outline-backward-same-level
+ "zp" 'outline-previous-heading
+ "zN" 'outline-forward-same-level
+ "zn" 'outline-next-heading
  "zu" 'outline-up-heading)
 
 (general-define-key
