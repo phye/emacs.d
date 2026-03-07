@@ -164,5 +164,36 @@
               (error nil))))))
     (message "RPCs in %s: %d" scope (how-many "^\\s-*rpc\\b" beg end))))
 
+;;;###autoload
+(defun phye/protobuf-jump-req-rsp ()
+  "Jump between Req and Rsp on the same line in a service RPC definition.
+If point is on a XxxReq type, jump to XxxRsp.
+If point is on a XxxRsp type, jump to XxxReq."
+  (interactive)
+  (let (current-name other-name bounds)
+    ;; Get the symbol at point (handles underscores and mixed case in protobuf types)
+    (setq bounds (bounds-of-thing-at-point 'symbol))
+    (unless bounds
+      (user-error "No word at point"))
+    (setq current-name (buffer-substring-no-properties (car bounds) (cdr bounds)))
+    (unless (and current-name (> (length current-name) 0))
+      (user-error "No word at point"))
+
+    ;; Determine the counterpart name
+    (cond
+     ((string-suffix-p "Req" current-name)
+      (setq other-name (concat (substring current-name 0 -3) "Rsp")))
+     ((string-suffix-p "Rsp" current-name)
+      (setq other-name (concat (substring current-name 0 -3) "Req")))
+     (t
+      (user-error "Word does not end with Req or Rsp")))
+    (message "current: %s, other: %s" current-name other-name)
+
+    ;; Search for the counterpart on the current line
+    (beginning-of-line)
+    (if (re-search-forward other-name (line-end-position) t)
+        (backward-sexp)
+      (user-error "Could not find %s on this line" other-name))))
+
 (provide 'phye-init-utils)
 ;;; phye-init-utils.el ends here
