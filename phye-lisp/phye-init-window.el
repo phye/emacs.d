@@ -1,3 +1,20 @@
+;;; phye-init-window.el --- Window and buffer management  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Buffer/window layout, frame navigation, and ace-window integration.
+
+;;; Code:
+
+(declare-function evil-window-vsplit "evil-commands")
+(declare-function evil-window-set-width "evil-commands")
+(declare-function ivy-read "ivy")
+(declare-function xref-goto-xref "xref")
+(declare-function aw-select "ace-window")
+
+(defvar recentf-list)
+
+(require 'cl-lib)
+
 ;; {{ buffer and window related
 (setq split-height-threshold nil)
 (setq frame-resize-pixelwise t)
@@ -26,6 +43,7 @@
   (set-window-dedicated-p (selected-window) (not (window-dedicated-p (selected-window))))
   (message "window dedicated: %s" (window-dedicated-p (selected-window))))
 
+(defvar xref-history-storage)
 (setq xref-history-storage 'xref-window-local-history)
 ;; }}
 
@@ -112,6 +130,7 @@
     (funcall (or (command-remapping #'scroll-up-command) #'scroll-up-command) lines)))
 
 (defun phye/xref-goto-xref-and-quit ()
+  "Go to xref and quit the xref buffer."
   (interactive)
   (xref-goto-xref t))
 
@@ -132,8 +151,10 @@
 ;; (use-package bufler :ensure t :defer t :init (bufler-mode))
 
 (defun phye/remember-list-in-new-frame ()
+  "Open remember notes in a new frame."
   (interactive)
   (select-frame (make-frame))
   (remember-notes t))
 
 (provide 'phye-init-window)
+;;; phye-init-window.el ends here

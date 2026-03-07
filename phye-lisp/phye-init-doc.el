@@ -1,5 +1,14 @@
+;;; phye-init-doc.el --- Documentation and markup modes  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for markdown, org export, and info mode.
+
+;;; Code:
+
+(defvar Info-mode-map)
+
 (defun phye/markdown-hook ()
-  "diasable trunc lines"
+  "Disable truncate lines in markdown mode."
   (interactive)
   ;;(linum-mode)
   (setq truncate-lines nil))
@@ -36,7 +45,7 @@ installed."
 
 ;; {{ info mode
 (defun phye/info-mode-hook ()
-  "bind evil like windmov"
+  "Bind evil-like window movement keys in Info mode."
   (interactive)
   (define-key Info-mode-map (kbd "C-w h") 'evil-window-left)
   (define-key Info-mode-map (kbd "C-w l") 'evil-window-right)
@@ -46,3 +55,4 @@ installed."
 ;; }}
 
 (provide 'phye-init-doc)
+;;; phye-init-doc.el ends here

@@ -48,7 +48,7 @@
  "jj" 'scroll-other-window-down
  "kk" 'scroll-other-window-up
  "<SPC>" 'insert-zero-width-space
- "<TAB>" 'insert-tab)
+ "<TAB>" 'phye/insert-tab)
 
 ;; format: off
 ;; state dependent global keys

@@ -1,3 +1,10 @@
+;;; phye-init-prog.el --- General programming configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Shell pop, tree-sitter, eglot, xref, and prog-mode hooks.
+
+;;; Code:
+
 ;; quick pop shell
 (use-package
  shell-pop
@@ -61,11 +68,13 @@
 
 ;; ediff
 (defvar ediff-previous-theme nil
-  "previous theme before ediff for backup")
+  "Previous theme before ediff for backup.")
 (defun phye/ediff-startup-hook ()
+  "Save current theme and load doom-gruvbox for ediff."
   (setq ediff-previous-theme (car custom-enabled-themes))
   (load-theme 'doom-gruvbox t))
 (defun phye/ediff-cleanup-hook ()
+  "Restore previous theme and run ediff janitor."
   (load-theme ediff-previous-theme t)
   (ediff-janitor nil t))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
@@ -73,6 +82,7 @@
 
 ;; log
 (defun phye/view-log-with-color ()
+  "Apply ANSI color codes in the current buffer."
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
@@ -123,7 +133,7 @@
   (setq eldoc-idle-delay 5))
 
 (defun phye/python-mode-hook ()
-  "phye's python mode hook"
+  "Phye's python mode hook."
   ;; pip install python-lsp-server
   (customize-set-variable 'python-interpreter "~/.pyvenv/bin/python")
   (pyvenv-activate "~/.pyvenv")
@@ -134,7 +144,7 @@
 (add-hook 'python-mode-hook 'phye/python-mode-hook 0)
 
 (defun phye/goto-definition-at-point ()
-  "my mode-aware go to definition"
+  "My mode-aware go to definition."
   (interactive)
   (cl-case
    major-mode
@@ -162,7 +172,7 @@
   (cl-case major-mode (org-mode (org-mark-ring-goto)) (t (xref-pop-marker-stack))))
 
 (defun phye/xref-clear-marker-stack ()
-  "Interactively clear marker stack"
+  "Interactively clear marker stack."
   (interactive)
   (xref-clear-marker-stack)
   (message "xref stack cleared"))
@@ -181,8 +191,8 @@
 
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
+  "Phye's prog mode hook."
   (interactive)
-  "phye's prog mode hook"
   (turn-on-auto-fill)
   (hs-minor-mode)
   (hl-todo-mode 1)
@@ -217,3 +227,4 @@
 ;; (add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
 
 (provide 'phye-init-prog)
+;;; phye-init-prog.el ends here

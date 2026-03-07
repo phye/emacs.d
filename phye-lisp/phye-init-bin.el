@@ -1,6 +1,13 @@
+;;; phye-init-bin.el --- Binary and assembly mode configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for binary, hexl-mode, and asm-mode.
+
+;;; Code:
+
 ;; {{ binary
 (defun phye/hexl-mode-hook ()
-  "phye's hexl mode hook"
+  "Phye's hexl mode hook."
   (interactive)
   (read-only-mode t))
 
@@ -25,3 +32,4 @@
 ;; }}
 
 (provide 'phye-init-bin)
+;;; phye-init-bin.el ends here

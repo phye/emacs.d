@@ -1,6 +1,9 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; General Edit Configs ;; ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; phye-init.el --- Main entry point for phye's Emacs config  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Loads all phye-init-* modules in order.
+
+;;; Code:
 
 (defconst phye-lisp-dir (concat my-emacs-d "phye-lisp")
   "Directory of phye-lisp.")
@@ -29,6 +32,4 @@
 
 (cd "~/ws")
 (provide 'phye-init)
-;;;;;;;;;;;;;;;
-;; ;; End ;; ;;
-;;;;;;;;;;;;;;;
+;;; phye-init.el ends here

@@ -1,3 +1,17 @@
+;;; phye-init-utils.el --- Utility functions for phye's config  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Miscellaneous utility functions.
+
+;;; Code:
+
+(require 'cl-lib)
+
+(declare-function recentf-save-list "recentf")
+(declare-function clipetty-kill-ring-save "clipetty")
+(declare-function find-file-in-current-directory "find-file-in-project")
+(declare-function ffip-project-root "find-file-in-project")
+
 ;; define function to shutdown emacs server instance
 
 (defun server-shutdown ()
@@ -23,11 +37,12 @@
 
 ;; timestamp
 (defun ts-to-human (ts)
-  "Given ts INTEGER, return human readable string."
+  "Given TS INTEGER, return human readable string."
   (interactive "nts: ")
   (message (format-time-string "%Y-%m-%d %H:%M:%S" ts)))
 
 (defun current-ts ()
+  "Copy the current Unix timestamp as an integer to clipboard."
   (interactive)
   (let ((ts (format "%s" (time-convert (current-time) 'integer))))
     (copy-variable-to-clipboard ts)))
@@ -36,19 +51,9 @@
 (defun decode-hex-string (hex-string)
   "Decode hex string convert HEX-STRING to ascii."
   (apply #'concat
-         (cl-loop
-          for
-          i
-          from
-          0
-          to
-          (- (/ (length hex-string) 2) 1)
-          for
-          hex-byte
-          =
-          (substring hex-string (* 2 i) (* 2 (+ i 1)))
-          collect
-          (format "%c" (string-to-number hex-byte 16)))))
+         (cl-loop for i from 0 to (- (/ (length hex-string) 2) 1)
+                  for hex-byte = (substring hex-string (* 2 i) (* 2 (+ i 1)))
+                  collect (format "%c" (string-to-number hex-byte 16)))))
 
 ;; code toggle
 ;; from: https://emacs.wordpress.com/2007/01/16/quick-and-dirty-code-folding/
@@ -81,28 +86,34 @@
   (message "copied: %s" val))
 
 (defun copy-relative-dir-in-project ()
+  "Copy the relative directory of the current file within the project to clipboard."
   (interactive)
   (let ((path (file-name-directory (file-relative-name (buffer-file-name) (ffip-project-root)))))
     (copy-variable-to-clipboard path)))
 
 (defun copy-relative-path-in-project ()
+  "Copy the relative path of the current file within the project to clipboard."
   (interactive)
   (let ((path (file-relative-name (buffer-file-name) (ffip-project-root))))
     (copy-variable-to-clipboard path)))
 
 (defun copy-project-root-to-clipboard ()
+  "Copy the project root directory to clipboard."
   (interactive)
   (copy-variable-to-clipboard (ffip-project-root)))
 
 (defun copy-full-dir-to-clipboard ()
+  "Copy the full directory of the current buffer to clipboard."
   (interactive)
   (copy-variable-to-clipboard default-directory))
 
 (defun copy-full-path-to-clipboard ()
+  "Copy the full path of the current file to clipboard."
   (interactive)
   (copy-variable-to-clipboard (file-truename buffer-file-name)))
 
 (defun copy-file-name-to-clipboard ()
+  "Copy the file name (without directory) of the current buffer to clipboard."
   (interactive)
   (copy-variable-to-clipboard (file-name-nondirectory buffer-file-name)))
 
@@ -111,6 +122,7 @@
   (file-name-nondirectory (directory-file-name (file-name-directory path))))
 
 (defun copy-project-name-to-clipboard ()
+  "Copy the project name (last component of project root) to clipboard."
   (interactive)
   (copy-variable-to-clipboard (get-last-dirname (ffip-project-root))))
 
@@ -119,7 +131,7 @@
   (interactive)
   (insert-char (char-from-name "ZERO WIDTH SPACE")))
 
-(defun insert-tab ()
+(defun phye/insert-tab ()
   "Insert tab."
   (interactive)
   (insert-char ?\t))
@@ -153,3 +165,4 @@
     (message "RPCs in %s: %d" scope (how-many "^\\s-*rpc\\b" beg end))))
 
 (provide 'phye-init-utils)
+;;; phye-init-utils.el ends here

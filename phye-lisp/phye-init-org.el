@@ -1,3 +1,64 @@
+;;; phye-init-org.el --- Org mode configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Org mode settings, org-journal, org-roam, org-remark, and related packages.
+
+;;; Code:
+
+(declare-function my-yas-reload-all "init-yasnippet")
+(declare-function general-define-key "general")
+(declare-function ffip-project-root "find-file-in-project")
+(declare-function evil-set-initial-state "evil-core")
+(declare-function pdf-tools-install "pdf-tools")
+(declare-function org-journal-new-entry "org-journal")
+(declare-function org-remark-global-tracking-mode "org-remark")
+(declare-function org-remark-beg-end "org-remark")
+(declare-function org-remark-mark "org-remark")
+(declare-function org-remark-open "org-remark")
+(declare-function org-remark-view "org-remark")
+(declare-function org-roam-db-autosync-mode "org-roam")
+(declare-function org-back-to-heading "org")
+(declare-function org-todo "org")
+(declare-function org-export-derived-backend-p "ox")
+
+(defvar org-catch-invisible-edits)
+(defvar org-adapt-indentation)
+(defvar org-refile-targets)
+(defvar org-capture-templates)
+(defvar org-archive-location)
+(defvar org-src-window-setup)
+(defvar org-confirm-babel-evaluate)
+(defvar org-babel-default-header-args:plantuml)
+(defvar org-babel-default-header-args:icalendar)
+(defvar org-babel-python-command)
+(defvar org-log-into-drawer)
+(defvar org-tag-alist)
+(defvar org-deadline-warning-days)
+(defvar org-clock-persist)
+(defvar org-agenda-files)
+(defvar org-export-with-sub-superscripts)
+(defvar org-export-with-properties)
+(defvar org-export-with-priority)
+(defvar org-export-with-toc)
+(defvar org-latex-classes)
+(defvar org-latex-listings)
+(defvar org-latex-to-pdf-process)
+(defvar org-roam-v2-ack)
+(defvar org-mode-map)
+(defvar org-roam-node-display-template)
+(defvar org-noter-notes-mode-map)
+(defvar org-remark-notes-buffer-name)
+(defvar org-todo-keywords)
+(defvar org-tags-column)
+(defvar org-export-headline-levels)
+(defvar org-list-allow-alphabetical)
+(defvar org-icalendar-include-todo)
+(defvar org-icalendar-use-scheduled)
+(defvar org-icalendar-use-deadline)
+(defvar org-icalendar-alarm-time)
+(defvar org-icalendar-ttl)
+(defvar org-src-lang-modes)
+
 ;; general editting
 (setq org-catch-invisible-edits (quote error))
 (setq org-adapt-indentation t)
@@ -152,14 +213,14 @@
 ;; org-journal capture
 ;; Refer to https://github.com/bastibe/org-journal
 (defun org-journal-find-location ()
-  ;; Open today's journal, but specify a non-nil prefix argument in order to
-  ;; inhibit inserting the heading; org-capture will insert the heading.
+  "Open today's journal with non-nil prefix to inhibit heading insertion.
+`org-capture' will insert the heading instead."
   (org-journal-new-entry t)
   ;; Position point on the journal's top-level heading so that org-capture
   ;; will add the new entry as a child entry.
   (goto-char (point-min)))
 (defun org-journal-delete ()
-  ;; Delete current journal file and buffer
+  "Delete current journal file and buffer."
   (interactive)
   (delete-file (buffer-name))
   (kill-buffer))
@@ -229,14 +290,8 @@
  (org-remark-notes-display-buffer-action
   '((display-buffer-below-selected) (window-height 30) (preserve-size t))))
 
-(defun phye/mark-and-open (begin end &optional id mode)
-  "mark region and open notes"
-  (interactive (org-remark-beg-end nil))
-  (org-remark-mark begin end id mode)
-  (org-remark-open (point)))
-
 (defun phye/remark-view-and-select ()
-  "review remark and select window"
+  "Review remark and select window."
   (interactive)
   (org-remark-view (point))
   (select-window (get-buffer-window org-remark-notes-buffer-name)))
@@ -264,6 +319,7 @@
 ;; {{ Custom Org Mode Functions
 ;; My org template
 (defun phye/org-template ()
+  "Insert standard org file template with title and setupfile."
   (insert "#+title: \n")
   (insert "#+setupfile: ~/.emacs.d/misc/include.org\n"))
 (define-auto-insert "\\.org$" #'phye/org-template)
@@ -272,6 +328,7 @@
 (with-eval-after-load 'org-list
   '(add-hook 'org-checkbox-statistics-hook (function ndk/checkbox-list-complete)))
 (defun ndk/checkbox-list-complete ()
+  "Set heading todo state based on checkbox completion statistics."
   (save-excursion
     (org-back-to-heading t)
     (let ((beg (point))
@@ -343,7 +400,7 @@
 
 ;; {{ hooks
 (defun phye/org-mode-hook ()
-  "custom orgmode settings"
+  "Custom orgmode settings."
   (interactive)
   ;; (setq safe-local-variable-values (quote ((lentic-init . lentic-orgel-org-init))))
   (set-fill-column 100))
@@ -378,7 +435,7 @@
   (setq org-icalendar-use-scheduled '(event-if-todo event-if-not-todo todo-start))
   (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
   (setq org-icalendar-alarm-time 60)
-  (setq org-icalendar-ttl "PT1H")
+  (setq org-icalendar-ttl "1H")
   (my-run-with-idle-timer
    1
    (lambda ()
@@ -396,7 +453,7 @@
      (my-yas-reload-all))))
 
 (defun phye/org-before-save-hook ()
-  "phye's orgmode before save hook."
+  "Phye's orgmode before save hook."
   (when (member major-mode '(org-mode gfm-mode))
     (when (eq major-mode 'org-mode)
       (phye/insert-zws-in-buffer))
@@ -410,7 +467,7 @@
    "#A" "P0"
    (replace-regexp-in-string "#B" "P1" (replace-regexp-in-string "#C" "P2" str))))
 
-(defun phye/md-after-export-hook (text backend info)
+(defun phye/md-after-export-hook (text backend _info)
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
   (when (org-export-derived-backend-p backend 'md)
     (concat
@@ -424,3 +481,4 @@
 (customize-set-variable 'remember-in-new-frame t)
 
 (provide 'phye-init-org)
+;;; phye-init-org.el ends here

@@ -1,3 +1,9 @@
+;;; phye-init-elpa.el --- ELPA package list for phye's config
+
+;;; Commentary:
+;; Defines phye-elpa-packages and appends them to melpa-include-packages.
+
+;;; Code:
 (setq phye-elpa-packages
       '(activities
         acp
@@ -57,6 +63,8 @@
         vimish-fold
         zerodark))
 
+(defvar melpa-include-packages)
 (setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
 
 (provide 'phye-init-elpa)
+;;; phye-init-elpa.el ends here

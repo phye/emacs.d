@@ -1,3 +1,15 @@
+;;; phye-init-evil.el --- Evil mode configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Evil mode setup including cursor styles, undo, and terminal cursor changer.
+
+;;; Code:
+
+(declare-function evil-set-initial-state "evil-core")
+(declare-function etcc-on "evil-terminal-cursor-changer")
+
+(defvar evil-undo-system)
+
 (evil-set-initial-state 'image-mode 'emacs)
 (evil-set-initial-state 'hexl-mode 'emacs)
 (evil-set-initial-state 'helpful-mode 'emacs)
@@ -31,10 +43,12 @@
     (require 'evil-terminal-cursor-changer)
     (etcc-on)))
 
-(defun phye/indent-after-newline (count)
+(defun phye/indent-after-newline (_count)
+  "Indent current line according to mode after opening a new line."
   (indent-according-to-mode))
 
 (advice-add 'evil-open-below :after #'phye/indent-after-newline)
 (advice-add 'evil-open-above :after #'phye/indent-after-newline)
 
 (provide 'phye-init-evil)
+;;; phye-init-evil.el ends here

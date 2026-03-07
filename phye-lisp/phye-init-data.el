@@ -1,3 +1,14 @@
+;;; phye-init-data.el --- Data format modes  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for JSON, YAML, protobuf, and Dockerfile modes.
+
+;;; Code:
+
+(declare-function json-mode "json-mode")
+(declare-function outline-indent-minor-mode "outline-indent")
+(declare-function phye/prog-mode-hook "phye-init-prog")
+
 ;; {{ JavaScript/JSON
 (use-package
  json-mode
@@ -12,7 +23,7 @@
 ;; }}
 
 (defun cb/pretty-print-yaml-json (beg end)
-  "Parse the region as a double-quoted string (handling YAML/Lisp style escapes),parse the result as JSON, and pretty-print it to a new buffer."
+  "Parse region (BEG END) as a double-quoted string and pretty-print as JSON."
   (interactive "r")
   (let* ((input-str (buffer-substring-no-properties beg end))
          (quoted-str
@@ -69,3 +80,4 @@
  :config (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode)))
 
 (provide 'phye-init-data)
+;;; phye-init-data.el ends here

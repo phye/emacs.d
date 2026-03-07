@@ -1,3 +1,16 @@
+;;; phye-init-misc.el --- Miscellaneous Emacs settings  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Miscellaneous settings: fonts, language, display, and macOS tweaks.
+
+;;; Code:
+
+(declare-function exec-path-from-shell-copy-env "exec-path-from-shell")
+
+(defvar zsh-program)
+(defvar my-term-program)
+(defvar dictionary-server)
+
 ;; chinese font
 (use-package cnfonts :ensure t :defer t)
 
@@ -36,3 +49,4 @@
 ;; }}
 
 (provide 'phye-init-misc)
+;;; phye-init-misc.el ends here

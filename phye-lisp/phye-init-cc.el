@@ -1,5 +1,35 @@
+;;; phye-init-cc.el --- C/C++ and Go mode configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; C/C++ style, eglot, and Go mode hooks.
+
+;;; Code:
+
+(declare-function my-run-with-idle-timer "init-utils")
+(declare-function my-ensure "init-utils")
+(declare-function local-require "init-utils")
+(declare-function annotate-mode "annotate")
+(declare-function tree-sitter-hl-mode "tree-sitter")
+(declare-function rainbow-mode "rainbow-mode")
+(declare-function phye/prog-mode-hook "phye-init-prog")
+(declare-function ts-fold-mode "ts-fold")
+(declare-function eglot--server-capable "eglot")
+(declare-function eglot--error "eglot")
+(declare-function eglot--current-server-or-lose "eglot")
+(declare-function jsonrpc-request "jsonrpc")
+(declare-function eglot--TextDocumentIdentifier "eglot")
+(declare-function jsonrpc-lambda "jsonrpc")
+(declare-function eglot--dcase "eglot")
+
+(eval-when-compile
+  (require 'eglot nil t))
+
+(defvar c-basic-offset)
+(defvar eglot-code-action-indications)
+
 ;; {{ c
 (defun phye/cc-mode-hook ()
+  "Phye's C/C++ mode hook."
   (setq c-basic-offset 2)
   (set-fill-column 80)
   (c-set-offset 'inlambda 0)
@@ -64,7 +94,7 @@
            (eglot-execute-command server (intern command) arguments))))))))
 
 (defun phye/go-mode-hook ()
-  "phye's golang hook"
+  "Phye's golang hook."
   (interactive)
   (auto-fill-mode -1)
   (tree-sitter-hl-mode)
@@ -77,3 +107,4 @@
 ;; }}
 
 (provide 'phye-init-cc)
+;;; phye-init-cc.el ends here

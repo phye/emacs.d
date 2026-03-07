@@ -1,3 +1,15 @@
+;;; phye-init-draw.el --- Drawing and diagramming tools  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for plantuml, graphviz, artist, and gnuplot.
+
+;;; Code:
+
+(declare-function evil-emacs-state "evil-states")
+(declare-function evil-exit-emacs-state "evil-states")
+
+(defvar artist-mode)
+
 ;; {{ plantuml
 (use-package
  plantuml-mode
@@ -22,6 +34,7 @@
 
 ;; {{ artist
 (defun artist-mode-toggle-emacs-state ()
+  "Toggle evil Emacs state when entering or leaving artist mode."
   (if artist-mode
       (evil-emacs-state)
     (evil-exit-emacs-state)))
@@ -35,4 +48,6 @@
 ;; {{
 ;; (add-to-list 'imagemagick-types-inhibit 'SVG)
 ;; }}
+
 (provide 'phye-init-draw)
+;;; phye-init-draw.el ends here

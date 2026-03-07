@@ -1,3 +1,10 @@
+;;; phye-init-themes.el --- Theme and visual configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Theme loading, highlight faces, symbol overlay, and avy color setup.
+
+;;; Code:
+
 (defun phye/load-theme (theme)
   "Load THEME after disable custom themes."
   (mapc #'disable-theme custom-enabled-themes)
@@ -222,7 +229,7 @@
   :group 'faces)
 
 (defface phye-overlay-base '((t :weight bold :foreground "light green"))
-  "my base face for symbol overlay highlight.")
+  "My base face for symbol overlay highlight.")
 (defface phye-highlight-face-0 '((t :inherit phye-overlay-base :background "salmon"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
@@ -330,7 +337,7 @@
 
 ;; customize avy jump colors
 (defun recover-avy-lead-face (&optional unused)
-  "Recovy avy leader face."
+  "Recovy avy leader face, UNUSED is ignored."
   (interactive)
   (require 'avy)
   (set-face-attribute 'avy-lead-face nil :inherit 'font-lock-warning-face))
@@ -425,3 +432,4 @@
    (phye/toggle-theme)))
 
 (provide 'phye-init-themes)
+;;; phye-init-themes.el ends here

@@ -1,8 +1,12 @@
-;;; package --- Summary
+;;; phye-init-ai.el --- AI assistant configuration  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
+;; agent-shell and related AI assistant packages.
 
 ;;; Code:
+
+(defvar agent-shell-google-gemini-acp-command)
+
 (use-package
  agent-shell
  ;; use the modified version for codebuddy

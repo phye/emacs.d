@@ -1,3 +1,38 @@
+;;; phye-init-edit.el --- Editing utilities and file navigation  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Clipboard, Dired, recentf, deadgrep, project, and key-chord configuration.
+
+;;; Code:
+
+(declare-function my-run-with-idle-timer "init-utils")
+(declare-function recentf-load-list "recentf")
+(declare-function ivy-read "ivy")
+(declare-function ivy--regex "ivy")
+(declare-function dired-get-file-for-visit "dired")
+(declare-function dired-find-file "dired")
+(declare-function dired-find-file-other-window "dired")
+(declare-function wgrep-change-to-wgrep-mode "wgrep")
+(declare-function wgrep-toggle-readonly-area "wgrep")
+(declare-function evil-escape "evil-escape")
+(declare-function deadgrep--read-search-term "deadgrep")
+(declare-function deadgrep "deadgrep")
+(declare-function deadgrep--buffer-name "deadgrep")
+(declare-function deadgrep-restart "deadgrep")
+(declare-function better-jumper-mode "better-jumper")
+(declare-function better-jumper-set-jump "better-jumper")
+(declare-function key-chord-mode "key-chord")
+(declare-function project-files "project")
+
+(defvar diary-file)
+(defvar my-disable-wucuo)
+(defvar dired-mode-map)
+(defvar recentf-list)
+(defvar recentf-save-file)
+(defvar project-read-file-name-function)
+(defvar deadgrep--search-term)
+(defvar ivy-initial-inputs-alist)
+
 ;; diary
 ;; although I don't use Diary Mode, change the default file in case of mistyping
 (setq diary-file "~/ws/gtd/diary.org")
@@ -22,7 +57,7 @@
 ;; open recent directory, requires ivy (part of swiper)
 ;; borrows from http://stackoverflow.com/questions/23328037/in-emacs-how-to-maintain-a-list-of-recent-directories
 (defun bjm/ivy-dired-recent-dirs ()
-  "Present a list of recently used directories and open the selected one in dired"
+  "Present a list of recently used directories and open the selected one in Dired."
   (interactive)
   (let ((recent-dirs
          (delete-dups
@@ -43,7 +78,7 @@
       (dired dir))))
 
 (defun phye/dired-open-file (&optional not-reuse)
-  "Open file in other window, unless prefix is set"
+  "Open file in other window, unless prefix NOT-REUSE is set."
   (interactive "P")
   (if (file-directory-p (dired-get-file-for-visit))
       ;; follow dir in current window
@@ -103,18 +138,18 @@
   (wgrep-toggle-readonly-area)
   (evil-escape))
 
-(defun select-deadgrep-window-advice (search-term &optional directory)
-  "Select deadgrep buffer"
+(defun select-deadgrep-window-advice (_search-term &optional _directory)
+  "Select deadgrep buffer after SEARCH-TERM and DIRECTORY are set."
   (select-window (get-buffer-window "*deadgrep\\.*")))
 (advice-add 'deadgrep :after-until #'select-deadgrep-window-advice)
 
 (defun phye/deadgrep-current-directory (search-term)
-  "deadgrep in current directory"
+  "Run deadgrep with SEARCH-TERM in current directory."
   (interactive (list (deadgrep--read-search-term)))
   (deadgrep search-term default-directory))
 
 (defun phye/project-find-dir ()
-  "find directory fuzzily (copied from `'project-find-dir`'"
+  "Find directory fuzzily (copied from `project-find-dir')."
   (interactive)
   (let* ((project (project-current t))
          (all-files (project-files project))
@@ -128,7 +163,7 @@
     dir))
 
 (defun phye/deadgrep-directory ()
-  "Find directory with fuzzy support, then restart the search"
+  "Find directory with fuzzy support, then restart the search."
   (interactive)
   (setq default-directory (phye/project-find-dir))
   (rename-buffer (deadgrep--buffer-name deadgrep--search-term default-directory) t)
@@ -151,6 +186,7 @@
 (use-package better-jumper :ensure t :defer t :config (better-jumper-mode +1))
 
 (defun phye/deadgrep-visit-result-hook ()
+  "Set a jump point when visiting a deadgrep result."
   (interactive)
   (better-jumper-set-jump))
 
@@ -184,3 +220,4 @@
   :defer t)
 
 (provide 'phye-init-edit)
+;;; phye-init-edit.el ends here

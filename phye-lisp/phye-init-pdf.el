@@ -1,3 +1,15 @@
+;;; phye-init-pdf.el --- PDF tools configuration  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; Configuration for pdf-tools and latex/company-math.
+
+;;; Code:
+
+(declare-function pdf-tools-install "pdf-tools")
+(declare-function pdf-info-outline "pdf-info")
+(declare-function pdf-view-current-page "pdf-view")
+(declare-function pdf-view-goto-page "pdf-view")
+
 ;; {{ latex
 (use-package
  company-math
@@ -39,8 +51,8 @@
      (let* ((title-item-0 (nth 0 toc))
             (title-item-1 (nth 1 toc))
             (title-page-0 (cdr (nth 3 title-item-0)))
-            (title-page-1 (cdr (nth 3 title-item-1))))
-       (setq target-page (funcall condfunc cur-page title-page-0 title-page-1))
+            (title-page-1 (cdr (nth 3 title-item-1)))
+            (target-page (funcall condfunc cur-page title-page-0 title-page-1)))
        (if (>= target-page 0)
            (progn
              (setq found t)
@@ -70,3 +82,4 @@
        -1))))
 
 (provide 'phye-init-pdf)
+;;; phye-init-pdf.el ends here
