@@ -14,6 +14,9 @@
  :config
  (setq agent-shell-google-gemini-acp-command
        (cons "gemini-internal" (cdr agent-shell-google-gemini-acp-command)))
+ (setq agent-shell-anthropic-claude-environment
+       (agent-shell-make-environment-variables
+         "CLAUDE_CODE_EXECUTABLE" (string-trim-right (shell-command-to-string "which claude-internal"))))
 
  ;; :ensure t
  ;; to use codebuddy, normally you should only login once and then relies on
