@@ -166,34 +166,32 @@
 
 ;;;###autoload
 (defun phye/protobuf-jump-req-rsp ()
-  "Jump between Req and Rsp on the same line in a service RPC definition.
-If point is on a XxxReq type, jump to XxxRsp.
-If point is on a XxxRsp type, jump to XxxReq."
+  "Jump between req and rsp in current line if there're req/rsp at point.
+Otherwise, jump to the next req/rsp matched."
   (interactive)
-  (let (current-name other-name bounds)
-    ;; Get the symbol at point (handles underscores and mixed case in protobuf types)
+  (let (current-name other-name bounds (origin (point)))
     (setq bounds (bounds-of-thing-at-point 'symbol))
-    (unless bounds
-      (user-error "No word at point"))
-    (setq current-name (buffer-substring-no-properties (car bounds) (cdr bounds)))
-    (unless (and current-name (> (length current-name) 0))
-      (user-error "No word at point"))
+    (when bounds
+      (setq current-name (buffer-substring-no-properties (car bounds) (cdr bounds))))
+    (message "current-name at point: %s" current-name)
 
-    ;; Determine the counterpart name
     (cond
-     ((string-suffix-p "Req" current-name)
+     ((and current-name (string-suffix-p "Req" current-name))
       (setq other-name (concat (substring current-name 0 -3) "Rsp")))
-     ((string-suffix-p "Rsp" current-name)
+     ((and current-name (string-suffix-p "Rsp" current-name))
       (setq other-name (concat (substring current-name 0 -3) "Req")))
      (t
-      (user-error "Word does not end with Req or Rsp")))
-    (message "current: %s, other: %s" current-name other-name)
+      ;; Not on a Req/Rsp symbol: jump forward to the next one
+      (unless (re-search-forward "\\b\\w+\\(?:Req\\|Rsp\\)\\b" nil t)
+        (user-error "No Req/Rsp found forward in buffer"))
+      (goto-char (match-beginning 0))))
 
-    ;; Search for the counterpart on the current line
-    (beginning-of-line)
-    (if (re-search-forward other-name (line-end-position) t)
-        (backward-sexp)
-      (user-error "Could not find %s on this line" other-name))))
+    (when other-name
+      (goto-char (point-min))
+      (if (re-search-forward other-name nil t)
+          (goto-char (match-beginning 0))
+        (goto-char origin)
+        (user-error "Could not find %s" other-name)))))
 
 (provide 'phye-init-utils)
 ;;; phye-init-utils.el ends here

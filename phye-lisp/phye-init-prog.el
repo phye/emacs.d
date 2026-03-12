@@ -53,7 +53,8 @@
   (add-to-list 'counsel-etags-ignore-filenames "*_pb2.py")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.h")
   (add-to-list 'counsel-etags-ignore-filenames "*.pb.cc")
-  (add-to-list 'counsel-etags-ignore-filenames "*.pb.go"))
+  (add-to-list 'counsel-etags-ignore-filenames "*.pb.go")
+  (add-to-list 'counsel-etags-ignore-filenames "*.org"))
 
 (with-eval-after-load 'find-file-in-project
   ;; (add-to-list 'ffip-prune-patterns "*/build")

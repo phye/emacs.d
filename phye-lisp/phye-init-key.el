@@ -378,6 +378,7 @@
 
 (key-chord-define evil-insert-state-map ",," 'evil-escape)
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
+(key-chord-define evil-normal-state-map "ff" 'phye/protobuf-jump-req-rsp)
 (key-chord-define ivy-minibuffer-map "jj" 'ivy-next-line)
 (key-chord-define ivy-minibuffer-map "kk" 'ivy-previous-line)
 (key-chord-define ivy-minibuffer-map "gg" 'ivy-beginning-of-buffer)
