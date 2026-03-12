@@ -104,7 +104,7 @@ EVENT is ignored."
   "Set up embedded shells."
   (local-set-key (kbd "C-c C-l") 'eacl-complete-line-from-buffer)
   ;; look up shell command history
-  (local-set-key (kbd "M-n") 'counsel-shell-history)
+  ;; (local-set-key (kbd "M-n") 'counsel-shell-history)
   ;; Don't show trailing whitespace in REPL.
   (local-set-key (kbd "M-;") 'comment-dwim))
 (add-hook 'comint-mode-hook 'my-comint-mode-hook-setup)
