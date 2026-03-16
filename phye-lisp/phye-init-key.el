@@ -28,7 +28,7 @@
 (general-define-key
  :keymaps 'override
  "M-`" 'other-frame
- "M-v" 'paste-from-x-clipboard
+ ;; "M-v" 'paste-from-x-clipboard
  "C-a" 'move-beginning-of-line
  "C-e" 'move-end-of-line
  "C-x C-c" 'delete-frame
@@ -157,7 +157,7 @@
  "sl" 'org-store-link
  "sp" 'outline-backward-same-level
  "sn" 'outline-forward-same-level
- "tt" 'shell-pop
+ "tt" 'multi-vterm-dedicated-toggle
  "ut" 'counsel-etags-update-tags-force
  "xB" 'ivy-switch-buffer
  "xK" 'phye/kill-buffer-and-frame
@@ -350,6 +350,15 @@
  ",rR" 'phye/open-recent-file-in-other-frame
  "n" 'phye/pdf-goto-next-title-page
  "p" 'phye/pdf-goto-prev-title-page)
+
+(general-define-key
+ :keymaps 'vterm-mode-map
+ :states '(emacs insert)
+ "C-w" 'vterm-send-C-w
+ "M-v" 'vterm-yank
+ "s-v" 'vterm-yank)
+
+;; format: off
 ;; }}
 
 ;; {{ mini buffer edit

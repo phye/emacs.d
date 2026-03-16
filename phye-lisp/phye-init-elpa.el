@@ -36,6 +36,7 @@
         manoj-dark
         markdown-toc
         mermaid-mode
+        multi-vterm
         nerd-icons
         ob-mermaid
         org-fancy-priorities
