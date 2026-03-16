@@ -28,9 +28,6 @@
 (general-define-key
  :keymaps 'override
  "M-`" 'other-frame
- ;; "M-v" 'paste-from-x-clipboard
- "C-a" 'move-beginning-of-line
- "C-e" 'move-end-of-line
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
  "C-c a" 'org-agenda
@@ -54,7 +51,10 @@
 ;; state dependent global keys
 (general-define-key
  :states '(emacs)
- "C-w" 'backward-kill-word)
+ "M-v" 'paste-from-x-clipboard
+ "C-w" 'backward-kill-word
+ "C-a" 'move-beginning-of-line
+ "C-e" 'move-end-of-line)
 
 ;; format: off
 ;; normal visual state without prefix
@@ -354,6 +354,8 @@
 (general-define-key
  :keymaps 'vterm-mode-map
  :states '(emacs insert)
+ "C-a" 'vterm-send-C-a
+ "C-e" 'vterm-send-C-e
  "C-w" 'vterm-send-C-w
  "M-v" 'vterm-yank
  "s-v" 'vterm-yank)
