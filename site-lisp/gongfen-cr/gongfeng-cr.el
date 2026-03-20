@@ -126,6 +126,10 @@ Cached after the first successful IID→ID lookup so subsequent operations
 (defvar-local gongfeng-cr--input-overlay nil
   "The currently active comment-input overlay, if any.")
 
+(defvar-local gongfeng-cr--input-prompt-end nil
+  "Marker pointing to the end of the prompt in the input buffer.
+Text after this position is the user's comment.")
+
 ;;;; ─── Token management ──────────────────────────────────────────────────────
 
 ;;;###autoload
@@ -207,7 +211,13 @@ CALLBACK is called with the parsed JSON response (or nil on error)."
             ("Content-Type"  . "application/json")))
          (url-request-data
           (when payload
-            (encode-coding-string (json-encode payload) 'utf-8))))
+            ;; Bind json-encoding-coding-system so that non-ASCII characters
+            ;; (e.g. Chinese) are emitted as raw UTF-8 code points rather than
+            ;; \uXXXX escape sequences, then encode the resulting string to a
+            ;; proper UTF-8 unibyte sequence for the HTTP body.
+            (let ((json-encoding-coding-system 'utf-8))
+              (encode-coding-string
+               (json-encode payload) 'utf-8)))))
     (url-retrieve
      url
      (lambda (status)
@@ -215,7 +225,10 @@ CALLBACK is called with the parsed JSON response (or nil on error)."
               (err         (plist-get status :error)))
          (cond
           (err
-           (message "gongfeng-cr: HTTP error %S (URL: %s)" err url))
+           (let ((body (gongfeng-cr--response-body)))
+             (message "gongfeng-cr: HTTP error %S (URL: %s)\n  response: %s"
+                      err url
+                      (substring body 0 (min 400 (length body))))))
           ((and http-status (>= http-status 400))
            (let ((body (gongfeng-cr--response-body)))
              (message "gongfeng-cr: HTTP %d for %s\n  response: %s"
@@ -337,13 +350,12 @@ and caches the returned .id field in `gongfeng-cr--mr-id'."
 
 Two-step process:
   1. GET /projects/:id/merge_request/iid/:iid  → resolves the global MR id
-  2. GET /projects/:id/merge_request/:mr_id/comments
+  2. GET /projects/:id/merge_requests/:mr_id/notes
 
 Each comment object has the shape:
-  { note, author{name,username}, created_at,
-    line_code, line_type,
-    path (file path relative to repo root),
-    new_line / old_line (integer line numbers) }"
+  { body, author{name,username}, created_at,
+    file_path,
+    note_position.latest_position.{right_line_num, left_line_num} }"
   (let* ((project-id (gongfeng-cr--ensure-project-id))
          (mr-iid     gongfeng-cr--mr-iid)
          (rel-path   (gongfeng-cr--relative-file-path))
@@ -353,8 +365,8 @@ Each comment object has the shape:
      (lambda (mr-id)
        (let ((url (concat (gongfeng-cr--api-url
                            "projects" project-id
-                           "merge_request" (number-to-string mr-id)
-                           "comments")
+                           "merge_requests" (number-to-string mr-id)
+                           "notes")
                           "?per_page=100")))
          (gongfeng-cr--http-request
           "GET" url nil
@@ -437,7 +449,8 @@ Each comment object has the shape:
     (with-current-buffer ibuf
       (gongfeng-cr-input-mode)
       (insert prompt)
-      (setq-local gongfeng-cr--input-overlay ov))
+      (setq-local gongfeng-cr--input-overlay ov)
+      (setq-local gongfeng-cr--input-prompt-end (point-marker)))
     (let ((win (display-buffer
                 ibuf
                 '(display-buffer-below-selected
@@ -446,21 +459,22 @@ Each comment object has the shape:
     (message "Type your comment, then C-c C-c to submit or C-c C-k to cancel.")))
 
 (define-derived-mode gongfeng-cr-input-mode text-mode "CR-Input"
-  "Transient mode for entering a Gongfeng CR comment."
+  "Transient mode for entering a Gongfeng CR comment.
+The buffer coding system is set to UTF-8 so Chinese and other
+non-ASCII input methods work correctly."
+  (set-buffer-file-coding-system 'utf-8)
   (use-local-map gongfeng-cr--input-map))
 
 (defun gongfeng-cr--get-input-text ()
-  "Extract user-typed text from the input buffer (strip the prompt prefix)."
+  "Extract user-typed text from the input buffer (everything after the prompt)."
   (when gongfeng-cr--input-overlay
     (let ((ibuf (overlay-get gongfeng-cr--input-overlay 'gongfeng-cr-input-buffer)))
       (when (buffer-live-p ibuf)
         (with-current-buffer ibuf
-          (let* ((text      (buffer-string))
-                 ;; Strip everything up to and including the last "│ " in the prompt
-                 (stripped  (if (string-match ".*│ " text)
-                                (substring text (match-end 0))
-                              text)))
-            (string-trim stripped)))))))
+          (string-trim
+           (buffer-substring-no-properties
+            gongfeng-cr--input-prompt-end
+            (point-max))))))))
 
 (defun gongfeng-cr--cancel-comment ()
   "Cancel the in-progress comment input without submitting."
@@ -503,34 +517,38 @@ Each comment object has the shape:
 
 Two-step process:
   1. GET /projects/:id/merge_request/iid/:iid  → resolves the global MR id
-  2. POST /projects/:id/merge_request/:mr_id/comments
+  2. POST /projects/:id/merge_requests/:mr_id/notes
 
-Payload: { body, file_path, right_line_num }"
+Payload: { body, path, line, line_type }"
   (let* ((project-id (gongfeng-cr--ensure-project-id))
          (mr-iid     gongfeng-cr--mr-iid)
          (rel-path   (gongfeng-cr--relative-file-path))
-         (end-line   (gongfeng-cr--line-number-at end)))
+         (end-line   (gongfeng-cr--line-number-at end))
+         (src-buf    (current-buffer)))
     (message "gongfeng-cr: posting comment to MR !%d (line %d) …" mr-iid end-line)
     (gongfeng-cr--resolve-mr-id
      (lambda (mr-id)
        (let* ((url     (gongfeng-cr--api-url
                         "projects" project-id
-                        "merge_request" (number-to-string mr-id)
-                        "comments"))
-              ;; Gongfeng /comments POST payload (actual field names):
-              ;; body           — comment text
-              ;; file_path      — file path relative to repo root
-              ;; right_line_num — 1-based line number on the new/right side
-              (payload `((body           . ,body)
-                         (file_path      . ,rel-path)
-                         (right_line_num . ,end-line))))
+                        "merge_requests" (number-to-string mr-id)
+                        "notes"))
+              ;; POST /merge_requests/:id/notes payload (Gongfeng API v3):
+              ;; body      — comment text (required)
+              ;; path      — file path relative to repo root (for line comments)
+              ;; line      — line number as string (for line comments)
+              ;; line_type — "new" (right side) or "old" (left side)
+              (payload `((body      . ,body)
+                         (path      . ,rel-path)
+                         (line      . ,(number-to-string end-line))
+                         (line_type . "new"))))
          (gongfeng-cr--http-request
           "POST" url payload
           (lambda (resp)
             (if (and resp (alist-get 'id resp))
                 (progn
                   (message "gongfeng-cr: comment posted (id=%s)." (alist-get 'id resp))
-                  (gongfeng-cr--fetch-comments))
+                  (with-current-buffer src-buf
+                    (gongfeng-cr--fetch-comments)))
               (message "gongfeng-cr: failed to post comment — see *Messages* for details.")))))))))
 
 ;;;; ─── Diagnostics ───────────────────────────────────────────────────────────
@@ -638,10 +656,10 @@ Results are shown in the *gongfeng-cr-diagnose* buffer."
                          (url-retrieve
                           comments-url
                           (lambda (_status2)
-                            (let ((raw (buffer-string)))
+                            (let ((decoded (gongfeng-cr--response-body)))
                               (with-current-buffer (get-buffer-create "*gongfeng-cr-diagnose*")
                                 (goto-char (point-max))
-                                (insert raw)
+                                (insert decoded)
                                 (insert "\n=== done ===\n")
                                 (message "gongfeng-cr-diagnose: done — see *gongfeng-cr-diagnose*"))))
                           nil t))))
