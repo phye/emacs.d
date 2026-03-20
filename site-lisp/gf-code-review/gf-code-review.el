@@ -59,8 +59,7 @@
   "Your Gongfeng private token.
 Set this variable (e.g. via `gf-code-review-set-token') before using the mode.
 The token is sent in the PRIVATE-TOKEN HTTP header on every API request."
-  :type '(choice (const :tag "Not set" nil)
-                 (string :tag "Token"))
+  :type '(choice (const :tag "Not set" nil) (string :tag "Token"))
   :group 'gf-code-review)
 
 (defcustom gf-code-review-base-url "https://git.woa.com/api/v3"
@@ -77,33 +76,26 @@ The token is sent in the PRIVATE-TOKEN HTTP header on every API request."
 
 (defface gf-code-review-comment-face
   '((((background dark))
-     :background "#2a2a4a" :foreground "#a0c8ff"
+     :background "#2a2a4a"
+     :foreground "#a0c8ff"
      :box (:line-width 1 :color "#5080c0")
      :extend t)
-    (t
-     :background "#eef4ff" :foreground "#2040a0"
-     :box (:line-width 1 :color "#8090c0")
-     :extend t))
+    (t :background "#eef4ff" :foreground "#2040a0" :box (:line-width 1 :color "#8090c0") :extend t))
   "Face for displaying fetched CR comments."
   :group 'gf-code-review)
 
 (defface gf-code-review-input-face
   '((((background dark))
-     :background "#2a3a2a" :foreground "#a0ffa0"
+     :background "#2a3a2a"
+     :foreground "#a0ffa0"
      :box (:line-width 1 :color "#50a050")
      :extend t)
-    (t
-     :background "#f0fff0" :foreground "#205020"
-     :box (:line-width 1 :color "#70a070")
-     :extend t))
+    (t :background "#f0fff0" :foreground "#205020" :box (:line-width 1 :color "#70a070") :extend t))
   "Face for the comment-input overlay."
   :group 'gf-code-review)
 
 (defface gf-code-review-header-face
-  '((((background dark))
-     :foreground "#80c0ff" :weight bold)
-    (t
-     :foreground "#1040c0" :weight bold))
+  '((((background dark)) :foreground "#80c0ff" :weight bold) (t :foreground "#1040c0" :weight bold))
   "Face for the header line inside a comment overlay."
   :group 'gf-code-review)
 
@@ -136,28 +128,23 @@ Text after this position is the user's comment.")
 (defun gf-code-review-set-token (token)
   "Interactively set `gf-code-review-private-token' to TOKEN.
 This is the only configuration you normally need to perform."
-  (interactive
-   (list (read-string "Gongfeng private token: "
-                      gf-code-review-private-token)))
+  (interactive (list (read-string "Gongfeng private token: " gf-code-review-private-token)))
   (setq gf-code-review-private-token token)
   (message "gf-code-review: token set."))
 
 (defun gf-code-review--assert-token ()
   "Signal an error if `gf-code-review-private-token' is not configured."
-  (unless (and gf-code-review-private-token
-               (not (string-empty-p gf-code-review-private-token)))
+  (unless (and gf-code-review-private-token (not (string-empty-p gf-code-review-private-token)))
     (user-error "gf-code-review: Please set your token first via M-x gf-code-review-set-token")))
 
 ;;;; ─── Project / remote helpers ─────────────────────────────────────────────
 
 (defun gf-code-review--git-remote-url ()
   "Return the URL of the `origin' remote for the current buffer's repo."
-  (let ((default-directory (or (locate-dominating-file
-                                (or buffer-file-name default-directory)
-                                ".git")
-                               default-directory)))
-    (string-trim
-     (shell-command-to-string "git remote get-url origin 2>/dev/null"))))
+  (let ((default-directory
+         (or (locate-dominating-file (or buffer-file-name default-directory) ".git")
+             default-directory)))
+    (string-trim (shell-command-to-string "git remote get-url origin 2>/dev/null"))))
 
 (defun gf-code-review--parse-project-path (remote-url)
   "Extract <namespace>/<project> from REMOTE-URL (ssh or https)."
@@ -183,7 +170,7 @@ This is the only configuration you normally need to perform."
   "Set `gf-code-review--project-id' from the git remote, or ask the user."
   (unless gf-code-review--project-id
     (let* ((remote (gf-code-review--git-remote-url))
-           (path   (gf-code-review--parse-project-path remote)))
+           (path (gf-code-review--parse-project-path remote)))
       (if path
           (progn
             (message "gf-code-review: detected project %s" path)
@@ -208,37 +195,34 @@ CALLBACK is called with the parsed JSON response (or nil on error)."
   (let* ((url-request-method method)
          (url-request-extra-headers
           `(("PRIVATE-TOKEN" . ,gf-code-review-private-token)
-            ("Content-Type"  . "application/json")))
+            ("Content-Type" . "application/json; charset=utf-8")))
          (url-request-data
           (when payload
-            (let* ((body (json-serialize payload))
+            (let* ((body (json-encode payload))
                    ;; encode-coding-string produces a unibyte UTF-8 string,
-                   ;; which url-http-create-request requires (multibyte strings
-                   ;; are rejected since Emacs 25.1 — Bug#23750).
+                   ;; which url-http-create-request requires (Emacs Bug#23750).
                    (encoded (encode-coding-string body 'utf-8)))
-              (message "gf-code-review: request body (length=%d, multibyte=%S): %s"
-                       (length encoded) (multibyte-string-p encoded) body)
-              (message "gf-code-review: request body hex: %s"
-                       (mapconcat (lambda (c) (format "%02x" c))
-                                  (string-to-list encoded) " "))
               encoded))))
     (url-retrieve
      url
      (lambda (status)
        (let* ((http-status (gf-code-review--http-status-code))
-              (err         (plist-get status :error))
-              (resp-body   (gf-code-review--response-body)))
+              (err (plist-get status :error))
+              (resp-body (gf-code-review--response-body)))
          (message "gf-code-review: response status=%S http=%S body=%s"
-                  err http-status
+                  err
+                  http-status
                   (substring resp-body 0 (min 400 (length resp-body))))
          (cond
           (err
            (message "gf-code-review: HTTP error %S (URL: %s)\n  response: %s"
-                    err url
+                    err
+                    url
                     (substring resp-body 0 (min 400 (length resp-body)))))
           ((and http-status (>= http-status 400))
            (message "gf-code-review: HTTP %d for %s\n  response: %s"
-                    http-status url
+                    http-status
+                    url
                     (substring resp-body 0 (min 400 (length resp-body)))))
           (t
            (let ((result (gf-code-review--parse-response)))
@@ -258,8 +242,7 @@ CALLBACK is called with the parsed JSON response (or nil on error)."
   (save-excursion
     (goto-char (point-min))
     (if (re-search-forward "^\\s-*$" nil t)
-        (decode-coding-string
-         (buffer-substring (point) (point-max)) 'utf-8)
+        (decode-coding-string (buffer-substring (point) (point-max)) 'utf-8)
       "")))
 
 (defun gf-code-review--parse-response ()
@@ -268,8 +251,8 @@ Moves past the HTTP headers and decodes the body."
   (let ((body (gf-code-review--response-body)))
     (condition-case err
         (let ((json-object-type 'alist)
-              (json-array-type  'list)
-              (json-key-type    'symbol))
+              (json-array-type 'list)
+              (json-key-type 'symbol))
           (json-read-from-string body))
       (error
        (message "gf-code-review: JSON parse error: %S\nbody: %s" err body)
@@ -301,23 +284,25 @@ Moves past the HTTP headers and decodes the body."
 
 (defun gf-code-review--insert-comment-overlay (line author body &optional created-at)
   "Insert a read-only overlay after LINE showing AUTHOR, BODY, and CREATED-AT."
-  (let* ((pos     (gf-code-review--line-end-pos line))
-         (ov      (make-overlay pos pos nil t nil))
-         (header  (propertize
-                   (format "  💬 %s%s"
-                           author
-                           (if created-at (format "  [%s]" created-at) ""))
-                   'face 'gf-code-review-header-face))
+  (let* ((pos (gf-code-review--line-end-pos line))
+         (ov (make-overlay pos pos nil t nil))
+         (header
+          (propertize (format "  💬 %s%s"
+                              author
+                              (if created-at
+                                  (format "  [%s]" created-at)
+                                ""))
+                      'face 'gf-code-review-header-face))
          ;; Indent body lines for readability
-         (body-lines (mapconcat
-                      (lambda (l) (concat "  │ " l))
-                      (split-string body "\n")
-                      "\n"))
-         (text    (propertize
-                   (concat "\n" header "\n"
-                           (propertize body-lines 'face 'gf-code-review-comment-face)
-                           "\n")
-                   'cursor 0)))
+         (body-lines (mapconcat (lambda (l) (concat "  │ " l)) (split-string body "\n") "\n"))
+         (text
+          (propertize (concat
+                       "\n"
+                       header
+                       "\n"
+                       (propertize body-lines 'face 'gf-code-review-comment-face)
+                       "\n")
+                      'cursor 0)))
     (overlay-put ov 'after-string text)
     (overlay-put ov 'gf-code-review t)
     (push ov gf-code-review--overlays)))
@@ -334,13 +319,14 @@ and caches the returned .id field in `gf-code-review--mr-id'."
   (if gf-code-review--mr-id
       (funcall callback gf-code-review--mr-id)
     (let* ((project-id (gf-code-review--ensure-project-id))
-           (url        (gf-code-review--api-url
-                        "projects" project-id
-                        "merge_request" "iid" (number-to-string gf-code-review--mr-iid)))
-           (buf        (current-buffer)))
+           (url
+            (gf-code-review--api-url
+             "projects" project-id "merge_request" "iid" (number-to-string gf-code-review--mr-iid)))
+           (buf (current-buffer)))
       (message "gf-code-review: resolving MR id for IID %d …" gf-code-review--mr-iid)
       (gf-code-review--http-request
-       "GET" url nil
+       "GET" url
+       nil
        (lambda (mr)
          (let ((mr-id (and mr (alist-get 'id mr))))
            (if (not (numberp mr-id))
@@ -363,19 +349,20 @@ Each comment object has the shape:
     file_path,
     note_position.latest_position.{right_line_num, left_line_num} }"
   (let* ((project-id (gf-code-review--ensure-project-id))
-         (mr-iid     gf-code-review--mr-iid)
-         (rel-path   (gf-code-review--relative-file-path))
-         (buf        (current-buffer)))
+         (mr-iid gf-code-review--mr-iid)
+         (rel-path (gf-code-review--relative-file-path))
+         (buf (current-buffer)))
     (message "gf-code-review: fetching comments for MR !%d …" mr-iid)
     (gf-code-review--resolve-mr-id
      (lambda (mr-id)
-       (let ((url (concat (gf-code-review--api-url
-                           "projects" project-id
-                           "merge_requests" (number-to-string mr-id)
-                           "notes")
-                          "?per_page=100")))
+       (let ((url
+              (concat
+               (gf-code-review--api-url
+                "projects" project-id "merge_requests" (number-to-string mr-id) "notes")
+               "?per_page=100")))
          (gf-code-review--http-request
-          "GET" url nil
+          "GET" url
+          nil
           (lambda (comments)
             (with-current-buffer buf
               (gf-code-review--clear-overlays)
@@ -394,28 +381,30 @@ Each comment object has the shape:
                     ;;   .note_position.latest_position.{right_line_num, left_line_num}
                     ;;     right_line_num   — line on the new/right side of the diff
                     ;;     left_line_num    — line on the old/left side
-                    (let* ((note-body  (alist-get 'body c))
-                           (file-path  (alist-get 'file_path c))
-                           (note-pos   (alist-get 'note_position c))
+                    (let* ((note-body (alist-get 'body c))
+                           (file-path (alist-get 'file_path c))
+                           (note-pos (alist-get 'note_position c))
                            (latest-pos (and note-pos (alist-get 'latest_position note-pos)))
                            ;; prefer right (new) side; fall back to left (old) side
-                           (line-num   (and latest-pos
-                                            (or (alist-get 'right_line_num latest-pos)
-                                                (alist-get 'left_line_num  latest-pos))))
+                           (line-num
+                            (and latest-pos
+                                 (or (alist-get 'right_line_num latest-pos)
+                                     (alist-get 'left_line_num latest-pos))))
                            (author-obj (alist-get 'author c))
-                           (author     (if author-obj
-                                           (or (alist-get 'name author-obj)
-                                               (alist-get 'username author-obj)
-                                               "unknown")
-                                         "unknown"))
+                           (author
+                            (if author-obj
+                                (or (alist-get 'name author-obj)
+                                    (alist-get 'username author-obj)
+                                    "unknown")
+                              "unknown"))
                            (created-at (alist-get 'created_at c)))
                       (when (and note-body
                                  (integerp line-num)
                                  file-path
                                  rel-path
                                  (string= file-path rel-path))
-                        (gf-code-review--insert-comment-overlay
-                         line-num author note-body created-at)
+                        (gf-code-review--insert-comment-overlay line-num author note-body
+                                                                created-at)
                         (cl-incf count))))
                   (message "gf-code-review: %d comment(s) in this file, %d total in MR."
                            count total)))))))))))
@@ -433,18 +422,21 @@ Each comment object has the shape:
   "Open an inline input overlay below the region from BEG to END."
   (when gf-code-review--input-overlay
     (gf-code-review--cancel-comment))
-  (let* ((end-pos   (save-excursion (goto-char end) (line-end-position)))
-         (ov        (make-overlay end-pos end-pos nil t nil))
+  (let* ((end-pos
+          (save-excursion
+            (goto-char end)
+            (line-end-position)))
+         (ov (make-overlay end-pos end-pos nil t nil))
          ;; A temporary indirect buffer lets the user type freely
-         (ibuf      (generate-new-buffer "*gf-code-review-input*"))
-         (prompt    (propertize
-                     (concat "\n  ┌─ New CR comment "
-                             (propertize "(C-c C-c submit, C-c C-k cancel)"
-                                         'face '(:weight normal :slant italic))
-                             "\n  │ ")
-                     'face 'gf-code-review-input-face
-                     'read-only t
-                     'rear-nonsticky t)))
+         (ibuf (generate-new-buffer "*gf-code-review-input*"))
+         (prompt
+          (propertize (concat
+                       "\n  ┌─ New CR comment "
+                       (propertize "(C-c C-c submit, C-c C-k cancel)"
+                                   'face
+                                   '(:weight normal :slant italic))
+                       "\n  │ ")
+                      'face 'gf-code-review-input-face 'read-only t 'rear-nonsticky t)))
     ;; Store metadata on the overlay
     (overlay-put ov 'gf-code-review-input t)
     (overlay-put ov 'gf-code-review-region-beg beg)
@@ -457,11 +449,9 @@ Each comment object has the shape:
       (insert prompt)
       (setq-local gf-code-review--input-overlay ov)
       (setq-local gf-code-review--input-prompt-end (point-marker)))
-    (let ((win (display-buffer
-                ibuf
-                '(display-buffer-below-selected
-                  (window-height . 6)))))
-      (when win (select-window win)))
+    (let ((win (display-buffer ibuf '(display-buffer-below-selected (window-height . 6)))))
+      (when win
+        (select-window win)))
     (message "Type your comment, then C-c C-c to submit or C-c C-k to cancel.")))
 
 (define-derived-mode gf-code-review-input-mode text-mode "CR-Input"
@@ -478,9 +468,7 @@ non-ASCII input methods work correctly."
       (when (buffer-live-p ibuf)
         (with-current-buffer ibuf
           (string-trim
-           (buffer-substring-no-properties
-            gf-code-review--input-prompt-end
-            (point-max))))))))
+           (buffer-substring-no-properties gf-code-review--input-prompt-end (point-max))))))))
 
 (defun gf-code-review--cancel-comment ()
   "Cancel the in-progress comment input without submitting."
@@ -491,7 +479,8 @@ non-ASCII input methods work correctly."
       (setq gf-code-review--input-overlay nil)
       (when (buffer-live-p ibuf)
         (let ((win (get-buffer-window ibuf)))
-          (when win (delete-window win)))
+          (when win
+            (delete-window win)))
         (kill-buffer ibuf))))
   (message "gf-code-review: comment cancelled."))
 
@@ -501,10 +490,10 @@ non-ASCII input methods work correctly."
   (let ((body (gf-code-review--get-input-text)))
     (if (or (null body) (string-empty-p body))
         (message "gf-code-review: empty comment, not submitting.")
-      (let* ((ov        gf-code-review--input-overlay)
-             (src-buf   (overlay-buffer ov))
-             (beg       (overlay-get ov 'gf-code-review-region-beg))
-             (end       (overlay-get ov 'gf-code-review-region-end)))
+      (let* ((ov gf-code-review--input-overlay)
+             (src-buf (overlay-buffer ov))
+             (beg (overlay-get ov 'gf-code-review-region-beg))
+             (end (overlay-get ov 'gf-code-review-region-end)))
         (with-current-buffer src-buf
           (gf-code-review--post-comment beg end body)))))
   ;; Close overlay regardless
@@ -527,35 +516,37 @@ Two-step process:
 
 Payload: { body, path, line, line_type }"
   (let* ((project-id (gf-code-review--ensure-project-id))
-         (mr-iid     gf-code-review--mr-iid)
-         (rel-path   (gf-code-review--relative-file-path))
-         (end-line   (gf-code-review--line-number-at end))
-         (src-buf    (current-buffer)))
+         (mr-iid gf-code-review--mr-iid)
+         (rel-path (gf-code-review--relative-file-path))
+         (end-line (gf-code-review--line-number-at end))
+         (src-buf (current-buffer)))
     (message "gf-code-review: posting comment %s to MR !%d (line %d) …" body mr-iid end-line)
     (gf-code-review--resolve-mr-id
      (lambda (mr-id)
-       (let* ((url     (gf-code-review--api-url
-                        "projects" project-id
-                        "merge_requests" (number-to-string mr-id)
-                        "notes"))
+       (let* ((url
+               (gf-code-review--api-url
+                "projects" project-id "merge_requests" (number-to-string mr-id) "notes"))
               ;; POST /merge_requests/:id/notes payload (Gongfeng API v3):
               ;; body      — comment text (required)
               ;; path      — file path relative to repo root (for line comments)
               ;; line      — line number as string (for line comments)
               ;; line_type — "new" (right side) or "old" (left side)
-              (payload `((body      . ,body)
-                         (path      . ,rel-path)
-                         (line      . ,(number-to-string end-line))
-                         (line_type . "new"))))
+              (payload
+               `((body . ,body)
+                 (path . ,rel-path)
+                 (line . ,(number-to-string end-line))
+                 (line_type . "new"))))
          (gf-code-review--http-request
-          "POST" url payload
+          "POST" url
+          payload
           (lambda (resp)
             (if (and resp (alist-get 'id resp))
                 (progn
                   (message "gf-code-review: comment posted (id=%s)." (alist-get 'id resp))
                   (with-current-buffer src-buf
                     (gf-code-review--fetch-comments)))
-              (message "gf-code-review: failed to post comment — see *Messages* for details.")))))))))
+              (message
+               "gf-code-review: failed to post comment — see *Messages* for details.")))))))))
 
 ;;;; ─── Diagnostics ───────────────────────────────────────────────────────────
 
@@ -574,17 +565,21 @@ Three HTTP requests are made:
 Results are shown in the *gf-code-review-diagnose* buffer."
   (interactive)
   (gf-code-review--assert-token)
-  (let* ((remote  (gf-code-review--git-remote-url))
-         (path    (gf-code-review--parse-project-path remote))
-         (encoded (when path (gf-code-review--url-encode-path path)))
-         (iid     (or gf-code-review--mr-iid
-                      (read-number "MR IID for test request: ")))
-         (base    (when encoded
-                    (gf-code-review--api-url "projects" encoded)))
-         (mr-list-url  (when base
-                         (concat base "/merge_requests?state=opened&per_page=10")))
-         (mr-resolve-url (when base
-                           (concat base "/merge_request/iid/" (number-to-string iid)))))
+  (let* ((remote (gf-code-review--git-remote-url))
+         (path (gf-code-review--parse-project-path remote))
+         (encoded
+          (when path
+            (gf-code-review--url-encode-path path)))
+         (iid (or gf-code-review--mr-iid (read-number "MR IID for test request: ")))
+         (base
+          (when encoded
+            (gf-code-review--api-url "projects" encoded)))
+         (mr-list-url
+          (when base
+            (concat base "/merge_requests?state=opened&per_page=10")))
+         (mr-resolve-url
+          (when base
+            (concat base "/merge_request/iid/" (number-to-string iid)))))
     (with-current-buffer (get-buffer-create "*gf-code-review-diagnose*")
       (erase-buffer)
       (insert "=== gf-code-review diagnostics ===\n\n")
@@ -599,19 +594,20 @@ Results are shown in the *gf-code-review-diagnose* buffer."
     ;; Request 1 — list open MRs to show available IIDs
     (when mr-list-url
       (let* ((url-request-method "GET")
-             (url-request-extra-headers
-              `(("PRIVATE-TOKEN" . ,gf-code-review-private-token))))
+             (url-request-extra-headers `(("PRIVATE-TOKEN" . ,gf-code-review-private-token))))
         (url-retrieve
          mr-list-url
          (lambda (_status)
-           (let* ((body  (gf-code-review--response-body))
-                  (code  (gf-code-review--http-status-code))
-                  (mrs   (condition-case nil
-                             (let ((json-object-type 'alist)
-                                   (json-array-type  'list)
-                                   (json-key-type    'symbol))
-                               (json-read-from-string body))
-                           (error nil))))
+           (let* ((body (gf-code-review--response-body))
+                  (code (gf-code-review--http-status-code))
+                  (mrs
+                   (condition-case nil
+                       (let ((json-object-type 'alist)
+                             (json-array-type 'list)
+                             (json-key-type 'symbol))
+                         (json-read-from-string body))
+                     (error
+                      nil))))
              (with-current-buffer (get-buffer-create "*gf-code-review-diagnose*")
                (goto-char (point-max))
                (insert (format "HTTP status: %s\n" (or code "?")))
@@ -619,41 +615,46 @@ Results are shown in the *gf-code-review-diagnose* buffer."
                    (progn
                      (insert "Open MRs (iid  title):\n")
                      (dolist (mr mrs)
-                       (insert (format "  !%-6s  %s\n"
-                                       (alist-get 'iid mr "?")
-                                       (alist-get 'title mr "(no title)")))))
-                 (insert (format "Raw response:\n%s\n"
-                                 (substring body 0 (min 600 (length body))))))
+                       (insert
+                        (format "  !%-6s  %s\n"
+                                (alist-get 'iid mr "?")
+                                (alist-get 'title mr "(no title)")))))
+                 (insert (format "Raw response:\n%s\n" (substring body 0 (min 600 (length body))))))
                (insert (format "\n── Step 2: resolve MR id for IID !%s ───────────────\n" iid))
                (insert (format "URL: %s\n\n" mr-resolve-url)))))
          nil t)))
     ;; Request 2 — resolve IID → global MR id, then fetch comments
     (when mr-resolve-url
       (let* ((url-request-method "GET")
-             (url-request-extra-headers
-              `(("PRIVATE-TOKEN" . ,gf-code-review-private-token))))
+             (url-request-extra-headers `(("PRIVATE-TOKEN" . ,gf-code-review-private-token))))
         (url-retrieve
          mr-resolve-url
          (lambda (_status)
-           (let* ((body    (gf-code-review--response-body))
-                  (code    (gf-code-review--http-status-code))
-                  (mr-obj  (condition-case nil
-                               (let ((json-object-type 'alist)
-                                     (json-array-type  'list)
-                                     (json-key-type    'symbol))
-                                 (json-read-from-string body))
-                             (error nil)))
-                  (mr-id   (and mr-obj (alist-get 'id mr-obj))))
+           (let* ((body (gf-code-review--response-body))
+                  (code (gf-code-review--http-status-code))
+                  (mr-obj
+                   (condition-case nil
+                       (let ((json-object-type 'alist)
+                             (json-array-type 'list)
+                             (json-key-type 'symbol))
+                         (json-read-from-string body))
+                     (error
+                      nil)))
+                  (mr-id (and mr-obj (alist-get 'id mr-obj))))
              (with-current-buffer (get-buffer-create "*gf-code-review-diagnose*")
                (goto-char (point-max))
                (insert (format "HTTP status: %s\n" (or code "?")))
                (if (numberp mr-id)
                    (progn
                      (insert (format "Resolved MR id: %d\n" mr-id))
-                     (let ((comments-url (concat base "/merge_request/"
-                                                 (number-to-string mr-id)
-                                                 "/comments?per_page=5")))
-                       (insert (format "\n── Step 3: comments for MR id %d ───────────────────\n" mr-id))
+                     (let ((comments-url
+                            (concat
+                             base
+                             "/merge_request/"
+                             (number-to-string mr-id)
+                             "/comments?per_page=5")))
+                       (insert
+                        (format "\n── Step 3: comments for MR id %d ───────────────────\n" mr-id))
                        (insert (format "URL: %s\n\n" comments-url))
                        ;; Request 3 — fetch comments
                        (let* ((url-request-method "GET")
@@ -667,10 +668,12 @@ Results are shown in the *gf-code-review-diagnose* buffer."
                                 (goto-char (point-max))
                                 (insert decoded)
                                 (insert "\n=== done ===\n")
-                                (message "gf-code-review-diagnose: done — see *gf-code-review-diagnose*"))))
+                                (message
+                                 "gf-code-review-diagnose: done — see *gf-code-review-diagnose*"))))
                           nil t))))
-                 (insert (format "Failed to resolve MR id.\nRaw: %s\n=== done ===\n"
-                                 (substring body 0 (min 400 (length body)))))
+                 (insert
+                  (format "Failed to resolve MR id.\nRaw: %s\n=== done ===\n"
+                          (substring body 0 (min 400 (length body)))))
                  (message "gf-code-review-diagnose: done — see *gf-code-review-diagnose*")))))
          nil t)))))
 
@@ -717,7 +720,8 @@ Key bindings:
   C-c r c   `gf-code-review-add-comment'   (requires an active region)
   C-c r r   `gf-code-review-refresh'       re-fetch comments"
   :lighter " GF-CR"
-  :keymap gf-code-review-mode-map
+  :keymap
+  gf-code-review-mode-map
   (if gf-code-review-mode
       (progn
         (gf-code-review--assert-token)
@@ -730,9 +734,10 @@ Key bindings:
     (gf-code-review--clear-overlays)
     (when gf-code-review--input-overlay
       (gf-code-review--cancel-comment))
-    (setq gf-code-review--mr-iid     nil
-          gf-code-review--mr-id      nil
-          gf-code-review--project-id nil)))
+    (setq
+     gf-code-review--mr-iid nil
+     gf-code-review--mr-id nil
+     gf-code-review--project-id nil)))
 
 ;;;; ─── Provide ────────────────────────────────────────────────────────────────
 
