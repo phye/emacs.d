@@ -99,6 +99,49 @@ The token is sent in the PRIVATE-TOKEN HTTP header on every API request."
   "Face for the header line inside a comment overlay."
   :group 'gf-code-review)
 
+;;;; ─── Per-repo IID cache ─────────────────────────────────────────────────────
+
+(defvar gf-code-review--iid-cache (make-hash-table :test 'equal)
+  "In-memory cache mapping git-root (string) → MR IID (integer).
+Populated on first use from the .git/gf-code-review-iid file so all
+buffers in the same repository share the IID without re-prompting.")
+
+(defun gf-code-review--git-root ()
+  "Return the absolute path to the git root for the current buffer, or nil."
+  (when-let ((root (locate-dominating-file
+                    (or buffer-file-name default-directory) ".git")))
+    (expand-file-name root)))
+
+(defun gf-code-review--iid-file ()
+  "Return the path to the per-repo IID persistence file (.git/gf-code-review-iid)."
+  (when-let ((root (gf-code-review--git-root)))
+    (expand-file-name "gf-code-review-iid"
+                      (expand-file-name ".git" root))))
+
+(defun gf-code-review--load-cached-iid ()
+  "Return the persisted MR IID for the current repo, or nil.
+Checks the in-memory cache first; falls back to the .git/gf-code-review-iid
+file, and populates the cache from it so subsequent calls are instant."
+  (let ((root (gf-code-review--git-root)))
+    (or (and root (gethash root gf-code-review--iid-cache))
+        (when-let ((file (gf-code-review--iid-file)))
+          (when (file-readable-p file)
+            (let* ((raw (with-temp-buffer
+                          (insert-file-contents file)
+                          (string-trim (buffer-string))))
+                   (iid (string-to-number raw)))
+              (when (and (integerp iid) (> iid 0))
+                (when root
+                  (puthash root iid gf-code-review--iid-cache))
+                iid)))))))
+
+(defun gf-code-review--save-iid (iid)
+  "Persist IID for the current repo to the in-memory cache and .git file."
+  (when-let ((root (gf-code-review--git-root)))
+    (puthash root iid gf-code-review--iid-cache))
+  (when-let ((file (gf-code-review--iid-file)))
+    (write-region (number-to-string iid) nil file nil 'silent)))
+
 ;;;; ─── Buffer-local state ────────────────────────────────────────────────────
 
 (defvar-local gf-code-review--mr-iid nil
@@ -474,9 +517,17 @@ non-ASCII input methods work correctly."
   "Cancel the in-progress comment input without submitting."
   (interactive)
   (when gf-code-review--input-overlay
-    (let ((ibuf (overlay-get gf-code-review--input-overlay 'gf-code-review-input-buffer)))
-      (delete-overlay gf-code-review--input-overlay)
+    (let* ((ov gf-code-review--input-overlay)
+           (ibuf (overlay-get ov 'gf-code-review-input-buffer))
+           (src-buf (overlay-buffer ov)))
+      (delete-overlay ov)
       (setq gf-code-review--input-overlay nil)
+      ;; Also clear the source buffer's reference to prevent spurious cancels
+      ;; the next time add-comment is invoked (the variable is buffer-local, so
+      ;; clearing it in ibuf does not affect the source buffer).
+      (when (and src-buf (buffer-live-p src-buf))
+        (with-current-buffer src-buf
+          (setq gf-code-review--input-overlay nil)))
       (when (buffer-live-p ibuf)
         (let ((win (get-buffer-window ibuf)))
           (when win
@@ -680,6 +731,18 @@ Results are shown in the *gf-code-review-diagnose* buffer."
 ;;;; ─── Public commands ────────────────────────────────────────────────────────
 
 ;;;###autoload
+(defun gf-code-review-set-mr-iid (iid)
+  "Set the MR IID for the current repository to IID and persist it.
+Use this to switch to a different MR without toggling the mode off/on.
+All buffers sharing the same git root will pick up the new IID the next
+time `gf-code-review-mode' is enabled."
+  (interactive (list (read-number "New MR IID: " (or gf-code-review--mr-iid 0))))
+  (setq gf-code-review--mr-iid iid
+        gf-code-review--mr-id nil)          ; force re-resolve
+  (gf-code-review--save-iid iid)
+  (message "gf-code-review: MR IID set to !%d (persisted for this repo)." iid))
+
+;;;###autoload
 (defun gf-code-review-add-comment (beg end)
   "Add a CR comment for the selected region (BEG to END).
 Opens an inline input overlay; press C-c C-c to submit, C-c C-k to cancel."
@@ -726,8 +789,14 @@ Key bindings:
       (progn
         (gf-code-review--assert-token)
         (unless gf-code-review--mr-iid
-          (let ((iid (read-number "MR IID to review (the integer in the MR URL): ")))
-            (setq gf-code-review--mr-iid iid)))
+          (let ((cached (gf-code-review--load-cached-iid)))
+            (if cached
+                (progn
+                  (setq gf-code-review--mr-iid cached)
+                  (message "gf-code-review: using cached MR IID !%d for this repo." cached))
+              (let ((iid (read-number "MR IID to review (the integer in the MR URL): ")))
+                (setq gf-code-review--mr-iid iid)
+                (gf-code-review--save-iid iid)))))
         (gf-code-review--ensure-project-id)
         (gf-code-review--fetch-comments))
     ;; Disable: clean up
