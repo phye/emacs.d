@@ -37,7 +37,7 @@
 (use-package
  gf-code-review
  :load-path "~/.emacs.d/site-lisp/gf-code-review/"
- :config (gf-code-review-set-token (getenv GIT_WOA_TOKEN)))
+ :config (gf-code-review-set-token (getenv "GIT_WOA_TOKEN")))
 
 (provide 'phye-init-git)
 
