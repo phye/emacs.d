@@ -347,14 +347,22 @@ Moves past the HTTP headers and decodes the body."
     (forward-line (1- line))
     (line-end-position)))
 
-(defun gf-code-review--insert-comment-overlay (line author body &optional created-at resolved note-id)
-  "Insert a read-only overlay after LINE showing AUTHOR, BODY, CREATED-AT, and RESOLVED.
-NOTE-ID is stored on the overlay so it can be used to resolve the comment later."
-  (let* ((pos (gf-code-review--line-end-pos line))
-         (ov (make-overlay pos pos nil t nil))
+(defun gf-code-review--render-note (note &optional is-first resolved)
+  "Render a single NOTE alist into a propertized string for an overlay.
+IS-FIRST non-nil means this is the thread's first note (shows the status indicator).
+RESOLVED is the thread-level resolved value (t or :json-false)."
+  (let* ((author-obj (alist-get 'author note))
+         (author (if author-obj
+                     (or (alist-get 'name author-obj)
+                         (alist-get 'username author-obj)
+                         "unknown")
+                   "unknown"))
+         (created-at (alist-get 'created_at note))
+         (body (or (alist-get 'body note) ""))
          (is-resolved (eq resolved t))
          (status-str
           (cond
+           ((not is-first) "")
            (is-resolved
             (propertize " ✓resolved" 'face 'gf-code-review-resolved-face))
            ((eq resolved :json-false)
@@ -364,28 +372,43 @@ NOTE-ID is stored on the overlay so it can be used to resolve the comment later.
           (concat
            (propertize (format "  💬 %s%s"
                                author
-                               (if created-at
-                                   (format "  [%s]" created-at)
-                                 ""))
+                               (if created-at (format "  [%s]" created-at) ""))
                        'face 'gf-code-review-header-face)
            status-str))
-         ;; Indent body lines; use green body face for resolved, blue for open
          (body-face (if is-resolved
                         'gf-code-review-resolved-body-face
                       'gf-code-review-comment-face))
-         (body-lines (mapconcat (lambda (l) (concat "  │ " l)) (split-string body "\n") "\n"))
+         (body-lines (mapconcat (lambda (l) (concat "  │ " l))
+                                (split-string body "\n") "\n")))
+    (concat header "\n"
+            (propertize body-lines 'face body-face)
+            "\n")))
+
+(defun gf-code-review--insert-discussion-overlay (line notes resolved first-note-id)
+  "Insert a single overlay after LINE rendering all NOTES in a discussion thread.
+RESOLVED is the thread-level resolved state (t or :json-false).
+FIRST-NOTE-ID is stored on the overlay for the resolve command."
+  (let* ((pos (gf-code-review--line-end-pos line))
+         (ov (make-overlay pos pos nil t nil))
+         (first-body (alist-get 'body (car notes)))
+         (separator (propertize "  ├────────────────\n"
+                                'face 'gf-code-review-header-face))
          (text
-          (propertize (concat
-                       "\n"
-                       header
-                       "\n"
-                       (propertize body-lines 'face body-face)
-                       "\n")
-                      'cursor 0)))
+          (propertize
+           (concat "\n"
+                   (mapconcat
+                    (lambda (note-and-idx)
+                      (gf-code-review--render-note
+                       (car note-and-idx)
+                       (= (cdr note-and-idx) 0)
+                       resolved))
+                    (cl-loop for n in notes for i from 0 collect (cons n i))
+                    separator))
+           'cursor 0)))
     (overlay-put ov 'after-string text)
     (overlay-put ov 'gf-code-review t)
-    (overlay-put ov 'gf-code-review-note-id note-id)
-    (overlay-put ov 'gf-code-review-body body)
+    (overlay-put ov 'gf-code-review-note-id first-note-id)
+    (overlay-put ov 'gf-code-review-body first-body)
     (overlay-put ov 'gf-code-review-resolved resolved)
     (push ov gf-code-review--overlays)))
 
@@ -423,13 +446,11 @@ and caches the returned .id field in `gf-code-review--mr-id'."
   "Fetch MR comments from Gongfeng and render them as overlays.
 
 Two-step process:
-  1. GET /projects/:id/merge_request/iid/:iid  → resolves the global MR id
+  1. Resolve the global MR id from the IID.
   2. GET /projects/:id/merge_requests/:mr_id/notes
 
-Each comment object has the shape:
-  { body, author{name,username}, created_at,
-    file_path,
-    note_position.latest_position.{right_line_num, left_line_num} }"
+Notes are flat; replies carry a `parent_id' pointing to the root note.
+We group them into threads and render each thread as one overlay."
   (let* ((project-id (gf-code-review--ensure-project-id))
          (mr-iid gf-code-review--mr-iid)
          (rel-path (gf-code-review--relative-file-path))
@@ -445,56 +466,55 @@ Each comment object has the shape:
          (gf-code-review--http-request
           "GET" url
           nil
-          (lambda (comments)
+          (lambda (notes)
             (with-current-buffer buf
               (gf-code-review--clear-overlays)
-              (if (null comments)
+              (if (null notes)
                   (message "gf-code-review: no comments found (or request failed).")
-                (let ((total (length comments))
-                      (count 0))
-                  (message "gf-code-review: fetched %d comment(s) total; current file rel-path=%S"
+                (let* ((total (length notes))
+                       (count 0)
+                       ;; index all notes by id for quick child lookup
+                       (by-id (make-hash-table))
+                       ;; children: parent-id -> list of child notes (in order)
+                       (children (make-hash-table))
+                       (roots nil))
+                  (message "gf-code-review: fetched %d note(s) total; file rel-path=%S"
                            total rel-path)
-                  (dolist (c comments)
-                    ;; Gongfeng /comments response shape (actual field names):
-                    ;;   .body              — the comment text
-                    ;;   .file_path         — file path (relative to repo root)
-                    ;;   .author.{name,username}
-                    ;;   .created_at
-                    ;;   .note_position.latest_position.{right_line_num, left_line_num}
-                    ;;     right_line_num   — line on the new/right side of the diff
-                    ;;     left_line_num    — line on the old/left side
-                    (let* ((note-body (alist-get 'body c))
-                           (file-path (alist-get 'file_path c))
-                           (note-pos (alist-get 'note_position c))
+                  ;; First pass: index and separate roots from replies
+                  (dolist (n notes)
+                    (let ((id (alist-get 'id n))
+                          (pid (alist-get 'parent_id n)))
+                      (puthash id n by-id)
+                      (if pid
+                          (puthash pid
+                                   (append (gethash pid children) (list n))
+                                   children)
+                        (push n roots))))
+                  ;; roots arrive newest-first from the API; reverse for natural order
+                  (setq roots (nreverse roots))
+                  ;; Second pass: render one overlay per root that matches this file
+                  (dolist (root roots)
+                    (let* ((file-path (alist-get 'file_path root))
+                           (note-pos (alist-get 'note_position root))
                            (latest-pos (and note-pos (alist-get 'latest_position note-pos)))
-                           ;; prefer right (new) side; fall back to left (old) side
                            (line-num
                             (and latest-pos
                                  (or (alist-get 'right_line_num latest-pos)
                                      (alist-get 'left_line_num latest-pos))))
-                           (author-obj (alist-get 'author c))
-                           (author
-                            (if author-obj
-                                (or (alist-get 'name author-obj)
-                                    (alist-get 'username author-obj)
-                                    "unknown")
-                              "unknown"))
-                           (created-at (alist-get 'created_at c))
-                           (resolve-state (alist-get 'resolve_state c))
-                           ;; resolve_state: 0=default 1=unresolved 2=resolved
+                           (resolve-state (alist-get 'resolve_state root))
                            (resolved (cond ((eql resolve-state 2) t)
                                           ((eql resolve-state 1) :json-false)
                                           (t nil)))
-                           (note-id (alist-get 'id c)))
-                      (when (and note-body
-                                 (integerp line-num)
+                           (root-id (alist-get 'id root))
+                           (thread (cons root (gethash root-id children))))
+                      (when (and (integerp line-num)
                                  file-path
                                  rel-path
                                  (string= file-path rel-path))
-                        (gf-code-review--insert-comment-overlay line-num author note-body
-                                                                created-at resolved note-id)
+                        (gf-code-review--insert-discussion-overlay
+                         line-num thread resolved root-id)
                         (cl-incf count))))
-                  (message "gf-code-review: %d comment(s) in this file, %d total in MR."
+                  (message "gf-code-review: %d thread(s) in this file, %d total notes in MR."
                            count total)))))))))))
 
 ;;;; ─── Input overlay (adding a comment) ─────────────────────────────────────
