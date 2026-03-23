@@ -12,7 +12,8 @@
 (setq vc-follow-symlinks t)
 
 ;; use magit to edit commit message
-(with-eval-after-load 'magit t)
+(with-eval-after-load 'magit
+  t)
 
 ;; To use this function:
 ;; 1. Select a region containing HTTPS Git URLs.
@@ -32,6 +33,11 @@
   "Convert HTTPS git URLs to SSH in git-config."
   (interactive)
   (convert-https-to-ssh-in-region (point-min) (point-max)))
+
+(use-package
+ gf-code-review
+ :load-path "~/.emacs.d/site-lisp/gf-code-review/"
+ :config (gf-code-review-set-token (getenv GIT_WOA_TOKEN)))
 
 (provide 'phye-init-git)
 
