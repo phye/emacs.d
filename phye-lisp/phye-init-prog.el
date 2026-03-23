@@ -154,6 +154,7 @@
    (go-mode (xref-find-definitions (symbol-at-point)))
    (python-mode (xref-find-definitions (symbol-at-point)))
    (org-mode (org-open-at-point))
+   (typescript-mode (xref-find-definitions (symbol-at-point)))
    (emacs-lisp-mode (my-evil-goto-definition))
    (t (counsel-etags-find-tag-at-point))))
 

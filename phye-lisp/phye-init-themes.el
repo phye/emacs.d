@@ -93,8 +93,10 @@
    modus-vivendi-tritanopia
    nord
    noctilux
+   occidental
    omtose-darker
    planet
+   professional
    purple-haze
    rebecca
    sanityinc-tomorrow-eighties
@@ -107,6 +109,7 @@
    srcery
    smyx
    tango-dark
+   twilight
    wombat
    zerodark))
 
