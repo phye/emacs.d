@@ -7,6 +7,7 @@
 (setq phye-elpa-packages
       '(activities
         acp
+        shell-maker
         agent-shell
         annotate-mode
         atom-dark
