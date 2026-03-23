@@ -84,6 +84,28 @@ The token is sent in the PRIVATE-TOKEN HTTP header on every API request."
   "Face for displaying fetched CR comments."
   :group 'gf-code-review)
 
+(defface gf-code-review-resolved-face
+  '((((background dark)) :foreground "#60c060" :weight bold)
+    (t :foreground "#207020" :weight bold))
+  "Face for the resolved status indicator in a comment overlay."
+  :group 'gf-code-review)
+
+(defface gf-code-review-unresolved-face
+  '((((background dark)) :foreground "#60a8ff" :weight bold)
+    (t :foreground "#1040c0" :weight bold))
+  "Face for the unresolved/open status indicator in a comment overlay."
+  :group 'gf-code-review)
+
+(defface gf-code-review-resolved-body-face
+  '((((background dark))
+     :background "#1a3a1a"
+     :foreground "#80c080"
+     :box (:line-width 1 :color "#40a040")
+     :extend t)
+    (t :background "#eeffee" :foreground "#205020" :box (:line-width 1 :color "#60a060") :extend t))
+  "Face for the body lines of a resolved CR comment overlay."
+  :group 'gf-code-review)
+
 (defface gf-code-review-input-face
   '((((background dark))
      :background "#2a3a2a"
@@ -325,29 +347,46 @@ Moves past the HTTP headers and decodes the body."
     (forward-line (1- line))
     (line-end-position)))
 
-(defun gf-code-review--insert-comment-overlay (line author body &optional created-at)
-  "Insert a read-only overlay after LINE showing AUTHOR, BODY, and CREATED-AT."
+(defun gf-code-review--insert-comment-overlay (line author body &optional created-at resolved note-id)
+  "Insert a read-only overlay after LINE showing AUTHOR, BODY, CREATED-AT, and RESOLVED.
+NOTE-ID is stored on the overlay so it can be used to resolve the comment later."
   (let* ((pos (gf-code-review--line-end-pos line))
          (ov (make-overlay pos pos nil t nil))
+         (is-resolved (eq resolved t))
+         (status-str
+          (cond
+           (is-resolved
+            (propertize " ✓resolved" 'face 'gf-code-review-resolved-face))
+           ((eq resolved :json-false)
+            (propertize " ○open" 'face 'gf-code-review-unresolved-face))
+           (t "")))
          (header
-          (propertize (format "  💬 %s%s"
-                              author
-                              (if created-at
-                                  (format "  [%s]" created-at)
-                                ""))
-                      'face 'gf-code-review-header-face))
-         ;; Indent body lines for readability
+          (concat
+           (propertize (format "  💬 %s%s"
+                               author
+                               (if created-at
+                                   (format "  [%s]" created-at)
+                                 ""))
+                       'face 'gf-code-review-header-face)
+           status-str))
+         ;; Indent body lines; use green body face for resolved, blue for open
+         (body-face (if is-resolved
+                        'gf-code-review-resolved-body-face
+                      'gf-code-review-comment-face))
          (body-lines (mapconcat (lambda (l) (concat "  │ " l)) (split-string body "\n") "\n"))
          (text
           (propertize (concat
                        "\n"
                        header
                        "\n"
-                       (propertize body-lines 'face 'gf-code-review-comment-face)
+                       (propertize body-lines 'face body-face)
                        "\n")
                       'cursor 0)))
     (overlay-put ov 'after-string text)
     (overlay-put ov 'gf-code-review t)
+    (overlay-put ov 'gf-code-review-note-id note-id)
+    (overlay-put ov 'gf-code-review-body body)
+    (overlay-put ov 'gf-code-review-resolved resolved)
     (push ov gf-code-review--overlays)))
 
 ;;;; ─── MR id resolver ────────────────────────────────────────────────────────
@@ -440,14 +479,20 @@ Each comment object has the shape:
                                     (alist-get 'username author-obj)
                                     "unknown")
                               "unknown"))
-                           (created-at (alist-get 'created_at c)))
+                           (created-at (alist-get 'created_at c))
+                           (resolve-state (alist-get 'resolve_state c))
+                           ;; resolve_state: 0=default 1=unresolved 2=resolved
+                           (resolved (cond ((eql resolve-state 2) t)
+                                          ((eql resolve-state 1) :json-false)
+                                          (t nil)))
+                           (note-id (alist-get 'id c)))
                       (when (and note-body
                                  (integerp line-num)
                                  file-path
                                  rel-path
                                  (string= file-path rel-path))
                         (gf-code-review--insert-comment-overlay line-num author note-body
-                                                                created-at)
+                                                                created-at resolved note-id)
                         (cl-incf count))))
                   (message "gf-code-review: %d comment(s) in this file, %d total in MR."
                            count total)))))))))))
@@ -464,7 +509,7 @@ Each comment object has the shape:
 (defun gf-code-review--open-input-overlay (beg end)
   "Open an inline input overlay below the region from BEG to END."
   (when gf-code-review--input-overlay
-    (gf-code-review--cancel-comment))
+    (gf-code-review--close-input-overlay))
   (let* ((end-pos
           (save-excursion
             (goto-char end)
@@ -513,16 +558,16 @@ non-ASCII input methods work correctly."
           (string-trim
            (buffer-substring-no-properties gf-code-review--input-prompt-end (point-max))))))))
 
-(defun gf-code-review--cancel-comment ()
-  "Cancel the in-progress comment input without submitting."
-  (interactive)
+(defun gf-code-review--close-input-overlay ()
+  "Tear down the active comment-input overlay, window, and buffer.
+Does nothing if no input overlay is active."
   (when gf-code-review--input-overlay
     (let* ((ov gf-code-review--input-overlay)
            (ibuf (overlay-get ov 'gf-code-review-input-buffer))
            (src-buf (overlay-buffer ov)))
       (delete-overlay ov)
       (setq gf-code-review--input-overlay nil)
-      ;; Also clear the source buffer's reference to prevent spurious cancels
+      ;; Clear the source buffer's reference to prevent spurious cancels
       ;; the next time add-comment is invoked (the variable is buffer-local, so
       ;; clearing it in ibuf does not affect the source buffer).
       (when (and src-buf (buffer-live-p src-buf))
@@ -532,7 +577,12 @@ non-ASCII input methods work correctly."
         (let ((win (get-buffer-window ibuf)))
           (when win
             (delete-window win)))
-        (kill-buffer ibuf))))
+        (kill-buffer ibuf)))))
+
+(defun gf-code-review--cancel-comment ()
+  "Cancel the in-progress comment input without submitting."
+  (interactive)
+  (gf-code-review--close-input-overlay)
   (message "gf-code-review: comment cancelled."))
 
 (defun gf-code-review--submit-comment ()
@@ -546,9 +596,9 @@ non-ASCII input methods work correctly."
              (beg (overlay-get ov 'gf-code-review-region-beg))
              (end (overlay-get ov 'gf-code-review-region-end)))
         (with-current-buffer src-buf
-          (gf-code-review--post-comment beg end body)))))
-  ;; Close overlay regardless
-  (gf-code-review--cancel-comment))
+          (gf-code-review--post-comment beg end body)
+          (deactivate-mark)))))
+  (gf-code-review--close-input-overlay))
 
 ;;;; ─── Posting a comment ─────────────────────────────────────────────────────
 
@@ -728,6 +778,57 @@ Results are shown in the *gf-code-review-diagnose* buffer."
                  (message "gf-code-review-diagnose: done — see *gf-code-review-diagnose*")))))
          nil t)))))
 
+;;;; ─── Resolving a comment ──────────────────────────────────────────────────
+
+(defun gf-code-review--overlay-at-point ()
+  "Return the first gf-code-review comment overlay on the current line, or nil.
+Overlays are zero-length and placed at line-end-position, so we search
+from line-beginning up to and including line-end (overlays-in end is exclusive,
+hence the +1)."
+  (let ((found nil))
+    (dolist (ov (overlays-in (line-beginning-position) (1+ (line-end-position))))
+      (when (and (overlay-get ov 'gf-code-review)
+                 (overlay-get ov 'gf-code-review-note-id))
+        (setq found ov)))
+    found))
+
+;;;###autoload
+(defun gf-code-review-resolve-comment ()
+  "Mark the CR comment at point as resolved via the Gongfeng API.
+The note overlay must be on the current line.  After a successful API
+call the comments are refreshed so the overlay updates to green."
+  (interactive)
+  (gf-code-review--assert-token)
+  (unless (bound-and-true-p gf-code-review-mode)
+    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
+  (let ((ov (gf-code-review--overlay-at-point)))
+    (unless ov
+      (user-error "gf-code-review: no comment overlay on this line"))
+    (let ((note-id (overlay-get ov 'gf-code-review-note-id))
+          (note-body (overlay-get ov 'gf-code-review-body))
+          (already (overlay-get ov 'gf-code-review-resolved)))
+      (when (eq already t)
+        (user-error "gf-code-review: comment is already resolved"))
+      (let* ((project-id (gf-code-review--ensure-project-id))
+             (src-buf (current-buffer)))
+        (gf-code-review--resolve-mr-id
+         (lambda (mr-id)
+           (let ((url (gf-code-review--api-url
+                       "projects" project-id
+                       "merge_requests" (number-to-string mr-id)
+                       "notes" (number-to-string note-id))))
+             (gf-code-review--http-request
+              "PUT" url
+              `((body . ,note-body) (resolve_state . 2))
+              (lambda (resp)
+                (if (and resp (alist-get 'id resp))
+                    (progn
+                      (message "gf-code-review: note %d resolved." note-id)
+                      (with-current-buffer src-buf
+                        (gf-code-review--fetch-comments)))
+                  (message "gf-code-review: failed to resolve note %d — see *Messages*."
+                           note-id)))))))))))
+
 ;;;; ─── Public commands ────────────────────────────────────────────────────────
 
 ;;;###autoload
@@ -769,6 +870,7 @@ Opens an inline input overlay; press C-c C-c to submit, C-c C-k to cancel."
   (let ((m (make-sparse-keymap)))
     (define-key m (kbd "C-c r c") #'gf-code-review-add-comment)
     (define-key m (kbd "C-c r r") #'gf-code-review-refresh)
+    (define-key m (kbd "C-c r v") #'gf-code-review-resolve-comment)
     m)
   "Keymap for `gf-code-review-mode'.")
 
@@ -780,8 +882,9 @@ When enabled you will be asked for the MR IID; comments targeting the
 current file are then fetched and shown as inline overlays.
 
 Key bindings:
-  C-c r c   `gf-code-review-add-comment'   (requires an active region)
-  C-c r r   `gf-code-review-refresh'       re-fetch comments"
+  C-c r c   `gf-code-review-add-comment'     (requires an active region)
+  C-c r r   `gf-code-review-refresh'         re-fetch comments
+  C-c r v   `gf-code-review-resolve-comment' resolve comment at point"
   :lighter " GF-CR"
   :keymap
   gf-code-review-mode-map
