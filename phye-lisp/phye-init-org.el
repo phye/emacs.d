@@ -460,18 +460,23 @@
     (phye/cleanup-white-spaces-in-buffer)))
 (add-hook 'before-save-hook #'phye/org-before-save-hook)
 
-;; TODO(phye): move this priority logic to md-after-export-hook
-(defun phye/replace-priority-in-string (str)
-  "Replace #[A|B|C] priority with P[0|1|2] in STR."
-  (replace-regexp-in-string
-   "#A" "P0"
-   (replace-regexp-in-string "#B" "P1" (replace-regexp-in-string "#C" "P2" str))))
+(defun phye/apply-regexp-replacements (str replacements)
+  "Apply each (REGEXP . REP) pair in REPLACEMENTS to STR sequentially."
+  (seq-reduce (lambda (s pair)
+                (replace-regexp-in-string (car pair) (cdr pair) s))
+              replacements str))
+
+(defun phye/md-cleanup-string (str)
+  "Apply all MD export string cleanups to STR in one pass."
+  (phye/apply-regexp-replacements
+   str `((,phye/in-word-white-spaces-regex . "\\1\\2")
+         ("#A" . "P0") ("#B" . "P1") ("#C" . "P2")
+         ("!\\[[^]]*\\](\\(images/[^)]+\\))" . "<img src=\"\\1\" width=\"800\">"))))
 
 (defun phye/md-after-export-hook (text backend _info)
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
   (when (org-export-derived-backend-p backend 'md)
-    (concat
-     "[TOC]\n\n" (phye/replace-priority-in-string (phye/cleanup-white-spaces-in-string text)))))
+    (concat "[TOC]\n\n" (phye/md-cleanup-string text))))
 (add-hook 'org-export-filter-final-output-functions #'phye/md-after-export-hook)
 
 ;; Persistent notes (like persistent-scratch, but built-in)
