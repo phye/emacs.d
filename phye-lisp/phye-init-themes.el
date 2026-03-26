@@ -405,19 +405,21 @@
          (hour (phye/current-hour))
          (light (< hour dark-hour)))
     (message "Toggle Theme at %s" loc)
-    (when (equal loc "office")
-      (if light
-          (progn
-            (when (car custom-enabled-themes)
-              (setq previous-dark-theme (car custom-enabled-themes)))
-            (phye/load-theme default-theme))
-        (phye/load-theme previous-dark-theme))
-      (when (display-graphic-p)
-        (shell-command
-         (format "~/bin/scripts/toggle_dark_theme.sh %s"
-                 (if light
-                     "false"
-                   "true")))))))
+    (if (equal loc "office")
+        (progn
+          (if light
+              (progn
+                (when (car custom-enabled-themes)
+                  (setq previous-dark-theme (car custom-enabled-themes)))
+                (phye/load-theme default-theme))
+            (phye/load-theme previous-dark-theme))
+          (when (display-graphic-p)
+            (shell-command
+             (format "~/bin/scripts/toggle_dark_theme.sh %s"
+                     (if light
+                         "false"
+                       "true")))))
+      (phye/load-theme default-theme))))
 
 (advice-add 'my-pickup-random-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-pickup-random-color-theme :after #'phye/set-ivy-match-bg-color)
