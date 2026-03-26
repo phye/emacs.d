@@ -8,6 +8,7 @@
 (declare-function magit-status "magit")
 (declare-function magit-blame "magit")
 (declare-function magit-push "magit")
+(declare-function exec-path-from-shell-copy-env "exec-path-from-shell")
 
 (setq vc-follow-symlinks t)
 
@@ -37,7 +38,10 @@
 (use-package
  gf-code-review
  :load-path "~/.emacs.d/site-lisp/gf-code-review/"
- :config (gf-code-review-set-token (getenv "GIT_WOA_TOKEN")))
+ :config
+ (exec-path-from-shell-copy-env "GIT_WOA_TOKEN")
+ (gf-code-review-set-token
+  (encode-coding-string (string-trim (getenv "GIT_WOA_TOKEN")) 'us-ascii)))
 
 (provide 'phye-init-git)
 
