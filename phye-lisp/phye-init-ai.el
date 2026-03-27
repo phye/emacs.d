@@ -8,38 +8,37 @@
 (defvar agent-shell-google-gemini-acp-command)
 
 (use-package
- agent-shell
- ;; use the modified version for codebuddy
- :vc (:url "git@git.woa.com:phye/agent-shell.git" :rev "merge_upstream")
- :config
- (setq agent-shell-prefer-viewport-interaction nil)
- (setq agent-shell-permission-responder-function
-       (lambda (permission)
-         (when-let (((equal (map-elt (map-elt permission :tool-call) :kind) "read"))
-                    (choice
-                     (seq-find
-                      (lambda (option) (equal (map-elt option :kind) "allow_once"))
-                      (map-elt permission :options))))
-           (funcall (map-elt permission :respond) (map-elt choice :option-id))
-           t)))
- (setq agent-shell-google-gemini-acp-command
-       (cons "gemini-internal" (cdr agent-shell-google-gemini-acp-command)))
- (setq agent-shell-anthropic-claude-environment
-       (agent-shell-make-environment-variables
-        "CLAUDE_CODE_EXECUTABLE"
-        (string-trim-right (shell-command-to-string "which claude-internal"))))
+  agent-shell
+  :ensure t
+  ;; use the modified version for codebuddy
+  ;; :vc (:url "git@git.woa.com:phye/agent-shell.git" :rev "merge_upstream")
+  :config
+  (setq agent-shell-prefer-viewport-interaction nil)
+  (setq agent-shell-permission-responder-function
+        (lambda (permission)
+          (when-let (((equal (map-elt (map-elt permission :tool-call) :kind) "read"))
+                     (choice
+                      (seq-find
+                       (lambda (option) (equal (map-elt option :kind) "allow_once"))
+                       (map-elt permission :options))))
+            (funcall (map-elt permission :respond) (map-elt choice :option-id))
+            t)))
+  (if (eq (getenv "LOCATION") "office")
+      (progn
+        (setq agent-shell-google-gemini-acp-command
+              (cons "gemini-internal" (cdr agent-shell-google-gemini-acp-command)))
+        (setq agent-shell-anthropic-claude-environment
+              (agent-shell-make-environment-variables
+               "CLAUDE_CODE_EXECUTABLE" (string-trim-right (shell-command-to-string "which claude-internal"))
+               )))
+    (setq agent-shell-anthropic-authentication
+          (agent-shell-anthropic-make-authentication
+           :api-key (getenv "KIMI_AUTH_TOKEN")))
+    (setq agent-shell-anthropic-claude-environment
+          (agent-shell-make-environment-variables
+           "ENABLE_TOOL_SEARCH" "false"
+           "ANTHROPIC_BASE_URL" "https://api.kimi.com/coding/"))))
 
- ;; :ensure t
- ;; to use codebuddy, normally you should only login once and then relies on
- ;; codebuddy's login state to keep session
- )
-
-;; (use-package
-;;  agent-shell
-;;  :ensure t
-;;  :config (setq agent-shell-google-authentication (agent-shell-google-make-authentication :none t))
-;;  (setq agent-shell-google-gemini-command
-;;        (cons "gemini-internal" (cdr agent-shell-google-gemini-command))))
 (provide 'phye-init-ai)
 
 ;;; phye-init-ai.el ends here

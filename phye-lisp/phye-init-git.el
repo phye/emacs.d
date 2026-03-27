@@ -39,9 +39,9 @@
  gf-code-review
  :load-path "~/.emacs.d/site-lisp/gf-code-review/"
  :config
- (exec-path-from-shell-copy-env "GIT_WOA_TOKEN")
- (gf-code-review-set-token
-  (encode-coding-string (string-trim (getenv "GIT_WOA_TOKEN")) 'us-ascii)))
+ (let ((auth-token (exec-path-from-shell-copy-env "GIT_WOA_TOKEN")))
+   (unless (seq-empty-p auth-token)
+     (gf-code-review-set-token (encode-coding-string (string-trim auth-token) 'us-ascii)))))
 
 (provide 'phye-init-git)
 
