@@ -28,6 +28,7 @@
 (general-define-key
  :keymaps 'override
  "M-`" 'other-frame
+ "s-x" 'counsel-M-x
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
  "C-c a" 'org-agenda
@@ -50,7 +51,7 @@
 ;; format: off
 ;; state dependent global keys
 (general-define-key
- :states '(emacs)
+ :states '(emacs insert)
  "M-v" 'paste-from-x-clipboard
  "C-w" 'backward-kill-word
  "C-a" 'move-beginning-of-line
@@ -351,6 +352,7 @@
  "n" 'phye/pdf-goto-next-title-page
  "p" 'phye/pdf-goto-prev-title-page)
 
+;; format: off
 (general-define-key
  :keymaps 'vterm-mode-map
  :states '(emacs insert)
@@ -361,6 +363,14 @@
  "s-v" 'vterm-yank)
 
 ;; format: off
+(general-define-key
+ :keymaps 'gf-code-review-mode-map
+ :states '(normal)
+ :prefix ","
+ "ca" 'gf-code-review-add-comment
+ "cr" 'gf-code-review-resolve-comment
+ "ce" 'gf-code-review-edit-comment)
+
 ;; }}
 
 ;; {{ mini buffer edit
@@ -394,7 +404,7 @@
 (key-chord-define ivy-minibuffer-map "jj" 'ivy-next-line)
 (key-chord-define ivy-minibuffer-map "kk" 'ivy-previous-line)
 (key-chord-define ivy-minibuffer-map "gg" 'ivy-beginning-of-buffer)
-(key-chord-define ivy-minibuffer-map "dd" 'ivy-end-of-buffer)
+(key-chord-define ivy-minibuffer-map "gG" 'ivy-beginning-of-buffer)
 (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
 (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit)
 
