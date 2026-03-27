@@ -568,7 +568,10 @@ PUT to update the note instead of POSTing a new one."
  "Transient mode for entering a Gongfeng CR comment.
 The buffer coding system is set to UTF-8 so Chinese and other
 non-ASCII input methods work correctly."
- (set-buffer-file-coding-system 'utf-8) (use-local-map gf-code-review--input-map))
+ (set-buffer-file-coding-system 'utf-8)
+ (use-local-map gf-code-review--input-map)
+ (when (fboundp 'evil-emacs-state)
+   (evil-emacs-state)))
 
 (defun gf-code-review--get-input-text ()
   "Extract user-typed text from the input buffer (everything after the prompt)."
@@ -814,12 +817,7 @@ Press C-c C-c to submit the edit, or C-c C-k to cancel."
 ;;;; ─── Minor mode ─────────────────────────────────────────────────────────────
 
 (defvar gf-code-review-mode-map
-  (let ((m (make-sparse-keymap)))
-    (define-key m (kbd "C-c r c") #'gf-code-review-add-comment)
-    (define-key m (kbd "C-c r e") #'gf-code-review-edit-comment)
-    (define-key m (kbd "C-c r r") #'gf-code-review-refresh)
-    (define-key m (kbd "C-c r v") #'gf-code-review-resolve-comment)
-    m)
+  (make-sparse-keymap)
   "Keymap for `gf-code-review-mode'.")
 
 ;;;###autoload
@@ -829,11 +827,11 @@ Press C-c C-c to submit the edit, or C-c C-k to cancel."
 When enabled you will be asked for the MR IID; comments targeting the
 current file are then fetched and shown as inline overlays.
 
-Key bindings:
-  C-c r c   `gf-code-review-add-comment'     (requires an active region)
-  C-c r e   `gf-code-review-edit-comment'    edit comment at point
-  C-c r r   `gf-code-review-refresh'         re-fetch comments
-  C-c r v   `gf-code-review-resolve-comment' resolve comment at point"
+Commands:
+  `gf-code-review-add-comment'     add comment for selected region
+  `gf-code-review-edit-comment'    edit comment at point
+  `gf-code-review-refresh'         re-fetch comments
+  `gf-code-review-resolve-comment' resolve comment at point"
   :lighter " GF-CR"
   :keymap
   gf-code-review-mode-map
