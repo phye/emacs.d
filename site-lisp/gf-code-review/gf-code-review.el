@@ -247,7 +247,6 @@ This is the only configuration you normally need to perform."
 PAYLOAD is an alist that will be JSON-encoded and sent as the request body.
 CALLBACK is called with the parsed JSON response (or nil on error)."
   (gf-code-review--assert-token)
-  (message "gf-code-review: %s %s" method url)
   (let* ((url-request-method method)
          (url-request-extra-headers
           `(("PRIVATE-TOKEN" . ,gf-code-review-private-token)
@@ -259,7 +258,6 @@ CALLBACK is called with the parsed JSON response (or nil on error)."
                    ;; which url-http-create-request requires (Emacs Bug#23750).
                    (encoded (encode-coding-string body 'utf-8)))
               encoded))))
-    (message "url-request-extra-headers: %s" url-request-extra-headers)
     (url-retrieve
      url
      (lambda (status)
@@ -518,8 +516,11 @@ We group them into threads and render each thread as one overlay."
     m)
   "Keymap active while a comment-input overlay is open.")
 
-(defun gf-code-review--open-input-overlay (beg end)
-  "Open an inline input overlay below the region from BEG to END."
+(defun gf-code-review--open-input-overlay (beg end &optional edit-note-id initial-body)
+  "Open an inline input overlay below the region from BEG to END.
+When EDIT-NOTE-ID is non-nil, the overlay is opened in edit mode: the
+existing comment body INITIAL-BODY is pre-filled and submission will
+PUT to update the note instead of POSTing a new one."
   (when gf-code-review--input-overlay
     (gf-code-review--close-input-overlay))
   (let* ((end-pos
@@ -529,9 +530,12 @@ We group them into threads and render each thread as one overlay."
          (ov (make-overlay end-pos end-pos nil t nil))
          ;; A temporary indirect buffer lets the user type freely
          (ibuf (generate-new-buffer "*gf-code-review-input*"))
+         (editing edit-note-id)
          (prompt
           (propertize (concat
-                       "\n  ┌─ New CR comment "
+                       (if editing
+                           "\n  ┌─ Edit CR comment "
+                         "\n  ┌─ New CR comment ")
                        (propertize "(C-c C-c submit, C-c C-k cancel)"
                                    'face
                                    '(:weight normal :slant italic))
@@ -542,13 +546,18 @@ We group them into threads and render each thread as one overlay."
     (overlay-put ov 'gf-code-review-region-beg beg)
     (overlay-put ov 'gf-code-review-region-end end)
     (overlay-put ov 'gf-code-review-input-buffer ibuf)
+    (when editing
+      (overlay-put ov 'gf-code-review-edit-note-id edit-note-id))
     (setq gf-code-review--input-overlay ov)
     ;; Switch to the input buffer in a side window
     (with-current-buffer ibuf
       (gf-code-review-input-mode)
       (insert prompt)
       (setq-local gf-code-review--input-overlay ov)
-      (setq-local gf-code-review--input-prompt-end (point-marker)))
+      (setq-local gf-code-review--input-prompt-end (point-marker))
+      ;; Pre-fill with existing body when editing
+      (when (and editing initial-body)
+        (insert initial-body)))
     (let ((win (display-buffer ibuf '(display-buffer-below-selected (window-height . 6)))))
       (when win
         (select-window win)))
@@ -598,7 +607,9 @@ Does nothing if no input overlay is active."
   (message "gf-code-review: comment cancelled."))
 
 (defun gf-code-review--submit-comment ()
-  "Submit the typed comment to the Gongfeng API and close the input overlay."
+  "Submit the typed comment to the Gongfeng API and close the input overlay.
+If the overlay carries a `gf-code-review-edit-note-id' property the
+existing note is updated via PUT; otherwise a new note is POSTed."
   (interactive)
   (let ((body (gf-code-review--get-input-text)))
     (if (or (null body) (string-empty-p body))
@@ -606,9 +617,12 @@ Does nothing if no input overlay is active."
       (let* ((ov gf-code-review--input-overlay)
              (src-buf (overlay-buffer ov))
              (beg (overlay-get ov 'gf-code-review-region-beg))
-             (end (overlay-get ov 'gf-code-review-region-end)))
+             (end (overlay-get ov 'gf-code-review-region-end))
+             (edit-note-id (overlay-get ov 'gf-code-review-edit-note-id)))
         (with-current-buffer src-buf
-          (gf-code-review--post-comment beg end body)
+          (if edit-note-id
+              (gf-code-review--update-comment edit-note-id body)
+            (gf-code-review--post-comment beg end body))
           (deactivate-mark)))))
   (gf-code-review--close-input-overlay))
 
@@ -660,6 +674,35 @@ Payload: { body, path, line, line_type }"
                     (gf-code-review--fetch-comments)))
               (message
                "gf-code-review: failed to post comment — see *Messages* for details.")))))))))
+
+(defun gf-code-review--update-comment (note-id body)
+  "Update the existing note NOTE-ID with new BODY text via the Gongfeng API.
+
+Sends PUT /projects/:id/merge_requests/:mr_id/notes/:note_id with the
+new body.  On success, comments are refreshed."
+  (let* ((project-id (gf-code-review--ensure-project-id))
+         (mr-iid gf-code-review--mr-iid)
+         (src-buf (current-buffer)))
+    (message "gf-code-review: updating note %d on MR !%d …" note-id mr-iid)
+    (gf-code-review--resolve-mr-id
+     (lambda (mr-id)
+       (let* ((url
+               (gf-code-review--api-url
+                "projects" project-id "merge_requests" (number-to-string mr-id)
+                "notes" (number-to-string note-id)))
+              (payload `((body . ,body))))
+         (gf-code-review--http-request
+          "PUT" url
+          payload
+          (lambda (resp)
+            (if (and resp (alist-get 'id resp))
+                (progn
+                  (message "gf-code-review: note %d updated." note-id)
+                  (with-current-buffer src-buf
+                    (gf-code-review--fetch-comments)))
+              (message
+               "gf-code-review: failed to update note %d — see *Messages* for details."
+               note-id)))))))))
 
 ;;;; ─── Resolving a comment ──────────────────────────────────────────────────
 
@@ -743,6 +786,23 @@ Opens an inline input overlay; press C-c C-c to submit, C-c C-k to cancel."
   (gf-code-review--open-input-overlay beg end))
 
 ;;;###autoload
+(defun gf-code-review-edit-comment ()
+  "Edit the CR comment overlay at point.
+Opens an inline input overlay pre-filled with the existing comment body.
+Press C-c C-c to submit the edit, or C-c C-k to cancel."
+  (interactive)
+  (gf-code-review--assert-token)
+  (unless (bound-and-true-p gf-code-review-mode)
+    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
+  (let ((ov (gf-code-review--overlay-at-point)))
+    (unless ov
+      (user-error "gf-code-review: no comment overlay on this line"))
+    (let ((note-id (overlay-get ov 'gf-code-review-note-id))
+          (note-body (overlay-get ov 'gf-code-review-body))
+          (line (line-beginning-position)))
+      (gf-code-review--open-input-overlay line line note-id note-body))))
+
+;;;###autoload
 (defun gf-code-review-refresh ()
   "Re-fetch and redisplay all comments for the current MR / file."
   (interactive)
@@ -756,6 +816,7 @@ Opens an inline input overlay; press C-c C-c to submit, C-c C-k to cancel."
 (defvar gf-code-review-mode-map
   (let ((m (make-sparse-keymap)))
     (define-key m (kbd "C-c r c") #'gf-code-review-add-comment)
+    (define-key m (kbd "C-c r e") #'gf-code-review-edit-comment)
     (define-key m (kbd "C-c r r") #'gf-code-review-refresh)
     (define-key m (kbd "C-c r v") #'gf-code-review-resolve-comment)
     m)
@@ -770,6 +831,7 @@ current file are then fetched and shown as inline overlays.
 
 Key bindings:
   C-c r c   `gf-code-review-add-comment'     (requires an active region)
+  C-c r e   `gf-code-review-edit-comment'    edit comment at point
   C-c r r   `gf-code-review-refresh'         re-fetch comments
   C-c r v   `gf-code-review-resolve-comment' resolve comment at point"
   :lighter " GF-CR"
