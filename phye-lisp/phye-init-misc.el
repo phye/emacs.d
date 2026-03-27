@@ -39,8 +39,8 @@
 (setq help-window-select t)
 
 ;; {{ macOS
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
+(setq mac-command-modifier 'super)
+(setq mac-option-modifier 'meta)
 
 (customize-set-variable 'calendar-latitude +31.2)
 (customize-set-variable 'calendar-longitude +121.5)
