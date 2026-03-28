@@ -1,4 +1,4 @@
-;;; gf-code-review.el --- Code Review overlay for GitHub/GitLab/Gongfeng MRs -*- lexical-binding: t; -*-
+;;; code-review-minimal.el --- Minimal Code Review overlay for GitHub/GitLab/Gongfeng -*- lexical-binding: t; -*-
 
 ;; Author: phye
 ;; Version: 0.2.0
@@ -7,20 +7,21 @@
 
 ;;; Commentary:
 ;;
-;; gf-code-review is a minor mode for performing code review directly inside Emacs
-;; against GitHub Pull Requests, GitLab Merge Requests, and Gongfeng (Tencent GitLab) MRs.
+;; code-review-minimal is a lightweight minor mode for performing code review
+;; directly inside Emacs against GitHub Pull Requests, GitLab Merge Requests,
+;; and Gongfeng (Tencent GitLab) MRs.
 ;;
 ;; Quick start:
 ;;   1. Configure authentication:
-;;      - GitHub: Set `gf-code-review-github-token'
-;;      - GitLab/Gongfeng: Set `gf-code-review-gitlab-token'
+;;      - GitHub: Set `code-review-minimal-github-token'
+;;      - GitLab/Gongfeng: Set `code-review-minimal-gitlab-token'
 ;;
 ;;   2. Open any file that belongs to a tracked project, then:
-;;        M-x gf-code-review-mode
+;;        M-x code-review-minimal-mode
 ;;      The backend is auto-detected from the git remote URL.
 ;;
 ;;   3. To add a new comment, select a region, then:
-;;        M-x gf-code-review-add-comment
+;;        M-x code-review-minimal-add-comment
 ;;      An overlay input area opens beneath the selection.
 ;;      Type your comment and press C-c C-c to submit, or C-c C-k to cancel.
 ;;
@@ -44,12 +45,12 @@
 
 ;;;; ─── Customisation ────────────────────────────────────────────────────────
 
-(defgroup gf-code-review nil
+(defgroup code-review-minimal nil
   "Code-review overlays for GitHub/GitLab/Gongfeng Pull/Merge Requests."
   :group 'tools
-  :prefix "gf-code-review-")
+  :prefix "code-review-minimal-")
 
-(defcustom gf-code-review-backend nil
+(defcustom code-review-minimal-backend nil
   "Backend to use for code review.
 If nil, auto-detect from git remote URL.
 Valid values: nil (auto), `github', `gitlab', `gongfeng'."
@@ -57,66 +58,66 @@ Valid values: nil (auto), `github', `gitlab', `gongfeng'."
                  (const :tag "GitHub" github)
                  (const :tag "GitLab" gitlab)
                  (const :tag "Gongfeng (Tencent GitLab)" gongfeng))
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
 ;; Token configuration (per-backend)
-(defcustom gf-code-review-github-token nil
+(defcustom code-review-minimal-github-token nil
   "GitHub personal access token.
 Create one at: https://github.com/settings/tokens
 Required scopes: repo (for private repos), public_repo (for public repos)"
   :type '(choice (const :tag "Not set" nil) (string :tag "Token"))
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-gitlab-token nil
+(defcustom code-review-minimal-gitlab-token nil
   "GitLab personal access token.
 Create one at: GitLab UI → User Settings → Access Tokens
 Required scopes: api (for full access) or read_api + read_repository + write_repository"
   :type '(choice (const :tag "Not set" nil) (string :tag "Token"))
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-gongfeng-token nil
+(defcustom code-review-minimal-gongfeng-token nil
   "Gongfeng (git.woa.com) private token.
 Create one at: Gongfeng UI → User Settings → Access Tokens"
   :type '(choice (const :tag "Not set" nil) (string :tag "Token"))
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
 ;; API base URLs
-(defcustom gf-code-review-github-base-url "https://api.github.com"
+(defcustom code-review-minimal-github-base-url "https://api.github.com"
   "Base URL for GitHub API.
 For GitHub Enterprise, use: https://your-github-enterprise.com/api/v3"
   :type 'string
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-gitlab-base-url "https://gitlab.com/api/v4"
+(defcustom code-review-minimal-gitlab-base-url "https://gitlab.com/api/v4"
   "Base URL for GitLab API.
 For self-hosted GitLab, use: https://your-gitlab.com/api/v4"
   :type 'string
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-gongfeng-base-url "https://git.woa.com/api/v3"
+(defcustom code-review-minimal-gongfeng-base-url "https://git.woa.com/api/v3"
   "Base URL for Gongfeng API."
   :type 'string
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-;; Legacy backward compatibility
-(defcustom gf-code-review-private-token nil
-  "Deprecated. Use `gf-code-review-gongfeng-token' instead."
+;; Legacy backward compatibility (for gf-code-review users)
+(defcustom code-review-minimal-private-token nil
+  "Deprecated. Use `code-review-minimal-gongfeng-token' instead."
   :type '(choice (const :tag "Not set" nil) (string :tag "Token"))
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-base-url gf-code-review-gongfeng-base-url
-  "Deprecated. Use `gf-code-review-gongfeng-base-url' instead."
+(defcustom code-review-minimal-base-url code-review-minimal-gongfeng-base-url
+  "Deprecated. Use `code-review-minimal-gongfeng-base-url' instead."
   :type 'string
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defcustom gf-code-review-comment-face 'gf-code-review-comment-face
+(defcustom code-review-minimal-comment-face 'code-review-minimal-comment-face
   "Face used for comment overlay text."
   :type 'face
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
 ;;;; ─── Faces ─────────────────────────────────────────────────────────────────
 
-(defface gf-code-review-comment-face
+(defface code-review-minimal-comment-face
   '((((background dark))
      :background "#2a2a4a"
      :foreground "#a0c8ff"
@@ -124,19 +125,19 @@ For self-hosted GitLab, use: https://your-gitlab.com/api/v4"
      :extend t)
     (t :background "#eef4ff" :foreground "#2040a0" :box (:line-width 1 :color "#8090c0") :extend t))
   "Face for displaying fetched CR comments."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defface gf-code-review-resolved-face
+(defface code-review-minimal-resolved-face
   '((((background dark)) :foreground "#60c060" :weight bold) (t :foreground "#207020" :weight bold))
   "Face for the resolved status indicator in a comment overlay."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defface gf-code-review-unresolved-face
+(defface code-review-minimal-unresolved-face
   '((((background dark)) :foreground "#60a8ff" :weight bold) (t :foreground "#1040c0" :weight bold))
   "Face for the unresolved/open status indicator in a comment overlay."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defface gf-code-review-resolved-body-face
+(defface code-review-minimal-resolved-body-face
   '((((background dark))
      :background "#1a3a1a"
      :foreground "#80c080"
@@ -144,9 +145,9 @@ For self-hosted GitLab, use: https://your-gitlab.com/api/v4"
      :extend t)
     (t :background "#eeffee" :foreground "#205020" :box (:line-width 1 :color "#60a060") :extend t))
   "Face for the body lines of a resolved CR comment overlay."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defface gf-code-review-input-face
+(defface code-review-minimal-input-face
   '((((background dark))
      :background "#2a3a2a"
      :foreground "#a0ffa0"
@@ -154,16 +155,16 @@ For self-hosted GitLab, use: https://your-gitlab.com/api/v4"
      :extend t)
     (t :background "#f0fff0" :foreground "#205020" :box (:line-width 1 :color "#70a070") :extend t))
   "Face for the comment-input overlay."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
-(defface gf-code-review-header-face
+(defface code-review-minimal-header-face
   '((((background dark)) :foreground "#80c0ff" :weight bold) (t :foreground "#1040c0" :weight bold))
   "Face for the header line inside a comment overlay."
-  :group 'gf-code-review)
+  :group 'code-review-minimal)
 
 ;;;; ─── Backend Detection ─────────────────────────────────────────────────────
 
-(defun gf-code-review--detect-backend (remote-url)
+(defun code-review-minimal--detect-backend (remote-url)
   "Auto-detect backend from REMOTE-URL.
 Returns one of: github, gitlab, gongfeng, or nil."
   (cond
@@ -182,27 +183,27 @@ Returns one of: github, gitlab, gongfeng, or nil."
 
 ;;;; ─── Per-repo Cache ─────────────────────────────────────────────────────────
 
-(defvar gf-code-review--iid-cache (make-hash-table :test 'equal)
+(defvar code-review-minimal--iid-cache (make-hash-table :test 'equal)
   "In-memory cache mapping git-root (string) → MR IID (integer).")
 
-(defvar gf-code-review--backend-cache (make-hash-table :test 'equal)
+(defvar code-review-minimal--backend-cache (make-hash-table :test 'equal)
   "In-memory cache mapping git-root (string) → backend symbol.")
 
-(defun gf-code-review--git-root ()
+(defun code-review-minimal--git-root ()
   "Return the absolute path to the git root for the current buffer, or nil."
   (when-let ((root (locate-dominating-file (or buffer-file-name default-directory) ".git")))
     (expand-file-name root)))
 
-(defun gf-code-review--cache-file (filename)
+(defun code-review-minimal--cache-file (filename)
   "Return the path to a per-repo cache file in .git/ directory."
-  (when-let ((root (gf-code-review--git-root)))
+  (when-let ((root (code-review-minimal--git-root)))
     (expand-file-name filename (expand-file-name ".git" root))))
 
-(defun gf-code-review--load-cached-iid ()
+(defun code-review-minimal--load-cached-iid ()
   "Return the persisted MR IID for the current repo, or nil."
-  (let ((root (gf-code-review--git-root)))
-    (or (and root (gethash root gf-code-review--iid-cache))
-        (when-let ((file (gf-code-review--cache-file "gf-code-review-iid")))
+  (let ((root (code-review-minimal--git-root)))
+    (or (and root (gethash root code-review-minimal--iid-cache))
+        (when-let ((file (code-review-minimal--cache-file "code-review-minimal-iid")))
           (when (file-readable-p file)
             (let* ((raw (with-temp-buffer
                           (insert-file-contents file)
@@ -210,101 +211,101 @@ Returns one of: github, gitlab, gongfeng, or nil."
                    (iid (string-to-number raw)))
               (when (and (integerp iid) (> iid 0))
                 (when root
-                  (puthash root iid gf-code-review--iid-cache))
+                  (puthash root iid code-review-minimal--iid-cache))
                 iid)))))))
 
-(defun gf-code-review--save-iid (iid)
+(defun code-review-minimal--save-iid (iid)
   "Persist IID for the current repo."
-  (when-let ((root (gf-code-review--git-root)))
-    (puthash root iid gf-code-review--iid-cache))
-  (when-let ((file (gf-code-review--cache-file "gf-code-review-iid")))
+  (when-let ((root (code-review-minimal--git-root)))
+    (puthash root iid code-review-minimal--iid-cache))
+  (when-let ((file (code-review-minimal--cache-file "code-review-minimal-iid")))
     (write-region (number-to-string iid) nil file nil 'silent)))
 
-(defun gf-code-review--load-cached-backend ()
+(defun code-review-minimal--load-cached-backend ()
   "Return the persisted backend for the current repo, or nil."
-  (let ((root (gf-code-review--git-root)))
-    (or (and root (gethash root gf-code-review--backend-cache))
-        (when-let ((file (gf-code-review--cache-file "gf-code-review-backend")))
+  (let ((root (code-review-minimal--git-root)))
+    (or (and root (gethash root code-review-minimal--backend-cache))
+        (when-let ((file (code-review-minimal--cache-file "code-review-minimal-backend")))
           (when (file-readable-p file)
             (let ((backend (with-temp-buffer
                              (insert-file-contents file)
                              (string-trim (buffer-string)))))
               (when (> (length backend) 0)
                 (when root
-                  (puthash root backend gf-code-review--backend-cache))
+                  (puthash root backend code-review-minimal--backend-cache))
                 (intern backend))))))))
 
-(defun gf-code-review--save-backend (backend)
+(defun code-review-minimal--save-backend (backend)
   "Persist BACKEND for the current repo."
-  (when-let ((root (gf-code-review--git-root)))
-    (puthash root backend gf-code-review--backend-cache))
-  (when-let ((file (gf-code-review--cache-file "gf-code-review-backend")))
+  (when-let ((root (code-review-minimal--git-root)))
+    (puthash root backend code-review-minimal--backend-cache))
+  (when-let ((file (code-review-minimal--cache-file "code-review-minimal-backend")))
     (write-region (symbol-name backend) nil file nil 'silent)))
 
 ;;;; ─── Buffer-local State ────────────────────────────────────────────────────
 
-(defvar-local gf-code-review--mr-iid nil
+(defvar-local code-review-minimal--mr-iid nil
   "MR IID (per-project integer id) currently being reviewed.")
 
-(defvar-local gf-code-review--mr-id nil
-  "MR global integer id resolved from `gf-code-review--mr-iid'.")
+(defvar-local code-review-minimal--mr-id nil
+  "MR global integer id resolved from `code-review-minimal--mr-iid'.")
 
-(defvar-local gf-code-review--project-info nil
+(defvar-local code-review-minimal--project-info nil
   "Project info alist with backend-specific keys.
 GitHub: ((owner . \"user\") (repo . \"project\"))
 GitLab/Gongfeng: ((project-id . \"namespace%2Fproject\"))")
 
-(defvar-local gf-code-review--current-backend nil
+(defvar-local code-review-minimal--current-backend nil
   "The backend symbol currently in use (github, gitlab, gongfeng).")
 
-(defvar-local gf-code-review--overlays nil
-  "List of comment overlays created by `gf-code-review-mode'.")
+(defvar-local code-review-minimal--overlays nil
+  "List of comment overlays created by `code-review-minimal-mode'.")
 
-(defvar-local gf-code-review--input-overlay nil
+(defvar-local code-review-minimal--input-overlay nil
   "The currently active comment-input overlay, if any.")
 
-(defvar-local gf-code-review--input-prompt-end nil
+(defvar-local code-review-minimal--input-prompt-end nil
   "Marker pointing to the end of the prompt in the input buffer.")
 
 ;;;; ─── Token Management ──────────────────────────────────────────────────────
 
-(defun gf-code-review--get-token (backend)
+(defun code-review-minimal--get-token (backend)
   "Get the authentication token for BACKEND."
   (pcase backend
-    ('github gf-code-review-github-token)
-    ('gitlab gf-code-review-gitlab-token)
-    ('gongfeng (or gf-code-review-gongfeng-token gf-code-review-private-token))
+    ('github code-review-minimal-github-token)
+    ('gitlab code-review-minimal-gitlab-token)
+    ('gongfeng (or code-review-minimal-gongfeng-token code-review-minimal-private-token))
     (_ nil)))
 
 ;;;###autoload
-(defun gf-code-review-set-token (backend token)
+(defun code-review-minimal-set-token (backend token)
   "Interactively set authentication TOKEN for BACKEND.
 BACKEND should be one of: github, gitlab, gongfeng."
   (interactive (list (intern (completing-read "Backend: " '("github" "gitlab" "gongfeng")))
                      (read-string "Token: ")))
   (pcase backend
-    ('github (setq gf-code-review-github-token token))
-    ('gitlab (setq gf-code-review-gitlab-token token))
-    ('gongfeng (setq gf-code-review-gongfeng-token token))
+    ('github (setq code-review-minimal-github-token token))
+    ('gitlab (setq code-review-minimal-gitlab-token token))
+    ('gongfeng (setq code-review-minimal-gongfeng-token token))
     (_ (user-error "Unknown backend: %s" backend)))
-  (message "gf-code-review: token set for %s." backend))
+  (message "code-review-minimal: token set for %s." backend))
 
 ;; Keep old function for backward compatibility
 ;;;###autoload
-(defun gf-code-review-set-gongfeng-token (token)
+(defun code-review-minimal-set-gongfeng-token (token)
   "Set Gongfeng token (backward compatible alias)."
-  (interactive (list (read-string "Gongfeng private token: " gf-code-review-gongfeng-token)))
-  (gf-code-review-set-token 'gongfeng token))
+  (interactive (list (read-string "Gongfeng private token: " code-review-minimal-gongfeng-token)))
+  (code-review-minimal-set-token 'gongfeng token))
 
-(defun gf-code-review--assert-token (backend)
+(defun code-review-minimal--assert-token (backend)
   "Signal an error if no token is configured for BACKEND."
-  (unless (and (gf-code-review--get-token backend)
-               (not (string-empty-p (gf-code-review--get-token backend))))
-    (user-error "gf-code-review: Please set your %s token via M-x gf-code-review-set-token" backend)))
+  (unless (and (code-review-minimal--get-token backend)
+               (not (string-empty-p (code-review-minimal--get-token backend))))
+    (user-error "code-review-minimal: Please set your %s token via M-x code-review-minimal-set-token" backend)))
 
 ;;;; ─── Remote Parsing ────────────────────────────────────────────────────────
 
-(defun gf-code-review--git-remote-url ()
+(defun code-review-minimal--git-remote-url ()
   "Return the URL of the `origin' remote."
   (let ((default-directory
          (or (locate-dominating-file (or buffer-file-name default-directory) ".git")
@@ -312,7 +313,7 @@ BACKEND should be one of: github, gitlab, gongfeng."
     (string-trim (shell-command-to-string "git remote get-url origin 2>/dev/null"))))
 
 ;; GitLab/Gongfeng: extract namespace/project from remote URL
-(defun gf-code-review--parse-gitlab-project-path (remote-url)
+(defun code-review-minimal--parse-gitlab-project-path (remote-url)
   "Extract namespace/project from REMOTE-URL (ssh or https)."
   (when remote-url
     (cond
@@ -327,7 +328,7 @@ BACKEND should be one of: github, gitlab, gongfeng."
       (match-string 1 remote-url)))))
 
 ;; GitHub: extract owner/repo from remote URL
-(defun gf-code-review--parse-github-repo (remote-url)
+(defun code-review-minimal--parse-github-repo (remote-url)
   "Parse GitHub REMOTE-URL to get (owner . repo)."
   (when remote-url
     (cond
@@ -349,40 +350,40 @@ BACKEND should be one of: github, gitlab, gongfeng."
 
 ;;;; ─── Backend Selection ─────────────────────────────────────────────────────
 
-(defun gf-code-review--ensure-backend ()
+(defun code-review-minimal--ensure-backend ()
   "Determine and return the backend to use.
-Uses `gf-code-review-backend' if set, otherwise auto-detects from remote URL.
+Uses `code-review-minimal-backend' if set, otherwise auto-detects from remote URL.
 Caches the result per repository."
-  (unless gf-code-review--current-backend
-    (let ((cached (gf-code-review--load-cached-backend)))
+  (unless code-review-minimal--current-backend
+    (let ((cached (code-review-minimal--load-cached-backend)))
       (if cached
-          (setq gf-code-review--current-backend cached)
+          (setq code-review-minimal--current-backend cached)
         ;; Auto-detect or use configured default
-        (let* ((remote (gf-code-review--git-remote-url))
-               (detected (gf-code-review--detect-backend remote))
-               (backend (or gf-code-review-backend detected)))
+        (let* ((remote (code-review-minimal--git-remote-url))
+               (detected (code-review-minimal--detect-backend remote))
+               (backend (or code-review-minimal-backend detected)))
           (if backend
               (progn
-                (setq gf-code-review--current-backend backend)
-                (gf-code-review--save-backend backend)
-                (message "gf-code-review: auto-detected %s backend from remote" backend))
-            (user-error "gf-code-review: Cannot detect backend from remote: %s. Please set `gf-code-review-backend'" remote))))))
-  gf-code-review--current-backend)
+                (setq code-review-minimal--current-backend backend)
+                (code-review-minimal--save-backend backend)
+                (message "code-review-minimal: auto-detected %s backend from remote" backend))
+            (user-error "code-review-minimal: Cannot detect backend from remote: %s. Please set `code-review-minimal-backend'" remote))))))
+  code-review-minimal--current-backend)
 
 ;;;; ─── HTTP Helpers ──────────────────────────────────────────────────────────
 
-(defun gf-code-review--api-url (backend &rest path-segments)
+(defun code-review-minimal--api-url (backend &rest path-segments)
   "Build a full API URL for BACKEND by joining PATH-SEGMENTS."
   (let ((base-url (pcase backend
-                    ('github gf-code-review-github-base-url)
-                    ('gitlab gf-code-review-gitlab-base-url)
-                    ('gongfeng gf-code-review-gongfeng-base-url)
-                    (_ gf-code-review-gitlab-base-url))))
+                    ('github code-review-minimal-github-base-url)
+                    ('gitlab code-review-minimal-gitlab-base-url)
+                    ('gongfeng code-review-minimal-gongfeng-base-url)
+                    (_ code-review-minimal-gitlab-base-url))))
     (concat base-url "/" (mapconcat #'identity path-segments "/"))))
 
-(defun gf-code-review--make-auth-headers (backend)
+(defun code-review-minimal--make-auth-headers (backend)
   "Create authentication headers for BACKEND."
-  (let ((token (gf-code-review--get-token backend)))
+  (let ((token (code-review-minimal--get-token backend)))
     (pcase backend
       ;; GitHub: Bearer token (GitHub Apps) or token (classic PAT)
       ('github
@@ -395,42 +396,42 @@ Caches the result per repository."
        `(("PRIVATE-TOKEN" . ,token)
          ("Content-Type" . "application/json; charset=utf-8"))))))
 
-(defun gf-code-review--http-request (backend method url &optional payload callback)
+(defun code-review-minimal--http-request (backend method url &optional payload callback)
   "Perform async HTTP METHOD request to URL for BACKEND.
 PAYLOAD is JSON-encoded as body. CALLBACK receives parsed JSON."
-  (gf-code-review--assert-token backend)
+  (code-review-minimal--assert-token backend)
   (let* ((url-request-method method)
-         (url-request-extra-headers (gf-code-review--make-auth-headers backend))
+         (url-request-extra-headers (code-review-minimal--make-auth-headers backend))
          (url-request-data
           (when payload
             (encode-coding-string (json-encode payload) 'utf-8))))
     (url-retrieve
      url
      (lambda (status)
-       (let* ((http-status (gf-code-review--http-status-code))
+       (let* ((http-status (code-review-minimal--http-status-code))
               (err (plist-get status :error))
-              (resp-body (gf-code-review--response-body)))
+              (resp-body (code-review-minimal--response-body)))
          (cond
           (err
-           (message "gf-code-review: HTTP error %S (URL: %s)" err url))
+           (message "code-review-minimal: HTTP error %S (URL: %s)" err url))
           ((and http-status (>= http-status 400))
-           (message "gf-code-review: HTTP %d for %s\n  response: %s"
+           (message "code-review-minimal: HTTP %d for %s\n  response: %s"
                     http-status url
                     (substring resp-body 0 (min 400 (length resp-body)))))
           (t
-           (let ((result (gf-code-review--parse-response)))
+           (let ((result (code-review-minimal--parse-response)))
              (when callback
                (funcall callback result)))))))
      nil t)))
 
-(defun gf-code-review--http-status-code ()
+(defun code-review-minimal--http-status-code ()
   "Return HTTP status code from url-retrieve buffer."
   (save-excursion
     (goto-char (point-min))
     (when (re-search-forward "HTTP/[0-9.]+ \\([0-9]+\\)" nil t)
       (string-to-number (match-string 1)))))
 
-(defun gf-code-review--response-body ()
+(defun code-review-minimal--response-body ()
   "Return response body from url-retrieve buffer."
   (save-excursion
     (goto-char (point-min))
@@ -438,21 +439,21 @@ PAYLOAD is JSON-encoded as body. CALLBACK receives parsed JSON."
         (decode-coding-string (buffer-substring (point) (point-max)) 'utf-8)
       "")))
 
-(defun gf-code-review--parse-response ()
+(defun code-review-minimal--parse-response ()
   "Parse JSON from url-retrieve response buffer."
-  (let ((body (gf-code-review--response-body)))
+  (let ((body (code-review-minimal--response-body)))
     (condition-case err
         (let ((json-object-type 'alist)
               (json-array-type 'list)
               (json-key-type 'symbol))
           (json-read-from-string body))
       (error
-       (message "gf-code-review: JSON parse error: %S" err)
+       (message "code-review-minimal: JSON parse error: %S" err)
        nil))))
 
 ;;;; ─── Utility Functions ─────────────────────────────────────────────────────
 
-(defun gf-code-review--relative-file-path ()
+(defun code-review-minimal--relative-file-path ()
   "Return the path of the current buffer's file relative to git root."
   (when buffer-file-name
     (let* ((root (locate-dominating-file buffer-file-name ".git")))
@@ -460,91 +461,91 @@ PAYLOAD is JSON-encoded as body. CALLBACK receives parsed JSON."
           (file-relative-name buffer-file-name (expand-file-name root))
         (file-name-nondirectory buffer-file-name)))))
 
-(defun gf-code-review--line-number-at (pos)
+(defun code-review-minimal--line-number-at (pos)
   "Return 1-based line number for POS."
   (save-excursion
     (goto-char pos)
     (line-number-at-pos)))
 
-(defun gf-code-review--line-end-pos (line)
+(defun code-review-minimal--line-end-pos (line)
   "Return buffer position at end of LINE (1-based)."
   (save-excursion
     (goto-char (point-min))
     (forward-line (1- line))
     (line-end-position)))
 
-(defun gf-code-review--clear-overlays ()
+(defun code-review-minimal--clear-overlays ()
   "Remove all comment overlays."
-  (mapc #'delete-overlay gf-code-review--overlays)
-  (setq gf-code-review--overlays nil))
+  (mapc #'delete-overlay code-review-minimal--overlays)
+  (setq code-review-minimal--overlays nil))
 
 ;;;; ─── Backend: GitLab/Gongfeng (Shared API) ─────────────────────────────────
 
-(defun gf-code-review--gitlab-ensure-project-id ()
+(defun code-review-minimal--gitlab-ensure-project-id ()
   "Set project ID from remote for GitLab/Gongfeng backend."
-  (unless (alist-get 'project-id gf-code-review--project-info)
-    (let* ((remote (gf-code-review--git-remote-url))
-           (path (gf-code-review--parse-gitlab-project-path remote)))
+  (unless (alist-get 'project-id code-review-minimal--project-info)
+    (let* ((remote (code-review-minimal--git-remote-url))
+           (path (code-review-minimal--parse-gitlab-project-path remote)))
       (if path
           (progn
-            (message "gf-code-review: detected project %s" path)
-            (setq gf-code-review--project-info
+            (message "code-review-minimal: detected project %s" path)
+            (setq code-review-minimal--project-info
                   `((project-id . ,(url-hexify-string path)))))
         (let ((manual (read-string "Project path (e.g. team/project): ")))
-          (setq gf-code-review--project-info
+          (setq code-review-minimal--project-info
                 `((project-id . ,(url-hexify-string manual))))))))
-  (alist-get 'project-id gf-code-review--project-info))
+  (alist-get 'project-id code-review-minimal--project-info))
 
-(defun gf-code-review--gitlab-resolve-mr-id (callback)
+(defun code-review-minimal--gitlab-resolve-mr-id (callback)
   "Resolve MR id and call CALLBACK with it (GitLab/Gongfeng)."
-  (if gf-code-review--mr-id
-      (funcall callback gf-code-review--mr-id)
-    (let* ((project-id (gf-code-review--gitlab-ensure-project-id))
-           (url (gf-code-review--api-url
-                 gf-code-review--current-backend
+  (if code-review-minimal--mr-id
+      (funcall callback code-review-minimal--mr-id)
+    (let* ((project-id (code-review-minimal--gitlab-ensure-project-id))
+           (url (code-review-minimal--api-url
+                 code-review-minimal--current-backend
                  "projects" project-id "merge_request" "iid"
-                 (number-to-string gf-code-review--mr-iid)))
+                 (number-to-string code-review-minimal--mr-iid)))
            (buf (current-buffer)))
-      (message "gf-code-review: resolving MR id for IID %d ..." gf-code-review--mr-iid)
-      (gf-code-review--http-request
-       gf-code-review--current-backend
+      (message "code-review-minimal: resolving MR id for IID %d ..." code-review-minimal--mr-iid)
+      (code-review-minimal--http-request
+       code-review-minimal--current-backend
        "GET" url nil
        (lambda (mr)
          (let ((mr-id (and mr (alist-get 'id mr))))
            (if (not (numberp mr-id))
-               (message "gf-code-review: failed to resolve MR id")
+               (message "code-review-minimal: failed to resolve MR id")
              (with-current-buffer buf
-               (setq gf-code-review--mr-id mr-id))
+               (setq code-review-minimal--mr-id mr-id))
              (funcall callback mr-id))))))))
 
 ;;;; ─── Backend: GitLab/Gongfeng - Fetch Comments ─────────────────────────────
 
-(defun gf-code-review--gitlab-fetch-comments ()
+(defun code-review-minimal--gitlab-fetch-comments ()
   "Fetch MR comments and render overlays (GitLab/Gongfeng)."
-  (let* ((project-id (gf-code-review--gitlab-ensure-project-id))
-         (mr-iid gf-code-review--mr-iid)
-         (rel-path (gf-code-review--relative-file-path))
+  (let* ((project-id (code-review-minimal--gitlab-ensure-project-id))
+         (mr-iid code-review-minimal--mr-iid)
+         (rel-path (code-review-minimal--relative-file-path))
          (buf (current-buffer)))
-    (message "gf-code-review: fetching comments for MR !%d ..." mr-iid)
-    (gf-code-review--gitlab-resolve-mr-id
+    (message "code-review-minimal: fetching comments for MR !%d ..." mr-iid)
+    (code-review-minimal--gitlab-resolve-mr-id
      (lambda (mr-id)
        (let ((url (concat
-                   (gf-code-review--api-url
-                    gf-code-review--current-backend
+                   (code-review-minimal--api-url
+                    code-review-minimal--current-backend
                     "projects" project-id "merge_requests"
                     (number-to-string mr-id) "notes")
                    "?per_page=100")))
-         (gf-code-review--http-request
-          gf-code-review--current-backend
+         (code-review-minimal--http-request
+          code-review-minimal--current-backend
           "GET" url nil
           (lambda (notes)
             (with-current-buffer buf
-              (gf-code-review--clear-overlays)
+              (code-review-minimal--clear-overlays)
               (if (null notes)
-                  (message "gf-code-review: no comments found")
-                (gf-code-review--gitlab-process-notes notes rel-path))))))))))
+                  (message "code-review-minimal: no comments found")
+                (code-review-minimal--gitlab-process-notes notes rel-path))))))))))
 
-(defun gf-code-review--gitlab-process-notes (notes rel-path)
+(defun code-review-minimal--gitlab-process-notes (notes rel-path)
   "Process GitLab/Gongfeng NOTES and create overlays for REL-PATH."
   (let* ((total (length notes))
          (count 0)
@@ -579,127 +580,127 @@ PAYLOAD is JSON-encoded as body. CALLBACK receives parsed JSON."
                    file-path
                    rel-path
                    (string= file-path rel-path))
-          (gf-code-review--insert-discussion-overlay line-num thread resolved root-id)
+          (code-review-minimal--insert-discussion-overlay line-num thread resolved root-id)
           (cl-incf count))))
-    (message "gf-code-review: %d thread(s) in this file, %d total notes." count total)))
+    (message "code-review-minimal: %d thread(s) in this file, %d total notes." count total)))
 
 ;;;; ─── Backend: GitLab/Gongfeng - Post/Update/Resolve ────────────────────────
 
-(defun gf-code-review--gitlab-post-comment (_beg end body)
+(defun code-review-minimal--gitlab-post-comment (_beg end body)
   "Post comment on line at END with BODY (GitLab/Gongfeng)."
-  (let* ((project-id (gf-code-review--gitlab-ensure-project-id))
-         (mr-iid gf-code-review--mr-iid)
-         (rel-path (gf-code-review--relative-file-path))
-         (end-line (gf-code-review--line-number-at end))
+  (let* ((project-id (code-review-minimal--gitlab-ensure-project-id))
+         (mr-iid code-review-minimal--mr-iid)
+         (rel-path (code-review-minimal--relative-file-path))
+         (end-line (code-review-minimal--line-number-at end))
          (src-buf (current-buffer)))
-    (gf-code-review--gitlab-resolve-mr-id
+    (code-review-minimal--gitlab-resolve-mr-id
      (lambda (mr-id)
-       (let* ((url (gf-code-review--api-url
-                    gf-code-review--current-backend
+       (let* ((url (code-review-minimal--api-url
+                    code-review-minimal--current-backend
                     "projects" project-id "merge_requests"
                     (number-to-string mr-id) "notes"))
               (payload `((body . ,body)
                          (path . ,rel-path)
                          (line . ,(number-to-string end-line))
                          (line_type . "new"))))
-         (gf-code-review--http-request
-          gf-code-review--current-backend
+         (code-review-minimal--http-request
+          code-review-minimal--current-backend
           "POST" url payload
           (lambda (resp)
             (if (and resp (alist-get 'id resp))
                 (progn
-                  (message "gf-code-review: comment posted (id=%s)" (alist-get 'id resp))
+                  (message "code-review-minimal: comment posted (id=%s)" (alist-get 'id resp))
                   (with-current-buffer src-buf
-                    (gf-code-review--gitlab-fetch-comments)))
-              (message "gf-code-review: failed to post comment")))))))))
+                    (code-review-minimal--gitlab-fetch-comments)))
+              (message "code-review-minimal: failed to post comment")))))))))
 
-(defun gf-code-review--gitlab-update-comment (note-id body)
+(defun code-review-minimal--gitlab-update-comment (note-id body)
   "Update NOTE-ID with BODY (GitLab/Gongfeng)."
-  (let* ((project-id (gf-code-review--gitlab-ensure-project-id))
+  (let* ((project-id (code-review-minimal--gitlab-ensure-project-id))
          (src-buf (current-buffer)))
-    (gf-code-review--gitlab-resolve-mr-id
+    (code-review-minimal--gitlab-resolve-mr-id
      (lambda (mr-id)
-       (let* ((url (gf-code-review--api-url
-                    gf-code-review--current-backend
+       (let* ((url (code-review-minimal--api-url
+                    code-review-minimal--current-backend
                     "projects" project-id "merge_requests"
                     (number-to-string mr-id) "notes" (number-to-string note-id)))
               (payload `((body . ,body))))
-         (gf-code-review--http-request
-          gf-code-review--current-backend
+         (code-review-minimal--http-request
+          code-review-minimal--current-backend
           "PUT" url payload
           (lambda (resp)
             (if (and resp (alist-get 'id resp))
                 (progn
-                  (message "gf-code-review: note %d updated" note-id)
+                  (message "code-review-minimal: note %d updated" note-id)
                   (with-current-buffer src-buf
-                    (gf-code-review--gitlab-fetch-comments)))
-              (message "gf-code-review: failed to update note %d" note-id)))))))))
+                    (code-review-minimal--gitlab-fetch-comments)))
+              (message "code-review-minimal: failed to update note %d" note-id)))))))))
 
-(defun gf-code-review--gitlab-resolve-comment (ov)
+(defun code-review-minimal--gitlab-resolve-comment (ov)
   "Resolve comment at overlay OV (GitLab/Gongfeng)."
-  (let ((note-id (overlay-get ov 'gf-code-review-note-id))
-        (note-body (overlay-get ov 'gf-code-review-body))
-        (project-id (gf-code-review--gitlab-ensure-project-id))
+  (let ((note-id (overlay-get ov 'code-review-minimal-note-id))
+        (note-body (overlay-get ov 'code-review-minimal-body))
+        (project-id (code-review-minimal--gitlab-ensure-project-id))
         (src-buf (current-buffer)))
-    (gf-code-review--gitlab-resolve-mr-id
+    (code-review-minimal--gitlab-resolve-mr-id
      (lambda (mr-id)
-       (let ((url (gf-code-review--api-url
-                   gf-code-review--current-backend
+       (let ((url (code-review-minimal--api-url
+                   code-review-minimal--current-backend
                    "projects" project-id "merge_requests"
                    (number-to-string mr-id) "notes" (number-to-string note-id))))
-         (gf-code-review--http-request
-          gf-code-review--current-backend
+         (code-review-minimal--http-request
+          code-review-minimal--current-backend
           "PUT" url
           `((body . ,note-body) (resolve_state . 2))
           (lambda (resp)
             (if (and resp (alist-get 'id resp))
                 (progn
-                  (message "gf-code-review: note %d resolved" note-id)
+                  (message "code-review-minimal: note %d resolved" note-id)
                   (with-current-buffer src-buf
-                    (gf-code-review--gitlab-fetch-comments)))
-              (message "gf-code-review: failed to resolve note %d" note-id)))))))))
+                    (code-review-minimal--gitlab-fetch-comments)))
+              (message "code-review-minimal: failed to resolve note %d" note-id)))))))))
 
 ;;;; ─── Backend: GitHub ───────────────────────────────────────────────────────
 
-(defun gf-code-review--github-ensure-project-info ()
+(defun code-review-minimal--github-ensure-project-info ()
   "Set project info from remote for GitHub backend."
-  (unless (alist-get 'owner gf-code-review--project-info)
-    (let* ((remote (gf-code-review--git-remote-url))
-           (parsed (gf-code-review--parse-github-repo remote)))
+  (unless (alist-get 'owner code-review-minimal--project-info)
+    (let* ((remote (code-review-minimal--git-remote-url))
+           (parsed (code-review-minimal--parse-github-repo remote)))
       (if parsed
           (progn
-            (message "gf-code-review: detected repo %s/%s" (car parsed) (cdr parsed))
-            (setq gf-code-review--project-info
+            (message "code-review-minimal: detected repo %s/%s" (car parsed) (cdr parsed))
+            (setq code-review-minimal--project-info
                   `((owner . ,(car parsed))
                     (repo . ,(cdr parsed)))))
         (let ((owner (read-string "GitHub owner/organization: "))
               (repo (read-string "GitHub repository name: ")))
-          (setq gf-code-review--project-info
+          (setq code-review-minimal--project-info
                 `((owner . ,owner)
                   (repo . ,repo))))))))
 
-(defun gf-code-review--github-fetch-comments ()
+(defun code-review-minimal--github-fetch-comments ()
   "Fetch PR comments and render overlays (GitHub)."
-  (gf-code-review--github-ensure-project-info)
-  (let* ((owner (alist-get 'owner gf-code-review--project-info))
-         (repo (alist-get 'repo gf-code-review--project-info))
-         (pr-number gf-code-review--mr-iid)
-         (rel-path (gf-code-review--relative-file-path))
+  (code-review-minimal--github-ensure-project-info)
+  (let* ((owner (alist-get 'owner code-review-minimal--project-info))
+         (repo (alist-get 'repo code-review-minimal--project-info))
+         (pr-number code-review-minimal--mr-iid)
+         (rel-path (code-review-minimal--relative-file-path))
          (buf (current-buffer)))
-    (message "gf-code-review: fetching comments for PR #%d ..." pr-number)
+    (message "code-review-minimal: fetching comments for PR #%d ..." pr-number)
     ;; GitHub PR review comments endpoint
-    (let ((url (gf-code-review--api-url
+    (let ((url (code-review-minimal--api-url
                 'github
                 "repos" owner repo "pulls" (number-to-string pr-number) "comments")))
-      (gf-code-review--http-request
+      (code-review-minimal--http-request
        'github
        "GET" url nil
        (lambda (comments)
          (with-current-buffer buf
-           (gf-code-review--clear-overlays)
-           (gf-code-review--github-process-comments comments rel-path)))))))
+           (code-review-minimal--clear-overlays)
+           (code-review-minimal--github-process-comments comments rel-path)))))))
 
-(defun gf-code-review--github-process-comments (comments rel-path)
+(defun code-review-minimal--github-process-comments (comments rel-path)
   "Process GitHub COMMENTS and create overlays for REL-PATH."
   (let ((count 0))
     (dolist (c comments)
@@ -714,33 +715,33 @@ PAYLOAD is JSON-encoded as body. CALLBACK receives parsed JSON."
                          (body . ,body)
                          (created_at . ,created)))
                  (thread (list note)))
-            (gf-code-review--insert-discussion-overlay line thread nil id)
+            (code-review-minimal--insert-discussion-overlay line thread nil id)
             (cl-incf count)))))
-    (message "gf-code-review: %d comment(s) in this file" count)))
+    (message "code-review-minimal: %d comment(s) in this file" count)))
 
-(defun gf-code-review--github-post-comment (_beg end body)
+(defun code-review-minimal--github-post-comment (_beg end body)
   "Post review comment on line at END with BODY (GitHub).
 Note: GitHub requires the commit SHA for PR review comments."
-  (gf-code-review--github-ensure-project-info)
-  (let* ((owner (alist-get 'owner gf-code-review--project-info))
-         (repo (alist-get 'repo gf-code-review--project-info))
-         (pr-number gf-code-review--mr-iid)
-         (rel-path (gf-code-review--relative-file-path))
-         (line (gf-code-review--line-number-at end))
+  (code-review-minimal--github-ensure-project-info)
+  (let* ((owner (alist-get 'owner code-review-minimal--project-info))
+         (repo (alist-get 'repo code-review-minimal--project-info))
+         (pr-number code-review-minimal--mr-iid)
+         (rel-path (code-review-minimal--relative-file-path))
+         (line (code-review-minimal--line-number-at end))
          (src-buf (current-buffer)))
     ;; First, get the PR head commit SHA
-    (let ((pr-url (gf-code-review--api-url
+    (let ((pr-url (code-review-minimal--api-url
                    'github
                    "repos" owner repo "pulls" (number-to-string pr-number))))
-      (gf-code-review--http-request
+      (code-review-minimal--http-request
        'github
        "GET" pr-url nil
        (lambda (pr-data)
          (let ((head-sha (alist-get 'sha (alist-get 'head pr-data))))
            (if (not head-sha)
-               (message "gf-code-review: failed to get PR head commit")
+               (message "code-review-minimal: failed to get PR head commit")
              ;; Post the review comment
-             (let ((url (gf-code-review--api-url
+             (let ((url (code-review-minimal--api-url
                          'github
                          "repos" owner repo "pulls" (number-to-string pr-number) "comments"))
                    (payload `((body . ,body)
@@ -748,48 +749,48 @@ Note: GitHub requires the commit SHA for PR review comments."
                               (line . ,line)
                               (side . "RIGHT")
                               (commit_id . ,head-sha))))
-               (gf-code-review--http-request
+               (code-review-minimal--http-request
                 'github
                 "POST" url payload
                 (lambda (resp)
                   (if (and resp (alist-get 'id resp))
                       (progn
-                        (message "gf-code-review: comment posted (id=%s)" (alist-get 'id resp))
+                        (message "code-review-minimal: comment posted (id=%s)" (alist-get 'id resp))
                         (with-current-buffer src-buf
-                          (gf-code-review--github-fetch-comments)))
-                    (message "gf-code-review: failed to post comment"))))))))))))
+                          (code-review-minimal--github-fetch-comments)))
+                    (message "code-review-minimal: failed to post comment"))))))))))))
 
-(defun gf-code-review--github-update-comment (note-id body)
+(defun code-review-minimal--github-update-comment (note-id body)
   "Update NOTE-ID with BODY (GitHub).
 Note: GitHub uses PATCH to update PR review comments."
-  (gf-code-review--github-ensure-project-info)
-  (let* ((owner (alist-get 'owner gf-code-review--project-info))
-         (repo (alist-get 'repo gf-code-review--project-info))
+  (code-review-minimal--github-ensure-project-info)
+  (let* ((owner (alist-get 'owner code-review-minimal--project-info))
+         (repo (alist-get 'repo code-review-minimal--project-info))
          (src-buf (current-buffer))
          ;; GitHub review comments use a different endpoint
-         (url (gf-code-review--api-url
+         (url (code-review-minimal--api-url
                'github
                "repos" owner repo "pulls" "comments" (number-to-string note-id))))
-    (gf-code-review--http-request
+    (code-review-minimal--http-request
      'github
      "PATCH" url `((body . ,body))
      (lambda (resp)
        (if (and resp (alist-get 'id resp))
            (progn
-             (message "gf-code-review: comment %d updated" note-id)
+             (message "code-review-minimal: comment %d updated" note-id)
              (with-current-buffer src-buf
-               (gf-code-review--github-fetch-comments)))
-         (message "gf-code-review: failed to update comment %d" note-id))))))
+               (code-review-minimal--github-fetch-comments)))
+         (message "code-review-minimal: failed to update comment %d" note-id))))))
 
-(defun gf-code-review--github-resolve-comment (_ov)
+(defun code-review-minimal--github-resolve-comment (_ov)
   "Resolve comment overlay OV (GitHub).
 Note: GitHub doesn't have a direct API to 'resolve' review comments.
 Resolution is done through the web UI or by marking conversations as resolved."
-  (message "gf-code-review: GitHub review comments are resolved via the web interface"))
+  (message "code-review-minimal: GitHub review comments are resolved via the web interface"))
 
 ;;;; ─── Overlay Rendering ─────────────────────────────────────────────────────
 
-(defun gf-code-review--render-note (note &optional is-first resolved)
+(defun code-review-minimal--render-note (note &optional is-first resolved)
   "Render NOTE alist into propertized string."
   (let* ((author-obj (alist-get 'author note))
          (author (if author-obj
@@ -803,8 +804,8 @@ Resolution is done through the web UI or by marking conversations as resolved."
          (status-str
           (cond
            ((not is-first) "")
-           (is-resolved (propertize " ✓resolved" 'face 'gf-code-review-resolved-face))
-           ((eq resolved :json-false) (propertize " ○open" 'face 'gf-code-review-unresolved-face))
+           (is-resolved (propertize " ✓resolved" 'face 'code-review-minimal-resolved-face))
+           ((eq resolved :json-false) (propertize " ○open" 'face 'code-review-minimal-unresolved-face))
            (t "")))
          (header (concat
                   (propertize (format "  💬 %s%s"
@@ -812,78 +813,78 @@ Resolution is done through the web UI or by marking conversations as resolved."
                                       (if created-at
                                           (format "  [%s]" created-at)
                                         ""))
-                              'face 'gf-code-review-header-face)
+                              'face 'code-review-minimal-header-face)
                   status-str))
          (body-face (if is-resolved
-                        'gf-code-review-resolved-body-face
-                      'gf-code-review-comment-face))
+                        'code-review-minimal-resolved-body-face
+                      'code-review-minimal-comment-face))
          (body-lines (mapconcat (lambda (l) (concat "  │ " l))
                                 (split-string body "\n") "\n")))
     (concat header "\n" (propertize body-lines 'face body-face) "\n")))
 
-(defun gf-code-review--insert-discussion-overlay (line notes resolved first-note-id)
+(defun code-review-minimal--insert-discussion-overlay (line notes resolved first-note-id)
   "Insert overlay after LINE with NOTES thread."
-  (let* ((pos (gf-code-review--line-end-pos line))
+  (let* ((pos (code-review-minimal--line-end-pos line))
          (ov (make-overlay pos pos nil t nil))
          (first-body (alist-get 'body (car notes)))
-         (separator (propertize "  ├────────────────\n" 'face 'gf-code-review-header-face))
+         (separator (propertize "  ├────────────────\n" 'face 'code-review-minimal-header-face))
          (text (propertize
                 (concat "\n"
                         (mapconcat
                          (lambda (note-and-idx)
-                           (gf-code-review--render-note (car note-and-idx)
+                           (code-review-minimal--render-note (car note-and-idx)
                                                      (= (cdr note-and-idx) 0)
                                                      resolved))
                          (cl-loop for n in notes for i from 0 collect (cons n i))
                          separator))
                 'cursor 0)))
     (overlay-put ov 'after-string text)
-    (overlay-put ov 'gf-code-review t)
-    (overlay-put ov 'gf-code-review-note-id first-note-id)
-    (overlay-put ov 'gf-code-review-body first-body)
-    (overlay-put ov 'gf-code-review-resolved resolved)
-    (push ov gf-code-review--overlays)))
+    (overlay-put ov 'code-review-minimal t)
+    (overlay-put ov 'code-review-minimal-note-id first-note-id)
+    (overlay-put ov 'code-review-minimal-body first-body)
+    (overlay-put ov 'code-review-minimal-resolved resolved)
+    (push ov code-review-minimal--overlays)))
 
 ;;;; ─── Input Overlay ─────────────────────────────────────────────────────────
 
-(defvar gf-code-review--input-map
+(defvar code-review-minimal--input-map
   (let ((m (make-sparse-keymap)))
-    (define-key m (kbd "C-c C-c") #'gf-code-review--submit-comment)
-    (define-key m (kbd "C-c C-k") #'gf-code-review--cancel-comment)
+    (define-key m (kbd "C-c C-c") #'code-review-minimal--submit-comment)
+    (define-key m (kbd "C-c C-k") #'code-review-minimal--cancel-comment)
     m)
   "Keymap for comment input.")
 
-(defun gf-code-review--open-input-overlay (beg end &optional edit-note-id initial-body)
+(defun code-review-minimal--open-input-overlay (beg end &optional edit-note-id initial-body)
   "Open inline input overlay below region BEG..END.
 If EDIT-NOTE-ID is non-nil, edit existing note with INITIAL-BODY."
-  (when gf-code-review--input-overlay
-    (gf-code-review--close-input-overlay))
+  (when code-review-minimal--input-overlay
+    (code-review-minimal--close-input-overlay))
   (let* ((end-pos (save-excursion
                     (goto-char end)
                     (line-end-position)))
          (ov (make-overlay end-pos end-pos nil t nil))
-         (ibuf (generate-new-buffer "*gf-code-review-input*"))
+         (ibuf (generate-new-buffer "*code-review-minimal-input*"))
          (editing edit-note-id)
          (prompt (propertize
                   (concat (if editing "\n  ┌─ Edit CR comment " "\n  ┌─ New CR comment ")
                           (propertize "(C-c C-c submit, C-c C-k cancel)"
                                       'face '(:weight normal :slant italic))
                           "\n  │ ")
-                  'face 'gf-code-review-input-face
+                  'face 'code-review-minimal-input-face
                   'read-only t
                   'rear-nonsticky t)))
-    (overlay-put ov 'gf-code-review-input t)
-    (overlay-put ov 'gf-code-review-region-beg beg)
-    (overlay-put ov 'gf-code-review-region-end end)
-    (overlay-put ov 'gf-code-review-input-buffer ibuf)
+    (overlay-put ov 'code-review-minimal-input t)
+    (overlay-put ov 'code-review-minimal-region-beg beg)
+    (overlay-put ov 'code-review-minimal-region-end end)
+    (overlay-put ov 'code-review-minimal-input-buffer ibuf)
     (when editing
-      (overlay-put ov 'gf-code-review-edit-note-id edit-note-id))
-    (setq gf-code-review--input-overlay ov)
+      (overlay-put ov 'code-review-minimal-edit-note-id edit-note-id))
+    (setq code-review-minimal--input-overlay ov)
     (with-current-buffer ibuf
-      (gf-code-review-input-mode)
+      (code-review-minimal-input-mode)
       (insert prompt)
-      (setq-local gf-code-review--input-overlay ov)
-      (setq-local gf-code-review--input-prompt-end (point-marker))
+      (setq-local code-review-minimal--input-overlay ov)
+      (setq-local code-review-minimal--input-prompt-end (point-marker))
       (when (and editing initial-body)
         (insert initial-body)))
     (let ((win (display-buffer ibuf '(display-buffer-below-selected (window-height . 6)))))
@@ -891,181 +892,181 @@ If EDIT-NOTE-ID is non-nil, edit existing note with INITIAL-BODY."
         (select-window win)))
     (message "Type your comment, then C-c C-c to submit or C-c C-k to cancel.")))
 
-(define-derived-mode gf-code-review-input-mode text-mode "CR-Input"
+(define-derived-mode code-review-minimal-input-mode text-mode "CR-Input"
   "Transient mode for entering a code review comment."
   (set-buffer-file-coding-system 'utf-8)
-  (use-local-map gf-code-review--input-map)
+  (use-local-map code-review-minimal--input-map)
   (when (fboundp 'evil-emacs-state)
     (evil-emacs-state)))
 
-(defun gf-code-review--get-input-text ()
+(defun code-review-minimal--get-input-text ()
   "Extract user text from input buffer."
-  (when gf-code-review--input-overlay
-    (let ((ibuf (overlay-get gf-code-review--input-overlay 'gf-code-review-input-buffer)))
+  (when code-review-minimal--input-overlay
+    (let ((ibuf (overlay-get code-review-minimal--input-overlay 'code-review-minimal-input-buffer)))
       (when (buffer-live-p ibuf)
         (with-current-buffer ibuf
           (string-trim
-           (buffer-substring-no-properties gf-code-review--input-prompt-end (point-max))))))))
+           (buffer-substring-no-properties code-review-minimal--input-prompt-end (point-max))))))))
 
-(defun gf-code-review--close-input-overlay ()
+(defun code-review-minimal--close-input-overlay ()
   "Close input overlay and clean up."
-  (when gf-code-review--input-overlay
-    (let* ((ov gf-code-review--input-overlay)
-           (ibuf (overlay-get ov 'gf-code-review-input-buffer))
+  (when code-review-minimal--input-overlay
+    (let* ((ov code-review-minimal--input-overlay)
+           (ibuf (overlay-get ov 'code-review-minimal-input-buffer))
            (src-buf (overlay-buffer ov)))
       (delete-overlay ov)
-      (setq gf-code-review--input-overlay nil)
+      (setq code-review-minimal--input-overlay nil)
       (when (and src-buf (buffer-live-p src-buf))
         (with-current-buffer src-buf
-          (setq gf-code-review--input-overlay nil)))
+          (setq code-review-minimal--input-overlay nil)))
       (when (buffer-live-p ibuf)
         (let ((win (get-buffer-window ibuf)))
           (when win
             (delete-window win)))
         (kill-buffer ibuf)))))
 
-(defun gf-code-review--cancel-comment ()
+(defun code-review-minimal--cancel-comment ()
   "Cancel comment input."
   (interactive)
-  (gf-code-review--close-input-overlay)
-  (message "gf-code-review: comment cancelled."))
+  (code-review-minimal--close-input-overlay)
+  (message "code-review-minimal: comment cancelled."))
 
-(defun gf-code-review--submit-comment ()
+(defun code-review-minimal--submit-comment ()
   "Submit comment to API."
   (interactive)
-  (let ((body (gf-code-review--get-input-text)))
+  (let ((body (code-review-minimal--get-input-text)))
     (if (or (null body) (string-empty-p body))
-        (message "gf-code-review: empty comment, not submitting.")
-      (let* ((ov gf-code-review--input-overlay)
+        (message "code-review-minimal: empty comment, not submitting.")
+      (let* ((ov code-review-minimal--input-overlay)
              (src-buf (overlay-buffer ov))
-             (beg (overlay-get ov 'gf-code-review-region-beg))
-             (end (overlay-get ov 'gf-code-review-region-end))
-             (edit-note-id (overlay-get ov 'gf-code-review-edit-note-id)))
+             (beg (overlay-get ov 'code-review-minimal-region-beg))
+             (end (overlay-get ov 'code-review-minimal-region-end))
+             (edit-note-id (overlay-get ov 'code-review-minimal-edit-note-id)))
         (with-current-buffer src-buf
           (if edit-note-id
-              (gf-code-review--update-comment edit-note-id body)
-            (gf-code-review--post-comment beg end body))
+              (code-review-minimal--update-comment edit-note-id body)
+            (code-review-minimal--post-comment beg end body))
           (deactivate-mark)))))
-  (gf-code-review--close-input-overlay))
+  (code-review-minimal--close-input-overlay))
 
 ;;;; ─── Backend Dispatch Functions ────────────────────────────────────────────
 
-(defun gf-code-review--fetch-comments ()
+(defun code-review-minimal--fetch-comments ()
   "Fetch comments using current backend."
-  (pcase gf-code-review--current-backend
-    ('github (gf-code-review--github-fetch-comments))
-    ((or 'gitlab 'gongfeng) (gf-code-review--gitlab-fetch-comments))
-    (_ (error "Unknown backend: %s" gf-code-review--current-backend))))
+  (pcase code-review-minimal--current-backend
+    ('github (code-review-minimal--github-fetch-comments))
+    ((or 'gitlab 'gongfeng) (code-review-minimal--gitlab-fetch-comments))
+    (_ (error "Unknown backend: %s" code-review-minimal--current-backend))))
 
-(defun gf-code-review--post-comment (beg end body)
+(defun code-review-minimal--post-comment (beg end body)
   "Post comment using current backend."
-  (pcase gf-code-review--current-backend
-    ('github (gf-code-review--github-post-comment beg end body))
-    ((or 'gitlab 'gongfeng) (gf-code-review--gitlab-post-comment beg end body))
-    (_ (error "Unknown backend: %s" gf-code-review--current-backend))))
+  (pcase code-review-minimal--current-backend
+    ('github (code-review-minimal--github-post-comment beg end body))
+    ((or 'gitlab 'gongfeng) (code-review-minimal--gitlab-post-comment beg end body))
+    (_ (error "Unknown backend: %s" code-review-minimal--current-backend))))
 
-(defun gf-code-review--update-comment (note-id body)
+(defun code-review-minimal--update-comment (note-id body)
   "Update comment using current backend."
-  (pcase gf-code-review--current-backend
-    ('github (gf-code-review--github-update-comment note-id body))
-    ((or 'gitlab 'gongfeng) (gf-code-review--gitlab-update-comment note-id body))
-    (_ (error "Unknown backend: %s" gf-code-review--current-backend))))
+  (pcase code-review-minimal--current-backend
+    ('github (code-review-minimal--github-update-comment note-id body))
+    ((or 'gitlab 'gongfeng) (code-review-minimal--gitlab-update-comment note-id body))
+    (_ (error "Unknown backend: %s" code-review-minimal--current-backend))))
 
-(defun gf-code-review--resolve-comment (ov)
+(defun code-review-minimal--resolve-comment (ov)
   "Resolve comment using current backend."
-  (pcase gf-code-review--current-backend
-    ('github (gf-code-review--github-resolve-comment ov))
-    ((or 'gitlab 'gongfeng) (gf-code-review--gitlab-resolve-comment ov))
-    (_ (error "Unknown backend: %s" gf-code-review--current-backend))))
+  (pcase code-review-minimal--current-backend
+    ('github (code-review-minimal--github-resolve-comment ov))
+    ((or 'gitlab 'gongfeng) (code-review-minimal--gitlab-resolve-comment ov))
+    (_ (error "Unknown backend: %s" code-review-minimal--current-backend))))
 
 ;;;; ─── Public Commands ───────────────────────────────────────────────────────
 
-(defun gf-code-review--overlay-at-point ()
+(defun code-review-minimal--overlay-at-point ()
   "Return comment overlay at point."
   (let ((found nil))
     (dolist (ov (overlays-in (line-beginning-position) (1+ (line-end-position))))
-      (when (and (overlay-get ov 'gf-code-review)
-                 (overlay-get ov 'gf-code-review-note-id))
+      (when (and (overlay-get ov 'code-review-minimal)
+                 (overlay-get ov 'code-review-minimal-note-id))
         (setq found ov)))
     found))
 
 ;;;###autoload
-(defun gf-code-review-set-mr-iid (iid)
+(defun code-review-minimal-set-mr-iid (iid)
   "Set the MR/PR IID for the current repository."
-  (interactive (list (read-number "New MR/PR IID: " (or gf-code-review--mr-iid 0))))
-  (setq gf-code-review--mr-iid iid
-        gf-code-review--mr-id nil)
-  (gf-code-review--save-iid iid)
-  (message "gf-code-review: MR IID set to !%d (persisted)." iid))
+  (interactive (list (read-number "New MR/PR IID: " (or code-review-minimal--mr-iid 0))))
+  (setq code-review-minimal--mr-iid iid
+        code-review-minimal--mr-id nil)
+  (code-review-minimal--save-iid iid)
+  (message "code-review-minimal: MR IID set to !%d (persisted)." iid))
 
 ;;;###autoload
-(defun gf-code-review-set-backend-for-repo (backend)
+(defun code-review-minimal-set-backend-for-repo (backend)
   "Set and persist the backend for the current repository.
 Use this to override auto-detection."
   (interactive (list (intern (completing-read "Backend: " '("github" "gitlab" "gongfeng")))))
-  (setq gf-code-review--current-backend backend)
-  (gf-code-review--save-backend backend)
-  (message "gf-code-review: backend set to %s (persisted)." backend))
+  (setq code-review-minimal--current-backend backend)
+  (code-review-minimal--save-backend backend)
+  (message "code-review-minimal: backend set to %s (persisted)." backend))
 
 ;;;###autoload
-(defun gf-code-review-add-comment (beg end)
+(defun code-review-minimal-add-comment (beg end)
   "Add a code review comment for selected region BEG..END."
   (interactive "r")
-  (unless (bound-and-true-p gf-code-review-mode)
-    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
-  (unless gf-code-review--mr-iid
-    (user-error "gf-code-review: no MR IID set"))
-  (gf-code-review--assert-token gf-code-review--current-backend)
-  (gf-code-review--open-input-overlay beg end))
+  (unless (bound-and-true-p code-review-minimal-mode)
+    (user-error "code-review-minimal: please enable `code-review-minimal-mode' first"))
+  (unless code-review-minimal--mr-iid
+    (user-error "code-review-minimal: no MR IID set"))
+  (code-review-minimal--assert-token code-review-minimal--current-backend)
+  (code-review-minimal--open-input-overlay beg end))
 
 ;;;###autoload
-(defun gf-code-review-edit-comment ()
+(defun code-review-minimal-edit-comment ()
   "Edit the code review comment at point."
   (interactive)
-  (unless (bound-and-true-p gf-code-review-mode)
-    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
-  (let ((ov (gf-code-review--overlay-at-point)))
+  (unless (bound-and-true-p code-review-minimal-mode)
+    (user-error "code-review-minimal: please enable `code-review-minimal-mode' first"))
+  (let ((ov (code-review-minimal--overlay-at-point)))
     (unless ov
-      (user-error "gf-code-review: no comment overlay on this line"))
-    (let ((note-id (overlay-get ov 'gf-code-review-note-id))
-          (note-body (overlay-get ov 'gf-code-review-body))
+      (user-error "code-review-minimal: no comment overlay on this line"))
+    (let ((note-id (overlay-get ov 'code-review-minimal-note-id))
+          (note-body (overlay-get ov 'code-review-minimal-body))
           (line (line-beginning-position)))
-      (gf-code-review--open-input-overlay line line note-id note-body))))
+      (code-review-minimal--open-input-overlay line line note-id note-body))))
 
 ;;;###autoload
-(defun gf-code-review-refresh ()
+(defun code-review-minimal-refresh ()
   "Re-fetch and redisplay all comments."
   (interactive)
-  (unless (bound-and-true-p gf-code-review-mode)
-    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
-  (unless gf-code-review--mr-iid
-    (user-error "gf-code-review: no MR IID set"))
-  (gf-code-review--assert-token gf-code-review--current-backend)
-  (gf-code-review--fetch-comments))
+  (unless (bound-and-true-p code-review-minimal-mode)
+    (user-error "code-review-minimal: please enable `code-review-minimal-mode' first"))
+  (unless code-review-minimal--mr-iid
+    (user-error "code-review-minimal: no MR IID set"))
+  (code-review-minimal--assert-token code-review-minimal--current-backend)
+  (code-review-minimal--fetch-comments))
 
 ;;;###autoload
-(defun gf-code-review-resolve-comment ()
+(defun code-review-minimal-resolve-comment ()
   "Mark the comment at point as resolved."
   (interactive)
-  (unless (bound-and-true-p gf-code-review-mode)
-    (user-error "gf-code-review: please enable `gf-code-review-mode' first"))
-  (let ((ov (gf-code-review--overlay-at-point)))
+  (unless (bound-and-true-p code-review-minimal-mode)
+    (user-error "code-review-minimal: please enable `code-review-minimal-mode' first"))
+  (let ((ov (code-review-minimal--overlay-at-point)))
     (unless ov
-      (user-error "gf-code-review: no comment overlay on this line"))
-    (let ((already (overlay-get ov 'gf-code-review-resolved)))
+      (user-error "code-review-minimal: no comment overlay on this line"))
+    (let ((already (overlay-get ov 'code-review-minimal-resolved)))
       (when (eq already t)
-        (user-error "gf-code-review: comment is already resolved"))
-      (gf-code-review--assert-token gf-code-review--current-backend)
-      (gf-code-review--resolve-comment ov))))
+        (user-error "code-review-minimal: comment is already resolved"))
+      (code-review-minimal--assert-token code-review-minimal--current-backend)
+      (code-review-minimal--resolve-comment ov))))
 
 ;;;; ─── Minor Mode ────────────────────────────────────────────────────────────
 
-(defvar gf-code-review-mode-map
+(defvar code-review-minimal-mode-map
   (make-sparse-keymap)
-  "Keymap for `gf-code-review-mode'.")
+  "Keymap for `code-review-minimal-mode'.")
 
 ;;;###autoload
-(define-minor-mode gf-code-review-mode
+(define-minor-mode code-review-minimal-mode
   "Minor mode for reviewing code inline using overlays.
 
 When enabled, you will be asked for the MR/PR IID; comments targeting
@@ -1076,46 +1077,46 @@ The backend is auto-detected from the git remote URL:
   - git.woa.com → Gongfeng
   - Other gitlab hosts → GitLab
 
-Or set `gf-code-review-backend' to override auto-detection.
+Or set `code-review-minimal-backend' to override auto-detection.
 
 Commands:
-  `gf-code-review-add-comment'     - add comment for selected region
-  `gf-code-review-edit-comment'    - edit comment at point
-  `gf-code-review-refresh'         - re-fetch comments
-  `gf-code-review-resolve-comment' - resolve comment at point
-  `gf-code-review-set-backend-for-repo' - change backend for this repo"
+  `code-review-minimal-add-comment'     - add comment for selected region
+  `code-review-minimal-edit-comment'    - edit comment at point
+  `code-review-minimal-refresh'         - re-fetch comments
+  `code-review-minimal-resolve-comment' - resolve comment at point
+  `code-review-minimal-set-backend-for-repo' - change backend for this repo"
   :lighter " CR"
-  :keymap gf-code-review-mode-map
-  (if gf-code-review-mode
+  :keymap code-review-minimal-mode-map
+  (if code-review-minimal-mode
       (progn
         ;; Determine backend
-        (gf-code-review--ensure-backend)
-        (message "gf-code-review: using %s backend" gf-code-review--current-backend)
+        (code-review-minimal--ensure-backend)
+        (message "code-review-minimal: using %s backend" code-review-minimal--current-backend)
         ;; Get token for backend
-        (gf-code-review--assert-token gf-code-review--current-backend)
+        (code-review-minimal--assert-token code-review-minimal--current-backend)
         ;; Get MR IID
-        (unless gf-code-review--mr-iid
-          (let ((cached (gf-code-review--load-cached-iid)))
+        (unless code-review-minimal--mr-iid
+          (let ((cached (code-review-minimal--load-cached-iid)))
             (if cached
                 (progn
-                  (setq gf-code-review--mr-iid cached)
-                  (message "gf-code-review: using cached MR IID !%d" cached))
+                  (setq code-review-minimal--mr-iid cached)
+                  (message "code-review-minimal: using cached MR IID !%d" cached))
               (let ((iid (read-number "MR/PR IID to review (integer in URL): ")))
-                (setq gf-code-review--mr-iid iid)
-                (gf-code-review--save-iid iid)))))
+                (setq code-review-minimal--mr-iid iid)
+                (code-review-minimal--save-iid iid)))))
         ;; Fetch comments
-        (gf-code-review--fetch-comments))
+        (code-review-minimal--fetch-comments))
     ;; Disable
-    (gf-code-review--clear-overlays)
-    (when gf-code-review--input-overlay
-      (gf-code-review--cancel-comment))
-    (setq gf-code-review--mr-iid nil
-          gf-code-review--mr-id nil
-          gf-code-review--project-info nil
-          gf-code-review--current-backend nil)))
+    (code-review-minimal--clear-overlays)
+    (when code-review-minimal--input-overlay
+      (code-review-minimal--cancel-comment))
+    (setq code-review-minimal--mr-iid nil
+          code-review-minimal--mr-id nil
+          code-review-minimal--project-info nil
+          code-review-minimal--current-backend nil)))
 
 ;;;; ─── Provide ────────────────────────────────────────────────────────────────
 
-(provide 'gf-code-review)
+(provide 'code-review-minimal)
 
-;; gf-code-review.el ends here
+;;; code-review-minimal.el ends here
