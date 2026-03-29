@@ -392,8 +392,10 @@
 (general-define-key
  :keymaps 'ivy-minibuffer-map
  :prefix ","
+ "jj" 'ivy-next-line
+ "kk" 'ivy-previous-line
  "gg" 'ivy-beginning-of-buffer
- "G" 'ivy-end-of-buffer)
+ "gG" 'ivy-end-of-buffer)
 ;; }}
 
 
@@ -401,10 +403,6 @@
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
 (key-chord-define evil-normal-state-map "ff" 'phye/protobuf-jump-req-rsp)
 (key-chord-define evil-normal-state-map ",," 'ace-pinyin-jump-char-2)
-(key-chord-define ivy-minibuffer-map "jj" 'ivy-next-line)
-(key-chord-define ivy-minibuffer-map "kk" 'ivy-previous-line)
-(key-chord-define ivy-minibuffer-map "gg" 'ivy-beginning-of-buffer)
-(key-chord-define ivy-minibuffer-map "gG" 'ivy-beginning-of-buffer)
 (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
 (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit)
 
