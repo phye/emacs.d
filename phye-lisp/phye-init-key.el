@@ -335,7 +335,8 @@
 (general-define-key
  :keymaps 'agent-shell-mode-map
  "M-p" 'comint-previous-input
- "M-n" 'comint-next-input)
+ "M-n" 'comint-next-input
+ "M-<RET>" 'newline)
 
 ;; format: off
 (general-define-key
