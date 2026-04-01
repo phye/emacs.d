@@ -155,6 +155,7 @@
    (python-mode (xref-find-definitions (symbol-at-point)))
    (org-mode (org-open-at-point))
    (typescript-mode (xref-find-definitions (symbol-at-point)))
+   (typescript-ts-mode (xref-find-definitions (symbol-at-point)))
    (emacs-lisp-mode (my-evil-goto-definition))
    (t (counsel-etags-find-tag-at-point))))
 
@@ -229,6 +230,9 @@
       (shell-command (format "tmux rename-window %s" name)))))
 
 ;; (add-to-list 'window-selection-change-functions #'phye/set-tmux-window-based-on-project)
+
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 
 (provide 'phye-init-prog)
 ;;; phye-init-prog.el ends here
