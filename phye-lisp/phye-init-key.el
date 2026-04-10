@@ -404,6 +404,7 @@
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
 (key-chord-define evil-normal-state-map "ff" 'phye/protobuf-jump-req-rsp)
 (key-chord-define evil-normal-state-map ",," 'ace-pinyin-jump-char-2)
+(key-chord-define evil-normal-state-map ".." 'evil-scroll-line-to-center)
 (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
 (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit)
 

@@ -92,13 +92,24 @@
 ;; tree-sitter
 (use-package tree-sitter :ensure t :defer t :config (setq treesit-font-lock-level 4))
 
-(use-package
- tree-sitter-langs
- :vc (:url "https://github.com/emacs-tree-sitter/tree-sitter-langs.git" :branch "0.13.27")
- :defer t
- :after (tree-sitter))
-
 (use-package ts-fold :load-path "~/.emacs.d/site-lisp/ts-fold" :custom (ts-fold-line-count-show t))
+
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (with-eval-after-load 'ts-fold
   (push '(block_sequence_item . ts-fold-range-seq) (alist-get 'yaml-mode ts-fold-range-alist))
@@ -106,8 +117,6 @@
   (push '(if_statement . ts-fold-range-seq) (alist-get 'python-mode ts-fold-range-alist)))
 
 (use-package ts-fold-indicators :load-path "~/.emacs.d/site-lisp/ts-fold/")
-
-(setq treesit-extra-load-path (list (format "%s/elpa/tree-sitter-langs-0.13.27/bin" user-emacs-directory)))
 
 (use-package symbol-overlay :ensure t :config (setq symbol-overlay-inhibit-map t))
 
