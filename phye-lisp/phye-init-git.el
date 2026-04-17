@@ -35,13 +35,9 @@
   (interactive)
   (convert-https-to-ssh-in-region (point-min) (point-max)))
 
-(use-package
- gf-code-review
- :load-path "~/.emacs.d/site-lisp/gf-code-review/"
- :config
- (let ((auth-token (exec-path-from-shell-copy-env "GIT_WOA_TOKEN")))
-   (unless (seq-empty-p auth-token)
-     (gf-code-review-set-token (encode-coding-string (string-trim auth-token) 'us-ascii)))))
+(use-package code-review-minimal
+  :vc (:url "https://github.com/phye/code-review-minimal"
+            :rev :newest))
 
 (provide 'phye-init-git)
 
