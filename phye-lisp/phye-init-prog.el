@@ -5,6 +5,9 @@
 
 ;;; Code:
 
+(declare-function phye/load-theme "phye-init-themes")
+(declare-function ediff-janitor "ediff-util")
+
 ;; quick pop shell
 (use-package
  shell-pop
@@ -75,10 +78,10 @@
 (defun phye/ediff-startup-hook ()
   "Save current theme and load doom-gruvbox for ediff."
   (setq ediff-previous-theme (car custom-enabled-themes))
-  (load-theme 'doom-gruvbox t))
+  (phye/load-theme 'ef-bio))
 (defun phye/ediff-cleanup-hook ()
   "Restore previous theme and run ediff janitor."
-  (load-theme ediff-previous-theme t)
+  (phye/load-theme ediff-previous-theme)
   (ediff-janitor nil t))
 (add-hook 'ediff-startup-hook #'phye/ediff-startup-hook)
 (add-hook 'ediff-cleanup-hook #'phye/ediff-cleanup-hook)
@@ -161,6 +164,7 @@
   (cl-case
    major-mode
    (go-mode (xref-find-definitions (symbol-at-point)))
+   (go-ts-mode (xref-find-definitions (symbol-at-point)))
    (python-mode (xref-find-definitions (symbol-at-point)))
    (org-mode (org-open-at-point))
    (typescript-mode (xref-find-definitions (symbol-at-point)))
@@ -174,6 +178,7 @@
   (cl-case
    major-mode
    (go-mode (gofmt))
+   (go-ts-mode (gofmt))
    (mermaid-mode t)
    (org-mode t)
    (python-mode (eglot-format-buffer))

@@ -9,6 +9,7 @@
 (declare-function magit-blame "magit")
 (declare-function magit-push "magit")
 (declare-function exec-path-from-shell-copy-env "exec-path-from-shell")
+(declare-function ediff-cleanup-mess "ediff-util")
 
 (setq vc-follow-symlinks t)
 

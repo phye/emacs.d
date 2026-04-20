@@ -60,6 +60,7 @@
 ;; (with-eval-after-load 'go-mode
 ;;   (require 'go-guru))
 (add-hook 'go-mode-hook 'eglot-ensure)
+(add-hook 'go-ts-mode-hook 'eglot-ensure)
 
 (use-package go-mode :ensure t :defer t :custom (gofmt-command "goimports"))
 
@@ -102,6 +103,9 @@
   (setq eglot-code-action-indications nil)
   ;; (annotate-mode)
   (ts-fold-mode))
+
+(add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
+
 (with-eval-after-load 'go-mode
   (add-hook 'go-mode-hook 'phye/go-mode-hook 90))
 ;; }}

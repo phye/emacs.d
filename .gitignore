@@ -78,4 +78,5 @@ cnfonts
 org-roam.db
 undo-fu-session
 ellama-sessions/
-/.agent-shell/
+.agent-shell/
+.claude

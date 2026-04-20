@@ -365,12 +365,13 @@
 
 ;; format: off
 (general-define-key
- :keymaps 'gf-code-review-mode-map
+ :keymaps 'code-review-minimal-mode-map
  :states '(normal)
  :prefix ","
- "ca" 'gf-code-review-add-comment
- "cr" 'gf-code-review-resolve-comment
- "ce" 'gf-code-review-edit-comment)
+ "ca" 'code-review-minimal-add-comment
+ "cr" 'code-review-minimal-reply-comment
+ "cR" 'code-review-minimal-resolve-comment
+ "ce" 'code-review-minimal-edit-comment)
 
 ;; }}
 
