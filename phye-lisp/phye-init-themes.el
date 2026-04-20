@@ -419,7 +419,7 @@
   (if light
       (if (display-graphic-p)
           'doric-wind
-        'doom-feather-light)
+        'ef-spring)
     (if (display-graphic-p)
         'ef-bio
       'kaolin-galaxy)))

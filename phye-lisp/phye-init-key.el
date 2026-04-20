@@ -89,9 +89,9 @@
  "cD" 'copy-full-dir-to-clipboard
  "cF" 'copy-full-path-to-clipboard
  "cP" 'copy-project-root-to-clipboard
- "c[" 'annotate-goto-previous-annotation
- "c]" 'annotate-goto-next-annotation
- "ca" 'annotate-annotate
+ ;; "c[" 'annotate-goto-previous-annotation
+ ;; "c]" 'annotate-goto-next-annotation
+ ;; "ca" 'annotate-annotate
  "cb" 'org-mark-ring-goto
  "cc" 'clipetty-kill-ring-save
  "cd" 'copy-relative-dir-in-project
