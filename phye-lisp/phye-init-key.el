@@ -366,7 +366,7 @@
 ;; format: off
 (general-define-key
  :keymaps 'code-review-minimal-mode-map
- :states '(normal)
+ :states '(normal visual)
  :prefix ","
  "ca" 'code-review-minimal-add-comment
  "cr" 'code-review-minimal-reply-comment

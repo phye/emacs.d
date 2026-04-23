@@ -228,7 +228,7 @@
     "tan"            ;; white
     "teal"           ;; cyan
     "plum"           ;; gray
-    "navy"           ;; blue
+    "light blue"     ;; blue
     "dark goldenrod" ;; yellow
     "dark red"       ;; red
     "dark turquoise" ;; green
@@ -312,7 +312,7 @@
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-10
   '((((background dark))  :inherit phye-overlay-base :background "cornflower blue")
-    (((background light)) :inherit phye-overlay-base :background "navy"))
+    (((background light)) :inherit phye-overlay-base :background "light blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-11
