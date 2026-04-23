@@ -78,7 +78,6 @@
 
 (defun copy-variable-to-clipboard (val)
   "Copy VAL to both Emacs and system clipboard."
-  (interactive)
   (with-temp-buffer
     (insert val)
     (mark-whole-buffer)

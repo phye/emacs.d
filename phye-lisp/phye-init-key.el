@@ -397,7 +397,7 @@
  "jj" 'ivy-next-line
  "kk" 'ivy-previous-line
  "gg" 'ivy-beginning-of-buffer
- "gG" 'ivy-end-of-buffer)
+ "G" 'ivy-end-of-buffer)
 ;; }}
 
 
