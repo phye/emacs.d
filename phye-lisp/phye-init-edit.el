@@ -220,7 +220,7 @@
   :defer t)
 
 
-(use-package xclip :load-path "~/.emacs.d/site-lisp/xclip" :config (xclip-mode))
+(use-package xclip :load-path "~/.emacs.d/site-lisp/xclip" :config (xclip-mode 1))
 
 (provide 'phye-init-edit)
 ;;; phye-init-edit.el ends here
