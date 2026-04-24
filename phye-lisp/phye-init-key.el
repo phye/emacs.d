@@ -386,18 +386,21 @@
  "C-n" 'next-line-or-history-element)
 
 ;; format: off
-(general-define-key
- :keymaps 'ivy-minibuffer-map
- "C-w" 'ivy-backward-kill-word)
+(with-eval-after-load 'ivy
+  (general-define-key
+   :keymaps 'ivy-minibuffer-map
+   "C-w" 'ivy-backward-kill-word)
 
-;; format: off
-(general-define-key
- :keymaps 'ivy-minibuffer-map
- :prefix ","
- "jj" 'ivy-next-line
- "kk" 'ivy-previous-line
- "gg" 'ivy-beginning-of-buffer
- "G" 'ivy-end-of-buffer)
+  ;; format: off
+  (general-define-key
+   :keymaps 'ivy-minibuffer-map
+   :prefix ","
+   "jj" 'ivy-next-line
+   "kk" 'ivy-previous-line
+   "gg" 'ivy-beginning-of-buffer
+   "G" 'ivy-end-of-buffer)
+  (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
+  (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit))
 ;; }}
 
 
@@ -405,22 +408,10 @@
 (key-chord-define evil-insert-state-map "jk" 'evil-escape)
 (key-chord-define evil-normal-state-map "ff" 'phye/protobuf-jump-req-rsp)
 (key-chord-define evil-normal-state-map ".." 'evil-scroll-line-to-center)
-(key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
-(key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit)
 
 ;; evil-matchit
-(defun evilmi-customize-keybinding ()
-       (evil-define-key 'normal evil-matchit-mode-map
-                        "%" 'evil-jump-item
-                        "m" 'evilmi-jump-items))
-
-;; format: off
-(defun phye/restore-keybindings ()
-       "Restore keybindings by evil-nerd-commenter."
-       (interactive)
-       (my-comma-leader-def
-        "cc" 'clipetty-kill-ring-save))
-;; NOTE(phye); this is ugly... but simple and working for the moment ...
-(my-run-with-idle-timer 5 'phye/restore-keybindings)
+(evil-define-key 'normal evil-matchit-mode-map
+                 "%" 'evil-jump-item
+                 "m" 'evilmi-jump-items)
 
 (provide 'phye-init-key)
