@@ -95,7 +95,14 @@
 ;; tree-sitter
 (use-package tree-sitter :ensure t :defer t :config (setq treesit-font-lock-level 4))
 
-(use-package ts-fold :load-path "~/.emacs.d/site-lisp/ts-fold" :custom (ts-fold-line-count-show t))
+(use-package treesit-fold
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold"
+            :rev newest)
+  :custom (treesit-fold-line-count-show t))
+
+(use-package treesit-fold-indicators
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold"
+            :rev newest))
 
 (setq treesit-language-source-alist
    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
@@ -114,12 +121,15 @@
      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
      (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-(with-eval-after-load 'ts-fold
-  (push '(block_sequence_item . ts-fold-range-seq) (alist-get 'yaml-mode ts-fold-range-alist))
-  (push '(try_statement . ts-fold-range-seq) (alist-get 'python-mode ts-fold-range-alist))
-  (push '(if_statement . ts-fold-range-seq) (alist-get 'python-mode ts-fold-range-alist)))
+(with-eval-after-load 'treesit-fold
+  (push '(block_sequence_item . treesit-fold-range-seq) (alist-get 'yaml-mode treesit-fold-range-alist))
+  (push '(try_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist))
+  (push '(if_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist)))
 
-(use-package ts-fold-indicators :load-path "~/.emacs.d/site-lisp/ts-fold/")
+;; Register go-ts-mode in hs-special-modes-alist, which only has go-mode by default
+;; (with-eval-after-load 'hideshow
+;;   (add-to-list 'hs-special-modes-alist
+;;                '(go-ts-mode "{" "}" "/[*/]" nil nil)))
 
 (use-package symbol-overlay :ensure t :config (setq symbol-overlay-inhibit-map t))
 
@@ -153,7 +163,7 @@
   (customize-set-variable 'python-interpreter "~/.pyvenv/bin/python")
   (pyvenv-activate "~/.pyvenv")
   (setq tab-width 4)
-  (ts-fold-mode t)
+  (treesit-fold-mode t)
   (eglot-ensure))
 
 (add-hook 'python-mode-hook 'phye/python-mode-hook 0)

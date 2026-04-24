@@ -39,6 +39,7 @@
         mermaid-mode
         multi-vterm
         nerd-icons
+        noctilux
         ob-mermaid
         org-fancy-priorities
         org-journal
@@ -62,7 +63,7 @@
         treemacs
         undo-fu-session
         wombat
-        vimish-fold
+        ;; vimish-fold
         zerodark))
 
 (defvar melpa-include-packages)

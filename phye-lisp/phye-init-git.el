@@ -36,9 +36,9 @@
   (interactive)
   (convert-https-to-ssh-in-region (point-min) (point-max)))
 
-;; (use-package code-review-minimal
-;;   :vc (:url "https://github.com/phye/code-review-minimal"
-;;             :rev "exp"))
+(use-package code-review-minimal
+  :vc (:url "https://github.com/phye/code-review-minimal"
+            :rev "exp"))
 
 (provide 'phye-init-git)
 
