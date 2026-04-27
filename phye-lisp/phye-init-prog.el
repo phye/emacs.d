@@ -218,6 +218,38 @@
         (kill-buffer xref-buffer)))))
 (advice-add 'xref-find-references :after #'phye/xref-jump-to-only-reference)
 
+(use-package
+ hl-todo
+ :ensure t
+ :defer t
+ :custom
+ (hl-todo-keyword-faces
+  '(("STUB" . "#1E90FF")
+    ("Deprecated" . "orange")
+    ("DEPRECATED" . "orange")
+    ("PITFALL" . "#FF4500")
+    ("LOGIC" . "yellow")
+    ("PURPOSE" . "lavender")
+    ("THOUGHT" . "orange")
+    ("DEBUG" . "blue")
+    ("HOLD" . "#d0bf8f")
+    ("TODO" . "#cc9393")
+    ("TBD" . "#cc9494")
+    ("NEXT" . "#dca3a3")
+    ("THEM" . "#dc8cc3")
+    ("PROG" . "#7cb8bb")
+    ("OKAY" . "#7cb8bb")
+    ("DONT" . "#5f7f5f")
+    ("FAIL" . "#8c5353")
+    ("DONE" . "#afd8af")
+    ("NOTE" . "#d0bf8f")
+    ("KLUDGE" . "#d0bf8f")
+    ("HACK" . "#d0bf8f")
+    ("TEMP" . "#d0bf8f")
+    ("FIXME" . "#cc9393")
+    ("CANCELLED" . "#d0bf8f")
+    ("XXX+" . "#cc9393"))))
+
 ;; general prog-mode-hook
 (defun phye/prog-mode-hook ()
   "Phye's prog mode hook."
