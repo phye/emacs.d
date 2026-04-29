@@ -128,6 +128,7 @@
    doom-one-light
    doom-opera-light
    doric-cherry
+   doric-coral
    doric-earth
    doric-light
    doric-wind

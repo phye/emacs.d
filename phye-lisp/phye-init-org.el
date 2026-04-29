@@ -496,16 +496,18 @@ a list item) are joined with a space.  Different list items are kept separate."
 
 (defun phye/apply-regexp-replacements (str replacements)
   "Apply each (REGEXP . REP) pair in REPLACEMENTS to STR sequentially."
-  (seq-reduce (lambda (s pair)
-                (replace-regexp-in-string (car pair) (cdr pair) s))
-              replacements str))
+  (seq-reduce
+   (lambda (s pair) (replace-regexp-in-string (car pair) (cdr pair) s)) replacements str))
 
 (defun phye/md-cleanup-string (str)
   "Apply all MD export string cleanups to STR in one pass."
   (phye/apply-regexp-replacements
-   str `((,phye/in-word-white-spaces-regex . "\\1\\2")
-         ("#A" . "P0") ("#B" . "P1") ("#C" . "P2")
-         ("!\\[[^]]*\\](\\(images/[^)]+\\))" . "<img src=\"\\1\" width=\"800\">"))))
+   str
+   `((,phye/in-word-white-spaces-regex . "\\1\\2")
+     ("#A" . "P0")
+     ("#B" . "P1")
+     ("#C" . "P2")
+     ("!\\[[^]]*\\](\\(images/[^)]+\\))" . "<img src=\"\\1\" width=\"800\">"))))
 
 (defun phye/md-after-export-hook (text backend _info)
   "Cleanup white spaces in TEXT when BACKEND is md, INFO is not used."
