@@ -13,6 +13,7 @@
 (customize-set-variable
  'my-favorite-color-themes
  '(afternoon
+   alect-black
    atom-dark
    atom-one-dark
    ample
@@ -59,12 +60,14 @@
    doom-vibrant
    doom-xcode
    doom-zenburn
+   doom-winter-is-coming-dark-blue
    doric-dark
    doric-fire
    dorsey
    ef-autumn
    ef-bio
    ef-cherie
+   ef-deuteranopia-dark
    ef-elea-dark
    ef-dark
    ef-duo-dark
@@ -116,6 +119,7 @@
 (customize-set-variable
  'my-favorite-light-color-themes
  '(apropospriate-light
+   doom-ayu-light
    doom-bluloco-light
    doom-feather-light
    doom-homage-white
@@ -132,6 +136,7 @@
    kaolin-mono-light
    kaolin-breeze
    ef-arbutus
+   ef-cyprus
    ef-deuteranopia-light
    ef-duo-light
    ef-eagle
@@ -144,6 +149,8 @@
    ef-summer
    ef-trio-light
    ef-tritanopia-light
+   espresso
+   modus-operandi-tritanopia
    farmhouse-light
    occidental
    professional
