@@ -86,6 +86,7 @@
  "bm" 'phye/ace-move-buffer-to-window
  "bn" 'next-buffer
  "bp" 'previous-buffer
+ "cC" 'phye/copy-org-to-wecom
  "cD" 'copy-full-dir-to-clipboard
  "cF" 'copy-full-path-to-clipboard
  "cP" 'copy-project-root-to-clipboard

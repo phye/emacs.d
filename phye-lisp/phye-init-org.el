@@ -387,10 +387,6 @@
   (interactive)
   (replace-regexp-in-region phye/in-word-white-spaces-regex "\\1\\2" begin end))
 
-(defun phye/cleanup-white-spaces-in-string (str)
-  "Cleanup white spaces in STR."
-  (replace-regexp-in-string phye/in-word-white-spaces-regex "\\1\\2" str))
-
 (defun phye/cleanup-white-spaces-in-buffer ()
   "Delete white spaces in buffer."
   (interactive)
@@ -457,8 +453,46 @@
   (when (member major-mode '(org-mode gfm-mode))
     (when (eq major-mode 'org-mode)
       (phye/insert-zws-in-buffer))
-    (phye/cleanup-white-spaces-in-buffer)))
+    (when (eq major-mode 'gfm-mode)
+      (phye/cleanup-white-spaces-in-buffer))))
 (add-hook 'before-save-hook #'phye/org-before-save-hook)
+
+(defun phye/copy-org-to-wecom (beg end)
+  "Copy region from BEG to END, joining wrapped continuation lines of each list item.
+Lines that continue the same list item (non-empty, non-list-item lines following
+a list item) are joined with a space.  Different list items are kept separate."
+  (interactive "r")
+  (let* ((text (buffer-substring-no-properties beg end))
+         (lines (split-string text "\n"))
+         (result '())
+         (current-item nil)
+         (list-item-re "^[ \t]*\\([-+*]\\|[0-9]+[.)]\\) "))
+    (dolist (line lines)
+      (cond
+       ;; New list item: flush previous item and start a new one.
+       ((string-match list-item-re line)
+        (when current-item
+          (push current-item result))
+        (setq current-item line))
+       ;; Empty line: flush current item and preserve the blank line.
+       ((string-match "^[ \t]*$" line)
+        (when current-item
+          (push current-item result)
+          (setq current-item nil))
+        (push "" result))
+       ;; Continuation line inside a list item: join with a space.
+       (current-item
+        (setq current-item
+              (concat current-item (string-trim line))))
+       ;; Regular (non-list) line outside any list item: pass through.
+       (t
+        (push line result))))
+    ;; Flush the last pending item.
+    (when current-item
+      (push current-item result))
+    (let ((final-text (string-join (nreverse result) "\n")))
+      (kill-new final-text)
+      (message "Copied to kill ring (wecom format)"))))
 
 (defun phye/apply-regexp-replacements (str replacements)
   "Apply each (REGEXP . REP) pair in REPLACEMENTS to STR sequentially."
