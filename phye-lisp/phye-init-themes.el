@@ -394,7 +394,7 @@
   "Return different default theme based on frame type and whether LIGHT or not."
   (if light
       (if (display-graphic-p)
-          'doric-wind
+          'ef-spring
         'ef-spring)
     (if (display-graphic-p)
         'ef-bio
