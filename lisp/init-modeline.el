@@ -47,6 +47,18 @@
     ;; `global-mode-string' is useful because `org-timer-set-timer' uses it
     "%M"
 
+    '(:eval (cond
+             ((eq evil-state 'visual)
+              "VISUAL")
+             ((eq evil-state 'normal)
+              "NORMAL")
+             ((eq evil-state 'insert)
+              "INSERT")
+             ((eq evil-state 'emacs)
+              "EMACS")
+             (t
+              "*")))
+
     '(:eval my-extra-mode-line-info)
 
     " %-" ;; fill with '-'
