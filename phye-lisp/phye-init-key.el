@@ -308,11 +308,6 @@
 ;; format: off
 (general-define-key
  :keymaps 'dired-mode-map
- "e" 'evil-forward-word-end
- "b" 'evil-backward-word-begin
- "h" 'dired-up-directory
- "j" 'dired-next-line
- "k" 'dired-previous-line
  "<RET>" 'phye/dired-open-file
  "C-o" 'casual-dired-tmenu)
 
