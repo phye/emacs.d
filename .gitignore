@@ -80,3 +80,4 @@ undo-fu-session
 ellama-sessions/
 .agent-shell/
 .claude
+tree-sitter
