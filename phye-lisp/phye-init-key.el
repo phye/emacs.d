@@ -271,7 +271,9 @@
  "n" 'xref-next-group
  "p" 'xref-prev-group
  "j" 'xref-next-line-no-show
+ "J" 'xref-next-line
  "k" 'xref-prev-line-no-show
+ "K" 'xref-prev-line
  "o" 'xref-goto-xref
  "RET" 'phye/xref-goto-xref-and-quit)
 

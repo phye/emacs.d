@@ -260,7 +260,7 @@
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-4
   '((((background dark))  :inherit phye-overlay-base :background "dodger blue")
-    (((background light)) :inherit phye-overlay-base :background "medium blue"))
+    (((background light)) :inherit phye-overlay-base :background "light blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-5
@@ -290,7 +290,7 @@
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-10
   '((((background dark))  :inherit phye-overlay-base :background "cornflower blue")
-    (((background light)) :inherit phye-overlay-base :background "light blue"))
+    (((background light)) :inherit phye-overlay-base :background "deep sky blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-11
