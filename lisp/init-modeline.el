@@ -9,7 +9,7 @@
 (setq-default mode-line-format
   (list
     ;; the buffer name
-   "%b"
+   '(:eval (truncate-string-to-width (buffer-name) 50))
 
     ;; line and column
    ;; '%02' to set to 2 chars at least; prevents flickering
@@ -17,7 +17,7 @@
 
     "["
 
-    "%m " ; major mode name
+    '(:eval (concat (symbol-name major-mode) " ")) ; major mode name
 
     ;; buffer file encoding
     '(:eval (let ((sys (coding-system-plist buffer-file-coding-system)))
@@ -49,13 +49,13 @@
 
     '(:eval (cond
              ((eq evil-state 'visual)
-              "VISUAL")
+              "VIS")
              ((eq evil-state 'normal)
-              "NORMAL")
+              "NOR")
              ((eq evil-state 'insert)
-              "INSERT")
+              "INS")
              ((eq evil-state 'emacs)
-              "EMACS")
+              "EMA")
              (t
               "*")))
 
