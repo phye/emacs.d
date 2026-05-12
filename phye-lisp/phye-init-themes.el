@@ -75,6 +75,7 @@
    ef-owl
    ef-rosa
    ef-winter
+   exotica
    gotham
    grandshell
    gruvbox-dark-soft
@@ -112,6 +113,7 @@
    srcery
    smyx
    tango-dark
+   toxi
    twilight
    wombat
    zerodark))
@@ -434,6 +436,7 @@
                 (when (car custom-enabled-themes)
                   (setq previous-dark-theme (car custom-enabled-themes)))
                 (phye/load-theme default-theme))
+            (setq previous-dark-theme (car custom-enabled-themes))
             (phye/load-theme previous-dark-theme))
           (when (display-graphic-p)
             (shell-command

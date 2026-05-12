@@ -156,5 +156,11 @@
   (select-frame (make-frame))
   (remember-notes t))
 
+(defun phye/delete-frame ()
+  "Delete the selected frame with a confirmation prompt."
+  (interactive)
+  (when (y-or-n-p "Delete this frame? ")
+    (delete-frame)))
+
 (provide 'phye-init-window)
 ;;; phye-init-window.el ends here

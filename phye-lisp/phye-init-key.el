@@ -29,6 +29,7 @@
  :keymaps 'override
  "M-`" 'other-frame
  "s-x" 'counsel-M-x
+ "s-w" 'phye/delete-frame
  "C-x C-c" 'delete-frame
  "C-x m" 'manual-entry
  "C-c a" 'org-agenda
