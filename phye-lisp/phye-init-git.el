@@ -40,6 +40,37 @@
   :vc (:url "https://github.com/phye/code-review-minimal"
             :rev "exp"))
 
+;;; Ediff abort mechanism
+;; "Q" aborts the git difftool session: ediff-really-quit cleans up, then
+;; server-send-string sends "-error" to terminate the emacsclient with code 1;
+;; ediff.sh propagates that exit code and git difftool's trustExitCode stops
+;; remaining files.  "q" quits cleanly (exit 0).
+
+(defun phye/ediff-abort ()
+  "Abort the entire git difftool session.
+Quits ediff then sends \"-error\" via the server protocol so emacsclient
+exits with code 1.  git difftool's trustExitCode stops remaining files."
+  (interactive)
+  (let ((proc (frame-parameter (selected-frame) 'client)))
+    (ediff-really-quit nil)
+    (when proc
+      (server-send-string proc "-error Ediff aborted\n"))))
+
+(defun phye/ediff-setup ()
+  "Configure the live ediff control buffer.
+Captures frame, binds \"Q\" to abort and \"q\" to quit without prompt.
+Called from `ediff-startup-hook' where `ediff-mode-map' is already active."
+  (let ((frame (selected-frame)))
+    (add-hook 'ediff-quit-hook (lambda () (delete-frame frame)) t t))
+  (define-key ediff-mode-map (kbd "Q") #'phye/ediff-abort)
+  (define-key ediff-mode-map (kbd "q") (lambda () (interactive) (ediff-really-quit nil))))
+
+(defun phye/ediff-start (fn &rest args)
+  "Start an ediff session.
+Registers `phye/ediff-setup' on `ediff-startup-hook' then calls FN with ARGS."
+  (add-hook 'ediff-startup-hook #'phye/ediff-setup t)
+  (apply fn args))
+
 (provide 'phye-init-git)
 
 ;;; phye-init-git.el ends here
