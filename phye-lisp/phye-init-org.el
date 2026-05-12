@@ -458,14 +458,17 @@
 (add-hook 'before-save-hook #'phye/org-before-save-hook)
 
 (defun phye/copy-org-to-wecom (beg end)
-  "Copy region from BEG to END, joining wrapped continuation lines of each list item.
-Lines that continue the same list item (non-empty, non-list-item lines following
-a list item) are joined with a space.  Different list items are kept separate."
+  "Copy region from BEG to END, joining fill-column-wrapped continuation lines.
+Any line (inside or outside a list item) whose predecessor was wide enough
+\(>= 80% of `fill-column') is assumed to have been soft-wrapped and is joined
+to the previous line with a space.  Otherwise newlines are preserved."
   (interactive "r")
   (let* ((text (buffer-substring-no-properties beg end))
          (lines (split-string text "\n"))
          (result '())
          (current-item nil)
+         (prev-line-width 0)
+         (threshold (floor (* 0.8 fill-column)))
          (list-item-re "^[ \t]*\\([-+*]\\|[0-9]+[.)]\\) "))
     (dolist (line lines)
       (cond
@@ -473,25 +476,43 @@ a list item) are joined with a space.  Different list items are kept separate."
        ((string-match list-item-re line)
         (when current-item
           (push current-item result))
-        (setq current-item line))
+        (setq current-item line)
+        (setq prev-line-width (string-width line)))
        ;; Empty line: flush current item and preserve the blank line.
        ((string-match "^[ \t]*$" line)
         (when current-item
           (push current-item result)
           (setq current-item nil))
-        (push "" result))
-       ;; Continuation line inside a list item: join with a space.
+        (push "" result)
+        (setq prev-line-width 0))
+       ;; Continuation line inside a list item: join with a space only when
+       ;; the previous line was wide enough (>= 80% of fill-column), meaning
+       ;; it was word-wrapped.  Track prev-line-width using the original line
+       ;; width, not the accumulated current-item, so that joining two lines
+       ;; does not spuriously cause a third short line to be joined as well.
        (current-item
-        (setq current-item
-              (concat current-item (string-trim line))))
-       ;; Regular (non-list) line outside any list item: pass through.
+        (if (>= prev-line-width threshold)
+            (progn
+              (setq current-item (concat current-item " " (string-trim line)))
+              (setq prev-line-width (string-width (string-trim line))))
+          (setq current-item (concat current-item "\n" line))
+          (setq prev-line-width (string-width line))))
+       ;; Regular (non-list) line outside any list item: same logic.
        (t
-        (push line result))))
+        (if (and result
+                 (not (string-equal (car result) ""))
+                 (>= prev-line-width threshold))
+            (progn
+              (setcar result (concat (car result) " " (string-trim line)))
+              (setq prev-line-width (string-width (string-trim line))))
+          (push line result)
+          (setq prev-line-width (string-width line))))))
     ;; Flush the last pending item.
     (when current-item
       (push current-item result))
     (let ((final-text (string-join (nreverse result) "\n")))
       (kill-new final-text)
+      (deactivate-mark)
       (message "Copied to kill ring (wecom format)"))))
 
 (defun phye/apply-regexp-replacements (str replacements)
