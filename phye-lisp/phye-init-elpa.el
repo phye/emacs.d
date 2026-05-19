@@ -69,5 +69,76 @@
 (defvar melpa-include-packages)
 (setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
 
+(defvar phye/theme-packages
+  '(doom-themes
+    ef-themes
+    doric-themes
+    kaolin-themes
+    gruvbox-theme
+    solarized-theme
+    modus-themes
+    color-theme-sanityinc-tomorrow
+    spacemacs-theme
+    alect-themes
+    atom-dark-theme
+    atom-one-dark-theme
+    ample-theme
+    afternoon-theme
+    bubbleberry-theme
+    clues-theme
+    cherry-blossom-theme
+    cyberpunk-theme
+    dakrone-theme
+    darkmine-theme
+    darkokai-theme
+    sublime-themes
+    espresso-theme
+    exotica-theme
+    farmhouse-themes
+    gotham-theme
+    grandshell-theme
+    hc-zenburn-theme
+    hemisu-theme
+    jazz-theme
+    madhat2r-theme
+    noctilux-theme
+    nord-theme
+    occidental-theme
+    omtose-phellack-themes
+    planet-theme
+    professional-theme
+    purple-haze-theme
+    rebecca-theme
+    apropospriate-theme
+    seti-theme
+    srcery-theme
+    smyx-theme
+    toxi-theme
+    twilight-theme
+    zerodark-theme)
+  "Theme packages to ensure are installed.
+Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
+
+(declare-function my-run-with-idle-timer "init-utils")
+
+(my-run-with-idle-timer
+ 30
+ ;; ensure all theme packages are installed
+ (lambda ()
+   (let (missing)
+     (dolist (pkg phye/theme-packages)
+       (unless (package-installed-p pkg)
+         (push pkg missing)))
+     (if (null missing)
+         (message "phye: all theme packages already installed")
+       (message "phye: installing missing theme packages: %s"
+                (mapconcat #'symbol-name (nreverse missing) ", "))
+       (package-refresh-contents)
+       (dolist (pkg missing)
+         (condition-case err
+             (package-install pkg)
+           (error (message "phye: failed to install %s – %s" pkg err))))
+       (message "phye: done installing theme packages")))))
+
 (provide 'phye-init-elpa)
 ;;; phye-init-elpa.el ends here
