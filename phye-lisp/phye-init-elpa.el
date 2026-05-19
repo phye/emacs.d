@@ -122,7 +122,7 @@ Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
 (declare-function my-run-with-idle-timer "init-utils")
 
 (my-run-with-idle-timer
- 30
+ 10
  ;; ensure all theme packages are installed
  (lambda ()
    (let (missing)
@@ -132,13 +132,14 @@ Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
      (if (null missing)
          (message "phye: all theme packages already installed")
        (message "phye: installing missing theme packages: %s"
-                (mapconcat #'symbol-name (nreverse missing) ", "))
+                (mapconcat #'symbol-name (reverse missing) ", "))
        (package-refresh-contents)
        (dolist (pkg missing)
+         (message "Processing pkg %s" pkg)
          (condition-case err
              (package-install pkg)
-           (error (message "phye: failed to install %s – %s" pkg err))))
-       (message "phye: done installing theme packages")))))
+           (t (message "failed to install %s – %s" pkg (error-message-string err)))))
+       (message "done installing theme packages")))))
 
 (provide 'phye-init-elpa)
 ;;; phye-init-elpa.el ends here
