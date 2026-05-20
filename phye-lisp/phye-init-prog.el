@@ -24,15 +24,6 @@
 
 (customize-set-variable 'sh-basic-offset 2)
 
-;; code annotation
-(use-package
- annotate
- :ensure t
- :defer t
- :custom
- (annotate-summary-ask-query t)
- (annotate-file "~/.emacs.data.d/annotations"))
-
 ;; company
 ;; (with-eval-after-load 'company-ispell
 ;;   (setq company-ispell-available nil))
@@ -264,6 +255,9 @@
   (set-fill-column 100)
   (symbol-overlay-mode))
 (add-hook 'prog-mode-hook 'phye/prog-mode-hook 90)
+
+;; The legacy proc backend has no init function for most modes; silence it.
+(remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
 
 (defun phye/get-project-name-of-active-window ()
   "Return project name of active window."

@@ -8,7 +8,6 @@
 (declare-function my-run-with-idle-timer "init-utils")
 (declare-function my-ensure "init-utils")
 (declare-function local-require "init-utils")
-(declare-function annotate-mode "annotate")
 (declare-function tree-sitter-hl-mode "tree-sitter")
 (declare-function rainbow-mode "rainbow-mode")
 (declare-function phye/prog-mode-hook "phye-init-prog")
@@ -35,7 +34,6 @@
   (c-set-offset 'inlambda 0)
   (hide-ifdef-mode)
   (hs-minor-mode)
-  (annotate-mode)
   (unless (member major-mode '(protobuf-mode bpftrace-mode))
     (tree-sitter-hl-mode))
   (rainbow-mode -1)
@@ -101,7 +99,6 @@
   (tree-sitter-hl-mode)
   (setq compile-command "go test")
   (setq eglot-code-action-indications nil)
-  ;; (annotate-mode)
   (ts-fold-mode))
 
 (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))

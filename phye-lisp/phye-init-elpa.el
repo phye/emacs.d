@@ -9,7 +9,6 @@
         acp
         shell-maker
         agent-shell
-        annotate-mode
         atom-dark
         atom-one-dark
         bazel
