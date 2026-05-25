@@ -36,9 +36,9 @@
   (interactive)
   (convert-https-to-ssh-in-region (point-min) (point-max)))
 
-(use-package code-review-minimal
-  :vc (:url "https://github.com/phye/code-review-minimal"
-            :rev "exp"))
+(use-package inline-review
+  :vc (:url "https://github.com/phye/inline-review"
+            :rev "master"))
 
 ;;; Ediff abort mechanism
 ;; "Q" aborts the git difftool session: ediff-really-quit cleans up, then
