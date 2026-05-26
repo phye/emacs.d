@@ -145,7 +145,14 @@
 
 (defun phye/deadgrep-current-directory (search-term)
   "Run deadgrep with SEARCH-TERM in current directory."
-  (interactive (list (deadgrep--read-search-term)))
+  (interactive
+   (let* ((default (if (use-region-p)
+                       (buffer-substring-no-properties (region-beginning) (region-end))
+                     (thing-at-point 'symbol)))
+          (prompt (if default
+                      (format "Search term (default %s): " default)
+                    "Search term: ")))
+     (list (read-string prompt nil nil default))))
   (deadgrep search-term default-directory))
 
 (defun phye/project-find-dir ()
