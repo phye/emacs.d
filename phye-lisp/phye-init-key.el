@@ -361,13 +361,13 @@
 
 ;; format: off
 (general-define-key
- :keymaps 'code-review-minimal-mode-map
+ :keymaps 'inline-review-mode-map
  :states '(normal visual)
  :prefix ","
- "ca" 'code-review-minimal-add-comment
- "cr" 'code-review-minimal-reply-comment
- "cR" 'code-review-minimal-resolve-comment
- "ce" 'code-review-minimal-edit-comment)
+ "ca" 'inline-review-add-comment
+ "cr" 'inline-review-reply-comment
+ "cR" 'inline-review-resolve-comment
+ "ce" 'inline-review-edit-comment)
 
 ;; }}
 
