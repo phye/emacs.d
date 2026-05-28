@@ -414,7 +414,7 @@
   (let ((bg-color "")
         (hour (phye/current-hour)))
     (if (< (phye/current-hour) dark-hour)
-        (setq bg-color "#00FF86")
+        (setq bg-color "#87CEEB")
       (setq bg-color "#0065FF"))
     (set-face-background 'ivy-current-match bg-color nil)))
 
