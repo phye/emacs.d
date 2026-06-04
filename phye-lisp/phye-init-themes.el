@@ -83,6 +83,7 @@
    hc-zenburn
    hemisu-dark
    jazz
+   junio
    kaolin-aurora
    kaolin-eclipse
    kaolin-bubblegum
@@ -99,6 +100,7 @@
    noctilux
    occidental
    omtose-darker
+   organic-green
    planet
    professional
    purple-haze

@@ -113,6 +113,7 @@
     srcery-theme
     smyx-theme
     toxi-theme
+    twilight-bright-theme
     twilight-theme
     zerodark-theme)
   "Theme packages to ensure are installed.
