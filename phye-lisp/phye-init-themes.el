@@ -287,7 +287,7 @@
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-9
   '((((background dark)) :inherit phye-overlay-base :background "light yellow")
-    (((background light)) :inherit phye-overlay-base :background "wheat"))
+    (((background light)) :inherit phye-overlay-base :background "saddle brown"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-10
@@ -340,6 +340,26 @@
     (((background light)) :inherit phye-overlay-base :background "steel blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
+(defface phye-highlight-face-20
+  '((((background dark)) :inherit phye-overlay-base :background "burlywood")
+    (((background light)) :inherit phye-overlay-base :background "chocolate"))
+  "A custom highlight face for symbol-overlay."
+  :group 'phye-overlay-faces)
+(defface phye-highlight-face-21
+  '((((background dark)) :inherit phye-overlay-base :background "medium slate blue")
+    (((background light)) :inherit phye-overlay-base :background "dark slate blue"))
+  "A custom highlight face for symbol-overlay."
+  :group 'phye-overlay-faces)
+(defface phye-highlight-face-22
+  '((((background dark)) :inherit phye-overlay-base :background "pink")
+    (((background light)) :inherit phye-overlay-base :background "deep pink"))
+  "A custom highlight face for symbol-overlay."
+  :group 'phye-overlay-faces)
+(defface phye-highlight-face-23
+  '((((background dark)) :inherit phye-overlay-base :background "medium purple")
+    (((background light)) :inherit phye-overlay-base :background "indigo"))
+  "A custom highlight face for symbol-overlay."
+  :group 'phye-overlay-faces)
 
 (customize-set-variable
  'symbol-overlay-faces
@@ -362,7 +382,11 @@
    phye-highlight-face-16
    phye-highlight-face-17
    phye-highlight-face-18
-   phye-highlight-face-19))
+   phye-highlight-face-19
+   phye-highlight-face-20
+   phye-highlight-face-21
+   phye-highlight-face-22
+   phye-highlight-face-23))
 
 ;; customize avy jump colors
 (defun recover-avy-lead-face (&optional unused)
