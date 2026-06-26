@@ -144,15 +144,23 @@
 (advice-add 'deadgrep :after-until #'select-deadgrep-window-advice)
 
 (defun phye/deadgrep-current-directory (search-term)
-  "Run deadgrep with SEARCH-TERM in current directory."
-  (interactive
-   (let* ((default (if (use-region-p)
-                       (buffer-substring-no-properties (region-beginning) (region-end))
-                     (thing-at-point 'symbol)))
-          (prompt (if default
-                      (format "Search term (default %s): " default)
-                    "Search term: ")))
-     (list (read-string prompt nil nil default))))
+  "Run deadgrep with SEARCH-TERM in current directory.
+Without a prefix argument, search for the symbol at point (or active region)
+without prompting. With a prefix argument, prompt for the search term,
+defaulting to the symbol at point."
+  (interactive (let* ((default
+                       (if (use-region-p)
+                           (buffer-substring-no-properties (region-beginning) (region-end))
+                         (thing-at-point 'symbol))))
+                 (if current-prefix-arg
+                     (let ((prompt
+                            (if default
+                                (format "Search term (default %s): " default)
+                              "Search term: ")))
+                       (list (read-string prompt nil nil default)))
+                   (unless default
+                     (user-error "No symbol at point"))
+                   (list default))))
   (deadgrep search-term default-directory))
 
 (defun phye/project-find-dir ()
@@ -218,13 +226,9 @@
 ;;   :config
 ;;   (require 'smartparens-config))
 
-(use-package key-chord
-  :ensure t
-  :config (key-chord-mode 1))
+(use-package key-chord :ensure t :config (key-chord-mode 1))
 
-(use-package outline-indent
-  :ensure t
-  :defer t)
+(use-package outline-indent :ensure t :defer t)
 
 
 (use-package xclip :load-path "~/.emacs.d/site-lisp/xclip" :config (xclip-mode 1))
