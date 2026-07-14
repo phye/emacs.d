@@ -193,7 +193,8 @@ defaulting to the symbol at point."
          (project-find-regexp "Regexp")
          (project-find-dir "Dir")
          (project-switch-to-buffer "Buffer")
-         (project-list-buffers "List buffers"))))
+         (project-list-buffers "List buffers")
+         (agent-shell "Run AgentShell" "A"))))
 
 (with-eval-after-load 'counsel
   (setcdr (assoc 'counsel-M-x ivy-initial-inputs-alist) ""))

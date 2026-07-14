@@ -102,7 +102,6 @@
    omtose-darker
    organic-green
    planet
-   professional
    purple-haze
    rebecca
    sanityinc-tomorrow-eighties
@@ -238,7 +237,7 @@
 
 (defface phye-overlay-base
   '((((background dark)) :weight bold :foreground "white")
-    (((background light)) :weight bold :foreground "black"))
+    (((background light)) :weight bold :foreground "navy"))
   "My base face for symbol overlay highlight.")
 (defface phye-highlight-face-0
   '((((background dark)) :inherit phye-overlay-base :background "salmon")
