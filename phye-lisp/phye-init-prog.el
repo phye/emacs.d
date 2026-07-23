@@ -89,6 +89,7 @@
 (use-package treesit-fold
   :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold"
             :rev newest)
+  :defer t
   :custom (treesit-fold-line-count-show t))
 
 (use-package treesit-fold-indicators
@@ -122,7 +123,7 @@
 ;;   (add-to-list 'hs-special-modes-alist
 ;;                '(go-ts-mode "{" "}" "/[*/]" nil nil)))
 
-(use-package symbol-overlay :ensure t :config (setq symbol-overlay-inhibit-map t))
+(use-package symbol-overlay :ensure t :defer t :init (setq symbol-overlay-inhibit-map t))
 
 (setq-default eglot-workspace-configuration
               '(:pylsp

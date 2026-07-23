@@ -14,7 +14,6 @@
         bazel
         better-jumper
         bpftrace-mode
-        bufler
         burly
         clipetty
         deadgrep
@@ -121,25 +120,25 @@ Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
 
 (declare-function my-run-with-idle-timer "init-utils")
 
-(my-run-with-idle-timer
- 10
- ;; ensure all theme packages are installed
- (lambda ()
-   (let (missing)
-     (dolist (pkg phye/theme-packages)
-       (unless (package-installed-p pkg)
-         (push pkg missing)))
-     (if (null missing)
-         (message "phye: all theme packages already installed")
-       (message "phye: installing missing theme packages: %s"
-                (mapconcat #'symbol-name (reverse missing) ", "))
-       (package-refresh-contents)
-       (dolist (pkg missing)
-         (message "Processing pkg %s" pkg)
-         (condition-case err
-             (package-install pkg)
-           (t (message "failed to install %s – %s" pkg (error-message-string err)))))
-       (message "done installing theme packages")))))
+(defun phye/elpa--defer-init ()
+  "Deferred ELPA setup: ensure theme packages are installed."
+  (let (missing)
+    (dolist (pkg phye/theme-packages)
+      (unless (package-installed-p pkg)
+        (push pkg missing)))
+    (if (null missing)
+        (message "phye: all theme packages already installed")
+      (message "phye: installing missing theme packages: %s"
+               (mapconcat #'symbol-name (reverse missing) ", "))
+      (package-refresh-contents)
+      (dolist (pkg missing)
+        (message "Processing pkg %s" pkg)
+        (condition-case err
+            (package-install pkg)
+          (t (message "failed to install %s – %s" pkg (error-message-string err)))))
+      (message "done installing theme packages"))))
+
+(my-run-with-idle-timer 10 #'phye/elpa--defer-init)
 
 (provide 'phye-init-elpa)
 ;;; phye-init-elpa.el ends here

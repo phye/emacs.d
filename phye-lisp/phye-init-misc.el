@@ -18,21 +18,22 @@
 
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(my-run-with-idle-timer
- 2
- (lambda ()
-   (global-display-line-numbers-mode)
-   (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
-   (setq my-term-program zsh-program)
-   (exec-path-from-shell-copy-env "LOCATION")
-   (exec-path-from-shell-copy-env "KIMI_AUTH_TOKEN")
-   (savehist-mode)
-   (when (display-graphic-p)
-     (server-start))))
+(defun phye/misc--defer-init ()
+  "Deferred misc setup: line numbers, env vars, savehist, server."
+  (global-display-line-numbers-mode)
+  (setq zsh-program (string-trim (shell-command-to-string "which zsh")))
+  (setq my-term-program zsh-program)
+  (exec-path-from-shell-copy-env "LOCATION")
+  (exec-path-from-shell-copy-env "KIMI_AUTH_TOKEN")
+  (savehist-mode)
+  (when (display-graphic-p)
+    (server-start)))
+
+(my-run-with-idle-timer 2 #'phye/misc--defer-init)
 
 (set-language-environment "utf-8")
 
-(customize-set-variable 'native-comp-async-report-warnings-errors 'silent)
+(setq native-comp-async-report-warnings-errors 'silent)
 (customize-set-variable 'warning-minimum-level :error)
 
 (setq dictionary-server "dict.org")

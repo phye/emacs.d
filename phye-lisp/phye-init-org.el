@@ -284,11 +284,16 @@
  org-remark
  :ensure t
  :defer t
- :init (org-remark-global-tracking-mode 1)
  :config (evil-set-initial-state 'org-remark-mode 'normal)
  :custom (org-remark-notes-file-name #'phye/org-remark-notes-file-name)
  (org-remark-notes-display-buffer-action
   '((display-buffer-below-selected) (window-height 30) (preserve-size t))))
+
+(defun phye/org-remark--defer-init ()
+  "Deferred org-remark setup: enable global tracking."
+  (org-remark-global-tracking-mode 1))
+
+(my-run-with-idle-timer 2 #'phye/org-remark--defer-init)
 
 (defun phye/remark-view-and-select ()
   "Review remark and select window."
@@ -412,6 +417,19 @@
 ;; }}
 
 ;; settings after org loaded
+(defun phye/org-babel--defer-init ()
+  "Deferred org-babel setup: clock persistence, languages, yasnippet."
+  (org-clock-persistence-insinuate)
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((mermaid . t) (ditaa . t) (plantuml . t) (dot . t) (emacs-lisp . t) (gnuplot . t)))
+  (require 'graphviz-dot-mode)
+  (require 'ox-md nil t)
+  (require 'ox-odt nil t)
+  (require 'yasnippet)
+  (my-yas-reload-all))
+
 (with-eval-after-load 'org
   (setq org-todo-keywords
         '((sequence
@@ -432,21 +450,7 @@
   (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
   (setq org-icalendar-alarm-time 60)
   (setq org-icalendar-ttl "1H")
-  (my-run-with-idle-timer
-   1
-   (lambda ()
-     ;; org babel
-     (org-clock-persistence-insinuate)
-     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
-     (org-babel-do-load-languages
-      'org-babel-load-languages
-      '((mermaid .t) (ditaa . t) (plantuml . t) (dot . t) (emacs-lisp . t) (gnuplot . t)))
-     (require 'graphviz-dot-mode)
-     (require 'ox-md nil t)
-     (require 'ox-odt nil t)
-     ;; (require 'calfw-org)
-     (require 'yasnippet)
-     (my-yas-reload-all))))
+  (my-run-with-idle-timer 2 #'phye/org-babel--defer-init))
 
 (defun phye/org-before-save-hook ()
   "Phye's orgmode before save hook."

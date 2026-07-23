@@ -20,9 +20,6 @@
 (declare-function jsonrpc-lambda "jsonrpc")
 (declare-function eglot--dcase "eglot")
 
-(eval-when-compile
-  (require 'eglot nil t))
-
 (defvar c-basic-offset)
 (defvar eglot-code-action-indications)
 
@@ -46,12 +43,13 @@
 ;; }}
 
 ;; {{ cpp
-(my-run-with-idle-timer
- 5
- (lambda ()
-   (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
-   (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
-   (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode))))
+(defun phye/cc--defer-init ()
+  "Deferred cc setup: auto-mode-alist entries for cuda, cmake, clang-format."
+  (add-to-list 'auto-mode-alist '("\\.cu\\'" . c++-mode))
+  (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
+  (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode)))
+
+(my-run-with-idle-timer 5 #'phye/cc--defer-init)
 ;; }}
 
 ;; {{ Golang

@@ -38,7 +38,8 @@
 
 (use-package inline-review
   :vc (:url "https://github.com/phye/inline-review"
-            :rev "master"))
+            :rev "master")
+  :defer t)
 
 ;;; Ediff abort mechanism
 ;; "Q" aborts the git difftool session: ediff-really-quit cleans up, then

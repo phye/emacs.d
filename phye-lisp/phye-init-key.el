@@ -161,7 +161,6 @@
  "ut" 'counsel-etags-update-tags-force
  "xB" 'ivy-switch-buffer
  "xK" 'phye/kill-buffer-and-frame
- "xb" 'bufler-switch-buffer
  "xc" 'suspend-frame
  "xd" 'find-file-in-cpp-module
  "xe" 'exit-recursive-edit

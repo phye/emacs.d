@@ -90,7 +90,7 @@
 (use-package casual-suite :ensure t :defer t)
 
 ;; recentf
-(use-package sync-recentf :ensure t :custom (recentf-auto-cleanup 60) :config (recentf-mode 1))
+(use-package sync-recentf :ensure t :defer t :custom (recentf-auto-cleanup 60))
 (setq recentf-save-file "~/.emacs.data.d/recentf")
 
 (use-package undo-fu :ensure t :defer t)
@@ -106,12 +106,15 @@
 ;;   (undo-fu-session-global-mode)
 ;;   (undo-fu-session-recover))
 
-(my-run-with-idle-timer
- 2 ;; gpg encrypt
- (lambda ()
-   (require 'epa-file)
-   (epa-file-enable)
-   (recentf-load-list)))
+(defun phye/edit--defer-init ()
+  "Deferred edit setup: gpg encrypt, sync-recentf, recentf load."
+  (require 'sync-recentf)
+  (recentf-mode 1)
+  (require 'epa-file)
+  (epa-file-enable)
+  (recentf-load-list))
+
+(my-run-with-idle-timer 2 #'phye/edit--defer-init)
 
 (use-package crux :ensure t :defer t)
 
