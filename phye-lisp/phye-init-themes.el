@@ -477,15 +477,14 @@
 (advice-add 'counsel-load-theme :after #'phye/set-ivy-match-bg-color)
 (advice-add 'phye/load-theme :after #'phye/set-ivy-match-bg-color)
 
-(run-at-time "07:30" 86400 #'phye/toggle-theme)
-(run-at-time "17:00" 86400 #'phye/toggle-theme)
-
 (defun phye/themes--defer-init ()
   "Deferred themes setup: load default theme."
   (message "Load default theme...")
+  (run-at-time "07:30" 86400 #'phye/toggle-theme)
+  (run-at-time "17:00" 86400 #'phye/toggle-theme)
   (phye/toggle-theme))
 
-(my-run-with-idle-timer 5 #'phye/themes--defer-init)
+(run-with-idle-timer 5 nil #'phye/themes--defer-init)
 
 (provide 'phye-init-themes)
 ;;; phye-init-themes.el ends here

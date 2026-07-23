@@ -5,7 +5,6 @@
 
 ;;; Code:
 
-(declare-function my-run-with-idle-timer "init-utils")
 (declare-function recentf-load-list "recentf")
 (declare-function ivy-read "ivy")
 (declare-function ivy--regex "ivy")
@@ -109,12 +108,11 @@
 (defun phye/edit--defer-init ()
   "Deferred edit setup: gpg encrypt, sync-recentf, recentf load."
   (require 'sync-recentf)
-  (recentf-mode 1)
   (require 'epa-file)
   (epa-file-enable)
-  (recentf-load-list))
+  (recentf-mode 1))
 
-(my-run-with-idle-timer 2 #'phye/edit--defer-init)
+(run-with-idle-timer 2 nil #'phye/edit--defer-init)
 
 (use-package crux :ensure t :defer t)
 

@@ -5,7 +5,6 @@
 
 ;;; Code:
 
-(declare-function my-run-with-idle-timer "init-utils")
 (declare-function my-ensure "init-utils")
 (declare-function local-require "init-utils")
 (declare-function tree-sitter-hl-mode "tree-sitter")
@@ -49,7 +48,7 @@
   (add-to-list 'auto-mode-alist '("CMakeLists.txt" . cmake-mode))
   (add-to-list 'auto-mode-alist '(".clang-format" . conf-mode)))
 
-(my-run-with-idle-timer 5 #'phye/cc--defer-init)
+(run-with-idle-timer 5 nil #'phye/cc--defer-init)
 ;; }}
 
 ;; {{ Golang

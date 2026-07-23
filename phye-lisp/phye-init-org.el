@@ -293,7 +293,7 @@
   "Deferred org-remark setup: enable global tracking."
   (org-remark-global-tracking-mode 1))
 
-(my-run-with-idle-timer 2 #'phye/org-remark--defer-init)
+(run-with-idle-timer 2 nil #'phye/org-remark--defer-init)
 
 (defun phye/remark-view-and-select ()
   "Review remark and select window."
@@ -450,7 +450,7 @@
   (setq org-icalendar-use-deadline '(event-if-todo event-if-not-todo todo-due))
   (setq org-icalendar-alarm-time 60)
   (setq org-icalendar-ttl "1H")
-  (my-run-with-idle-timer 2 #'phye/org-babel--defer-init))
+  (run-with-idle-timer 2 nil #'phye/org-babel--defer-init))
 
 (defun phye/org-before-save-hook ()
   "Phye's orgmode before save hook."

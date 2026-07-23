@@ -118,8 +118,6 @@
   "Theme packages to ensure are installed.
 Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
 
-(declare-function my-run-with-idle-timer "init-utils")
-
 (defun phye/elpa--defer-init ()
   "Deferred ELPA setup: ensure theme packages are installed."
   (let (missing)
@@ -138,7 +136,7 @@ Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
           (t (message "failed to install %s – %s" pkg (error-message-string err)))))
       (message "done installing theme packages"))))
 
-(my-run-with-idle-timer 10 #'phye/elpa--defer-init)
+(run-with-idle-timer 10 nil #'phye/elpa--defer-init)
 
 (provide 'phye-init-elpa)
 ;;; phye-init-elpa.el ends here

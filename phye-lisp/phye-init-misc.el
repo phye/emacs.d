@@ -29,7 +29,7 @@
   (when (display-graphic-p)
     (server-start)))
 
-(my-run-with-idle-timer 2 #'phye/misc--defer-init)
+(run-with-idle-timer 2 nil #'phye/misc--defer-init)
 
 (set-language-environment "utf-8")
 
