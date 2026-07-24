@@ -112,7 +112,7 @@
   (epa-file-enable)
   (recentf-mode 1))
 
-(run-with-idle-timer 2 nil #'phye/edit--defer-init)
+(my-run-with-idle-timer 2 #'phye/edit--defer-init)
 
 (use-package crux :ensure t :defer t)
 

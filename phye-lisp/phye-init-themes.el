@@ -484,7 +484,7 @@
   (run-at-time "17:00" 86400 #'phye/toggle-theme)
   (phye/toggle-theme))
 
-(run-with-idle-timer 5 nil #'phye/themes--defer-init)
+(my-run-with-idle-timer 2 #'phye/themes--defer-init)
 
 (provide 'phye-init-themes)
 ;;; phye-init-themes.el ends here
