@@ -36,6 +36,7 @@
    doom-ephemeral
    doom-feather-dark
    doom-gruvbox
+   doom-henna
    doom-homage-black
    doom-horizon
    doom-ir-black
@@ -446,6 +447,9 @@
 (defvar previous-dark-theme (phye/default-theme nil)
   "Previous dark theme before toggle.")
 
+(defvar previous-light-theme (phye/default-theme t)
+  "Previous light theme before toggle.")
+
 (defun phye/toggle-theme ()
   "Toggle theme based on current time."
   (interactive)
@@ -460,9 +464,9 @@
               (progn
                 (when (car custom-enabled-themes)
                   (setq previous-dark-theme (car custom-enabled-themes)))
-                (phye/load-theme default-theme))
+                (phye/load-theme previous-light-theme))
             (when (car custom-enabled-themes)
-              (setq previous-dark-theme (car custom-enabled-themes)))
+              (setq previous-light-theme (car custom-enabled-themes)))
             (phye/load-theme previous-dark-theme))
           (when (display-graphic-p)
             (shell-command
