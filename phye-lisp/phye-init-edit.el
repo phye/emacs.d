@@ -235,45 +235,5 @@ defaulting to the symbol at point."
 
 (use-package xclip :load-path "~/.emacs.d/site-lisp/xclip" :config (xclip-mode 1))
 
-;;;###autoload
-(defun phye/highlight-region (beg end &optional all)
-  "Highlight the region BEG..END with an overlay.
-With prefix arg ALL, also highlight every occurrence of the region's text
-in the buffer."
-  (interactive "r\nP")
-  (unless (use-region-p)
-    (user-error "No active region"))
-  (let ((text (buffer-substring-no-properties beg end)))
-    (if all
-        (save-excursion
-          (goto-char (point-min))
-          (while (search-forward text nil t)
-            (phye--make-highlight-overlay (match-beginning 0) (match-end 0))))
-      (phye--make-highlight-overlay beg end)))
-  (deactivate-mark))
-
-(defun phye--make-highlight-overlay (beg end)
-  "Create a phye highlight overlay between BEG and END."
-  (let ((ov (make-overlay beg end)))
-    (overlay-put ov 'face 'hi-yellow)
-    (overlay-put ov 'phye-highlight t)
-    ov))
-
-;;;###autoload
-(defun phye/unhighlight-region ()
-  "Delete the innermost `phye/highlight-region' overlay containing point.
-If the mark is active, deactivate it."
-  (interactive)
-  (let* ((ovs (seq-filter (lambda (o) (overlay-get o 'phye-highlight))
-                          (overlays-at (point))))
-         (innermost (car (sort ovs
-                               (lambda (a b)
-                                 (< (- (overlay-end a) (overlay-start a))
-                                    (- (overlay-end b) (overlay-start b))))))))
-    (unless innermost
-      (user-error "No highlight at point"))
-    (delete-overlay innermost)
-    (deactivate-mark)))
-
 (provide 'phye-init-edit)
 ;;; phye-init-edit.el ends here

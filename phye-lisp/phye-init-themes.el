@@ -388,6 +388,46 @@
    phye-highlight-face-22
    phye-highlight-face-23))
 
+;;;###autoload
+(defun phye/highlight-region (beg end &optional all)
+  "Highlight the region BEG..END with an overlay.
+With prefix arg ALL, also highlight every occurrence of the region's text
+in the buffer."
+  (interactive "r\nP")
+  (unless (use-region-p)
+    (user-error "No active region"))
+  (let ((text (buffer-substring-no-properties beg end)))
+    (if all
+        (save-excursion
+          (goto-char (point-min))
+          (while (search-forward text nil t)
+            (phye--make-highlight-overlay (match-beginning 0) (match-end 0))))
+      (phye--make-highlight-overlay beg end)))
+  (deactivate-mark))
+
+(defun phye--make-highlight-overlay (beg end)
+  "Create a phye highlight overlay between BEG and END."
+  (let ((ov (make-overlay beg end)))
+    (overlay-put ov 'face 'hi-yellow)
+    (overlay-put ov 'phye-highlight t)
+    ov))
+
+;;;###autoload
+(defun phye/unhighlight-region ()
+  "Delete the innermost `phye/highlight-region' overlay containing point.
+If the mark is active, deactivate it."
+  (interactive)
+  (let* ((ovs (seq-filter (lambda (o) (overlay-get o 'phye-highlight))
+                          (overlays-at (point))))
+         (innermost (car (sort ovs
+                               (lambda (a b)
+                                 (< (- (overlay-end a) (overlay-start a))
+                                    (- (overlay-end b) (overlay-start b))))))))
+    (unless innermost
+      (user-error "No highlight at point"))
+    (delete-overlay innermost)
+    (deactivate-mark)))
+
 ;; customize avy jump colors
 (defun recover-avy-lead-face (&optional unused)
   "Recovy avy leader face, UNUSED is ignored."
@@ -484,6 +524,9 @@
 (defun phye/themes--defer-init ()
   "Deferred themes setup: load default theme."
   (message "Load default theme...")
+  ;; Load `hi-lock' so the `hi-yellow' face used by `phye/highlight-region'
+  ;; is defined by the time the user invokes the command.
+  (require 'hi-lock)
   (run-at-time "07:30" 86400 #'phye/toggle-theme)
   (run-at-time "17:00" 86400 #'phye/toggle-theme)
   (phye/toggle-theme))
