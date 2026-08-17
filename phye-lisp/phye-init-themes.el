@@ -458,15 +458,24 @@ If the mark is active, deactivate it."
 (defvar dark-hour 17
   "Dark hour.")
 
+(defvar phye/weekday-themes
+  '((0 . (ef-summer        . ef-autumn))     ; Sunday
+    (1 . (ef-spring        . ef-bio))        ; Monday
+    (2 . (ef-frost         . ef-winter))     ; Tuesday
+    (3 . (ef-melissa-light . ef-cherie))     ; Wednesday
+    (4 . (ef-duo-light     . ef-duo-dark))   ; Thursday
+    (5 . (ef-cyprus        . ef-night))      ; Friday
+    (6 . (ef-elea-light    . ef-elea-dark))) ; Saturday
+  "Alist mapping weekday (0=Sun..6=Sat) to a (LIGHT . DARK) theme pair.")
+
+(defun phye/current-weekday ()
+  "Return current day of week as integer (0=Sunday..6=Saturday)."
+  (string-to-number (format-time-string "%w")))
+
 (defun phye/default-theme (light)
-  "Return different default theme based on frame type and whether LIGHT or not."
-  (if light
-      (if (display-graphic-p)
-          'ef-spring
-        'ef-spring)
-    (if (display-graphic-p)
-        'ef-bio
-      'kaolin-galaxy)))
+  "Return the day's theme; LIGHT non-nil selects the light variant, else dark."
+  (let ((pair (cdr (assq (phye/current-weekday) phye/weekday-themes))))
+    (if light (car pair) (cdr pair))))
 
 (defun phye/time-based-default-theme ()
   "Return default theme."
