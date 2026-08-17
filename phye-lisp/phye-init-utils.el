@@ -11,6 +11,7 @@
 (declare-function clipetty-kill-ring-save "clipetty")
 (declare-function find-file-in-current-directory "find-file-in-project")
 (declare-function ffip-project-root "find-file-in-project")
+(declare-function counsel-etags-find-tag-at-point "counsel-etags")
 
 ;; define function to shutdown emacs server instance
 
@@ -191,6 +192,77 @@ Otherwise, jump to the next req/rsp matched."
           (goto-char (match-beginning 0))
         (goto-char origin)
         (user-error "Could not find %s" other-name)))))
+
+;;;###autoload
+(defun phye/jump-between-rainbow-envs ()
+  "Jump between the formal and testing rainbow config for the current file.
+Toggles the last `/formal/' or `/testing/' segment in the buffer's
+file path and visits the corresponding file."
+  (interactive)
+  (let ((path (buffer-file-name)))
+    (unless path
+      (user-error "Current buffer is not visiting a file"))
+    (let* ((case-fold-search nil)
+           (from (cond
+                  ((string-match "\\(.*\\)/formal/\\([^\0]*\\)\\'" path) 'formal)
+                  ((string-match "\\(.*\\)/testing/\\([^\0]*\\)\\'" path) 'testing)
+                  (t nil))))
+      (unless from
+        (user-error "Current file is not under a rainbow formal/testing directory"))
+      (let* ((prefix (match-string 1 path))
+             (suffix (match-string 2 path))
+             (target-env (if (eq from 'formal) "testing" "formal"))
+             (target (format "%s/%s/%s" prefix target-env suffix)))
+        (unless (file-exists-p target)
+          (user-error "Target rainbow config does not exist: %s" target))
+        (find-file target)))))
+
+(declare-function xref-push-marker-stack "xref")
+
+(defun phye--rainbow-placeholder-find-position (file name)
+  "Return the position of NAME's definition in FILE, or nil if absent."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (goto-char (point-min))
+    (when (re-search-forward (concat "^" (regexp-quote name) ":") nil t)
+      (match-beginning 0))))
+
+;;;###autoload
+(defun phye/jump-to-rainbow-placeholder ()
+  "Jump to the definition of the rainbow placeholder at point.
+The identifier at point (e.g. inside `${NAME}' or bare `NAME') is looked
+up in the `placeholder.yaml' sitting next to the current file.  Pushes
+point onto the xref marker stack so `xref-pop-marker-stack' (or
+`xref-go-back') returns to the origin."
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (unless filename
+      (user-error "Current buffer is not visiting a file"))
+    (let ((sym (thing-at-point 'symbol t)))
+      (unless (and sym (string-match-p "\\`[A-Za-z_][A-Za-z0-9_]*\\'" sym))
+        (user-error "No placeholder identifier at point"))
+      (let ((placeholder-file (expand-file-name "placeholder.yaml"
+                                                (file-name-directory filename))))
+        (unless (file-exists-p placeholder-file)
+          (user-error "placeholder.yaml not found in %s"
+                      (file-name-directory filename)))
+        (let ((pos (phye--rainbow-placeholder-find-position placeholder-file sym)))
+          (unless pos
+            (user-error "Placeholder %s not found in placeholder.yaml" sym))
+          (xref-push-marker-stack)
+          (find-file placeholder-file)
+          (goto-char pos)
+          (deactivate-mark))))))
+
+;;;###autoload
+(defun phye/yaml-jump-to-definition ()
+  "Jump to definition in yaml files.
+Try `phye/jump-to-rainbow-placeholder' first; on failure fall back to
+`counsel-etags-find-tag-at-point'."
+  (interactive)
+  (condition-case _
+      (phye/jump-to-rainbow-placeholder)
+    (user-error (counsel-etags-find-tag-at-point))))
 
 (provide 'phye-init-utils)
 ;;; phye-init-utils.el ends here

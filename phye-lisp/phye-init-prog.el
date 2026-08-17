@@ -171,6 +171,8 @@
    (org-mode (org-open-at-point))
    (typescript-mode (xref-find-definitions (symbol-at-point)))
    (typescript-ts-mode (xref-find-definitions (symbol-at-point)))
+   (yaml-mode (phye/yaml-jump-to-definition))
+   (yaml-ts-mode (phye/yaml-jump-to-definition))
    (emacs-lisp-mode (my-evil-goto-definition))
    (t (counsel-etags-find-tag-at-point))))
 
