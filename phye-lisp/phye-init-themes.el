@@ -493,34 +493,44 @@ If the mark is active, deactivate it."
       (setq bg-color "#0065FF"))
     (set-face-background 'ivy-current-match bg-color nil)))
 
-(defvar previous-dark-theme (phye/default-theme nil)
+(defvar previous-dark-theme nil
   "Previous dark theme before toggle.")
 
-(defvar previous-light-theme (phye/default-theme t)
+(defvar previous-light-theme nil
   "Previous light theme before toggle.")
 
-(defun phye/toggle-theme ()
-  "Toggle theme based on current time."
-  (interactive)
+(defvar phye/theme-mode nil
+  "Last applied mode: \\='light or \\='dark.")
+
+(defun phye/toggle-theme (&optional update-default)
+  "Switch to the time-appropriate theme, saving the current theme.
+With \\[universal-argument], also update the weekday default for the outgoing mode."
+  (interactive "P")
   (let* ((loc (getenv "LOCATION"))
-         (default-theme (phye/time-based-default-theme))
-         (hour (phye/current-hour))
-         (light (< hour dark-hour))
-         (current (car custom-enabled-themes))
-         (target (or (if light previous-light-theme previous-dark-theme) default-theme)))
+         (light (< (phye/current-hour) dark-hour))
+         (new-mode (if light 'light 'dark))
+         (current (car custom-enabled-themes)))
     (message "Toggle Theme at %s" loc)
-    (if (equal loc "office")
-        (progn
-          (when (and current (not (eq current target)))
-            (if light
-                (setq previous-light-theme current)
-              (setq previous-dark-theme current)))
-          (phye/load-theme target)
-          (when (display-graphic-p)
-            (shell-command
-             (format "~/bin/scripts/toggle_dark_theme.sh %s"
-                     (if light "false" "true")))))
-      (phye/load-theme default-theme))))
+    (if (not (equal loc "office"))
+        (phye/load-theme (phye/time-based-default-theme))
+      (when (and phye/theme-mode (not (eq phye/theme-mode new-mode)) current)
+        (when update-default
+          (let ((pair (assq (phye/current-weekday) phye/weekday-themes)))
+            (when pair
+              (if light
+                  (setcdr (cdr pair) current)
+                (setcar (cdr pair) current)))))
+        (if light
+            (setq previous-dark-theme current)
+          (setq previous-light-theme current)))
+      (setq phye/theme-mode new-mode)
+      (phye/load-theme (if update-default
+                           (phye/default-theme light)
+                         (or (if light previous-light-theme previous-dark-theme)
+                             (phye/default-theme light))))
+      (when (display-graphic-p)
+        (shell-command (format "~/bin/scripts/toggle_dark_theme.sh %s"
+                               (if light "false" "true")))))))
 
 (advice-add 'my-pickup-random-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-pickup-random-color-theme :after #'phye/set-ivy-match-bg-color)
@@ -533,6 +543,8 @@ If the mark is active, deactivate it."
   ;; Load `hi-lock' so the `hi-yellow' face used by `phye/highlight-region'
   ;; is defined by the time the user invokes the command.
   (require 'hi-lock)
+  (setq previous-light-theme (phye/default-theme t))
+  (setq previous-dark-theme (phye/default-theme nil))
   (run-at-time "07:30" 86400 #'phye/toggle-theme)
   (run-at-time "17:00" 86400 #'phye/toggle-theme)
   (phye/toggle-theme))
