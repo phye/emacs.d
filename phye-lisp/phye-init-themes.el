@@ -505,24 +505,21 @@ If the mark is active, deactivate it."
   (let* ((loc (getenv "LOCATION"))
          (default-theme (phye/time-based-default-theme))
          (hour (phye/current-hour))
-         (light (< hour dark-hour)))
+         (light (< hour dark-hour))
+         (current (car custom-enabled-themes))
+         (target (or (if light previous-light-theme previous-dark-theme) default-theme)))
     (message "Toggle Theme at %s" loc)
     (if (equal loc "office")
         (progn
-          (if light
-              (progn
-                (when (car custom-enabled-themes)
-                  (setq previous-dark-theme (car custom-enabled-themes)))
-                (phye/load-theme previous-light-theme))
-            (when (car custom-enabled-themes)
-              (setq previous-light-theme (car custom-enabled-themes)))
-            (phye/load-theme previous-dark-theme))
+          (when (and current (not (eq current target)))
+            (if light
+                (setq previous-light-theme current)
+              (setq previous-dark-theme current)))
+          (phye/load-theme target)
           (when (display-graphic-p)
             (shell-command
              (format "~/bin/scripts/toggle_dark_theme.sh %s"
-                     (if light
-                         "false"
-                       "true")))))
+                     (if light "false" "true")))))
       (phye/load-theme default-theme))))
 
 (advice-add 'my-pickup-random-color-theme :after #'recover-avy-lead-face)
