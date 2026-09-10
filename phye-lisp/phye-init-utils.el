@@ -219,6 +219,30 @@ file path and visits the corresponding file."
 
 (declare-function xref-push-marker-stack "xref")
 
+;;;###autoload
+(defun adp/switch-between-testing-and-formal ()
+  "Switch current buffer between the \"testing\" and \"formal\" variants.
+If the current file path contains \"testing\", open the file with
+\"testing\" replaced by \"formal\", and vice versa."
+  (interactive)
+  (let ((path (buffer-file-name)))
+    (unless path
+      (user-error "Current buffer is not visiting a file"))
+    (let ((target
+           (cond
+            ((string-match-p "testing" path)
+             (replace-regexp-in-string "testing" "formal" path))
+            ((string-match-p "formal" path)
+             (replace-regexp-in-string "formal" "testing" path))
+            (t
+             (user-error
+              "Path contains neither \"testing\" nor \"formal\": %s" path)))))
+      (unless (file-exists-p target)
+        (let ((dir (file-name-directory target)))
+          (unless (file-exists-p dir)
+            (make-directory dir t))))
+      (find-file target))))
+
 (defun phye--rainbow-placeholder-find-position (file name)
   "Return the position of NAME's definition in FILE, or nil if absent."
   (with-temp-buffer
