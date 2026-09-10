@@ -1,4 +1,4 @@
-;;; phye-init-key -- phye's favorite keybindings
+;;; phye-init-key -- phye's favorite keybindings  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; do not use space to override keybinds in Emacs mode
 

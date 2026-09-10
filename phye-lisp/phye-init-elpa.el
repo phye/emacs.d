@@ -1,4 +1,4 @@
-;;; phye-init-elpa.el --- ELPA package list for phye's config
+;;; phye-init-elpa.el --- ELPA package list for phye's config  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; Defines phye-elpa-packages and appends them to melpa-include-packages.
