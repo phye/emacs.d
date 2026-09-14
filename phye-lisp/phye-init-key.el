@@ -361,12 +361,19 @@
 ;; format: off
 (general-define-key
  :keymaps 'inline-review-mode-map
- :states '(normal visual)
+ :states '(emacs normal visual)
  :prefix ","
- "ca" 'inline-review-add-comment
- "cr" 'inline-review-reply-comment
- "cR" 'inline-review-resolve-comment
- "ce" 'inline-review-edit-comment)
+ "ac" 'inline-review-add-comment
+ "rc" 'inline-review-reply-comment
+ "Rc" 'inline-review-resolve-comment
+ "ec" 'inline-review-edit-comment
+ "ir" 'inline-review-refresh
+ "fh" 'inline-review-first-hunk
+ "nh" 'inline-review-next-hunk
+ "ph" 'inline-review-previous-hunk
+ "ft" 'inline-review-first-thread
+ "nt" 'inline-review-next-thread
+ "pt" 'inline-review-previous-thread)
 
 ;; }}
 

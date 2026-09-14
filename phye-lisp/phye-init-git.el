@@ -39,7 +39,8 @@
 (use-package inline-review
   :vc (:url "https://github.com/phye/inline-review"
             :rev "master")
-  :defer t)
+  :defer t
+  :hook (inline-review-mode . evil-normalize-keymaps))
 
 ;;; Ediff abort mechanism
 ;; "Q" aborts the git difftool session: ediff-really-quit cleans up, then
