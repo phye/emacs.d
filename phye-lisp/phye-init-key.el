@@ -145,7 +145,6 @@
  "ov" 'jao-toggle-selective-display
  "pe" 'flymake-goto-prev-error
  "rR" 'phye/open-recent-file-in-other-frame
- "rc" 'recover-avy-lead-face
  "rd" 'bjm/ivy-dired-recent-dirs
  "rm" 'org-remark-mark
  "rn" 'org-remark-next
@@ -365,7 +364,7 @@
  :prefix ","
  "ac" 'inline-review-add-comment
  "rc" 'inline-review-reply-comment
- "Rc" 'inline-review-resolve-comment
+ "mr" 'inline-review-resolve-comment
  "ec" 'inline-review-edit-comment
  "ir" 'inline-review-refresh
  "fh" 'inline-review-first-hunk
