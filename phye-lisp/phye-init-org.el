@@ -128,8 +128,8 @@
       (quote ("~/ws/gtd/gtd.org"
               "~/ws/gtd/Journelly.org"
               "~/ws/gtd/quick_notes.org"
-              "~/ws/gtd/life/plan_life.org"
-              "~/ws/gtd/life/birthday.org"
+              "~/ws/gtd/plan_life.org"
+              "~/ws/gtd/birthday.org"
               "~/ws/gtd/learn/plan_learning.org"
               "~/ws/gtd/work/plan_work.org.gpg")))
 
