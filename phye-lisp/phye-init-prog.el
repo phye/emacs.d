@@ -163,18 +163,24 @@
 (defun phye/goto-definition-at-point ()
   "My mode-aware go to definition."
   (interactive)
-  (cl-case
-   major-mode
-   (go-mode (xref-find-definitions (symbol-at-point)))
-   (go-ts-mode (xref-find-definitions (symbol-at-point)))
-   (python-mode (xref-find-definitions (symbol-at-point)))
-   (org-mode (org-open-at-point))
-   (typescript-mode (xref-find-definitions (symbol-at-point)))
-   (typescript-ts-mode (xref-find-definitions (symbol-at-point)))
-   (yaml-mode (phye/yaml-jump-to-definition))
-   (yaml-ts-mode (phye/yaml-jump-to-definition))
-   (emacs-lisp-mode (my-evil-goto-definition))
-   (t (counsel-etags-find-tag-at-point))))
+  (let ((source-buffer (current-buffer))
+        (inline-review-on (bound-and-true-p inline-review-mode)))
+    (cl-case
+     major-mode
+     (go-mode (xref-find-definitions (symbol-at-point)))
+     (go-ts-mode (xref-find-definitions (symbol-at-point)))
+     (python-mode (xref-find-definitions (symbol-at-point)))
+     (org-mode (org-open-at-point))
+     (typescript-mode (xref-find-definitions (symbol-at-point)))
+     (typescript-ts-mode (xref-find-definitions (symbol-at-point)))
+     (yaml-mode (phye/yaml-jump-to-definition))
+     (yaml-ts-mode (phye/yaml-jump-to-definition))
+     (emacs-lisp-mode (my-evil-goto-definition))
+     (t (counsel-etags-find-tag-at-point)))
+    (when (and inline-review-on
+               (not (eq source-buffer (current-buffer)))
+               (not (bound-and-true-p inline-review-mode)))
+      (inline-review-mode 1))))
 
 (defun phye/format-buffer ()
   "My format buffer wrapper."
