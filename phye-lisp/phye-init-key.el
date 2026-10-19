@@ -153,6 +153,7 @@
  "rD" 'org-remark-delete
  "rr" 'my-counsel-recentf
  "sc" 'agent-shell-send-region
+ "sC" 'agent-shell-send-region-to
  "sl" 'org-store-link
  "sp" 'outline-backward-same-level
  "sn" 'outline-forward-same-level

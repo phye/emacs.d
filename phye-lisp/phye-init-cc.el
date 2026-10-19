@@ -57,7 +57,14 @@
 (add-hook 'go-mode-hook 'eglot-ensure)
 (add-hook 'go-ts-mode-hook 'eglot-ensure)
 
-(use-package go-mode :ensure t :defer t :custom (gofmt-command "goimports"))
+(use-package
+ go-mode
+ :ensure t
+ :defer t
+ :commands (gofmt)
+ :custom
+ (gofmt-command "goimports")
+ (go-ts-indent-offset 4))
 
 ;; eglot-organize-imports is hopefully a temporary stopgap until
 ;; https://github.com/joaotavora/eglot/issues/574 is addressed.
