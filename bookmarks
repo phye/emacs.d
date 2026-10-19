@@ -3,11 +3,11 @@
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
 (("trpc.config.repairClientConfig"
- (filename . "~/ws/trpc/trpc-go/config.go")
- (front-context-string . "	setDefault(&bac")
- (rear-context-string . "nd service name\n")
- (position . 31317)
- (last-modified 26891 11664 886861 549000))
+  (filename . "~/ws/trpc/trpc-go/config.go")
+  (front-context-string . "	setDefault(&bac")
+  (rear-context-string . "nd service name\n")
+  (position . 31317)
+  (last-modified 26891 11664 886861 549000))
 ("trpc.decode.trpc.into.msg"
  (filename . "~/ws/trpc/trpc-go/codec.go")
  (front-context-string . "func msgWithRequ")
@@ -496,8 +496,8 @@
 #1=(#("org-refile-last-stored" 0 22
       (bmkp-full-record #1#))
     (filename . "~/ws/gtd/work/plan_work.org.gpg")
-    (front-context-string . #2="")
-    (rear-context-string . #2#)
+    (front-context-string . "")
+    (rear-context-string . "")
     (position . 23532)
     (last-modified 26860 49651 468108 0))
 #1=(#("org-capture-last-stored" 0 23
