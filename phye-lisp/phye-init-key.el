@@ -98,7 +98,7 @@
  "co" 'org-open-at-point
  "cp" 'copy-project-name-to-clipboard
  "dc" 'phye/deadgrep-current-directory
- "dg" 'deadgrep
+ "dg" 'phye/deadgrep
  "dk" 'deadgrep-kill-all-buffers
  "ee" 'eval-expression
  "fb" 'phye/format-buffer
@@ -327,6 +327,11 @@
  "<RET>" 'newline)
 
 ;; format: off
+(general-unbind
+ :keymaps '(agent-shell-mode-map)
+ "M-<RET>"
+ "M-<return>")
+
 (general-define-key
  :keymaps 'agent-shell-mode-map
  "M-p" 'comint-previous-input

@@ -144,6 +144,38 @@
   (select-window (get-buffer-window "*deadgrep\\.*")))
 (advice-add 'deadgrep :after-until #'select-deadgrep-window-advice)
 
+(defvar phye/deadgrep-prefix-history nil
+  "History list for the prefix prompt in `phye/deadgrep'.")
+
+(defvar phye/deadgrep-term-history nil
+  "History list for the search-term prompt in `phye/deadgrep'.")
+
+(defun phye/deadgrep ()
+  "Run deadgrep.
+Without a prefix argument, delegate to `deadgrep' interactively.
+With a prefix argument, prompt for a prefix string, then prompt
+for the search term (defaulting to the symbol at point or active
+region), and run `deadgrep' on their concatenation.  Prefix and
+search term use separate history lists."
+  (interactive)
+  (if current-prefix-arg
+      (let* ((search-prefix
+              (read-string "Search prefix: "
+                           (car phye/deadgrep-prefix-history)
+                           'phye/deadgrep-prefix-history))
+             (default
+              (if (use-region-p)
+                  (buffer-substring-no-properties (region-beginning) (region-end))
+                (thing-at-point 'symbol t)))
+             (prompt (if default
+                         (format "Search term (default %s): " default)
+                       "Search term: "))
+             (term
+              (read-string prompt nil 'phye/deadgrep-term-history default))
+             (current-prefix-arg nil))
+        (deadgrep (concat search-prefix term)))
+    (call-interactively #'deadgrep)))
+
 (defun phye/deadgrep-current-directory (search-term)
   "Run deadgrep with SEARCH-TERM in current directory.
 Without a prefix argument, search for the symbol at point (or active region)
