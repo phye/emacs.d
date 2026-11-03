@@ -242,7 +242,7 @@ defaulting to the symbol at point."
 (advice-add 'deadgrep-visit-result :after #'phye/deadgrep-visit-result-hook)
 (advice-add 'deadgrep-visit-result-other-window :after #'phye/deadgrep-visit-result-hook)
 
-(advice-add #'project-find-regexp :override #'deadgrep)
+(advice-add #'project-find-regexp :override #'phye/deadgrep)
 
 ;; Use puni-mode globally and disable it for term-mode.
 ;; (use-package

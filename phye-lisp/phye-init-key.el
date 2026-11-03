@@ -332,11 +332,14 @@
  "M-<RET>"
  "M-<return>")
 
-(general-define-key
- :keymaps 'agent-shell-mode-map
- "M-p" 'comint-previous-input
- "M-n" 'comint-next-input
- "M-<RET>" 'newline)
+(with-eval-after-load
+ 'agent-shell-mode
+ (general-define-key
+  :keymaps 'agent-shell-mode-map
+  "M-p" 'comint-previous-input
+  "M-n" 'comint-next-input
+  "M-<RET>" 'newline
+  "M-<return>" 'newline))
 
 ;; format: off
 (general-define-key
@@ -393,21 +396,22 @@
  "C-n" 'next-line-or-history-element)
 
 ;; format: off
-(with-eval-after-load 'ivy
-  (general-define-key
-   :keymaps 'ivy-minibuffer-map
-   "C-w" 'ivy-backward-kill-word)
+(with-eval-after-load
+ 'ivy
+ (general-define-key
+  :keymaps 'ivy-minibuffer-map
+  "C-w" 'ivy-backward-kill-word)
 
-  ;; format: off
-  (general-define-key
-   :keymaps 'ivy-minibuffer-map
-   :prefix ","
-   "jj" 'ivy-next-line
-   "kk" 'ivy-previous-line
-   "gg" 'ivy-beginning-of-buffer
-   "G" 'ivy-end-of-buffer)
-  (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
-  (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit))
+ ;; format: off
+ (general-define-key
+  :keymaps 'ivy-minibuffer-map
+  :prefix ","
+  "jj" 'ivy-next-line
+  "kk" 'ivy-previous-line
+  "gg" 'ivy-beginning-of-buffer
+  "G" 'ivy-end-of-buffer)
+ (key-chord-define ivy-minibuffer-map "jk" 'minibuffer-keyboard-quit)
+ (key-chord-define ivy-minibuffer-map "kj" 'minibuffer-keyboard-quit))
 ;; }}
 
 

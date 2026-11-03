@@ -64,7 +64,7 @@
  :commands (gofmt)
  :custom
  (gofmt-command "goimports")
- (go-ts-indent-offset 4))
+ (go-ts-indent-offset 8))
 
 ;; eglot-organize-imports is hopefully a temporary stopgap until
 ;; https://github.com/joaotavora/eglot/issues/574 is addressed.

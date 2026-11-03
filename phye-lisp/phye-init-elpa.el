@@ -46,6 +46,7 @@
         org-remark
         org-roam
         org-side-tree
+        occult
         outline-indent
         peep-dired
         pikchr-mode

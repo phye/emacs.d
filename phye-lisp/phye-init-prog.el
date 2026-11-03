@@ -83,6 +83,38 @@
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
+;; folding
+(use-package 'occult
+  :ensure t
+  :defer t)
+(with-eval-after-load 'evil
+  (evil-define-key 'visual 'global (kbd "zc") #'occult-toggle)
+  (evil-define-key 'visual 'global (kbd "za") #'occult-toggle)
+  (dolist (fn '(evil-open-fold evil-open-fold-rec))
+    (advice-add fn :around
+                (lambda (fn &rest args)
+                  (if (cl-find-if (lambda (o) (overlay-get o 'occult))
+                                  (overlays-at (point)))
+                      (occult-toggle)
+                    (apply fn args)))))
+
+  ;; `evil-open-folds' signals a user-error in a buffer with no folding
+  ;; minor mode, which must not stop occult's own folds from opening.
+  (advice-add 'evil-open-folds :around
+              (lambda (fn &rest args)
+                (if (cl-find-if (lambda (o) (overlay-get o 'occult))
+                                (overlays-in (point-min) (point-max)))
+                    (progn (ignore-error user-error (apply fn args))
+                           (occult-reveal-all))
+                  (apply fn args))))
+
+  (advice-add 'evil-toggle-fold :around
+              (lambda (fn &rest args)
+                (if (cl-find-if (lambda (o) (overlay-get o 'occult))
+                                (overlays-at (point)))
+                    (occult-toggle)
+                  (apply fn args)))))
+
 ;; tree-sitter
 (use-package tree-sitter :ensure t :defer t :config (setq treesit-font-lock-level 4))
 

@@ -11,6 +11,7 @@
  agent-shell
  :ensure t
  :defer t
+ :hook (agent-shell-mode . (lambda () (display-line-numbers-mode -1)))
  :config (setq agent-shell-prefer-viewport-interaction t)
  (setq agent-shell-permission-responder-function
        (lambda (permission)
