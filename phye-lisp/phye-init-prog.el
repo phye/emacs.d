@@ -84,12 +84,14 @@
   (ansi-color-apply-on-region (point-min) (point-max)))
 
 ;; folding
-(use-package 'occult
+(use-package occult
   :ensure t
-  :defer t)
-(with-eval-after-load 'evil
+  :after evil
+  :custom (occult-indicator ">>>")
+  :config
   (evil-define-key 'visual 'global (kbd "zc") #'occult-toggle)
   (evil-define-key 'visual 'global (kbd "za") #'occult-toggle)
+
   (dolist (fn '(evil-open-fold evil-open-fold-rec))
     (advice-add fn :around
                 (lambda (fn &rest args)
