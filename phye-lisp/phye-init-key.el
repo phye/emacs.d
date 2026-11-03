@@ -381,7 +381,10 @@
  "ph" 'inline-review-previous-hunk
  "ft" 'inline-review-first-thread
  "nt" 'inline-review-next-thread
- "pt" 'inline-review-previous-thread)
+ "pt" 'inline-review-previous-thread
+ "nf" 'inline-review-next-file
+ "pf" 'inline-review-next-file
+ "fR" 'inline-review-finish-review)
 
 ;; }}
 

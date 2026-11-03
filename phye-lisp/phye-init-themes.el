@@ -159,6 +159,7 @@
    farmhouse-light
    occidental
    professional
+   ritchie
    spacemacs-light
    twilight-bright
    whiteboard))
