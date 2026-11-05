@@ -15,11 +15,11 @@
  :config (setq agent-shell-prefer-viewport-interaction t)
  (setq agent-shell-permission-responder-function
        (lambda (permission)
-         (when-let (((equal (map-elt (map-elt permission :tool-call) :kind) "read"))
-                    (choice
-                     (seq-find
-                      (lambda (option) (equal (map-elt option :kind) "allow_once"))
-                      (map-elt permission :options))))
+         (when-let* (((equal (map-elt (map-elt permission :tool-call) :kind) "read"))
+                     (choice
+                      (seq-find
+                       (lambda (option) (equal (map-elt option :kind) "allow_once"))
+                       (map-elt permission :options))))
            (funcall (map-elt permission :respond) (map-elt choice :option-id))
            t)))
  (if (equal (getenv "LOCATION") "office")

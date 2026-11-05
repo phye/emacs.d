@@ -84,73 +84,84 @@
   (ansi-color-apply-on-region (point-min) (point-max)))
 
 ;; folding
-(use-package occult
-  :ensure t
-  :after evil
-  :custom (occult-indicator ">>>")
-  :config
-  (evil-define-key 'visual 'global (kbd "zc") #'occult-toggle)
-  (evil-define-key 'visual 'global (kbd "za") #'occult-toggle)
+(use-package
+ occult
+ :ensure t
+ :after evil
+ :custom (occult-indicator ">>>")
+ :config
+ (evil-define-key 'visual 'global (kbd "zc") #'occult-toggle)
+ (evil-define-key 'visual 'global (kbd "za") #'occult-toggle)
 
-  (dolist (fn '(evil-open-fold evil-open-fold-rec))
-    (advice-add fn :around
-                (lambda (fn &rest args)
-                  (if (cl-find-if (lambda (o) (overlay-get o 'occult))
-                                  (overlays-at (point)))
-                      (occult-toggle)
-                    (apply fn args)))))
+ (dolist (fn '(evil-open-fold evil-open-fold-rec))
+   (advice-add
+    fn
+    :around
+    (lambda (fn &rest args)
+      (if (cl-find-if (lambda (o) (overlay-get o 'occult)) (overlays-at (point)))
+          (occult-toggle)
+        (apply fn args)))))
 
-  ;; `evil-open-folds' signals a user-error in a buffer with no folding
-  ;; minor mode, which must not stop occult's own folds from opening.
-  (advice-add 'evil-open-folds :around
-              (lambda (fn &rest args)
-                (if (cl-find-if (lambda (o) (overlay-get o 'occult))
-                                (overlays-in (point-min) (point-max)))
-                    (progn (ignore-error user-error (apply fn args))
-                           (occult-reveal-all))
-                  (apply fn args))))
+ ;; `evil-open-folds' signals a user-error in a buffer with no folding
+ ;; minor mode, which must not stop occult's own folds from opening.
+ (advice-add
+  'evil-open-folds
+  :around
+  (lambda (fn &rest args)
+    (if (cl-find-if (lambda (o) (overlay-get o 'occult)) (overlays-in (point-min) (point-max)))
+        (progn
+          (ignore-error user-error
+            (apply fn args))
+          (occult-reveal-all))
+      (apply fn args))))
 
-  (advice-add 'evil-toggle-fold :around
-              (lambda (fn &rest args)
-                (if (cl-find-if (lambda (o) (overlay-get o 'occult))
-                                (overlays-at (point)))
-                    (occult-toggle)
-                  (apply fn args)))))
+ (advice-add
+  'evil-toggle-fold
+  :around
+  (lambda (fn &rest args)
+    (if (cl-find-if (lambda (o) (overlay-get o 'occult)) (overlays-at (point)))
+        (occult-toggle)
+      (apply fn args)))))
 
 ;; tree-sitter
 (use-package tree-sitter :ensure t :defer t :config (setq treesit-font-lock-level 4))
 
-(use-package treesit-fold
-  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold"
-            :rev newest)
-  :defer t
-  :custom (treesit-fold-line-count-show t))
+(use-package
+ treesit-fold
+ :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :rev newest)
+ :defer t
+ :custom (treesit-fold-line-count-show t))
 
-(use-package treesit-fold-indicators
-  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold"
-            :rev newest))
+(use-package
+ treesit-fold-indicators
+ :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :rev newest))
 
 (setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (typescript
+         "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (with-eval-after-load 'treesit-fold
-  (push '(block_sequence_item . treesit-fold-range-seq) (alist-get 'yaml-mode treesit-fold-range-alist))
+  (push
+   '(block_sequence_item . treesit-fold-range-seq) (alist-get 'yaml-mode treesit-fold-range-alist))
   (push '(try_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist))
-  (push '(if_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist)))
+  (push '(if_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist))
+  (push '(if_statement . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist))
+  (push '(elif_clause . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist))
+  (push '(else_clause . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist)))
 
 ;; Register go-ts-mode in hs-special-modes-alist, which only has go-mode by default
 ;; (with-eval-after-load 'hideshow
@@ -201,6 +212,7 @@
         (inline-review-on (bound-and-true-p inline-review-mode)))
     (cl-case
      major-mode
+     (bash-ts-mode (xref-find-definitions (symbol-at-point)))
      (go-mode (xref-find-definitions (symbol-at-point)))
      (go-ts-mode (xref-find-definitions (symbol-at-point)))
      (python-mode (xref-find-definitions (symbol-at-point)))
@@ -228,16 +240,18 @@ concurrent reviews in other projects are isolated."
   (interactive (list (read-string "MR/PR URL: ")))
   (let* ((saved-wconf (current-window-configuration))
          (saved-frame (selected-frame))
-         (root (or dir
-                   (and (bound-and-true-p project-current-directory-override)
-                        project-current-directory-override)
-                   (when-let ((proj (project-current nil)))
-                     (project-root proj)))))
+         (root
+          (or dir
+              (and (bound-and-true-p project-current-directory-override)
+                   project-current-directory-override)
+              (when-let* ((proj (project-current nil)))
+                (project-root proj)))))
     (unless (and root (file-directory-p root))
       (user-error "phye/inline-review-start: cannot resolve project root (got %S)" root))
     (setq root (file-name-as-directory (expand-file-name root)))
     (find-file root)
-    (let (start-fn finish-fn)
+    (let (start-fn
+          finish-fn)
       (setq start-fn
             (lambda ()
               (inline-review-remove-hook root 'start start-fn)
@@ -362,6 +376,10 @@ concurrent reviews in other projects are isolated."
 
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
+
+(with-eval-after-load 'evil-matchit
+  (evilmi-load-plugin-rules '(bash-ts-mode) '(sh)))
 
 (provide 'phye-init-prog)
 ;;; phye-init-prog.el ends here
