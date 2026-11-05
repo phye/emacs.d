@@ -216,6 +216,23 @@
                (not (bound-and-true-p inline-review-mode)))
       (inline-review-mode 1))))
 
+(defun phye/inline-review-start (url &optional dir)
+  "Start inline-review for URL and open overview once setup completes.
+DIR, or when nil the root of the dispatched/current project, is visited
+first so the async setup callbacks run in that git tree."
+  (interactive (list (read-string "MR/PR URL: ")))
+  (let* ((proj (project-current nil))
+         (root (or dir (and proj (project-root proj)))))
+    (when root
+      (find-file (file-name-as-directory (expand-file-name root)))))
+  (let (hook-fn)
+    (setq hook-fn
+          (lambda ()
+            (remove-hook 'inline-review-review-started-hook hook-fn)
+            (inline-review-overview)))
+    (add-hook 'inline-review-review-started-hook hook-fn))
+  (inline-review-review-url url))
+
 (defun phye/format-buffer ()
   "My format buffer wrapper."
   (interactive)
