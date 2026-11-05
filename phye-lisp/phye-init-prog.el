@@ -218,20 +218,39 @@
 
 (defun phye/inline-review-start (url &optional dir)
   "Start inline-review for URL and open overview once setup completes.
-DIR, or when nil the root of the dispatched/current project, is visited
-first so the async setup callbacks run in that git tree."
+DIR, or when nil the dispatched project's root (from
+`project-current-directory-override' or `project-current'), is visited
+first so the async setup callbacks run in that git tree.  The window
+configuration at call time is saved and restored when the review ends
+via `inline-review-finish-review'.  Hooks are registered per-project
+via `inline-review-add-start-hook'/`inline-review-add-finish-hook', so
+concurrent reviews in other projects are isolated."
   (interactive (list (read-string "MR/PR URL: ")))
-  (let* ((proj (project-current nil))
-         (root (or dir (and proj (project-root proj)))))
-    (when root
-      (find-file (file-name-as-directory (expand-file-name root)))))
-  (let (hook-fn)
-    (setq hook-fn
-          (lambda ()
-            (remove-hook 'inline-review-review-started-hook hook-fn)
-            (inline-review-overview)))
-    (add-hook 'inline-review-review-started-hook hook-fn))
-  (inline-review-review-url url))
+  (let* ((saved-wconf (current-window-configuration))
+         (saved-frame (selected-frame))
+         (root (or dir
+                   (and (bound-and-true-p project-current-directory-override)
+                        project-current-directory-override)
+                   (when-let ((proj (project-current nil)))
+                     (project-root proj)))))
+    (unless (and root (file-directory-p root))
+      (user-error "phye/inline-review-start: cannot resolve project root (got %S)" root))
+    (setq root (file-name-as-directory (expand-file-name root)))
+    (find-file root)
+    (let (start-fn finish-fn)
+      (setq start-fn
+            (lambda ()
+              (inline-review-remove-hook root 'start start-fn)
+              (inline-review-overview)))
+      (setq finish-fn
+            (lambda ()
+              (inline-review-remove-hook root 'finish finish-fn)
+              (when (frame-live-p saved-frame)
+                (with-selected-frame saved-frame
+                  (set-window-configuration saved-wconf)))))
+      (inline-review-add-hook root 'start start-fn)
+      (inline-review-add-hook root 'finish finish-fn))
+    (inline-review-review-url url)))
 
 (defun phye/format-buffer ()
   "My format buffer wrapper."
