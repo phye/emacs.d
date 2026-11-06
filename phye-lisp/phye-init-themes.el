@@ -418,12 +418,13 @@ in the buffer."
   "Delete the innermost `phye/highlight-region' overlay containing point.
 If the mark is active, deactivate it."
   (interactive)
-  (let* ((ovs (seq-filter (lambda (o) (overlay-get o 'phye-highlight))
-                          (overlays-at (point))))
-         (innermost (car (sort ovs
-                               (lambda (a b)
-                                 (< (- (overlay-end a) (overlay-start a))
-                                    (- (overlay-end b) (overlay-start b))))))))
+  (let* ((ovs (seq-filter (lambda (o) (overlay-get o 'phye-highlight)) (overlays-at (point))))
+         (innermost
+          (car
+           (sort ovs
+                 (lambda (a b)
+                   (< (- (overlay-end a) (overlay-start a))
+                      (- (overlay-end b) (overlay-start b))))))))
     (unless innermost
       (user-error "No highlight at point"))
     (delete-overlay innermost)
@@ -460,13 +461,13 @@ If the mark is active, deactivate it."
   "Dark hour.")
 
 (defvar phye/weekday-themes
-  '((0 . (ef-summer        . ef-autumn))     ; Sunday
-    (1 . (ef-spring        . ef-bio))        ; Monday
-    (2 . (ef-frost         . ef-winter))     ; Tuesday
-    (3 . (ef-melissa-light . ef-cherie))     ; Wednesday
-    (4 . (ef-duo-light     . ef-duo-dark))   ; Thursday
-    (5 . (ef-cyprus        . ef-night))      ; Friday
-    (6 . (ef-elea-light    . ef-elea-dark))) ; Saturday
+  '((0 . (ef-summer . ef-autumn)) ; Sunday
+    (1 . (spacemacs-light . ef-bio)) ; Monday
+    (2 . (ef-frost . ef-winter)) ; Tuesday
+    (3 . (ef-kassio . ef-cherie)) ; Wednesday
+    (4 . (ef-duo-light . ef-duo-dark)) ; Thursday
+    (5 . (doom-feather-light . ef-night)) ; Friday
+    (6 . (ef-elea-light . ef-elea-dark))) ; Saturday
   "Alist mapping weekday (0=Sun..6=Sat) to a (LIGHT . DARK) theme pair.")
 
 (defun phye/current-weekday ()
@@ -476,7 +477,9 @@ If the mark is active, deactivate it."
 (defun phye/default-theme (light)
   "Return the day's theme; LIGHT non-nil selects the light variant, else dark."
   (let ((pair (cdr (assq (phye/current-weekday) phye/weekday-themes))))
-    (if light (car pair) (cdr pair))))
+    (if light
+        (car pair)
+      (cdr pair))))
 
 (defun phye/time-based-default-theme ()
   "Return default theme."
@@ -509,7 +512,10 @@ With \\[universal-argument], also update the weekday default for the outgoing mo
   (interactive "P")
   (let* ((loc (getenv "LOCATION"))
          (light (< (phye/current-hour) dark-hour))
-         (new-mode (if light 'light 'dark))
+         (new-mode
+          (if light
+              'light
+            'dark))
          (current (car custom-enabled-themes)))
     (message "Toggle Theme at %s" loc)
     (if (not (equal loc "office"))
@@ -525,13 +531,19 @@ With \\[universal-argument], also update the weekday default for the outgoing mo
             (setq previous-dark-theme current)
           (setq previous-light-theme current)))
       (setq phye/theme-mode new-mode)
-      (phye/load-theme (if update-default
-                           (phye/default-theme light)
-                         (or (if light previous-light-theme previous-dark-theme)
-                             (phye/default-theme light))))
+      (phye/load-theme
+       (if update-default
+           (phye/default-theme light)
+         (or (if light
+                 previous-light-theme
+               previous-dark-theme)
+             (phye/default-theme light))))
       (when (display-graphic-p)
-        (shell-command (format "~/bin/scripts/toggle_dark_theme.sh %s"
-                               (if light "false" "true")))))))
+        (shell-command
+         (format "~/bin/scripts/toggle_dark_theme.sh %s"
+                 (if light
+                     "false"
+                   "true")))))))
 
 (advice-add 'my-pickup-random-color-theme :after #'recover-avy-lead-face)
 (advice-add 'my-pickup-random-color-theme :after #'phye/set-ivy-match-bg-color)
