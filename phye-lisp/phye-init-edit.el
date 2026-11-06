@@ -86,6 +86,44 @@
         (dired-find-file-other-window)
       (dired-find-file))))
 
+(defun phye/--sibling-files (&optional include-tests)
+  "Return a sorted list of visitable files in the current buffer's directory.
+Files with \"test\" in their name are excluded unless INCLUDE-TESTS is non-nil."
+  (let* ((dir (file-name-directory (or (buffer-file-name) default-directory)))
+         (files (seq-filter (lambda (f) (not (file-directory-p f)))
+                            (directory-files dir t "\\`[^.]"))))
+    (unless include-tests
+      (setq files (seq-remove (lambda (f)
+                                (string-match-p "test" (file-name-nondirectory f)))
+                              files)))
+    (sort files #'string<)))
+
+(defun phye/next-file (&optional include-tests)
+  "Open the next file in the current buffer's directory.
+Files with \"test\" in their name are skipped unless INCLUDE-TESTS
+is non-nil (C-u)."
+  (interactive "P")
+  (let* ((files (phye/--sibling-files include-tests))
+         (current (and (buffer-file-name) (expand-file-name (buffer-file-name))))
+         (idx (and current (seq-position files current #'string=))))
+    (unless files
+      (user-error "No sibling files in current directory"))
+    (find-file
+     (nth (mod (1+ (or idx -1)) (length files)) files))))
+
+(defun phye/previous-file (&optional include-tests)
+  "Open the previous file in the current buffer's directory.
+Files with \"test\" in their name are skipped unless INCLUDE-TESTS
+is non-nil (C-u)."
+  (interactive "P")
+  (let* ((files (phye/--sibling-files include-tests))
+         (current (and (buffer-file-name) (expand-file-name (buffer-file-name))))
+         (idx (and current (seq-position files current #'string=))))
+    (unless files
+      (user-error "No sibling files in current directory"))
+    (find-file
+     (nth (mod (1- (or idx 0)) (length files)) files))))
+
 (use-package casual-suite :ensure t :defer t)
 
 ;; recentf
