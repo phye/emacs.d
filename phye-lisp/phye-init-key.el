@@ -223,6 +223,8 @@
  "hh" 'phye/random-all-themes
  "pc" 'popper-cycle
  "pl" 'popper-toggle-latest
+ "nf" 'phye/next-file
+ "pf" 'phye/previous-file
  "vs" 'phye/vsplit-3-and-even)
 
 ;; format: off
@@ -327,19 +329,17 @@
  "<RET>" 'newline)
 
 ;; format: off
-(general-unbind
- :keymaps '(agent-shell-mode-map)
- "M-<RET>"
- "M-<return>")
-
-(with-eval-after-load
- 'agent-shell-mode
- (general-define-key
-  :keymaps 'agent-shell-mode-map
-  "M-p" 'comint-previous-input
-  "M-n" 'comint-next-input
-  "M-<RET>" 'newline
-  "M-<return>" 'newline))
+(with-eval-after-load 'agent-shell
+  (general-unbind
+    :keymaps 'agent-shell-mode-map
+    "M-<RET>"
+    "M-<return>")
+  (general-define-key
+   :keymaps 'agent-shell-mode-map
+   "M-p" 'comint-previous-input
+   "M-n" 'comint-next-input
+   "M-<RET>" 'newline
+   "M-<return>" 'newline))
 
 ;; format: off
 (general-define-key
