@@ -76,6 +76,11 @@
  "C-n" 'next-line
  "C-p" 'previous-line)
 
+(general-define-key
+ :states 'visual
+ "zc" 'occult-toggle
+ "za" 'occult-toggle)
+
 ;; format: off
 ;; normal visual state with comma prefix
 (general-define-key

@@ -90,9 +90,6 @@
  :after evil
  :custom (occult-indicator ">>>")
  :config
- (evil-define-key 'visual 'global (kbd "zc") #'occult-toggle)
- (evil-define-key 'visual 'global (kbd "za") #'occult-toggle)
-
  (dolist (fn '(evil-open-fold evil-open-fold-rec))
    (advice-add
     fn
