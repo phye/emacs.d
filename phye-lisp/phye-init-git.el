@@ -40,6 +40,10 @@
   :vc (:url "https://github.com/phye/inline-review"
             :rev "master")
   :defer t
+  :commands (inline-review-add-hook
+             inline-review-remove-hook
+             inline-review-overview
+             inline-review-review-url)
   :hook (inline-review-mode . evil-normalize-keymaps))
 
 ;;; Ediff abort mechanism

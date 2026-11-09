@@ -216,6 +216,7 @@
      (org-mode (org-open-at-point))
      (typescript-mode (xref-find-definitions (symbol-at-point)))
      (typescript-ts-mode (xref-find-definitions (symbol-at-point)))
+     (protobuf-mode (xref-find-definitions (symbol-at-point)))
      (yaml-mode (phye/yaml-jump-to-definition))
      (yaml-ts-mode (phye/yaml-jump-to-definition))
      (emacs-lisp-mode (my-evil-goto-definition))
@@ -374,9 +375,11 @@ concurrent reviews in other projects are isolated."
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 (add-to-list 'major-mode-remap-alist '(sh-mode . bash-ts-mode))
+(add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
 
 (with-eval-after-load 'evil-matchit
-  (evilmi-load-plugin-rules '(bash-ts-mode) '(sh)))
+  (evilmi-load-plugin-rules '(bash-ts-mode) '(sh))
+  (evilmi-load-plugin-rules '(mhtml-mode html-mode web-mode) '(simple html)))
 
 (provide 'phye-init-prog)
 ;;; phye-init-prog.el ends here
