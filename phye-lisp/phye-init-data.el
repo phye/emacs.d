@@ -131,7 +131,11 @@ parent, or all top-level lines when the current line has no key parent."
  protobuf-mode
  :ensure t
  :defer t
- :config (add-hook 'protobuf-mode-hook 'phye/prog-mode-hook 90))
+ :hook (protobuf-mode . eglot-ensure)
+ :config
+ (add-hook 'protobuf-mode-hook 'phye/prog-mode-hook 90)
+ (with-eval-after-load 'eglot
+   (add-to-list 'eglot-server-programs '(protobuf-mode . ("protobuf-lsp")))))
 ;; }}
 
 ;; conf
