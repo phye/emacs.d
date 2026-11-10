@@ -193,55 +193,99 @@ Otherwise, jump to the next req/rsp matched."
         (goto-char origin)
         (user-error "Could not find %s" other-name)))))
 
-;;;###autoload
-(defun phye/jump-between-rainbow-envs ()
-  "Jump between the formal and testing rainbow config for the current file.
-Toggles the last `/formal/' or `/testing/' segment in the buffer's
-file path and visits the corresponding file."
-  (interactive)
+(defconst adp--rainbow-env-specs
+  '((testing
+     :parse-re "\\(.*\\)/rainbow/rainbow/\\([^/]+\\)/\\([^/]+\\)/testing/\\([^\0]*\\)\\'"
+     :build "{root}/rainbow/rainbow/{group}/{app}/testing/{suffix}")
+    (formal
+     :parse-re "\\(.*\\)/rainbow/rainbow/\\([^/]+\\)/\\([^/]+\\)/formal/\\([^\0]*\\)\\'"
+     :build "{root}/rainbow/rainbow/{group}/{app}/formal/{suffix}")
+    (iaas-domestic
+     :parse-re "\\(.*\\)/iaas/domestic/\\(\\)\\([^/]+\\)/\\([^\0]*\\)\\'"
+     :build "{root}/iaas/domestic/{app}/{suffix}")
+    (iaas-intl
+     :parse-re "\\(.*\\)/iaas/intl/\\(\\)\\([^/]+\\)/\\([^\0]*\\)\\'"
+     :build "{root}/iaas/intl/{app}/{suffix}"))
+  "Per-env parse/build rules for rainbow config jumps.
+Each entry is (NAME :parse-re RE :build TEMPLATE).  RE must capture
+root/group/app/suffix as groups 1-4; GROUP is the rainbow grouping dir
+present only under rainbow/rainbow (empty capture for iaas layouts).
+TEMPLATE uses `{root}', `{group}', `{app}', `{suffix}' placeholders;
+unknown components expand to `*' and are resolved via
+`file-expand-wildcards'.")
+
+(defun adp--rainbow-parse (path spec)
+  "Parse PATH against SPEC; return plist (:root :group :app :suffix) or nil."
+  (let ((case-fold-search nil))
+    (when (string-match (plist-get (cdr spec) :parse-re) path)
+      (let ((group (match-string 2 path)))
+        (list :root (match-string 1 path)
+              :group (and group (not (string= "" group)) group)
+              :app (match-string 3 path)
+              :suffix (match-string 4 path))))))
+
+(defun adp--rainbow-build (components spec)
+  "Build a target path from COMPONENTS plist using SPEC's :build template.
+Missing components become `*' wildcards; the result is resolved via
+`file-expand-wildcards' and disambiguated with `completing-read' when
+multiple matches exist."
+  (let* ((template (plist-get (cdr spec) :build))
+         (path (replace-regexp-in-string
+                "{\\([a-z]+\\)}"
+                (lambda (m)
+                  (let* ((key (intern (concat ":" (substring m 1 -1))))
+                         (val (plist-get components key)))
+                    (or val "*")))
+                template t t)))
+    (if (string-match-p "[*?]" path)
+        (let ((matches (file-expand-wildcards path)))
+          (pcase (length matches)
+            (0 nil)
+            (1 (car matches))
+            (_ (completing-read "Pick target: " matches nil t))))
+      (and (file-exists-p path) path))))
+
+(defun adp--rainbow-jump (env-a env-b)
+  "Toggle current buffer between rainbow configs for ENV-A and ENV-B.
+ENV-A and ENV-B are keys in `adp--rainbow-env-specs'."
   (let ((path (buffer-file-name)))
     (unless path
       (user-error "Current buffer is not visiting a file"))
-    (let* ((case-fold-search nil)
-           (from (cond
-                  ((string-match "\\(.*\\)/formal/\\([^\0]*\\)\\'" path) 'formal)
-                  ((string-match "\\(.*\\)/testing/\\([^\0]*\\)\\'" path) 'testing)
-                  (t nil))))
-      (unless from
-        (user-error "Current file is not under a rainbow formal/testing directory"))
-      (let* ((prefix (match-string 1 path))
-             (suffix (match-string 2 path))
-             (target-env (if (eq from 'formal) "testing" "formal"))
-             (target (format "%s/%s/%s" prefix target-env suffix)))
-        (unless (file-exists-p target)
-          (user-error "Target rainbow config does not exist: %s" target))
-        (find-file target)))))
+    (let* ((spec-a (or (assq env-a adp--rainbow-env-specs)
+                       (error "Unknown rainbow env: %s" env-a)))
+           (spec-b (or (assq env-b adp--rainbow-env-specs)
+                       (error "Unknown rainbow env: %s" env-b)))
+           (parsed-a (adp--rainbow-parse path spec-a))
+           (parsed-b (unless parsed-a (adp--rainbow-parse path spec-b)))
+           (to-spec (if parsed-a spec-b spec-a))
+           (components (or parsed-a parsed-b
+                           (user-error
+                            "Current file is not under rainbow %s or %s layout"
+                            env-a env-b)))
+           (target (or (adp--rainbow-build components to-spec)
+                       (user-error "No %s counterpart found"
+                                   (car to-spec)))))
+      (find-file target))))
+
+;;;###autoload
+(defun adp/jump-between-rainbow-envs ()
+  "Jump between the formal and testing rainbow config for the current file."
+  (interactive)
+  (adp--rainbow-jump 'testing 'formal))
+
+;;;###autoload
+(defun adp/jump-between-rainbow-iaas-domestic-and-formal ()
+  "Jump between the formal and iaas/domestic rainbow config for the current file."
+  (interactive)
+  (adp--rainbow-jump 'iaas-domestic 'formal))
+
+;;;###autoload
+(defun adp/jump-between-rainbow-iaas-intl-and-formal ()
+  "Jump between the formal and iaas/intl rainbow config for the current file."
+  (interactive)
+  (adp--rainbow-jump 'iaas-intl 'formal))
 
 (declare-function xref-push-marker-stack "xref")
-
-;;;###autoload
-(defun adp/switch-between-testing-and-formal ()
-  "Switch current buffer between the \"testing\" and \"formal\" variants.
-If the current file path contains \"testing\", open the file with
-\"testing\" replaced by \"formal\", and vice versa."
-  (interactive)
-  (let ((path (buffer-file-name)))
-    (unless path
-      (user-error "Current buffer is not visiting a file"))
-    (let ((target
-           (cond
-            ((string-match-p "testing" path)
-             (replace-regexp-in-string "testing" "formal" path))
-            ((string-match-p "formal" path)
-             (replace-regexp-in-string "formal" "testing" path))
-            (t
-             (user-error
-              "Path contains neither \"testing\" nor \"formal\": %s" path)))))
-      (unless (file-exists-p target)
-        (let ((dir (file-name-directory target)))
-          (unless (file-exists-p dir)
-            (make-directory dir t))))
-      (find-file target))))
 
 (defun phye--rainbow-placeholder-find-position (file name)
   "Return the position of NAME's definition in FILE, or nil if absent."
