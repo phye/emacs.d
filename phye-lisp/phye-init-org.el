@@ -15,6 +15,7 @@
 (declare-function org-remark-beg-end "org-remark")
 (declare-function org-remark-mark "org-remark")
 (declare-function org-remark-open "org-remark")
+(declare-function org-remark-notes-buffer-get-or-create "org-remark")
 (declare-function org-remark-view "org-remark")
 (declare-function org-roam-db-autosync-mode "org-roam")
 (declare-function org-back-to-heading "org")
@@ -48,6 +49,8 @@
 (defvar org-roam-node-display-template)
 (defvar org-noter-notes-mode-map)
 (defvar org-remark-notes-buffer-name)
+(defvar org-remark-prop-id)
+(defvar org-remark-notes-display-buffer-action)
 (defvar org-todo-keywords)
 (defvar org-tags-column)
 (defvar org-export-headline-levels)
@@ -288,7 +291,9 @@
  :config (evil-set-initial-state 'org-remark-mode 'normal)
  :custom (org-remark-notes-file-name #'phye/org-remark-notes-file-name)
  (org-remark-notes-display-buffer-action
-  '((display-buffer-below-selected) (window-height 30) (preserve-size t))))
+  '((display-buffer-below-selected)
+    (window-height . 0.3)
+    (preserve-size . (nil . t)))))
 
 (defun phye/org-remark--defer-init ()
   "Deferred org-remark setup: enable global tracking."
@@ -296,11 +301,107 @@
 
 (run-with-idle-timer 2 nil #'phye/org-remark--defer-init)
 
-(defun phye/remark-view-and-select ()
-  "Review remark and select window."
+(defun phye--org-remark-overlays-in-range (beg end)
+  "Return org-remark overlays intersecting BEG..END (or at BEG if equal)."
+  (let ((ovs (if (= beg end) (overlays-at beg) (overlays-in beg end))))
+    (seq-filter (lambda (ov) (overlay-get ov 'org-remark-id)) ovs)))
+
+(defun phye--org-remark-pick-overlay (overlays)
+  "Prompt the user to pick one of OVERLAYS, labelled by highlighted text."
+  (let* ((cells (mapcar
+                 (lambda (ov)
+                   (cons (buffer-substring-no-properties
+                          (overlay-start ov) (overlay-end ov))
+                         ov))
+                 overlays))
+         (choice (completing-read "Pick remark: "
+                                  (mapcar #'car cells) nil t)))
+    (cdr (assoc choice cells))))
+
+(defun phye--org-remark-open-overlay (ov)
+  "Open the org-remark notes buffer narrowed to OV's heading.
+Replicates `org-remark-open' but uses the overlay's ID directly, so it
+does not depend on `org-remark-find-dwim' succeeding at `overlay-start'."
+  (let* ((id (overlay-get ov 'org-remark-id))
+         (ibuf (org-remark-notes-buffer-get-or-create)))
+    (pop-to-buffer ibuf org-remark-notes-display-buffer-action)
+    (widen)
+    (when-let (p (org-find-property org-remark-prop-id id))
+      (goto-char p)
+      (org-narrow-to-subtree)
+      (org-end-of-meta-data t)
+      (let ((meta-end (point)))
+        ;; Jump past any existing body content; fall back to the line
+        ;; just below the property drawer when the body is empty.
+        (goto-char (point-max))
+        (skip-chars-backward " \t\n")
+        (when (< (point) meta-end)
+          (goto-char meta-end))
+        (end-of-line))
+      (when (fboundp 'evil-insert-state)
+        (evil-insert-state))
+      (when (and (bolp) (eolp))
+        (indent-according-to-mode))
+      (recenter))))
+
+;;;###autoload
+(defun phye/org-remark-open ()
+  "Open an org-remark note in a side window for editing.
+With an active region and no overlapping highlight, create a new
+highlight via `org-remark-mark' first.  If one or more highlights
+overlap point or the region, open (or prompt among) them.  Without
+an active region or any existing highlight at point, signal an error
+rather than marking a word.  Finish with \\`C-c C-c' to save and
+return to the source window."
   (interactive)
-  (org-remark-view (point))
-  (select-window (get-buffer-window org-remark-notes-buffer-name)))
+  (require 'org-remark)
+  (let* ((region-p (use-region-p))
+         (beg (if region-p (region-beginning) (point)))
+         (end (if region-p (region-end) (point)))
+         (existing (phye--org-remark-overlays-in-range beg end))
+         (ov (cond
+              (existing
+               (if (= 1 (length existing))
+                   (car existing)
+                 (phye--org-remark-pick-overlay existing)))
+              (region-p
+               (org-remark-mark beg end))
+              (t
+               (user-error
+                "Select a region to mark, or place point on an existing remark")))))
+    (when region-p (deactivate-mark))
+    (phye--org-remark-open-overlay ov)))
+
+(defvar phye--org-remark-edit-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") #'phye/org-remark-finish-edit)
+    map)
+  "Keymap active in the org-remark notes buffer.")
+
+(define-minor-mode phye--org-remark-edit-mode
+  "Minor mode auto-enabled in the org-remark notes buffer.
+Rebinds \\`C-c C-c' to save the note and return to the source window."
+  :keymap phye--org-remark-edit-mode-map
+  :lighter " RemarkEdit")
+
+(defun phye--org-remark-maybe-enable-edit-mode ()
+  "Enable `phye--org-remark-edit-mode' in org-remark notes buffers.
+Matches any file whose name ends with `-notes.org', which is the
+pattern produced by `phye/org-remark-notes-file-name'."
+  (when-let* ((file (buffer-file-name)))
+    (when (string-match-p "-notes\\.org\\'" file)
+      (phye--org-remark-edit-mode 1))))
+
+(add-hook 'org-mode-hook #'phye--org-remark-maybe-enable-edit-mode)
+
+;;;###autoload
+(defun phye/org-remark-finish-edit ()
+  "Save the current org-remark note buffer and return to the source window.
+Relies on `quit-window' restoring the previously selected window and
+point, so the caller lands back where they invoked the edit."
+  (interactive)
+  (when (buffer-modified-p) (save-buffer))
+  (quit-window))
 ;; }}
 
 ;; {{ calfw

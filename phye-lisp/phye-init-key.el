@@ -151,9 +151,8 @@
  "pe" 'flymake-goto-prev-error
  "rR" 'phye/open-recent-file-in-other-frame
  "rd" 'bjm/ivy-dired-recent-dirs
- "rm" 'org-remark-mark
  "rn" 'org-remark-next
- "ro" 'phye/remark-view-and-select
+ "ro" 'phye/org-remark-open
  "rp" 'org-remark-prev
  "rD" 'org-remark-delete
  "rr" 'my-counsel-recentf
