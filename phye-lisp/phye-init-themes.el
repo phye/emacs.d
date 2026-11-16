@@ -14,13 +14,14 @@
  'my-favorite-color-themes
  '(afternoon
    alect-black
-   atom-dark
-   atom-one-dark
    ample
    ample-zen
+   atom-dark
+   atom-one-dark
    bubbleberry
-   clues
+   catppuccin
    cherry-blossom
+   clues
    cyberpunk
    dakrone
    darkmine
@@ -40,8 +41,8 @@
    doom-homage-black
    doom-horizon
    doom-ir-black
-   doom-laserwave
    doom-lantern
+   doom-laserwave
    doom-miramare
    doom-molokai
    doom-monokai-classic
@@ -59,19 +60,19 @@
    doom-sourcerer
    doom-spacegrey
    doom-vibrant
+   doom-winter-is-coming-dark-blue
    doom-xcode
    doom-zenburn
-   doom-winter-is-coming-dark-blue
    doric-dark
    doric-fire
-   ;; dorsey
+   dorsey
    ef-autumn
    ef-bio
    ef-cherie
-   ef-deuteranopia-dark
-   ef-elea-dark
    ef-dark
+   ef-deuteranopia-dark
    ef-duo-dark
+   ef-elea-dark
    ef-night
    ef-owl
    ef-rosa
@@ -79,26 +80,26 @@
    exotica
    gotham
    grandshell
-   gruvbox-dark-soft
    gruvbox-dark-medium
+   gruvbox-dark-soft
    hc-zenburn
    hemisu-dark
    jazz
    junio
    kaolin-aurora
-   kaolin-eclipse
    kaolin-bubblegum
    kaolin-dark
+   kaolin-eclipse
    kaolin-galaxy
    kaolin-ocean
    kaolin-temple
    kaolin-valley-dark
-   manoj-dark
    madhat2r
+   manoj-dark
    modus-vivendi
    modus-vivendi-tritanopia
-   nord
    noctilux
+   nord
    occidental
    omtose-darker
    organic-green
@@ -108,12 +109,12 @@
    sanityinc-tomorrow-eighties
    sanityinc-tomorrow-night
    seti
-   solarized-selenized-black
+   smyx
    solarized-gruvbox-dark
+   solarized-selenized-black
    solarized-wombat-dark
    spacemacs-dark
    srcery
-   smyx
    tango-dark
    toxi
    twilight
@@ -135,11 +136,8 @@
    doric-coral
    doric-earth
    doric-light
-   doric-wind
    doric-marble
-   kaolin-valley-light
-   kaolin-mono-light
-   kaolin-breeze
+   doric-wind
    ef-arbutus
    ef-cyprus
    ef-deuteranopia-light
@@ -155,8 +153,11 @@
    ef-trio-light
    ef-tritanopia-light
    espresso
-   modus-operandi-tritanopia
    farmhouse-light
+   kaolin-breeze
+   kaolin-mono-light
+   kaolin-valley-light
+   modus-operandi-tritanopia
    occidental
    professional
    ritchie

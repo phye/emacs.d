@@ -5,9 +5,8 @@
 
 ;;; Code:
 (setq phye-elpa-packages
-      '(activities
-        acp
-        shell-maker
+      '(acp
+        activities
         agent-shell
         atom-dark
         atom-one-dark
@@ -16,8 +15,8 @@
         bpftrace-mode
         burly
         clipetty
-        deadgrep
         dakrone
+        deadgrep
         dockerfile-mode
         doric-themes
         dorsey
@@ -28,9 +27,9 @@
         evil-collection
         evil-terminal-cursor-changer
         halloweenie-theme
-        hemisu-theme
         hcl-mode
         helpful
+        hemisu-theme
         key-chord
         manoj-dark
         markdown-toc
@@ -39,6 +38,7 @@
         nerd-icons
         noctilux
         ob-mermaid
+        occult
         org-fancy-priorities
         org-journal
         org-noter
@@ -46,7 +46,6 @@
         org-remark
         org-roam
         org-side-tree
-        occult
         outline-indent
         peep-dired
         pikchr-mode
@@ -55,6 +54,7 @@
         puni
         rg
         seti-theme
+        shell-maker
         show-font
         symbol-overlay
         sync-recentf
@@ -62,44 +62,42 @@
         treemacs
         undo-fu-session
         wombat
-        ;; vimish-fold
         zerodark))
 
 (defvar melpa-include-packages)
 (setq melpa-include-packages (append melpa-include-packages phye-elpa-packages nil))
 
 (defvar phye/theme-packages
-  '(doom-themes
-    ef-themes
-    doric-themes
-    kaolin-themes
-    gruvbox-theme
-    solarized-theme
-    modus-themes
-    color-theme-sanityinc-tomorrow
-    spacemacs-theme
+  '(afternoon-theme
     alect-themes
+    ample-theme
+    apropospriate-theme
     atom-dark-theme
     atom-one-dark-theme
-    ample-theme
-    afternoon-theme
     bubbleberry-theme
-    clues-theme
+    catppuccin-theme
     cherry-blossom-theme
+    clues-theme
+    color-theme-sanityinc-tomorrow
     cyberpunk-theme
     dakrone-theme
     darkmine-theme
     darkokai-theme
-    sublime-themes
+    doom-themes
+    doric-themes
+    ef-themes
     espresso-theme
     exotica-theme
     farmhouse-themes
     gotham-theme
     grandshell-theme
+    gruvbox-theme
     hc-zenburn-theme
     hemisu-theme
     jazz-theme
+    kaolin-themes
     madhat2r-theme
+    modus-themes
     noctilux-theme
     nord-theme
     occidental-theme
@@ -108,10 +106,12 @@
     professional-theme
     purple-haze-theme
     rebecca-theme
-    apropospriate-theme
     seti-theme
-    srcery-theme
     smyx-theme
+    solarized-theme
+    spacemacs-theme
+    srcery-theme
+    sublime-themes
     toxi-theme
     twilight-bright-theme
     twilight-theme
@@ -134,7 +134,8 @@ Built-in themes (wombat, tango-dark, manoj-dark) are intentionally omitted.")
         (message "Processing pkg %s" pkg)
         (condition-case err
             (package-install pkg)
-          (t (message "failed to install %s – %s" pkg (error-message-string err)))))
+          (t
+           (message "failed to install %s – %s" pkg (error-message-string err)))))
       (message "done installing theme packages"))))
 
 (run-with-idle-timer 10 nil #'phye/elpa--defer-init)
