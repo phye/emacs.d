@@ -323,6 +323,53 @@ point onto the xref marker stack so `xref-pop-marker-stack' (or
           (deactivate-mark))))))
 
 ;;;###autoload
+(defun phye/sort-elements-in-list ()
+  "Sort elements of the enclosing list at point as sexps.
+Point may be on any element or on the opening paren.  Elements are
+sorted lexicographically by their printed form; the whitespace between
+the first two original elements is reused as the separator between all
+sorted elements."
+  (interactive)
+  (let (list-beg list-end inner-beg inner-end bounds elements separator)
+    (save-excursion
+      (unless (looking-at-p "(")
+        (backward-up-list))
+      (setq list-beg (point))
+      (forward-sexp)
+      (setq list-end (point)))
+    (save-excursion
+      (goto-char list-beg)
+      (down-list)
+      (skip-chars-forward " \t\n")
+      (setq inner-beg (point))
+      (goto-char (1- list-end))
+      (skip-chars-backward " \t\n")
+      (setq inner-end (point))
+      (goto-char inner-beg)
+      (while (< (point) inner-end)
+        (let ((beg (point)))
+          (forward-sexp)
+          (push (cons beg (point)) bounds))
+        (skip-chars-forward " \t\n"))
+      (setq bounds (nreverse bounds))
+      (setq separator
+            (if (>= (length bounds) 2)
+                (buffer-substring-no-properties
+                 (cdr (nth 0 bounds))
+                 (car (nth 1 bounds)))
+              " "))
+      (setq elements
+            (mapcar (lambda (b)
+                      (buffer-substring-no-properties (car b) (cdr b)))
+                    bounds)))
+    (setq elements (sort elements #'string<))
+    (save-excursion
+      (delete-region inner-beg inner-end)
+      (goto-char inner-beg)
+      (insert (mapconcat #'identity elements separator)))
+    (message "Sorted %d elements" (length elements))))
+
+;;;###autoload
 (defun phye/yaml-jump-to-definition ()
   "Jump to definition in yaml files.
 Try `phye/jump-to-rainbow-placeholder' first; on failure fall back to
