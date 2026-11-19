@@ -23,6 +23,7 @@
 (require 'phye-init-window)
 (require 'phye-init-edit)
 (require 'phye-init-prog)
+(require 'phye-init-treesit-fold)
 (require 'phye-init-cc)
 (require 'phye-init-org)
 (require 'phye-init-ai)

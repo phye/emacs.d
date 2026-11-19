@@ -24,6 +24,13 @@
 
 (customize-set-variable 'sh-basic-offset 2)
 
+(defun phye/shell-mode-hook ()
+  "Phye's shell mode hook."
+  (treesit-fold-mode)
+  (eglot-ensure))
+
+(add-hook 'bash-ts-mode-hook 'phye/shell-mode-hook 0)
+
 ;; company
 ;; (with-eval-after-load 'company-ispell
 ;;   (setq company-ispell-available nil))
@@ -134,16 +141,6 @@ Emoji can break Emacs buffer rendering in terminal frames."
 ;; tree-sitter
 (use-package tree-sitter :ensure t :defer t :config (setq treesit-font-lock-level 4))
 
-(use-package
- treesit-fold
- :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :rev newest)
- :defer t
- :custom (treesit-fold-line-count-show t))
-
-(use-package
- treesit-fold-indicators
- :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold" :rev newest))
-
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
         (cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -161,15 +158,6 @@ Emoji can break Emacs buffer rendering in terminal frames."
         (typescript
          "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-
-(with-eval-after-load 'treesit-fold
-  (push
-   '(block_sequence_item . treesit-fold-range-seq) (alist-get 'yaml-mode treesit-fold-range-alist))
-  (push '(try_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist))
-  (push '(if_statement . treesit-fold-range-seq) (alist-get 'python-mode treesit-fold-range-alist))
-  (push '(if_statement . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist))
-  (push '(elif_clause . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist))
-  (push '(else_clause . treesit-fold-range-seq) (alist-get 'bash-ts-mode treesit-fold-range-alist)))
 
 ;; Register go-ts-mode in hs-special-modes-alist, which only has go-mode by default
 ;; (with-eval-after-load 'hideshow
