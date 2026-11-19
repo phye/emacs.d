@@ -158,6 +158,7 @@
  "rr" 'my-counsel-recentf
  "sc" 'agent-shell-send-region
  "sC" 'agent-shell-send-region-to
+ "ss" 'phye/switch-agent-shell
  "sl" 'org-store-link
  "sp" 'outline-backward-same-level
  "sn" 'outline-forward-same-level
