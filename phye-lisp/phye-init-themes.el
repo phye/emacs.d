@@ -565,5 +565,15 @@ With \\[universal-argument], also update the weekday default for the outgoing mo
 
 (my-run-with-idle-timer 2 #'phye/themes--defer-init)
 
+
+(use-package mindre-theme
+    :ensure t
+    :vc (:url "https://github.com/erikbackman/mindre-theme" :rev newest)
+    :custom
+    (mindre-use-more-bold nil)
+    (mindre-use-faded-lisp-parens t)
+    :config
+    (load-theme 'mindre t))
+
 (provide 'phye-init-themes)
 ;;; phye-init-themes.el ends here

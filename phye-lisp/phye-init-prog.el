@@ -83,6 +83,17 @@
   (interactive)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
+(defun phye/remove-emoji ()
+  "Remove all emoji characters from the current buffer.
+Emoji can break Emacs buffer rendering in terminal frames."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eobp))
+      (if (eq (aref char-script-table (char-after)) 'emoji)
+          (delete-char 1)
+        (forward-char 1)))))
+
 ;; folding
 (use-package
  occult

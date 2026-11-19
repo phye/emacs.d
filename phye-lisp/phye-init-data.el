@@ -144,6 +144,10 @@ parent, or all top-level lines when the current line has no key parent."
 ;; log
 (add-to-list 'auto-mode-alist '("\\.log\\'" . log-view-mode))
 
+;; go
+(add-to-list 'auto-mode-alist '("go.mod" . conf-mode))
+(add-to-list 'auto-mode-alist '("go.sum" . conf-mode))
+
 ;; Dockerfile
 (use-package
  dockerfile-mode

@@ -19,6 +19,7 @@
         deadgrep
         dockerfile-mode
         doric-themes
+        doom-themes
         dorsey
         el-themes
         elisp-autofmt
@@ -34,6 +35,7 @@
         manoj-dark
         markdown-toc
         mermaid-mode
+        mindre-theme
         multi-vterm
         nerd-icons
         noctilux
