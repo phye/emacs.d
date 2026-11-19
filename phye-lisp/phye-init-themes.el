@@ -243,123 +243,123 @@
     (((background light)) :weight bold :foreground "navy"))
   "My base face for symbol overlay highlight.")
 (defface phye-highlight-face-0
-  '((((background dark)) :inherit phye-overlay-base :background "salmon")
-    (((background light)) :inherit phye-overlay-base :background "tomato"))
+  '((((background dark)) :inherit phye-overlay-base :background "firebrick")
+    (((background light)) :inherit phye-overlay-base :background "light pink"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-1
-  '((((background dark)) :inherit phye-overlay-base :background "light gray")
-    (((background light)) :inherit phye-overlay-base :background "dim gray"))
+  '((((background dark)) :inherit phye-overlay-base :background "gray30")
+    (((background light)) :inherit phye-overlay-base :background "gainsboro"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-2
-  '((((background dark)) :inherit phye-overlay-base :background "light green")
-    (((background light)) :inherit phye-overlay-base :background "forest green"))
+  '((((background dark)) :inherit phye-overlay-base :background "forest green")
+    (((background light)) :inherit phye-overlay-base :background "pale green"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-3
-  '((((background dark)) :inherit phye-overlay-base :background "thistle")
+  '((((background dark)) :inherit phye-overlay-base :background "dark magenta")
     (((background light)) :inherit phye-overlay-base :background "plum"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-4
-  '((((background dark)) :inherit phye-overlay-base :background "dodger blue")
+  '((((background dark)) :inherit phye-overlay-base :background "steel blue")
     (((background light)) :inherit phye-overlay-base :background "light blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-5
-  '((((background dark)) :inherit phye-overlay-base :background "yellow")
-    (((background light)) :inherit phye-overlay-base :background "goldenrod"))
+  '((((background dark)) :inherit phye-overlay-base :background "dark goldenrod")
+    (((background light)) :inherit phye-overlay-base :background "khaki"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-6
-  '((((background dark)) :inherit phye-overlay-base :background "orchid")
-    (((background light)) :inherit phye-overlay-base :background "purple"))
+  '((((background dark)) :inherit phye-overlay-base :background "dark orchid")
+    (((background light)) :inherit phye-overlay-base :background "orchid"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-7
-  '((((background dark)) :inherit phye-overlay-base :background "ivory")
-    (((background light)) :inherit phye-overlay-base :background "tan"))
+  '((((background dark)) :inherit phye-overlay-base :background "sienna")
+    (((background light)) :inherit phye-overlay-base :background "wheat"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-8
-  '((((background dark)) :inherit phye-overlay-base :background "cyan")
-    (((background light)) :inherit phye-overlay-base :background "teal"))
+  '((((background dark)) :inherit phye-overlay-base :background "teal")
+    (((background light)) :inherit phye-overlay-base :background "pale turquoise"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-9
-  '((((background dark)) :inherit phye-overlay-base :background "light yellow")
-    (((background light)) :inherit phye-overlay-base :background "saddle brown"))
+  '((((background dark)) :inherit phye-overlay-base :background "olive drab")
+    (((background light)) :inherit phye-overlay-base :background "pale goldenrod"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-10
-  '((((background dark)) :inherit phye-overlay-base :background "cornflower blue")
-    (((background light)) :inherit phye-overlay-base :background "deep sky blue"))
+  '((((background dark)) :inherit phye-overlay-base :background "slate blue")
+    (((background light)) :inherit phye-overlay-base :background "light steel blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-11
-  '((((background dark)) :inherit phye-overlay-base :background "gold")
-    (((background light)) :inherit phye-overlay-base :background "dark goldenrod"))
+  '((((background dark)) :inherit phye-overlay-base :background "chocolate")
+    (((background light)) :inherit phye-overlay-base :background "moccasin"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-12
-  '((((background dark)) :inherit phye-overlay-base :background "light pink")
-    (((background light)) :inherit phye-overlay-base :background "dark red"))
+  '((((background dark)) :inherit phye-overlay-base :background "medium violet red")
+    (((background light)) :inherit phye-overlay-base :background "pink"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-13
-  '((((background dark)) :inherit phye-overlay-base :background "turquoise")
-    (((background light)) :inherit phye-overlay-base :background "dark turquoise"))
+  '((((background dark)) :inherit phye-overlay-base :background "cadet blue")
+    (((background light)) :inherit phye-overlay-base :background "powder blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-14
-  '((((background dark)) :inherit phye-overlay-base :background "hot pink")
-    (((background light)) :inherit phye-overlay-base :background "violet red"))
+  '((((background dark)) :inherit phye-overlay-base :background "indian red")
+    (((background light)) :inherit phye-overlay-base :background "misty rose"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-15
-  '((((background dark)) :inherit phye-overlay-base :background "chartreuse")
-    (((background light)) :inherit phye-overlay-base :background "olive drab"))
+  '((((background dark)) :inherit phye-overlay-base :background "dark olive green")
+    (((background light)) :inherit phye-overlay-base :background "light green"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-16
-  '((((background dark)) :inherit phye-overlay-base :background "light coral")
-    (((background light)) :inherit phye-overlay-base :background "coral"))
+  '((((background dark)) :inherit phye-overlay-base :background "crimson")
+    (((background light)) :inherit phye-overlay-base :background "peach puff"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-17
-  '((((background dark)) :inherit phye-overlay-base :background "honeydew")
-    (((background light)) :inherit phye-overlay-base :background "pale green"))
+  '((((background dark)) :inherit phye-overlay-base :background "sea green")
+    (((background light)) :inherit phye-overlay-base :background "lavender"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-18
-  '((((background dark)) :inherit phye-overlay-base :background "medium spring green")
-    (((background light)) :inherit phye-overlay-base :background "sea green"))
+  '((((background dark)) :inherit phye-overlay-base :background "dark slate gray")
+    (((background light)) :inherit phye-overlay-base :background "aquamarine"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-19
-  '((((background dark)) :inherit phye-overlay-base :background "sky blue")
-    (((background light)) :inherit phye-overlay-base :background "steel blue"))
+  '((((background dark)) :inherit phye-overlay-base :background "royal blue")
+    (((background light)) :inherit phye-overlay-base :background "light sky blue"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-20
-  '((((background dark)) :inherit phye-overlay-base :background "burlywood")
-    (((background light)) :inherit phye-overlay-base :background "chocolate"))
+  '((((background dark)) :inherit phye-overlay-base :background "saddle brown")
+    (((background light)) :inherit phye-overlay-base :background "burlywood"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-21
-  '((((background dark)) :inherit phye-overlay-base :background "medium slate blue")
-    (((background light)) :inherit phye-overlay-base :background "dark slate blue"))
+  '((((background dark)) :inherit phye-overlay-base :background "dark slate blue")
+    (((background light)) :inherit phye-overlay-base :background "thistle"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-22
-  '((((background dark)) :inherit phye-overlay-base :background "pink")
-    (((background light)) :inherit phye-overlay-base :background "deep pink"))
+  '((((background dark)) :inherit phye-overlay-base :background "pale violet red")
+    (((background light)) :inherit phye-overlay-base :background "lavender blush"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 (defface phye-highlight-face-23
-  '((((background dark)) :inherit phye-overlay-base :background "medium purple")
-    (((background light)) :inherit phye-overlay-base :background "indigo"))
+  '((((background dark)) :inherit phye-overlay-base :background "indigo")
+    (((background light)) :inherit phye-overlay-base :background "medium purple"))
   "A custom highlight face for symbol-overlay."
   :group 'phye-overlay-faces)
 
