@@ -29,13 +29,20 @@
   (customize-set-variable 'aw-background t))
 
 (defun phye/switch-to-previous-buffer-in-window ()
-  "Switch to previous buffer in the same window."
+  "Switch to previous buffer in the same window, restoring its last point."
   (interactive)
   (let* ((cur-buffer (current-buffer))
-         (alt-buffer (car (car (window-prev-buffers)))))
-    (if (eq cur-buffer alt-buffer)
-        (switch-to-buffer (car (car (cdr (window-prev-buffers)))))
-      (switch-to-buffer alt-buffer))))
+         (prev-entries (window-prev-buffers))
+         (entry (if (eq cur-buffer (car (car prev-entries)))
+                    (cadr prev-entries)
+                  (car prev-entries))))
+    (when entry
+      (let ((buf (nth 0 entry))
+            (start (nth 1 entry))
+            (pt (nth 2 entry)))
+        (switch-to-buffer buf)
+        (when (markerp pt) (goto-char pt))
+        (when (markerp start) (set-window-start (selected-window) start))))))
 
 (defun dedicate-current-window ()
   "Toggle window dedication in the selected window."
