@@ -155,5 +155,12 @@ parent, or all top-level lines when the current line has no key parent."
  :defer t
  :config (add-to-list 'auto-mode-alist '("Dockerfile_" . dockerfile-mode)))
 
+;; caddyfile
+(use-package caddyfile-mode
+  :ensure t
+  :defer t
+  :mode (("Caddyfile\\'" . caddyfile-mode)
+         ("caddy\\.conf\\'" . caddyfile-mode)))
+
 (provide 'phye-init-data)
 ;;; phye-init-data.el ends here
