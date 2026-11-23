@@ -39,19 +39,28 @@
 (defvar-local phye--agent-shell-return-marker nil
   "Marker to the position to return to when leaving an `agent-shell' buffer.")
 
+(defun phye--agent-shell-side-p (&optional buffer)
+  "Return non-nil if BUFFER (or current) is an agent-shell or viewport buffer."
+  (with-current-buffer (or buffer (current-buffer))
+    (derived-mode-p 'agent-shell-mode
+                    'agent-shell-viewport-edit-mode
+                    'agent-shell-viewport-view-mode)))
+
 (defun phye/switch-agent-shell ()
   "Toggle between an agent-shell buffer and a file buffer in the current project.
 When in a file buffer, remember the current position and switch to the
 most recent agent-shell buffer in the project, or invoke `agent-shell'
-if none exists.  When in an `agent-shell-mode' buffer, jump back to the
-remembered position, falling back to the most recently used file buffer
-in the project."
+if none exists.  When in an `agent-shell-mode' or viewport buffer, jump
+back to the remembered position, falling back to the most recently used
+file buffer in the project.  Viewport buffers are treated as part of
+the agent-shell side, so this command never toggles between the main
+agent-shell buffer and its viewport."
   (interactive)
   (let* ((proj (project-current))
          (proj-buffers (and proj (project-buffers proj)))
          (candidates (seq-filter (lambda (b) (memq b proj-buffers))
                                  (buffer-list)))
-         (in-agent-shell (derived-mode-p 'agent-shell-mode)))
+         (in-agent-shell (phye--agent-shell-side-p)))
     (if in-agent-shell
         (let ((marker phye--agent-shell-return-marker))
           (if (and (markerp marker) (marker-buffer marker))
@@ -63,7 +72,7 @@ in the project."
                                 (and (not (eq b (current-buffer)))
                                      (with-current-buffer b
                                        (and (buffer-file-name)
-                                            (not (derived-mode-p 'agent-shell-mode))))))
+                                            (not (phye--agent-shell-side-p b))))))
                               candidates)))
                 (switch-to-buffer target)
               (message "No file buffer in current project"))))
