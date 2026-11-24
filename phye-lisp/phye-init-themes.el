@@ -7,8 +7,9 @@
 
 (defun phye/load-theme (theme)
   "Load THEME after disable custom themes."
-  (mapc #'disable-theme custom-enabled-themes)
-  (load-theme theme t))
+  (unless (and theme (memq theme custom-enabled-themes))
+    (mapc #'disable-theme custom-enabled-themes)
+    (when theme (load-theme theme t))))
 
 (customize-set-variable
  'my-favorite-color-themes
